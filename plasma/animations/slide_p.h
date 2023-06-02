@@ -47,7 +47,6 @@ class SlideAnimation : public EasingAnimation
 
 public:
     explicit SlideAnimation(QObject *parent = 0, MovementDirection direction = MoveUp, qreal distance = 0);
-    ~SlideAnimation();
 
     /**
      * Set the animation distance

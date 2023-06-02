@@ -46,9 +46,6 @@ public:
     /** Default constructor */
     explicit GeometryAnimation(QObject *parent = 0);
 
-    /** Destructor */
-    virtual ~GeometryAnimation();
-
     /**
      * Access the initial geometry of animated widget.
      *

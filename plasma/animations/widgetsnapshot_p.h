@@ -30,7 +30,6 @@ class WidgetSnapShot : public QGraphicsWidget
 
 public:
     explicit WidgetSnapShot(QGraphicsItem *parent = 0);
-    virtual ~WidgetSnapShot();
 
     virtual void setTarget(QGraphicsWidget *target);
     QGraphicsWidget *target() const;

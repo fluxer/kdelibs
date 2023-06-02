@@ -30,12 +30,8 @@ namespace Plasma
 
 WidgetSnapShot::WidgetSnapShot(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
-      stack(0),
-      m_target(nullptr)
-{
-}
-
-WidgetSnapShot::~WidgetSnapShot()
+    stack(0),
+    m_target(nullptr)
 {
 }
 

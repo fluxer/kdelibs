@@ -30,11 +30,11 @@ namespace Plasma
 {
 
 PulseAnimation::PulseAnimation(QObject *parent)
-        : EasingAnimation(parent),
-          m_zvalue(0),
-          m_scale(0),
-          m_opacity(0),
-          m_endScale(1.5)
+    : EasingAnimation(parent),
+    m_zvalue(0),
+    m_scale(0),
+    m_opacity(0),
+    m_endScale(1.5)
 {
 }
 

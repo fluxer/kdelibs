@@ -42,7 +42,6 @@ class ZoomAnimation : public EasingAnimation
 
 public:
     explicit ZoomAnimation(QObject *parent = 0);
-    virtual ~ZoomAnimation();
 
     qreal zoom() const;
     void setZoom(qreal);

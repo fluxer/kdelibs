@@ -30,10 +30,6 @@ ZoomAnimation::ZoomAnimation(QObject *parent)
 {
 }
 
-ZoomAnimation::~ZoomAnimation()
-{
-}
-
 void ZoomAnimation::setZoom(qreal zoom)
 {
     m_zoom = zoom;

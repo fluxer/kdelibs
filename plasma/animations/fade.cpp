@@ -27,9 +27,9 @@ namespace Plasma
 {
 
 FadeAnimation::FadeAnimation(QObject *parent)
-             : EasingAnimation(parent),
-               m_startOpacity(0),
-               m_targetOpacity(1)
+    : EasingAnimation(parent),
+    m_startOpacity(0),
+    m_targetOpacity(1)
 {
 }
 

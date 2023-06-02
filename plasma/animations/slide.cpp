@@ -25,6 +25,14 @@
 namespace Plasma
 {
 
+SlideAnimation::SlideAnimation(QObject *parent, MovementDirection direction, qreal distance)
+    : EasingAnimation(parent)
+{
+    setMovementDirection(direction);
+    setDistance(distance);
+    setEasingCurve(QEasingCurve::OutCirc);
+}
+
 void SlideAnimation::setDistance(qreal distance)
 {
     m_animDistance = QPointF(distance,  0.0);
@@ -43,19 +51,6 @@ void SlideAnimation::setDistancePointF(const QPointF &distance)
 QPointF SlideAnimation::distancePointF() const
 {
     return m_animDistance;
-}
-
-SlideAnimation::~SlideAnimation()
-{
-}
-
-SlideAnimation::SlideAnimation(QObject *parent,
-                               MovementDirection direction,
-                               qreal distance) : EasingAnimation(parent)
-{
-    setMovementDirection(direction);
-    setDistance(distance);
-    setEasingCurve(QEasingCurve::OutCirc);
 }
 
 void SlideAnimation::setMovementDirection(const Animation::MovementDirection &direction)

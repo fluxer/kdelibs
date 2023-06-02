@@ -27,12 +27,8 @@ namespace Plasma
 {
 
 GeometryAnimation::GeometryAnimation(QObject *parent)
-             : EasingAnimation(parent),
-             m_startGeometry(-1, -1, -1, -1)
-{
-}
-
-GeometryAnimation::~GeometryAnimation()
+    : EasingAnimation(parent),
+    m_startGeometry(-1, -1, -1, -1)
 {
 }
 

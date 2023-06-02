@@ -48,8 +48,6 @@ class PixmapTransition : public EasingAnimation
 public:
     explicit PixmapTransition(QObject *parent = 0);
 
-    virtual ~PixmapTransition();
-
     /**
      * @return The first pixmap of the animation
      */

@@ -32,12 +32,8 @@ namespace Plasma
 
 PixmapTransition::PixmapTransition(QObject *parent)
     : EasingAnimation(parent),
-      m_cache(false),
-      m_dirty(false)
-{
-}
-
-PixmapTransition::~PixmapTransition()
+    m_cache(false),
+    m_dirty(false)
 {
 }
 

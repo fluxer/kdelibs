@@ -20,13 +20,8 @@
 #include "animation.h"
 #include "private/animationprivate_p.h"
 
-#include <QtCore/qmap.h>
-#include <QObject>
-#include <QParallelAnimationGroup>
-#include <QSequentialAnimationGroup>
-#include <QDebug>
+#include <QAbstractAnimation>
 #include <kdebug.h>
-#include <kglobalsettings.h>
 
 namespace Plasma
 {
@@ -40,7 +35,7 @@ AnimationPrivate::AnimationPrivate()
 
 Animation::Animation(QObject* parent)
     : QAbstractAnimation(parent),
-      d(new AnimationPrivate)
+    d(new AnimationPrivate())
 {
 }
 
