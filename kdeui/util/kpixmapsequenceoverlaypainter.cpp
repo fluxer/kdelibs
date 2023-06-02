@@ -50,8 +50,6 @@ public:
     int m_counter;
 
     bool m_started;
-
-    KPixmapSequenceOverlayPainter *q;
 };
 
 
@@ -107,7 +105,6 @@ KPixmapSequenceOverlayPainter::KPixmapSequenceOverlayPainter(QObject *parent)
     : QObject(parent),
     d(new Private())
 {
-    d->q = this;
     d->m_widget = 0;
     d->m_alignment = Qt::AlignCenter;
     d->m_counter = 0;
