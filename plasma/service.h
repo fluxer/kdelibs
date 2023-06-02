@@ -51,11 +51,12 @@ class ServicePrivate;
  * might be a username ("aseigo", "stranger65").
  *
  * A Service provides one or more operations, each of which provides some sort
- * of interaction with the destination. Operations are set by the service itself.
+ * of interaction with the destination. Operations are set by the service itself
+ * and their availability can be changed at any time.
  *
- * A service is started with a QVariant representing representing the parameters
- * and automatically deletes itself after completion and signaling success or
- * failure. See KJob for more information on this part of the process.
+ * A service is started with a QVariantMap representing the parameters, after
+ * completion a signal is emitted. The service job is automatically deleted,
+ * see KJob for more information on this part of the process.
  *
  * Services may be loaded from a DataEngine by passing in a source name to be used
  * as the destination.
@@ -113,7 +114,7 @@ public:
     Q_INVOKABLE QString destination() const;
 
     /**
-     * @return the possible operations for this profile
+     * @return the possible operations for this Service
      */
     Q_INVOKABLE QStringList operationNames() const;
 
@@ -121,7 +122,7 @@ public:
      * Retrieves the parameters for a given operation
      *
      * @param operation the operation to retrieve parameters for
-     * @return KConfigGroup containing the parameters
+     * @return QVariantMap containing the default parameters
      */
     Q_INVOKABLE QMap<QString, QVariant> operationParameters(const QString &operation);
 
@@ -257,7 +258,7 @@ protected:
     void setOperationNames(const QStringList &operations);
 
     /**
-     * Enables a given service by name
+     * Enables or disables given operation
      *
      * @param operation the name of the operation to enable or disable
      * @param enable true if the operation should be enabld, false if disabled
