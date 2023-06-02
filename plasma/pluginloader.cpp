@@ -42,10 +42,6 @@ PluginLoader::PluginLoader()
 {
 }
 
-PluginLoader::~PluginLoader()
-{
-}
-
 void PluginLoader::setPluginLoader(PluginLoader* loader)
 {
     if (!s_pluginLoader) {

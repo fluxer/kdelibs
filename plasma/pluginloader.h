@@ -50,8 +50,6 @@ class PLASMA_EXPORT PluginLoader
 public: 
     PluginLoader();
 
-    virtual ~PluginLoader();
-
     /**
      * Load an Applet plugin.
      *
