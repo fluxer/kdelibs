@@ -30,13 +30,12 @@
 #include <kstandardaction.h>
 #include <kcomponentdata.h>
 
-#include <QtCore/QObject>
-
+#include <QObject>
 #include <QAction>
-class KXMLGUIClient;
-
 #include <QActionGroup>
 #include <QString>
+
+class KXMLGUIClient;
 
 /**
  * \short A container for a set of QAction objects.

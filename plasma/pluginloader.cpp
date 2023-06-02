@@ -33,7 +33,6 @@
 #include "popupapplet.h"
 #include "private/applet_p.h"
 #include "private/extenderapplet_p.h"
-#include "private/service_p.h" // for NullService
 
 namespace Plasma {
 

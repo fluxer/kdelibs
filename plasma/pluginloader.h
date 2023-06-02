@@ -27,7 +27,6 @@ namespace Plasma {
 
 class Applet;
 class DataEngine;
-class Service;
 class AbstractRunner;
 
 //TODO:

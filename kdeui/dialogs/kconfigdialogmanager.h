@@ -25,11 +25,11 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
+#include <QtGui/QWidget>
 
 class KCoreConfigSkeleton;
 class KConfigSkeleton;
 class KConfigSkeletonItem;
-#include <QWidget>
 
 /**
  * @short Provides a means of automatically retrieving,
