@@ -31,7 +31,7 @@ Q_DECLARE_METATYPE(QList<int>)
 #define TEST_NAME QString::fromLatin1("configloadertest")
 
 #define GET_CONFIG_ITEM_VALUE(type, configName) \
-    KConfigSkeletonItem* item = cl->findItem(TEST_NAME, configName); \
+    KConfigSkeletonItem* item = cl->findItemByGroup(TEST_NAME, configName); \
     /* Check if we got back a valid item. */ \
     QVERIFY(item != 0); \
     /* Cast the item to the given type. */ \
