@@ -54,49 +54,49 @@ class ConfigLoaderPrivate
 
         bool *newBool()
         {
-            bool *v = new bool;
+            bool *v = new bool(false);
             bools.append(v);
             return v;
         }
 
         QString *newString()
         {
-            QString *v = new QString;
+            QString *v = new QString();
             strings.append(v);
             return v;
         }
 
         QStringList *newStringList()
         {
-            QStringList *v = new QStringList;
+            QStringList *v = new QStringList();
             stringlists.append(v);
             return v;
         }
 
         QColor *newColor()
         {
-            QColor *v = new QColor;
+            QColor *v = new QColor();
             colors.append(v);
             return v;
         }
 
         QFont *newFont()
         {
-            QFont *v = new QFont;
+            QFont *v = new QFont();
             fonts.append(v);
             return v;
         }
 
         qint32 *newInt()
         {
-            qint32 *v = new qint32;
+            qint32 *v = new qint32(0);
             ints.append(v);
             return v;
         }
 
         quint32 *newUint()
         {
-            quint32 *v = new quint32;
+            quint32 *v = new quint32(0);
             uints.append(v);
             return v;
         }
@@ -110,7 +110,7 @@ class ConfigLoaderPrivate
 
         QDateTime *newDateTime()
         {
-            QDateTime *v = new QDateTime;
+            QDateTime *v = new QDateTime();
             dateTimes.append(v);
             return v;
         }
@@ -124,49 +124,49 @@ class ConfigLoaderPrivate
 
         QList<qint32>* newIntList()
         {
-            QList<qint32> *v = new QList<qint32>;
+            QList<qint32> *v = new QList<qint32>();
             intlists.append(v);
             return v;
         }
 
         qint64 *newLongLong()
         {
-            qint64 *v = new qint64;
+            qint64 *v = new qint64(0);
             longlongs.append(v);
             return v;
         }
 
         QPoint *newPoint()
         {
-            QPoint *v = new QPoint;
+            QPoint *v = new QPoint();
             points.append(v);
             return v;
         }
 
         QRect *newRect()
         {
-            QRect *v = new QRect;
+            QRect *v = new QRect();
             rects.append(v);
             return v;
         }
 
         QSize *newSize()
         {
-            QSize *v = new QSize;
+            QSize *v = new QSize();
             sizes.append(v);
             return v;
         }
 
         quint64 *newULongLong()
         {
-            quint64 *v = new quint64;
+            quint64 *v = new quint64(0);
             ulonglongs.append(v);
             return v;
         }
 
         KUrl::List *newUrlList()
         {
-            KUrl::List *v = new KUrl::List;
+            KUrl::List *v = new KUrl::List();
             urllists.append(v);
             return v;
         }

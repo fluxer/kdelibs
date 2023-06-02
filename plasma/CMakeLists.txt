@@ -221,9 +221,9 @@ install(
     theme.h
     tooltipcontent.h
     tooltipmanager.h
-    ${CMAKE_CURRENT_BINARY_DIR}/plasma_export.h
     view.h
     wallpaper.h
+    ${CMAKE_CURRENT_BINARY_DIR}/plasma_export.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma
     COMPONENT Devel
 )

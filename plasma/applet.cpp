@@ -1012,7 +1012,7 @@ void Applet::setConfigurationRequired(bool needsConfig, const QString &reason)
     QGraphicsGridLayout *configLayout = new QGraphicsGridLayout(d->messageOverlay);
     configLayout->setContentsMargins(0, 0, 0, 0);
 
-  //  configLayout->addStretch();
+    // configLayout->addStretch();
     configLayout->setColumnStretchFactor(0, 5);
     configLayout->setColumnStretchFactor(2, 5);
     configLayout->setRowStretchFactor(0, 5);
@@ -1355,7 +1355,7 @@ void Applet::flushPendingConstraintsEvents()
                 d->modificationsTimer->stop();
             }
         } else {
-            d->modificationsTimer = new QBasicTimer;
+            d->modificationsTimer = new QBasicTimer();
         }
     }
 }
@@ -2006,7 +2006,7 @@ void AppletPrivate::addGlobalShortcutsPage(KConfigDialog *dialog)
         return;
     }
 
-    QWidget *page = new QWidget;
+    QWidget *page = new QWidget();
     QVBoxLayout *layout = new QVBoxLayout(page);
 
     if (!shortcutEditor) {

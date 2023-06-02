@@ -61,7 +61,7 @@ PluginLoader *PluginLoader::pluginLoader()
         // we have been called before any PluginLoader was set, so just use the default
         // implementation. this prevents plugins from nefariously injecting their own
         // plugin loader if the app doesn't
-        s_pluginLoader = new PluginLoader;
+        s_pluginLoader = new PluginLoader();
     }
 
     return s_pluginLoader;
