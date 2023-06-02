@@ -121,6 +121,4 @@ public:
 
 }
 
-Q_DECLARE_METATYPE(Plasma::PluginLoader*)
-
 #endif
