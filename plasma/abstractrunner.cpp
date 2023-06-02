@@ -41,8 +41,6 @@
 namespace Plasma
 {
 
-K_GLOBAL_STATIC(QMutex, s_bigLock)
-
 AbstractRunner::AbstractRunner(const KService::Ptr service, QObject *parent)
     : QObject(parent),
       d(new AbstractRunnerPrivate(this))
@@ -243,11 +241,6 @@ void AbstractRunner::setIgnoredTypes(RunnerContext::Types types)
 KService::List AbstractRunner::serviceQuery(const QString &serviceType, const QString &constraint) const
 {
     return KServiceTypeTrader::self()->query(serviceType, constraint);
-}
-
-QMutex* AbstractRunner::bigLock()
-{
-    return s_bigLock;
 }
 
 void AbstractRunner::run(const Plasma::RunnerContext &search, const Plasma::QueryMatch &action)
