@@ -34,69 +34,10 @@
 
 #include "packagemetadata.h"
 #include "private/package_p.h"
-#include "private/plasmoidservice_p.h"
 #include "private/service_p.h"
 
 namespace Plasma
 {
-
-bool copyFolder(QString sourcePath, QString targetPath)
-{
-    QDir source(sourcePath);
-    if(!source.exists())
-        return false;
-
-    QDir target(targetPath);
-    if(!target.exists()) {
-        QString targetName = target.dirName();
-        target.cdUp();
-        target.mkdir(targetName);
-        target = QDir(targetPath);
-    }
-
-    foreach (const QString &fileName, source.entryList(QDir::Files)) {
-        QString sourceFilePath = sourcePath + QDir::separator() + fileName;
-        QString targetFilePath = targetPath + QDir::separator() + fileName;
-
-        if (!QFile::copy(sourceFilePath, targetFilePath)) {
-            return false;
-        }
-    }
-
-    foreach (const QString &subFolderName, source.entryList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
-        QString sourceSubFolderPath = sourcePath + QDir::separator() + subFolderName;
-        QString targetSubFolderPath = targetPath + QDir::separator() + subFolderName;
-
-        if (!copyFolder(sourceSubFolderPath, targetSubFolderPath)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool removeFolder(QString folderPath)
-{
-    QDir folder(folderPath);
-    if(!folder.exists())
-        return false;
-
-    foreach (const QString &fileName, folder.entryList(QDir::Files)) {
-        if (!QFile::remove(folderPath + QDir::separator() + fileName)) {
-            return false;
-        }
-    }
-
-    foreach (const QString &subFolderName, folder.entryList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
-        if (!removeFolder(folderPath + QDir::separator() + subFolderName)) {
-            return false;
-        }
-    }
-
-    QString folderName = folder.dirName();
-    folder.cdUp();
-    return folder.rmdir(folderName);
-}
 
 Package::Package()
     : d(new PackagePrivate(PackageStructure::Ptr(0), QString()))
