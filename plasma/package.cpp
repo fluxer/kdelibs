@@ -93,9 +93,9 @@ bool PackagePrivate::isValid()
         prefixes << QString();
     }
 
-    foreach (const char *dir, structure->requiredDirectories()) {
+    foreach (const QByteArray &dir, structure->requiredDirectories()) {
         bool failed = true;
-        foreach (const QString &path, structure->searchPath(dir)) {
+        foreach (const QString &path, structure->searchPath(dir.constData())) {
             foreach (const QString &prefix, prefixes) {
                 QDir prefixdir(structure->path() + prefix + path);
                 if (prefixdir.exists()) {
@@ -115,9 +115,9 @@ bool PackagePrivate::isValid()
         }
     }
 
-    foreach (const char *file, structure->requiredFiles()) {
+    foreach (const QByteArray &file, structure->requiredFiles()) {
         bool failed = true;
-        foreach (const QString &path, structure->searchPath(file)) {
+        foreach (const QString &path, structure->searchPath(file.constData())) {
             foreach (const QString &prefix, prefixes) {
                 if (QFile::exists(structure->path() + prefix + path)) {
                     failed = false;
