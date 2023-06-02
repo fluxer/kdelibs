@@ -38,9 +38,7 @@ public:
     void _k_timeout();
     void paintFrame();
 
-    KPixmapSequence& sequence();
-
-    QRect pixmapRect();
+    QRect pixmapRect() const;
 
     KPixmapSequence m_sequence;
     QPointer<QWidget> m_widget;
@@ -59,67 +57,64 @@ public:
 
 void KPixmapSequenceOverlayPainter::Private::_k_timeout()
 {
-    if (sequence().isEmpty()) {
+    if (m_sequence.isEmpty()) {
         return;
     }
     ++m_counter;
-    m_counter %= sequence().frameCount();
-    if (m_widget)
+    m_counter %= m_sequence.frameCount();
+    if (m_widget) {
         m_widget->update(pixmapRect());
+    }
 }
 
 
 void KPixmapSequenceOverlayPainter::Private::paintFrame()
 {
-    if (m_counter >= sequence().frameCount()) {
+    if (m_counter >= m_sequence.frameCount()) {
         return;
     }
     QPainter p(m_widget);
-    p.drawPixmap(pixmapRect(), sequence().frameAt(m_counter), QRect(QPoint(0, 0), sequence().frameSize()));
+    p.drawPixmap(pixmapRect(), m_sequence.frameAt(m_counter), QRect(QPoint(0, 0), m_sequence.frameSize()));
 }
 
-
-KPixmapSequence& KPixmapSequenceOverlayPainter::Private::sequence()
-{
-    // make sure we have a valid default sequence
-    if(m_sequence.isEmpty())
-        m_sequence = KPixmapSequence("process-working", 22);
-
-    return m_sequence;
-}
-
-
-QRect KPixmapSequenceOverlayPainter::Private::pixmapRect()
+QRect KPixmapSequenceOverlayPainter::Private::pixmapRect() const
 {
     QRect rect(m_rect);
-    if(!rect.isValid())
+    if (!rect.isValid()) {
         rect = m_widget->rect();
+    }
 
     QPoint pos(rect.topLeft());
-    if (m_alignment & Qt::AlignHCenter)
-        pos.setX(rect.center().x() - (sequence().frameSize().width() / 2));
-    else if (m_alignment & Qt::AlignRight)
-        pos.setX(rect.right() - sequence().frameSize().width());
+    if (m_alignment & Qt::AlignHCenter) {
+        pos.setX(rect.center().x() - (m_sequence.frameSize().width() / 2));
+    } else if (m_alignment & Qt::AlignRight) {
+        pos.setX(rect.right() - m_sequence.frameSize().width());
+    }
 
-    if (m_alignment & Qt::AlignVCenter)
-        pos.setY(rect.center().y() - (sequence().frameSize().height() / 2));
-    else if (m_alignment & Qt::AlignBottom)
-        pos.setY(rect.bottom() - sequence().frameSize().height());
+    if (m_alignment & Qt::AlignVCenter) {
+        pos.setY(rect.center().y() - (m_sequence.frameSize().height() / 2));
+    } else if (m_alignment & Qt::AlignBottom) {
+        pos.setY(rect.bottom() - m_sequence.frameSize().height());
+    }
 
     pos += m_offset;
 
-    return QRect( pos, sequence().frameSize());
+    return QRect(pos, m_sequence.frameSize());
 }
 
 
 KPixmapSequenceOverlayPainter::KPixmapSequenceOverlayPainter(QObject *parent)
-        : QObject(parent),
-        d(new Private)
+    : QObject(parent),
+    d(new Private())
 {
     d->q = this;
     d->m_widget = 0;
     d->m_alignment = Qt::AlignCenter;
+    d->m_counter = 0;
     d->m_started = false;
+    // make sure we have a valid default sequence
+    d->m_sequence = KPixmapSequence("process-working", 22);
+
     setInterval(200);
     connect(&d->m_timer, SIGNAL(timeout()), this, SLOT(_k_timeout()));
 }
@@ -134,27 +129,22 @@ KPixmapSequenceOverlayPainter::~KPixmapSequenceOverlayPainter()
 
 KPixmapSequence KPixmapSequenceOverlayPainter::sequence() const
 {
-    return d->sequence();
+    return d->m_sequence;
 }
-
 
 int KPixmapSequenceOverlayPainter::interval() const
 {
     return d->m_timer.interval();
 }
 
-
 QRect KPixmapSequenceOverlayPainter::rect() const
 {
-    if(d->m_rect.isValid()) {
+    if (d->m_rect.isValid()) {
         return d->m_rect;
-    }
-    else if(d->m_widget) {
+    } else if(d->m_widget) {
         return d->m_widget->rect();
     }
-    else {
-        return QRect();
-    }
+    return QRect();
 }
 
 
@@ -163,27 +153,29 @@ Qt::Alignment KPixmapSequenceOverlayPainter::alignment() const
     return d->m_alignment;
 }
 
-
 QPoint KPixmapSequenceOverlayPainter::offset() const
 {
     return d->m_offset;
 }
-
 
 void KPixmapSequenceOverlayPainter::setSequence(const KPixmapSequence &seq)
 {
     bool restart = d->m_started;
     stop();
     d->m_sequence = seq;
-    if(restart) start();
-}
+    if (d->m_sequence.isEmpty()) {
+        d->m_sequence = KPixmapSequence("process-working", 22);
+    }
 
+    if (restart) {
+        start();
+    }
+}
 
 void KPixmapSequenceOverlayPainter::setInterval(int msecs)
 {
     d->m_timer.setInterval(msecs);
 }
-
 
 void KPixmapSequenceOverlayPainter::setWidget(QWidget *w)
 {
@@ -191,22 +183,24 @@ void KPixmapSequenceOverlayPainter::setWidget(QWidget *w)
     d->m_widget = w;
 }
 
-
 void KPixmapSequenceOverlayPainter::setRect(const QRect &rect)
 {
     bool restart = d->m_started;
     stop();
     d->m_rect = rect;
-    if(restart) start();
+    if (restart) {
+        start();
+    }
 }
-
 
 void KPixmapSequenceOverlayPainter::setAlignment(Qt::Alignment align)
 {
     bool restart = d->m_started;
     stop();
     d->m_alignment = align;
-    if(restart) start();
+    if (restart) {
+        start();
+    }
 }
 
 
@@ -215,9 +209,10 @@ void KPixmapSequenceOverlayPainter::setOffset(const QPoint &offset)
     bool restart = d->m_started;
     stop();
     d->m_offset = offset;
-    if(restart) start();
+    if (restart) {
+        start();
+    }
 }
-
 
 void KPixmapSequenceOverlayPainter::start()
 {
@@ -227,13 +222,12 @@ void KPixmapSequenceOverlayPainter::start()
         d->m_counter = 0;
         d->m_started = true;
         d->m_widget->installEventFilter(this);
-        if(d->m_widget->isVisible()) {
+        if (d->m_widget->isVisible()) {
             d->m_timer.start();
             d->m_widget->update(d->pixmapRect());
         }
     }
 }
-
 
 void KPixmapSequenceOverlayPainter::stop()
 {
@@ -244,7 +238,6 @@ void KPixmapSequenceOverlayPainter::stop()
         d->m_widget->update(d->pixmapRect());
     }
 }
-
 
 bool KPixmapSequenceOverlayPainter::eventFilter(QObject *obj, QEvent *event)
 {
@@ -274,7 +267,6 @@ bool KPixmapSequenceOverlayPainter::eventFilter(QObject *obj, QEvent *event)
             }
         }
     }
-
     return false;
 }
 
