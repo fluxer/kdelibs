@@ -279,20 +279,6 @@ protected:
                                   const QMap<QString, QVariant> &parameters) = 0;
 
     /**
-     * By default this is based on the file in plasma/services/name.operations, but can be
-     * reimplented to use a different mechanism.
-     *
-     * It should result in a call to setOperationsScheme(QIODevice *);
-     */
-    virtual void registerOperationsScheme();
-
-    /**
-     * Sets the XML used to define the operation schema for
-     * this Service.
-     */
-    void setOperationsScheme(QIODevice *xml);
-
-    /**
      * Sets the name of the Service; useful for Services not loaded from plugins,
      * which use the plugin name for this.
      *

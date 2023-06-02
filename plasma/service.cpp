@@ -122,9 +122,9 @@ KConfigGroup Service::operationDescription(const QString &operationName)
 
     d->config->writeConfig();
     KConfigGroup params(d->config->config(), operationName);
-    //kDebug() << "operation" << operationName
-    //         << "requested, has keys" << params.keyList() << "from"
-    //         << d->config->config()->name();
+    kDebug() << "operation" << operationName
+             << "requested, has keys" << params.keyList() << "from"
+             << d->config->config()->name();
     return params;
 }
 
@@ -183,7 +183,10 @@ void Service::associateWidget(QWidget *widget, const QString &operation)
 
     disassociateWidget(widget);
     d->associatedWidgets.insert(widget, operation);
-    connect(widget, SIGNAL(destroyed(QObject*)), this, SLOT(associatedWidgetDestroyed(QObject*)));
+    connect(
+        widget, SIGNAL(destroyed(QObject*)),
+        this, SLOT(associatedWidgetDestroyed(QObject*))
+    );
 
     widget->setEnabled(!d->disabledOperations.contains(operation));
 }
@@ -194,8 +197,10 @@ void Service::disassociateWidget(QWidget *widget)
         return;
     }
 
-    disconnect(widget, SIGNAL(destroyed(QObject*)),
-               this, SLOT(associatedWidgetDestroyed(QObject*)));
+    disconnect(
+        widget, SIGNAL(destroyed(QObject*)),
+        this, SLOT(associatedWidgetDestroyed(QObject*))
+    );
     d->associatedWidgets.remove(widget);
 }
 
@@ -217,8 +222,10 @@ void Service::associateItem(QGraphicsObject *widget, const QString &operation)
 
     disassociateItem(widget);
     d->associatedGraphicsWidgets.insert(widget, operation);
-    connect(widget, SIGNAL(destroyed(QObject*)),
-            this, SLOT(associatedGraphicsWidgetDestroyed(QObject*)));
+    connect(
+        widget, SIGNAL(destroyed(QObject*)),
+        this, SLOT(associatedGraphicsWidgetDestroyed(QObject*))
+    );
 
     widget->setEnabled(!d->disabledOperations.contains(operation));
 }
@@ -229,8 +236,10 @@ void Service::disassociateItem(QGraphicsObject *widget)
         return;
     }
 
-    disconnect(widget, SIGNAL(destroyed(QObject*)),
-               this, SLOT(associatedGraphicsWidgetDestroyed(QObject*)));
+    disconnect(
+        widget, SIGNAL(destroyed(QObject*)),
+        this, SLOT(associatedGraphicsWidgetDestroyed(QObject*))
+    );
     d->associatedGraphicsWidgets.remove(widget);
 }
 
@@ -250,7 +259,41 @@ void Service::setName(const QString &name)
     delete d->dummyConfig;
     d->dummyConfig = 0;
 
-    registerOperationsScheme();
+    if (d->name.isEmpty()) {
+        kDebug() << "No name found";
+        emit serviceReady(this);
+        return;
+    }
+
+    const QString path = KStandardDirs::locate("data", "plasma/services/" + d->name + ".operations");
+    if (path.isEmpty()) {
+        kDebug() << "Cannot find operations description:" << d->name << ".operations";
+        emit serviceReady(this);
+        return;
+    }
+
+    QFile xmlfile(path);
+    KSharedConfigPtr c = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    d->config = new ConfigLoader(c, &xmlfile, this);
+    d->config->d->setWriteDefaults(true);
+
+    emit operationsChanged();
+
+    {
+        QHashIterator<QWidget *, QString> it(d->associatedWidgets);
+        while (it.hasNext()) {
+            it.next();
+            it.key()->setEnabled(d->config->hasGroup(it.value()));
+        }
+    }
+
+    {
+        QHashIterator<QGraphicsObject *, QString> it(d->associatedGraphicsWidgets);
+        while (it.hasNext()) {
+            it.next();
+            it.key()->setEnabled(d->config->hasGroup(it.value()));
+        }
+    }
 
     emit serviceReady(this);
 }
@@ -291,59 +334,6 @@ void Service::setOperationEnabled(const QString &operation, bool enable)
 bool Service::isOperationEnabled(const QString &operation) const
 {
     return d->config && d->config->hasGroup(operation) && !d->disabledOperations.contains(operation);
-}
-
-void Service::setOperationsScheme(QIODevice *xml)
-{
-    delete d->config;
-
-    delete d->dummyConfig;
-    d->dummyConfig = 0;
-
-    KSharedConfigPtr c = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    d->config = new ConfigLoader(c, xml, this);
-    d->config->d->setWriteDefaults(true);
-
-    emit operationsChanged();
-
-    {
-        QHashIterator<QWidget *, QString> it(d->associatedWidgets);
-        while (it.hasNext()) {
-            it.next();
-            it.key()->setEnabled(d->config->hasGroup(it.value()));
-        }
-    }
-
-    {
-        QHashIterator<QGraphicsObject *, QString> it(d->associatedGraphicsWidgets);
-        while (it.hasNext()) {
-            it.next();
-            it.key()->setEnabled(d->config->hasGroup(it.value()));
-        }
-    }
-}
-
-void Service::registerOperationsScheme()
-{
-    if (d->config) {
-        // we've already done our job. let's go home.
-        return;
-    }
-
-    if (d->name.isEmpty()) {
-        kDebug() << "No name found";
-        return;
-    }
-
-    const QString path = KStandardDirs::locate("data", "plasma/services/" + d->name + ".operations");
-
-    if (path.isEmpty()) {
-        kDebug() << "Cannot find operations description:" << d->name << ".operations";
-        return;
-    }
-
-    QFile file(path);
-    setOperationsScheme(&file);
 }
 
 } // namespace Plasma
