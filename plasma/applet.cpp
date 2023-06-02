@@ -109,7 +109,6 @@
 #include "private/extenderapplet_p.h"
 #include "private/package_p.h"
 #include "private/packages_p.h"
-#include "private/plasmoidservice_p.h"
 #include "private/popupapplet_p.h"
 #include "private/service_p.h"
 
@@ -330,24 +329,21 @@ void Applet::restore(KConfigGroup &group)
     QString shortcutText = shortcutConfig.readEntryUntranslated("global", QString());
     if (!shortcutText.isEmpty()) {
         setGlobalShortcut(KShortcut(shortcutText));
-        /*
+/*
         kDebug() << "got global shortcut for" << name() << "of" << QKeySequence(shortcutText);
         kDebug() << "set to" << d->activationAction->objectName()
                  << d->activationAction->globalShortcut().primary();
-                 */
+*/
     }
 
     // local shortcut, if any
     //TODO: implement; the shortcut will need to be registered with the containment
-    /*
-#include "private/plasmoidservice_p.h"
-#include "authorizationmanager.h"
-#include "authorizationmanager.h"
+/*
     shortcutText = shortcutConfig.readEntryUntranslated("local", QString());
     if (!shortcutText.isEmpty()) {
         //TODO: implement; the shortcut
     }
-    */
+*/
 }
 
 void AppletPrivate::setFocus()

@@ -451,7 +451,6 @@ NoAlignment) const;
     private:
         friend class DataEnginePrivate;
         friend class DataEngineManager;
-        friend class PlasmoidServiceJob;
         friend class NullEngine;
 
         Q_PRIVATE_SLOT(d, void internalUpdateSource(DataContainer *source))

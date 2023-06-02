@@ -91,7 +91,6 @@ set(plasma_LIB_SRCS
     private/focusindicator.cpp
     private/nativetabbar.cpp
     private/packages.cpp
-    private/plasmoidservice.cpp
     private/runnerjobs.cpp
     private/style.cpp
     private/themedwidgetinterface.cpp
