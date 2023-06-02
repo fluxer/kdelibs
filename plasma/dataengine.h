@@ -232,19 +232,6 @@ NoAlignment) const;
          */
         QString pluginName() const;
 
-        /**
-         * Initializes and returns a new service from the name that was set
-         * with setDefaultService. (service name is set internally). Remember to dispose
-         * of the Service* when you are finished with it (even if a parent is passed)
-         * A DataEngine* is sent to the created service via the QVariantList arguments.
-         * 
-         *  @see setDefaultService
-         *  @param the parent of the object, if any, for the returned service
-         *  @return the newly created service
-         *  @since 4.5
-         */
-        Q_INVOKABLE Service* createDefaultService(QObject *parent = 0);
-
     Q_SIGNALS:
         /**
          * Emitted when a new data source is created
@@ -429,22 +416,6 @@ NoAlignment) const;
          * Sets the icon for this data engine
          **/
         void setIcon(const QString &icon);
-
-        /**
-         *  Should be set if there will be 1 main service.
-         *  This saves any users of this DataEngine from having to know the service name to load.
-         *  It is not created until createDefaultService is called.
-         *
-         *  @code
-         *  DataEngine *engine = dataEngine("foo");
-         *  Service *service = engine->createDefaultService(this);
-         *  @endcode
-         *
-         *  @see createDefaultService
-         *  @param serviceName the name of the service to load (plugin name)
-         *  @since 4.5
-         */
-        void setDefaultService(const QString &serviceName);
 
     protected Q_SLOTS:
         /**

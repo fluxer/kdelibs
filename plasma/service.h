@@ -43,7 +43,7 @@ class ServicePrivate;
 /**
  * @class Service plasma/service.h <Plasma/Service>
  *
- * @short This class provides a generic API for write access to settings or services.
+ * @short This class provides a generic API for write access services.
  *
  * Plasma::Service allows interaction with a "destination", the definition of which
  * depends on the Service itself. For a network settings Service this might be a
@@ -51,26 +51,23 @@ class ServicePrivate;
  * might be a username ("aseigo", "stranger65").
  *
  * A Service provides one or more operations, each of which provides some sort
- * of interaction with the destination. Operations are described using config
- * XML which is used to create a KConfig object with one group per operation.
- * The group names are used as the operation names, and the defined items in
- * the group are the parameters available to be set when using that operation.
+ * of interaction with the destination. Operations are set by the service itself.
  *
- * A service is started with a KConfigGroup (representing a ready to be serviced
- * operation) and automatically deletes itself after completion and signaling
- * success or failure. See KJob for more information on this part of the process.
+ * A service is started with a QVariant representing representing the parameters
+ * and automatically deletes itself after completion and signaling success or
+ * failure. See KJob for more information on this part of the process.
  *
- * Services may either be loaded "stand alone" from plugins, or from a DataEngine
- * by passing in a source name to be used as the destination.
+ * Services may be loaded from a DataEngine by passing in a source name to be used
+ * as the destination.
  *
  * Sample use might look like:
  *
  * @code
  * Plasma::DataEngine *twitter = dataEngine("twitter");
  * Plasma::Service *service = twitter.serviceForSource("aseigo");
- * KConfigGroup op = service->operationDescription("update");
- * op.writeEntry("tweet", "Hacking on plasma!");
- * Plasma::ServiceJob *job = service->startOperationCall(op);
+ * QVariantMap args = service->operationParameters("update");
+ * args["tweet"] = "Hacking on plasma!";
+ * Plasma::ServiceJob *job = service->startOperationCall("update", args);
  * connect(job, SIGNAL(finished(KJob*)), this, SLOT(jobCompeted()));
  * @endcode
  *
@@ -103,28 +100,6 @@ public:
     ~Service();
 
     /**
-     * Used to load a given service from a plugin.
-     *
-     * @param name the plugin name of the service to load
-     * @param args a list of arguments to supply to the service plugin when loading it
-     * @param parent the parent object, if any, for the service
-     *
-     * @return a Service object, guaranteed to be not null.
-     * @since 4.5
-     */
-    static Service *load(const QString &name, const QVariantList &args, QObject *parent = 0);
-
-    /**
-     * Used to load a given service from a plugin.
-     *
-     * @param name the plugin name of the service to load
-     * @param parent the parent object, if any, for the service
-     *
-     * @return a Service object, guaranteed to be not null.
-     */
-    static Service *load(const QString &name, QObject *parent = 0);
-
-    /**
      * Sets the destination for this Service to operate on
      *
      * @param destination specific to each Service, this sets which
@@ -145,10 +120,10 @@ public:
     /**
      * Retrieves the parameters for a given operation
      *
-     * @param operationName the operation to retrieve parameters for
+     * @param operation the operation to retrieve parameters for
      * @return KConfigGroup containing the parameters
      */
-    Q_INVOKABLE KConfigGroup operationDescription(const QString &operationName);
+    Q_INVOKABLE QMap<QString, QVariant> operationParameters(const QString &operation);
 
     /**
      * Called to create a ServiceJob which is associated with a given
@@ -157,7 +132,8 @@ public:
      * @return a started ServiceJob; the consumer may connect to relevant
      *         signals before returning to the event loop
      */
-    Q_INVOKABLE ServiceJob *startOperationCall(const KConfigGroup &description, QObject *parent = 0);
+    Q_INVOKABLE ServiceJob *startOperationCall(const QString &operation, const QMap<QString, QVariant> &parameters,
+                                               QObject *parent = 0);
 
     /**
      * Query to find if an operation is enabled or not.
@@ -230,13 +206,6 @@ public:
      */
     Q_INVOKABLE void disassociateItem(QGraphicsObject *widget);
 
-    /**
-     * @return a parameter map for the given description
-     * @param description the configuration values to turn into the parameter map
-     * @since 4.4
-     */
-    Q_INVOKABLE QMap<QString, QVariant> parametersFromDescription(const KConfigGroup &description);
-
 Q_SIGNALS:
     /**
      * Emitted when a job associated with this Service completes its task
@@ -264,11 +233,6 @@ protected:
     explicit Service(QObject *parent = 0);
 
     /**
-     * Constructor for plugin loading
-     */
-    Service(QObject *parent, const QVariantList &args);
-
-    /**
      * Called when a job should be created by the Service.
      *
      * @param operation which operation to work on
@@ -279,12 +243,18 @@ protected:
                                   const QMap<QString, QVariant> &parameters) = 0;
 
     /**
-     * Sets the name of the Service; useful for Services not loaded from plugins,
-     * which use the plugin name for this.
+     * Sets the name of the Service.
      *
      * @param name the name to use for this service
      */
     void setName(const QString &name);
+
+    /**
+     * Sets the operations of the Service.
+     *
+     * @param operations the operations this service supports
+     */
+    void setOperationNames(const QStringList &operations);
 
     /**
      * Enables a given service by name
@@ -305,19 +275,11 @@ private:
     friend class DataEnginePrivate;
     friend class GetSource;
     friend class PackagePrivate;
-    friend class PluginLoader;
 };
 
 } // namespace Plasma
 
 Q_DECLARE_METATYPE(Plasma::Service *)
-
-/**
- * Register a service when it is contained in a loadable module
- */
-#define K_EXPORT_PLASMA_SERVICE(libname, classname) \
-K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
-K_EXPORT_PLUGIN(factory("plasma_service_" #libname))
 
 #endif // multiple inclusion guard
 

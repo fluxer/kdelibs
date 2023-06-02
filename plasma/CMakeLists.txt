@@ -287,7 +287,6 @@ install(
     data/servicetypes/plasma-packagestructure.desktop
     data/servicetypes/plasma-runner.desktop
     data/servicetypes/plasma-scriptengine.desktop
-    data/servicetypes/plasma-service.desktop
     data/servicetypes/plasma-toolbox.desktop
     data/servicetypes/plasma-wallpaper.desktop
     DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
@@ -297,12 +296,5 @@ install(
     FILES
     data/services/plasma-applet-extenderapplet.desktop
     DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
-)
-
-install(
-    FILES
-    data/operations/dataengineservice.operations
-    data/operations/plasmoidservice.operations
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/plasma/services
 )
 

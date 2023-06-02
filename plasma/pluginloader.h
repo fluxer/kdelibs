@@ -81,17 +81,6 @@ public:
     AbstractRunner *loadRunner(const QString &name);
 
     /**
-     * Load a Service plugin.
-     *
-     * @param name the plugin name of the service to load
-     * @param args a list of arguments to supply to the service plugin when loading it
-     * @param parent the parent object, if any, for the service
-     *
-     * @return a Service object, unlike Plasma::Service::loadService, this can return null.
-     **/
-    Service *loadService(const QString &name, const QVariantList &args, QObject *parent = 0);
-
-    /**
      * Returns a list of all known applets.
      * This may skip applets based on security settings and ExcludeCategories in the application's config.
      *

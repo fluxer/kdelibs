@@ -71,16 +71,8 @@ class ServicePrivate
 {
 public:
     ServicePrivate(Service *service)
-        : q(service),
-          config(0),
-          dummyConfig(0)
+        : q(service)
     {
-    }
-
-    ~ServicePrivate()
-    {
-        delete config;
-        delete dummyConfig;
     }
 
     void jobFinished(KJob *job);
@@ -89,16 +81,13 @@ public:
 
     void associatedGraphicsWidgetDestroyed(QObject *obj);
 
-    KConfigGroup dummyGroup();
-
     Service *q;
     QString destination;
     QString name;
-    ConfigLoader *config;
-    KConfig *dummyConfig;
+    QStringList operationNames;
+    QSet<QString> disabledOperations;
     QMultiHash<QWidget *, QString> associatedWidgets;
     QMultiHash<QGraphicsObject *, QString> associatedGraphicsWidgets;
-    QSet<QString> disabledOperations;
 };
 
 } // namespace Plasma

@@ -46,27 +46,9 @@ Service::Service(QObject *parent)
 {
 }
 
-Service::Service(QObject *parent, const QVariantList &args)
-    : QObject(parent),
-      d(new ServicePrivate(this))
-{
-    Q_UNUSED(args)
-}
-
 Service::~Service()
 {
     delete d;
-}
-
-Service *Service::load(const QString &name, QObject *parent)
-{
-    QVariantList args;
-    return load(name, args, parent);
-}
-
-Service *Service::load(const QString &name, const QVariantList &args, QObject *parent)
-{
-    return PluginLoader::pluginLoader()->loadService(name, args, parent);
 }
 
 void ServicePrivate::jobFinished(KJob *job)
@@ -84,15 +66,6 @@ void ServicePrivate::associatedGraphicsWidgetDestroyed(QObject *obj)
     associatedGraphicsWidgets.remove(static_cast<QGraphicsObject*>(obj));
 }
 
-KConfigGroup ServicePrivate::dummyGroup()
-{
-    if (!dummyConfig) {
-        dummyConfig = new KConfig(QString(), KConfig::SimpleConfig);
-    }
-
-    return KConfigGroup(dummyConfig, "DummyGroup");
-}
-
 void Service::setDestination(const QString &destination)
 {
     d->destination = destination;
@@ -105,68 +78,37 @@ QString Service::destination() const
 
 QStringList Service::operationNames() const
 {
-    if (!d->config) {
+    if (d->operationNames.isEmpty()) {
         kDebug() << "No valid operations scheme has been registered";
-        return QStringList();
     }
-
-    return d->config->groupList();
+    return d->operationNames;
 }
 
-KConfigGroup Service::operationDescription(const QString &operationName)
+QMap<QString, QVariant> Service::operationParameters(const QString &operation)
 {
-    if (!d->config) {
-        kDebug() << "No valid operations scheme has been registered";
-        return d->dummyGroup();
+    if (!d->operationNames.contains(operation)) {
+        kDebug() << operation << "is not valid operations name";
     }
-
-    d->config->writeConfig();
-    KConfigGroup params(d->config->config(), operationName);
-    kDebug() << "operation" << operationName
-             << "requested, has keys" << params.keyList() << "from"
-             << d->config->config()->name();
-    return params;
+    // NOTE: default implementation returns nothing on purpose, here for future
+    // expansion and binding the parameters type to variable in plasmoids easier
+    return QMap<QString, QVariant>();
 }
 
-QMap<QString, QVariant> Service::parametersFromDescription(const KConfigGroup &description)
+ServiceJob *Service::startOperationCall(const QString &operation, const QMap<QString, QVariant> &parameters, QObject *parent)
 {
-    QMap<QString, QVariant> params;
-
-    if (!d->config || !description.isValid()) {
-        return params;
-    }
-
-    const QString op = description.name();
-    foreach (const QString &key, description.keyList()) {
-        KConfigSkeletonItem *item = d->config->findItemByGroup(op, key);
-        if (item) {
-            params.insert(key, description.readEntry(key, item->property()));
-        }
-    }
-
-    return params;
-}
-
-ServiceJob *Service::startOperationCall(const KConfigGroup &description, QObject *parent)
-{
-    // TODO: nested groups?
     ServiceJob *job = 0;
-    const QString op = description.isValid() ? description.name() : QString();
-
-    if (!d->config) {
-        kDebug() << "No valid operations scheme has been registered";
-    } else if (!op.isEmpty() && d->config->hasGroup(op)) {
-        if (d->disabledOperations.contains(op)) {
-            kDebug() << "Operation" << op << "is disabled";
+    if (!operation.isEmpty() && d->operationNames.contains(operation)) {
+        if (d->disabledOperations.contains(operation)) {
+            kDebug() << "Operation" << operation << "is disabled";
         } else {
-            job = createJob(op, parametersFromDescription(description));
+            job = createJob(operation, parameters);
         }
     } else {
-        kDebug() << op << "is not a valid group; valid groups are:" << d->config->groupList();
+        kDebug() << operation << "is not a valid, valid are:" << d->operationNames;
     }
 
     if (!job) {
-        job = new NullServiceJob(destination(), op, this);
+        job = new NullServiceJob(destination(), operation, this);
     }
 
     job->setParent(parent ? parent : this);
@@ -187,7 +129,6 @@ void Service::associateWidget(QWidget *widget, const QString &operation)
         widget, SIGNAL(destroyed(QObject*)),
         this, SLOT(associatedWidgetDestroyed(QObject*))
     );
-
     widget->setEnabled(!d->disabledOperations.contains(operation));
 }
 
@@ -226,7 +167,6 @@ void Service::associateItem(QGraphicsObject *widget, const QString &operation)
         widget, SIGNAL(destroyed(QObject*)),
         this, SLOT(associatedGraphicsWidgetDestroyed(QObject*))
     );
-
     widget->setEnabled(!d->disabledOperations.contains(operation));
 }
 
@@ -252,30 +192,11 @@ void Service::setName(const QString &name)
 {
     d->name = name;
 
-    // now reset the config, which may be based on our name
-    delete d->config;
-    d->config = 0;
-
-    delete d->dummyConfig;
-    d->dummyConfig = 0;
-
     if (d->name.isEmpty()) {
-        kDebug() << "No name found";
+        kDebug() << "Name is set to empty";
         emit serviceReady(this);
         return;
     }
-
-    const QString path = KStandardDirs::locate("data", "plasma/services/" + d->name + ".operations");
-    if (path.isEmpty()) {
-        kDebug() << "Cannot find operations description:" << d->name << ".operations";
-        emit serviceReady(this);
-        return;
-    }
-
-    QFile xmlfile(path);
-    KSharedConfigPtr c = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    d->config = new ConfigLoader(c, &xmlfile, this);
-    d->config->d->setWriteDefaults(true);
 
     emit operationsChanged();
 
@@ -283,7 +204,7 @@ void Service::setName(const QString &name)
         QHashIterator<QWidget *, QString> it(d->associatedWidgets);
         while (it.hasNext()) {
             it.next();
-            it.key()->setEnabled(d->config->hasGroup(it.value()));
+            it.key()->setEnabled(isOperationEnabled(it.value()));
         }
     }
 
@@ -291,16 +212,29 @@ void Service::setName(const QString &name)
         QHashIterator<QGraphicsObject *, QString> it(d->associatedGraphicsWidgets);
         while (it.hasNext()) {
             it.next();
-            it.key()->setEnabled(d->config->hasGroup(it.value()));
+            it.key()->setEnabled(isOperationEnabled(it.value()));
         }
     }
 
     emit serviceReady(this);
 }
 
+void Service::setOperationNames(const QStringList &operations)
+{
+    d->operationNames = operations;
+
+    if (d->operationNames.isEmpty()) {
+        kDebug() << "Operation names is set to empty";
+        return;
+    }
+
+    emit operationsChanged();
+}
+
 void Service::setOperationEnabled(const QString &operation, bool enable)
 {
-    if (!d->config || !d->config->hasGroup(operation)) {
+    if (!d->operationNames.contains(operation)) {
+        kDebug() << operation << "is not valid operations name";
         return;
     }
 
@@ -333,7 +267,7 @@ void Service::setOperationEnabled(const QString &operation, bool enable)
 
 bool Service::isOperationEnabled(const QString &operation) const
 {
-    return d->config && d->config->hasGroup(operation) && !d->disabledOperations.contains(operation);
+    return d->operationNames.contains(operation) && !d->disabledOperations.contains(operation);
 }
 
 } // namespace Plasma

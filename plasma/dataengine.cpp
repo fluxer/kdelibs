@@ -399,18 +399,6 @@ QString DataEngine::pluginName() const
     return d->dataEngineDescription.pluginName();
 }
 
-void DataEngine::setDefaultService(const QString &serviceName)
-{
-    d->serviceName = serviceName;
-}
-
-Service* DataEngine::createDefaultService(QObject *parent)
-{
-    QVariantList args;
-    args << QVariant::fromValue<DataEngine*>(this);
-    return Service::load(d->serviceName, args, parent);
-}
-
 void DataEngine::scheduleSourcesUpdated()
 {
     if (d->checkSourcesTimerId) {

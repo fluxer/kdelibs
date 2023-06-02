@@ -31,6 +31,12 @@ DataEngineService::DataEngineService(DataEngine *engine)
       m_engine(engine)
 {
     setName("dataengineservice");
+    setOperationNames(
+        QStringList()
+            << "GetSource" // SourceName, UUID
+            << "GetSourceNames"
+            << "ServiceForSource" // SourceName
+    );
     engine->connectAllSources(this, 1000);
     connect(engine, SIGNAL(sourceAdded(QString)), this, SLOT(sourceAdded(QString)));
 }

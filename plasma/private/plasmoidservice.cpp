@@ -63,6 +63,11 @@ PlasmoidService::PlasmoidService(const QString &packageLocation)
     : Plasma::Service(0)
 {
     setName("plasmoidservice");
+    setOperationNames(
+        QStringList()
+            << "GetMetaData"
+            << "DataEngine" // EngineName
+    );
 
     QString location(packageLocation);
     if (!location.endsWith('/')) {
@@ -78,6 +83,11 @@ PlasmoidService::PlasmoidService(const QString &packageLocation)
 PlasmoidService::PlasmoidService(Applet *applet)
 {
     setName("plasmoidservice");
+    setOperationNames(
+        QStringList()
+            << "GetMetaData"
+            << "DataEngine" // EngineName
+    );
     if (!applet->package() || !applet->package()->isValid()) {
         kDebug() << "not a valid package";
     }

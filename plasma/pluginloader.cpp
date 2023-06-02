@@ -174,37 +174,6 @@ AbstractRunner *PluginLoader::loadRunner(const QString &name)
     return 0;
 }
 
-Service *PluginLoader::loadService(const QString &name, const QVariantList &args, QObject *parent)
-{ 
-    //TODO: scripting API support
-    if (name.isEmpty()) {
-        return new NullService(QString(), parent);
-    }
-
-    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(name);
-    KService::List offers = KServiceTypeTrader::self()->query("Plasma/Service", constraint);
-
-    if (offers.isEmpty()) {
-        kDebug() << "offers is empty for " << name;
-        return new NullService(name, parent);
-    }
-
-    KService::Ptr offer = offers.first();
-    QString error;
-    Service *service = offer->createInstance<Plasma::Service>(parent, args, &error);
-
-    if (!service) {
-        kDebug() << "Couldn't load Service \"" << name << "\"! reason given: " << error;
-        return new NullService(name, parent);
-    }
-
-    if (service->name().isEmpty()) {
-        service->setName(name);
-    }
-
-    return service;
-}
-
 KPluginInfo::List PluginLoader::listAppletInfo(const QString &category, const QString &parentApp)
 {
     QString constraint = AppletPrivate::parentAppConstraint(parentApp);

@@ -96,7 +96,6 @@ class DataEnginePrivate
         uint limit;
         bool valid;
         QString engineName;
-        QString serviceName;
         QString waitingSourceRequest;
 };
 
