@@ -228,7 +228,7 @@ public:
             return 0;
         }
 
-        AbstractRunner *runner = PluginLoader::pluginLoader()->loadRunner(service->property("X-KDE-PluginInfo-Name", QVariant::String).toString());
+        AbstractRunner *runner = PluginLoader::loadRunner(service->property("X-KDE-PluginInfo-Name", QVariant::String).toString());
 
         if (runner) {
             runner->setParent(q);
@@ -523,7 +523,7 @@ QMimeData * RunnerManager::mimeDataForMatch(const QueryMatch &match) const
 
 KPluginInfo::List RunnerManager::listRunnerInfo(const QString &parentApp)
 {
-    return PluginLoader::pluginLoader()->listRunnerInfo(parentApp);
+    return PluginLoader::listRunnerInfo(parentApp);
 }
 
 void RunnerManager::setupMatchSession()

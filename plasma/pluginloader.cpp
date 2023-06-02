@@ -36,33 +36,6 @@
 
 namespace Plasma {
 
-static PluginLoader* s_pluginLoader = 0;
-
-PluginLoader::PluginLoader()
-{
-}
-
-void PluginLoader::setPluginLoader(PluginLoader* loader)
-{
-    if (!s_pluginLoader) {
-        s_pluginLoader = loader;
-    } else {
-        kDebug() << "Cannot set pluginLoader, already set!" << s_pluginLoader;
-    }
-}
-
-PluginLoader *PluginLoader::pluginLoader()
-{
-    if (!s_pluginLoader) {
-        // we have been called before any PluginLoader was set, so just use the default
-        // implementation. this prevents plugins from nefariously injecting their own
-        // plugin loader if the app doesn't
-        s_pluginLoader = new PluginLoader();
-    }
-
-    return s_pluginLoader;
-}
-
 Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVariantList &args)
 { 
     // the application-specific appletLoader failed to create an applet, here we try with our own logic.

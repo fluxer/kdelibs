@@ -129,7 +129,7 @@ Plasma::DataEngine *DataEngineManager::loadEngine(const QString &name)
         return engine;
     }
 
-    DataEngine *engine = PluginLoader::pluginLoader()->loadDataEngine(name);
+    DataEngine *engine = PluginLoader::loadDataEngine(name);
     if (!engine) {
         return d->nullEngine();
     }
@@ -179,7 +179,7 @@ QStringList DataEngineManager::listAllEngines(const QString &parentApp)
 
 KPluginInfo::List DataEngineManager::listEngineInfo(const QString &parentApp)
 {
-    return PluginLoader::pluginLoader()->listDataEngineInfo(parentApp);
+    return PluginLoader::listDataEngineInfo(parentApp);
 }
 
 KPluginInfo::List DataEngineManager::listEngineInfoByCategory(const QString &category, const QString &parentApp)

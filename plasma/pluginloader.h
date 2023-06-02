@@ -48,8 +48,6 @@ class AbstractRunner;
 class PLASMA_EXPORT PluginLoader
 {
 public: 
-    PluginLoader();
-
     /**
      * Load an Applet plugin.
      *
@@ -59,8 +57,8 @@ public:
      * @param args to send the applet extra arguments
      * @return a pointer to the loaded applet, or 0 on load failure
      **/
-    Applet *loadApplet(const QString &name, uint appletId = 0,
-                       const QVariantList &args = QVariantList());
+    static Applet *loadApplet(const QString &name, uint appletId = 0,
+                              const QVariantList &args = QVariantList());
 
     /**
      * Load a DataEngine plugin.
@@ -68,14 +66,14 @@ public:
      * @param name the name of the engine
      * @return the DataEngine that was loaded, or the NullEngine on failure.
      **/
-    DataEngine *loadDataEngine(const QString &name);
+    static DataEngine *loadDataEngine(const QString &name);
 
     /**
      * Load a Runner plugin
      *
      * @return the Runner that was loaded, or 0 on failure.
      */
-    AbstractRunner *loadRunner(const QString &name);
+    static AbstractRunner *loadRunner(const QString &name);
 
     /**
      * Returns a list of all known applets.
@@ -94,7 +92,7 @@ public:
      *                  registered to an application.
      * @return list of applets
      **/
-    KPluginInfo::List listAppletInfo(const QString &category, const QString &parentApp = QString());
+    static KPluginInfo::List listAppletInfo(const QString &category, const QString &parentApp = QString());
 
     /**
      * Returns a list of all known DataEngines.
@@ -106,7 +104,7 @@ public:
      *                  registered to an application.
      * @return list of DataEngines
      **/
-    KPluginInfo::List listDataEngineInfo(const QString &parentApp = QString());
+    static KPluginInfo::List listDataEngineInfo(const QString &parentApp = QString());
 
     /**
      * Returns a list of all known Runner implementations
@@ -118,20 +116,7 @@ public:
      *                  registered to an application.
      * @return list of AbstractRunners
      **/
-    KPluginInfo::List listRunnerInfo(const QString &parentApp = QString());
-
-    /**
-     * Set the plugin loader which will be queried for all loads.
-     *
-     * @param loader A subclass of PluginLoader which will be supplied
-     * by the application
-     **/
-    static void setPluginLoader(PluginLoader* loader);
-
-    /**
-     * Return the active plugin loader
-     **/
-    static PluginLoader* pluginLoader();
+    static KPluginInfo::List listRunnerInfo(const QString &parentApp = QString());
 };
 
 }
