@@ -20,8 +20,6 @@
 #ifndef PLASMA_DATACONTAINER_P_H
 #define PLASMA_DATACONTAINER_P_H
 
-#include "servicejob.h"
-
 #include <QtCore/qcoreevent.h>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QBasicTimer>
@@ -30,7 +28,6 @@
 
 namespace Plasma
 {
-class ServiceJob;
 class SignalRelay;
 
 class DataContainerPrivate

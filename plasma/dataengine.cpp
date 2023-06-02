@@ -34,7 +34,6 @@
 
 #include "datacontainer.h"
 #include "service.h"
-#include "private/dataengineservice_p.h"
 #include "private/service_p.h"
 
 namespace Plasma

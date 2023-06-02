@@ -448,7 +448,6 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
                 pos = QPoint((size.width() - scaledSize.width()) / 2,
                              (size.height() - scaledSize.height()) / 2);
             }
-
             break;
         }
         case Wallpaper::MaxpectResize: {

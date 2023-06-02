@@ -274,7 +274,6 @@ private:
 
     friend class Applet;
     friend class DataEnginePrivate;
-    friend class GetSource;
     friend class PackagePrivate;
 };
 

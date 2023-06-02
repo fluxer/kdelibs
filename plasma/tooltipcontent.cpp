@@ -70,7 +70,7 @@ public:
 };
 
 ToolTipContent::ToolTipContent()
-    : d(new ToolTipContentPrivate)
+    : d(new ToolTipContentPrivate())
 {
 }
 
@@ -93,7 +93,7 @@ ToolTipContent &ToolTipContent::operator=(const ToolTipContent &other)
 ToolTipContent::ToolTipContent(const QString &mainText,
                                const QString &subText,
                                const QPixmap &image)
-    : d(new ToolTipContentPrivate)
+    : d(new ToolTipContentPrivate())
 {
     setMainText(mainText);
     setSubText(subText);
@@ -103,7 +103,7 @@ ToolTipContent::ToolTipContent(const QString &mainText,
 ToolTipContent::ToolTipContent(const QString &mainText,
                                const QString &subText,
                                const QIcon &icon)
-    : d(new ToolTipContentPrivate)
+    : d(new ToolTipContentPrivate())
 {
     setMainText(mainText);
     setSubText(subText);

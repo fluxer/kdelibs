@@ -86,11 +86,9 @@ set(plasma_LIB_SRCS
     private/datacontainer_p.cpp
     private/dataenginebindings.cpp
     private/dataengineconsumer.cpp
-    private/dataengineservice.cpp
     private/extenderapplet.cpp
     private/extenderitemmimedata.cpp
     private/focusindicator.cpp
-    private/getsource.cpp
     private/nativetabbar.cpp
     private/packages.cpp
     private/plasmoidservice.cpp
