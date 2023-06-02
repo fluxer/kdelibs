@@ -98,7 +98,7 @@ public:
      * Loads a package format by name.
      *
      * @param format If not empty, attempts to locate the given format, either
-     *             from built-ins or via plugins.
+     *             from built-ins or from absolute path.
      * @return a package that matches the format, if available. The caller
      *         is responsible for deleting the object.
      */
@@ -324,13 +324,6 @@ protected:
 private:
     PackageStructurePrivate * const d;
 };
-
-/**
- * Register an applet when it is contained in a loadable module
- */
-#define K_EXPORT_PLASMA_PACKAGESTRUCTURE(libname, classname) \
-K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
-K_EXPORT_PLUGIN(factory("plasma_packagestructure_" #libname))
 
 } // Plasma namespace
 #endif

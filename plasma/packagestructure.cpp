@@ -146,37 +146,7 @@ PackageStructure::Ptr PackageStructure::load(const QString &packageFormat)
         return structure;
     }
 
-    // first we check for plugins in sycoca
-    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(packageFormat);
-    KService::List offers =
-        KServiceTypeTrader::self()->query("Plasma/PackageStructure", constraint);
-
-    QVariantList args;
-    QString error;
-    foreach (const KService::Ptr &offer, offers) {
-        PackageStructure::Ptr structure(
-            offer->createInstance<Plasma::PackageStructure>(0, args, &error));
-
-        if (structure) {
-            return structure;
-        }
-
-        kDebug() << "Couldn't load PackageStructure for" << packageFormat
-                 << "! reason given: " << error;
-    }
-
-    // if that didn't give us any love, then we try to load from a config file
-    structure = new PackageStructure();
-    QString configPath("plasma/packageformats/%1rc");
-    configPath = KStandardDirs::locate("data", configPath.arg(packageFormat));
-
-    if (!configPath.isEmpty()) {
-        KConfig config(configPath);
-        structure->read(&config);
-        return structure;
-    }
-
-    // try to load from absolute file path
+    // if that didn't give us any love, try to load from absolute file path
     KUrl url(packageFormat);
     if (url.isLocalFile()) {
         KConfig config(url.toLocalFile(), KConfig::SimpleConfig);
