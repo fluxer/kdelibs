@@ -977,20 +977,6 @@ void KDirModelTest::testUrlWithRef() // #171117
     disconnect(dirLister, SIGNAL(completed()), this, SLOT(slotListingCompleted()));
 }
 
-void KDirModelTest::testFontUrlWithHost() // #160057
-{
-    if (!KProtocolInfo::isKnownProtocol("fonts")) {
-        QSKIP("kio_fonts not installed", SkipAll);
-    }
-    KUrl url("fonts://foo/System");
-    KDirLister* dirLister = m_dirModel->dirLister();
-    dirLister->openUrl(url, KDirLister::NoFlags);
-    connect(dirLister, SIGNAL(completed()), this, SLOT(slotListingCompleted()));
-    enterLoop();
-
-    QCOMPARE(dirLister->url().url(), QString("fonts:/System"));
-}
-
 void KDirModelTest::testRemoteUrlWithHost() // #178416
 {
     if (!KProtocolInfo::isKnownProtocol("remote")) {

@@ -447,9 +447,9 @@ public:
    * copying a file or directory to another directory. By default the destination
    * filename is made out of the filename in the source URL. However if the
    * ioslave displays names that are different from the filename of the URL
-   * (e.g. kio_fonts shows Arial for arial.ttf, or kio_trash shows foo.txt and
-   * uses some internal URL), using Name means that the display name (UDS_NAME)
-   * will be used to as the filename in the destination directory.
+   * (e.g. kio_trash shows foo.txt and uses some internal URL), using Name means
+   * that the display name (UDS_NAME) will be used to as the filename in the
+   * destination directory.
    *
    * This corresponds to the "fileNameUsedForCopying=" field in the protocol description file.
    * Valid values for this field are "Name" or "FromURL" (default).
