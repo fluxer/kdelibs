@@ -23,18 +23,14 @@
 #include "servicejob.h"
 #include "service.h"
 
-#include <QtGui/qgraphicsitem.h>
+#include <QGraphicsObject>
 #include <QMap>
 #include <QMultiHash>
 #include <QWidget>
 #include <QSet>
 
-#include "plasma/configloader.h"
-
 namespace Plasma
 {
-
-class ConfigLoader;
 
 class NullServiceJob : public ServiceJob
 {

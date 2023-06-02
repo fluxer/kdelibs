@@ -21,21 +21,10 @@
 #include "servicejob.h"
 #include "private/service_p.h"
 
-#include "config-plasma.h"
-
-#include <QFile>
 #include <QGraphicsWidget>
 #include <QTimer>
 
 #include <kdebug.h>
-#include <kservice.h>
-#include <kservicetypetrader.h>
-#include <ksharedconfig.h>
-#include <kstandarddirs.h>
-
-#include "configloader.h"
-#include "private/configloader_p.h"
-#include "pluginloader.h"
 
 namespace Plasma
 {
