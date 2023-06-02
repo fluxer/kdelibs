@@ -40,18 +40,20 @@
 #include <kstandarddirs.h>
 #include <kwindowsystem.h>
 
-#include "libplasma-theme-global.h"
 #include "private/packages_p.h"
 #include "windoweffects.h"
 
 namespace Plasma
 {
 
+static const bool DEFAULT_THEME_CACHE = true;
+static const int DEFAULT_THEME_CACHE_SIZE = 81920;
+static const int DEFAULT_TOOLTIP_DELAY = 700;
+static const int DEFAULT_WALLPAPER_WIDTH = 1920;
+static const int DEFAULT_WALLPAPER_HEIGHT = 1200;
 //NOTE: Default wallpaper can be set from the theme configuration
 #define DEFAULT_WALLPAPER_THEME "default"
 #define DEFAULT_WALLPAPER_SUFFIX ".png"
-static const int DEFAULT_WALLPAPER_WIDTH = 1920;
-static const int DEFAULT_WALLPAPER_HEIGHT = 1200;
 
 enum styles {
     DEFAULTSTYLE,
@@ -78,18 +80,17 @@ public:
           defaultWallpaperSuffix(DEFAULT_WALLPAPER_SUFFIX),
           defaultWallpaperWidth(DEFAULT_WALLPAPER_WIDTH),
           defaultWallpaperHeight(DEFAULT_WALLPAPER_HEIGHT),
+          toolTipDelay(DEFAULT_TOOLTIP_DELAY),
           cachesToDiscard(NoCache),
           isDefault(false),
           useGlobal(true),
           hasWallpapers(false),
+          cacheTheme(DEFAULT_THEME_CACHE),
           useNativeWidgetStyle(false)
     {
         generalFont = QApplication::font();
-        ThemeConfig config;
-        cacheTheme = config.cacheTheme();
 
         pixmapCache = new QSharedPointer<QCache<QString, QPixmap> >(new QCache<QString, QPixmap>());
-        pixmapCache->data()->setMaxCost(config.themeCacheKb() * 1024);
 
         saveTimer = new QTimer(q);
         saveTimer->setSingleShot(true);
@@ -502,7 +503,15 @@ void Theme::settingsChanged()
     KConfigGroup cg = d->config();
     d->setThemeName(cg.readEntry("name", ThemePrivate::defaultTheme), false);
     cg = KConfigGroup(cg.config(), "PlasmaToolTips");
-    d->toolTipDelay = cg.readEntry("Delay", 700);
+    d->toolTipDelay = cg.readEntry("Delay", DEFAULT_TOOLTIP_DELAY);
+
+    KConfigGroup cachegrp = KConfigGroup(KSharedConfig::openConfig(ThemePrivate::themeRcFile), "CachePolicies");
+    d->cacheTheme = cachegrp.readEntry("CacheTheme", DEFAULT_THEME_CACHE);
+
+    if (d->pixmapCache) {
+        const int themeCacheKb = cachegrp.readEntry("ThemeCacheKb", DEFAULT_THEME_CACHE_SIZE);
+        d->pixmapCache->data()->setMaxCost(themeCacheKb * 1024);
+    }
 }
 
 void Theme::setThemeName(const QString &themeName)

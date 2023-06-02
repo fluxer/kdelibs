@@ -143,10 +143,6 @@ set(plasma_LIB_SRCS
     widgets/textedit.cpp
 )
 
-kde4_add_kcfg_files(plasma_LIB_SRCS
-    data/kconfigxt/libplasma-theme-global.kcfgc
-)
-
 add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma PUBLIC
