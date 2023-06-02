@@ -20,14 +20,13 @@
 #ifndef PLASMA_ABSTRACTTOOLBOX_H
 #define PLASMA_ABSTRACTTOOLBOX_H
 
+#include <QAction>
 #include <QGraphicsWidget>
 #include <QGraphicsItem>
 
 #include <kplugininfo.h>
 
 #include "plasma/plasma_export.h"
-
-#include <QAction>
 
 class KConfigGroup;
 

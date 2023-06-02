@@ -20,9 +20,11 @@
 #ifndef PLASMA_ABSTRACTRUNNER_H
 #define PLASMA_ABSTRACTRUNNER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QMutex>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QMutex>
+#include <QStringList>
+#include <QAction>
+#include <QMimeData>
 
 #include <kconfiggroup.h>
 #include <kservice.h>
@@ -32,9 +34,6 @@
 #include <plasma/querymatch.h>
 #include <plasma/runnercontext.h>
 #include <plasma/runnersyntax.h>
-
-#include <QAction>
-#include <QMimeData>
 
 class KCompletion;
 
