@@ -602,8 +602,7 @@ void Wallpaper::insertIntoCache(const QString& key, const QImage &image)
 #ifndef PLASMA_NO_KIO
             KIO::file_delete(d->cachePath(key));
 #else
-            QFile f(d->cachePath(key));
-            f.remove();
+            QFile::remove(d->cachePath(key));
 #endif
         } else {
             image.save(d->cachePath(key), imageFormat, 100);
