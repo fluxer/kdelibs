@@ -161,16 +161,13 @@ static QStringList extractFormats(const QMimeData* mimeData)
 {
     QStringList formats;
     Q_FOREACH(const QString& format, mimeData->formats()) {
-        if (format == QLatin1String("application/x-qiconlist")) { // see QIconDrag
-            continue;
-        }
         if (format == QLatin1String("application/x-kde-cutselection")) { // see KonqDrag
             continue;
         }
         if (format == QLatin1String("application/x-kde-suggestedfilename")) {
             continue;
         }
-        if (format.startsWith(QLatin1String("application/x-qt-"))) { // Qt-internal
+        if (format.startsWith(QLatin1String("application/x-qt-"))) { // Katie-internal
             continue;
         }
         if (format.startsWith(QLatin1String("x-kmail-drag/"))) { // app-internal
