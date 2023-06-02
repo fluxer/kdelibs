@@ -278,7 +278,6 @@ install(
 
 install(
     FILES
-    data/servicetypes/plasma-animator.desktop
     data/servicetypes/plasma-applet.desktop
     data/servicetypes/plasma-applet-popupapplet.desktop
     data/servicetypes/plasma-containment.desktop
