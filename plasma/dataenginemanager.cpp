@@ -213,7 +213,7 @@ void DataEngineManager::timerEvent(QTimerEvent *)
     while (it.hasNext()) {
         it.next();
         DataEngine *engine = it.value();
-        out << "DataEngine: " << it.key() << ' ' << (QString::fromLatin1("0x") + QString::number(quintptr(ptr), 16)) << endl;
+        out << "DataEngine: " << it.key() << ' ' << (QString::fromLatin1("0x") + QString::number(quintptr(engine), 16)) << endl;
         out << "            Claimed # of sources: " << engine->sources().count() << endl;
         out << "            Actual # of sources: " << engine->containerDict().count() << endl;
         out << endl << "            Source Details" << endl;
