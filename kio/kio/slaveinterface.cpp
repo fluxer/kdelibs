@@ -58,7 +58,8 @@ Q_GLOBAL_STATIC(UserNotificationHandler, globalUserNotificationHandler)
 SlaveInterfacePrivate::SlaveInterfacePrivate(const QString &protocol)
     : connection(nullptr),
     filesize(0),
-    offset(0), last_time(0),
+    offset(0),
+    last_time(0),
     nums(0),
     slave_calcs_speed(false),
     parentWindow(nullptr),
@@ -523,7 +524,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             kDebug(7007) << "needs a msg box";
             QDataStream stream(rawdata);
             QString text, caption, buttonYes, buttonNo, dontAskAgainName;
-            int type;
+            qint32 type;
             stream >> type >> text >> caption >> buttonYes >> buttonNo;
             if (stream.atEnd()) {
                 messageBox(type, text, caption, buttonYes, buttonNo);
