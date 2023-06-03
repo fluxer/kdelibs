@@ -42,17 +42,6 @@ class KIO_EXPORT JobUiDelegate : public KDialogJobUiDelegate
 
 public:
     /**
-     * Constructs a new KIO Job UI delegate.
-     */
-    JobUiDelegate();
-
-    /**
-     * Destroys the KIO Job UI delegate.
-     */
-    virtual ~JobUiDelegate();
-
-public:
-    /**
      * Associate this job with a window given by @p window.
      * @param window the window to associate to
      * @see window()
@@ -169,10 +158,6 @@ public:
                           const QString& dontAskAgainName = QString());
 
     virtual void showErrorMessage();
-
-private:
-    class Private;
-    Private * const d;
 };
 }
 

@@ -34,21 +34,6 @@
 
 #include "kio/scheduler.h"
 
-class KIO::JobUiDelegate::Private
-{
-public:
-};
-
-KIO::JobUiDelegate::JobUiDelegate()
-    : d(new Private())
-{
-}
-
-KIO::JobUiDelegate::~JobUiDelegate()
-{
-    delete d;
-}
-
 void KIO::JobUiDelegate::setWindow(QWidget *window)
 {
     KDialogJobUiDelegate::setWindow(window);
