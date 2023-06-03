@@ -98,20 +98,6 @@ public:
   void setProtocol(const QString &protocol);
 
   /**
-   * The actual protocol used to handle the request.
-   *
-   * This method will return a different protocol than
-   * the one obtained by using protocol() if a
-   * proxy-server is used for the given protocol.  This
-   * usually means that this method will return "http"
-   * when the actuall request was to retrieve a resource
-   * from an "ftp" server by going through a proxy server.
-   *
-   * @return the actual protocol (io-slave) that handled the request
-   */
-  QString slaveProtocol() const;
-
-  /**
    * @return Host this slave is (was?) connected to
    */
   QString host() const;

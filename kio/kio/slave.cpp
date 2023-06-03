@@ -70,8 +70,7 @@ namespace KIO {
     public:
         SlavePrivate(const QString &protocol) :
             m_protocol(protocol),
-            m_slaveProtocol(protocol),
-            slaveconnserver(new KIO::ConnectionServer),
+            slaveconnserver(new KIO::ConnectionServer()),
             m_job(0),
             m_pid(0),
             m_port(0),
@@ -91,7 +90,6 @@ namespace KIO {
         }
 
         QString m_protocol;
-        QString m_slaveProtocol;
         QString m_host;
         QString m_user;
         QString m_passwd;
@@ -179,12 +177,6 @@ void Slave::setProtocol(const QString & protocol)
 {
     Q_D(Slave);
     d->m_protocol = protocol;
-}
-
-QString Slave::slaveProtocol() const
-{
-    Q_D(const Slave);
-    return d->m_slaveProtocol;
 }
 
 QString Slave::host() const
