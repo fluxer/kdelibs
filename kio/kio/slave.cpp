@@ -289,9 +289,9 @@ void Slave::resume()
     d->connection->resume();
 }
 
-bool Slave::suspended()
+bool Slave::suspended() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->connection->suspended();
 }
 

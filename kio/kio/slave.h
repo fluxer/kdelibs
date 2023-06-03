@@ -146,7 +146,7 @@ public:
    * Tells whether the kioslave is suspended.
    * @return true if the kioslave is suspended.
    */
-  bool suspended();
+  bool suspended() const;
 
   /**
    * Sends the given command to the kioslave.
