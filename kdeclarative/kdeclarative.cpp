@@ -41,6 +41,7 @@
 
 void registerNonGuiMetaTypes(QScriptEngine *engine);
 QScriptValue constructIconClass(QScriptEngine *engine);
+QScriptValue constructImageClass(QScriptEngine *engine);
 QScriptValue constructKUrlClass(QScriptEngine *engine);
 
 class KScriptEngineAgent : public QScriptEngineAgent
@@ -178,8 +179,9 @@ void KDeclarative::setupBindings()
     //KConfig and KJob
     registerNonGuiMetaTypes(d->scriptEngine.data());
 
-    // Stuff from Qt
+    // Stuff from Katie
     global.setProperty("QIcon", constructIconClass(engine));
+    global.setProperty("QImage", constructImageClass(engine));
 
     // Add stuff from KDE libs
     bindI18N(engine);

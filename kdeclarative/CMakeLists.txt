@@ -26,6 +26,7 @@ set(kdeclarative_LIB_SRCS
     bindings/qscriptnonguibookkeeping.cpp
     bindings/i18n.cpp
     bindings/icon.cpp
+    bindings/image.cpp
     bindings/url.cpp
 )
 
