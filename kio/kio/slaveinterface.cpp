@@ -62,7 +62,6 @@ SlaveInterfacePrivate::SlaveInterfacePrivate(const QString &protocol)
     last_time(0),
     nums(0),
     slave_calcs_speed(false),
-    parentWindow(nullptr),
     m_protocol(protocol),
     slaveconnserver(new KIO::ConnectionServer()),
     m_job(nullptr),
@@ -624,18 +623,6 @@ void SlaveInterface::messageBox(int type, const QString &text, const QString &ca
     }
 
     globalUserNotificationHandler()->requestMessageBox(this, type, data);
-}
-
-void SlaveInterface::setWindow(QWidget* window)
-{
-    Q_D(SlaveInterface);
-    d->parentWindow = window;
-}
-
-QWidget* SlaveInterface::window() const
-{
-    Q_D(const SlaveInterface);
-    return d->parentWindow;
 }
 
 void SlaveInterface::accept()

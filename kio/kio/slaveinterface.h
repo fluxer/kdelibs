@@ -224,25 +224,6 @@ public:
     void setOffset( KIO::filesize_t offset );
     KIO::filesize_t offset() const;
 
-    /**
-     * Returns the top level window used as parent when displaying
-     * dialogs.
-     *
-     * @see setWindow
-     * @since 4.8.2
-     * @deprecated
-     */
-    KIO_DEPRECATED QWidget* window() const;
-
-    /**
-     * Sets the top level window used as a parent when displaying
-     * dialogs.
-     * @see window
-     * @since 4.8.2
-     * @deprecated
-     */
-    KIO_DEPRECATED void setWindow(QWidget* window);
-
 Q_SIGNALS:
     ///////////
     // Messages sent by the slave

@@ -23,8 +23,6 @@
 #include "connection.h"
 
 #include <QtCore/QTimer>
-#include <QtGui/QWidget>
-#include <QtCore/QPointer>
 
 #include <sys/time.h>
 
@@ -47,7 +45,6 @@ public:
     struct timeval start_time;
     uint nums;
     bool slave_calcs_speed;
-    QPointer<QWidget> parentWindow;
 
     QString m_protocol;
     QString m_host;
