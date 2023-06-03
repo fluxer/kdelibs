@@ -228,7 +228,7 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     d->wasKilled = false;
     d->last_tv.tv_sec = 0;
     d->last_tv.tv_usec = 0;
-    d->totalSize=0;
+    d->totalSize = 0;
     d->timeout = 0;
     d->remotefile = 0;
     d->inOpenLoop = false;

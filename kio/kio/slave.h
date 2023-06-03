@@ -51,7 +51,7 @@ class KIO_SLAVE_EXPORT Slave : public KIO::SlaveInterface
 public:
   explicit Slave(const QString &protocol, QObject *parent = 0);
 
-  virtual ~Slave();
+  ~Slave();
 
   void setPID(pid_t);
   int slave_pid() const;
@@ -76,7 +76,7 @@ public:
    * @param user to login as
    * @param passwd to login with
    */
-  virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &passwd);
+  void setHost(const QString &host, quint16 port, const QString &user, const QString &passwd);
 
   /**
    * Clear host info.
@@ -86,7 +86,7 @@ public:
   /**
    * Configure slave
    */
-  virtual void setConfig(const MetaData &config);
+  void setConfig(const MetaData &config);
 
   /**
    * The protocol this slave handles.
@@ -135,25 +135,25 @@ public:
   /**
    * Suspends the operation of the attached kioslave.
    */
-  virtual void suspend();
+  void suspend();
 
   /**
    * Resumes the operation of the attached kioslave.
    */
-  virtual void resume();
+  void resume();
 
   /**
    * Tells whether the kioslave is suspended.
    * @return true if the kioslave is suspended.
    */
-  virtual bool suspended();
+  bool suspended();
 
   /**
    * Sends the given command to the kioslave.
    * @param cmd command id
    * @param arr byte array containing data
    */
-  virtual void send(int cmd, const QByteArray &arr = QByteArray());
+  void send(int cmd, const QByteArray &arr = QByteArray());
 
   // == end communication with connected kioslave ==
 
