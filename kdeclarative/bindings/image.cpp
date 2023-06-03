@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2022 Ivailo Monev <xakepa10@gmail.com>
+ *   Copyright (c) 2023 Ivailo Monev <xakepa10@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License version 2 as
@@ -35,8 +35,8 @@ static QScriptValue imageCtor(QScriptContext *ctx, QScriptEngine *eng)
     if (ctx->argumentCount() > 0) {
         QScriptValue v = ctx->argument(0);
         if (v.isString()) {
-            QImage icon = QImage(v.toString());
-            return qScriptValueFromValue(eng, icon);
+            QImage image = QImage(v.toString());
+            return qScriptValueFromValue(eng, image);
         } else if (v.isVariant()) {
             QVariant variant = v.toVariant();
             QPixmap p = variant.value<QPixmap>();
@@ -68,4 +68,3 @@ QScriptValue constructImageClass(QScriptEngine *eng)
 
     return ctorFun;
 }
-
