@@ -204,12 +204,6 @@ public:
      */
     void setIdle();
 
-    /**
-     * @return Whether the slave is connected (Connection oriented slaves only)
-     */
-    bool isConnected() const;
-    void setConnected(bool c);
-
     void ref();
     void deref();
 

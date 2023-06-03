@@ -57,7 +57,6 @@ public:
     KIO::SimpleJob *m_job;
     pid_t m_pid;
     quint16 m_port;
-    bool contacted;
     bool dead;
     time_t contact_started;
     time_t m_idleSince;

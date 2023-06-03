@@ -67,7 +67,6 @@ SlaveInterfacePrivate::SlaveInterfacePrivate(const QString &protocol)
     m_job(nullptr),
     m_pid(0),
     m_port(0),
-    contacted(false),
     dead(false),
     contact_started(time(0)),
     m_idleSince(0),
@@ -90,7 +89,8 @@ SlaveInterfacePrivate::~SlaveInterfacePrivate()
 
 
 SlaveInterface::SlaveInterface(const QString &protocol, QObject *parent)
-    : QObject(parent), d_ptr(new SlaveInterfacePrivate(protocol))
+    : QObject(parent),
+    d_ptr(new SlaveInterfacePrivate(protocol))
 {
     connect(&d_ptr->speed_timer, SIGNAL(timeout()), SLOT(calcSpeed()));
     d_ptr->slaveconnserver->setParent(this);
@@ -101,7 +101,6 @@ SlaveInterface::SlaveInterface(const QString &protocol, QObject *parent)
 SlaveInterface::~SlaveInterface()
 {
     // Note: no kDebug() here (scheduler is deleted very late)
-
     delete d_ptr;
 }
 
@@ -145,18 +144,6 @@ void SlaveInterface::setIdle()
 {
     Q_D(SlaveInterface);
     d->m_idleSince = time(0);
-}
-
-bool SlaveInterface::isConnected() const
-{
-    Q_D(const SlaveInterface);
-    return d->contacted;
-}
-
-void SlaveInterface::setConnected(bool c)
-{
-    Q_D(SlaveInterface);
-    d->contacted = c;
 }
 
 void SlaveInterface::ref()
@@ -285,7 +272,7 @@ SlaveInterface* SlaveInterface::createSlave( const QString &protocol, const KUrl
 {
     kDebug(7002) << "createSlave" << protocol << "for" << url;
     SlaveInterface *slave = new SlaveInterface(protocol);
-    QString slaveAddress = slave->d_func()->slaveconnserver->address();
+    const QString slaveAddress = slave->d_func()->slaveconnserver->address();
 
     const QString slavename = KProtocolInfo::exec(protocol);
     if (slavename.isEmpty()) {
