@@ -231,7 +231,7 @@ void SlaveInterface::kill()
     Q_D(SlaveInterface);
     d->dead = true; // OO can be such simple.
     kDebug(7002) << "killing slave pid" << d->m_pid
-                 << "(" << QString(d->m_protocol) + "://" + d->m_host << ")";
+                 << "(" << d->m_protocol + "://" + d->m_host << ")";
     if (d->m_pid) {
        ::kill(d->m_pid, SIGTERM);
        d->m_pid = 0;
@@ -239,7 +239,7 @@ void SlaveInterface::kill()
 }
 
 void SlaveInterface::setHost( const QString &host, quint16 port,
-                     const QString &user, const QString &passwd)
+                              const QString &user, const QString &passwd)
 {
     Q_D(SlaveInterface);
     d->m_host = host;
@@ -272,7 +272,7 @@ SlaveInterface* SlaveInterface::createSlave( const QString &protocol, const KUrl
 {
     kDebug(7002) << "createSlave" << protocol << "for" << url;
     SlaveInterface *slave = new SlaveInterface(protocol);
-    const QString slaveAddress = slave->d_func()->slaveconnserver->address();
+    const QString slaveaddress = slave->d_func()->slaveconnserver->address();
 
     const QString slavename = KProtocolInfo::exec(protocol);
     if (slavename.isEmpty()) {
@@ -289,9 +289,9 @@ SlaveInterface* SlaveInterface::createSlave( const QString &protocol, const KUrl
         return 0;
     }
 
-    kDebug() << "kioslave" << ", " << slaveexe << ", " << protocol << ", " << slaveAddress;
+    kDebug() << "kioslave" << ", " << slaveexe << ", " << protocol << ", " << slaveaddress;
 
-    const QStringList slaveargs = QStringList() << slaveexe << slaveAddress;
+    const QStringList slaveargs = QStringList() << slaveexe << slaveaddress;
     Q_PID slavepid = 0;
     const bool result = QProcess::startDetached(
         KStandardDirs::findExe("kioslave"),
@@ -656,7 +656,7 @@ void SlaveInterface::gotInput()
 {
     Q_D(SlaveInterface);
     if (d->dead) {
-        //already dead? then slaveDied was emitted and we are done
+        // already dead? then slaveDied was emitted and we are done
         return;
     }
     ref();
@@ -664,8 +664,9 @@ void SlaveInterface::gotInput()
         d->connection->close();
         d->dead = true;
         QString arg = d->m_protocol;
-        if (!d->m_host.isEmpty())
-            arg += "://"+d->m_host;
+        if (!d->m_host.isEmpty()) {
+            arg += QString::fromLatin1("://") + d->m_host;
+        }
         kDebug(7002) << "slave died pid = " << d->m_pid;
         // Tell the job about the problem.
         emit error(ERR_SLAVE_DIED, arg);
@@ -680,7 +681,7 @@ void SlaveInterface::timeout()
 {
     Q_D(SlaveInterface);
     if (d->dead) {
-        //already dead? then slaveDied was emitted and we are done
+        // already dead? then slaveDied was emitted and we are done
         return;
     }
     if (d->connection->isConnected()) {
