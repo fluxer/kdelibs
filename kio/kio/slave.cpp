@@ -253,7 +253,7 @@ void Slave::setPID(pid_t pid)
     d->m_pid = pid;
 }
 
-int Slave::slave_pid() const
+pid_t Slave::pid() const
 {
     Q_D(const Slave);
     return d->m_pid;

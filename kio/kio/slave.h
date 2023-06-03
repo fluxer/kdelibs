@@ -54,7 +54,7 @@ public:
   ~Slave();
 
   void setPID(pid_t);
-  int slave_pid() const;
+  pid_t pid() const;
 
   void setJob(KIO::SimpleJob *job);
   KIO::SimpleJob *job() const;
