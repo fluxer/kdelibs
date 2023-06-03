@@ -525,13 +525,8 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             QDataStream stream(rawdata);
             QString text, caption, buttonYes, buttonNo, dontAskAgainName;
             qint32 type;
-            stream >> type >> text >> caption >> buttonYes >> buttonNo;
-            if (stream.atEnd()) {
-                messageBox(type, text, caption, buttonYes, buttonNo);
-            } else {
-                stream >> dontAskAgainName;
-                messageBox(type, text, caption, buttonYes, buttonNo, dontAskAgainName);
-            }
+            stream >> type >> text >> caption >> buttonYes >> buttonNo >> dontAskAgainName;
+            messageBox(type, text, caption, buttonYes, buttonNo, dontAskAgainName);
             break;
         }
         case INF_INFOMESSAGE: {
