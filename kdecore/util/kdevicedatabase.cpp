@@ -69,22 +69,14 @@ static inline QByteArray normalizeID(const QByteArray &id, const int padding)
     return result;
 }
 
-static QList<QByteArray> extractEntry(const QByteArray &line)
-{
-    QList<QByteArray> result;
-    const int doublespaceindex = line.indexOf("  ");
-    if (doublespaceindex != 4 && doublespaceindex != 2) {
-        return result;
-    }
-    result.append(line.left(doublespaceindex));
-    result.append(line.mid(doublespaceindex + 2));
-    return result;
-}
-
 static void extractIDs(QFile *idsfile,
                        KVendorEntryMap *vendormap, KDeviceEntryMap *devicemap,
                        KClassEntryMap *classmap, KSubClassEntryMap *subclassmap, KProtocolEntryMap *protocolmap)
 {
+    // qDebug() << Q_FUNC_INFO << idsfile->fileName();
+
+    char idbuffer[5];
+    char strbuffer[1024];
     bool classessection = false;
     QByteArray lastvendorid;
     QByteArray lastdeviceid;
@@ -107,9 +99,15 @@ static void extractIDs(QFile *idsfile,
         if (classessection) {
             // qDebug() << Q_FUNC_INFO << trimmeddbline;
             if (dbline.startsWith("\t\t")) {
-                const QList<QByteArray> protocolentry = extractEntry(trimmeddbline);
-                if (protocolentry.size() != 2) {
-                    kWarning() << "Invalid protocol line" << trimmeddbline;
+                ::memset(idbuffer, '\0', sizeof(idbuffer));
+                ::memset(strbuffer, '\0', sizeof(strbuffer));
+                const int sscanfresult = sscanf(
+                    dbline.constData(),
+                    "\t\t%2s  %1023[^\n]",
+                    idbuffer, strbuffer
+                );
+                if (Q_UNLIKELY(sscanfresult != 2)) {
+                    kWarning() << "Invalid sub-class line" << trimmeddbline;
                     continue;
                 }
                 if (lastvendorid.isEmpty()) {
@@ -120,10 +118,16 @@ static void extractIDs(QFile *idsfile,
                     kWarning() << "Protocol line before sub-class" << trimmeddbline;
                     continue;
                 }
-                protocolmap->insert({ lastvendorid, lastdeviceid, protocolentry.at(0) }, QString::fromAscii(protocolentry.at(1)));
+                protocolmap->insert({ lastvendorid, lastdeviceid, idbuffer }, QString::fromAscii(strbuffer));
             } else if (dbline.startsWith("\t")) {
-                const QList<QByteArray> subclassentry = extractEntry(trimmeddbline);
-                if (subclassentry.size() != 2) {
+                ::memset(idbuffer, '\0', sizeof(idbuffer));
+                ::memset(strbuffer, '\0', sizeof(strbuffer));
+                const int sscanfresult = sscanf(
+                    dbline.constData(),
+                    "\t%2s  %1023[^\n]",
+                    idbuffer, strbuffer
+                );
+                if (Q_UNLIKELY(sscanfresult != 2)) {
                     kWarning() << "Invalid sub-class line" << trimmeddbline;
                     continue;
                 }
@@ -131,24 +135,36 @@ static void extractIDs(QFile *idsfile,
                     kWarning() << "Sub-class line before class" << trimmeddbline;
                     continue;
                 }
-                lastdeviceid = subclassentry.at(0);
-                subclassmap->insert({ lastvendorid, subclassentry.at(0) }, QString::fromAscii(subclassentry.at(1)));
+                lastdeviceid = idbuffer;
+                subclassmap->insert({ lastvendorid, lastdeviceid }, QString::fromAscii(strbuffer));
             } else {
-                const QList<QByteArray> classentry = extractEntry(trimmeddbline.mid(2));
-                if (classentry.size() != 2) {
+                ::memset(idbuffer, '\0', sizeof(idbuffer));
+                ::memset(strbuffer, '\0', sizeof(strbuffer));
+                const int sscanfresult = sscanf(
+                    dbline.constData(),
+                    "C %2s  %1023[^\n]",
+                    idbuffer, strbuffer
+                );
+                if (Q_UNLIKELY(sscanfresult != 2)) {
                     kWarning() << "Invalid class line" << trimmeddbline;
                     continue;
                 }
-                lastvendorid = classentry.at(0);
-                classmap->insert(lastvendorid, QString::fromAscii(classentry.at(1)));
+                lastvendorid = idbuffer;
+                classmap->insert(lastvendorid, QString::fromAscii(strbuffer));
             }
         } else {
             if (dbline.startsWith("\t\t")) {
                 // sub-device
                 continue;
             } else if (dbline.startsWith("\t")) {
-                const QList<QByteArray> deviceentry = extractEntry(trimmeddbline);
-                if (deviceentry.size() != 2) {
+                ::memset(idbuffer, '\0', sizeof(idbuffer));
+                ::memset(strbuffer, '\0', sizeof(strbuffer));
+                const int sscanfresult = sscanf(
+                    dbline.constData(),
+                    "\t%4s  %1023[^\n]",
+                    idbuffer, strbuffer
+                );
+                if (Q_UNLIKELY(sscanfresult != 2)) {
                     kWarning() << "Invalid device line" << trimmeddbline;
                     continue;
                 }
@@ -156,15 +172,21 @@ static void extractIDs(QFile *idsfile,
                     kWarning() << "Device line before vendor" << trimmeddbline;
                     continue;
                 }
-                devicemap->insert({ lastvendorid, deviceentry.at(0) }, QString::fromAscii(deviceentry.at(1)));
+                devicemap->insert({ lastvendorid, idbuffer }, QString::fromAscii(strbuffer));
             } else {
-                const QList<QByteArray> vendorentry = extractEntry(trimmeddbline);
-                if (vendorentry.size() != 2) {
+                ::memset(idbuffer, '\0', sizeof(idbuffer));
+                ::memset(strbuffer, '\0', sizeof(strbuffer));
+                const int sscanfresult = sscanf(
+                    dbline.constData(),
+                    "%4s  %1023[^\n]",
+                    idbuffer, strbuffer
+                );
+                if (Q_UNLIKELY(sscanfresult != 2)) {
                     kWarning() << "Invalid vendor line" << trimmeddbline;
                     continue;
                 }
-                lastvendorid = vendorentry.at(0);
-                vendormap->insert(lastvendorid, QString::fromAscii(vendorentry.at(1)));
+                lastvendorid = idbuffer;
+                vendormap->insert(lastvendorid, QString::fromAscii(strbuffer));
             }
         }
     }
