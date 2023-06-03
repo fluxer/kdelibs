@@ -27,7 +27,7 @@
 
 
 namespace KIO {
-class Slave;
+
 class SlaveInterface;
 
 class UserNotificationHandler : public QObject
@@ -51,7 +51,7 @@ public:
         QString key() const;
 
         int type;
-        QPointer<Slave> slave;
+        QPointer<SlaveInterface> slave;
         QHash<MessageBoxDataType, QVariant> data;
     };
 

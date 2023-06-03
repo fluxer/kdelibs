@@ -23,7 +23,7 @@
 
 #include "slaveconfig.h"
 #include "authinfo.h"
-#include "slave.h"
+#include "slaveinterface.h"
 #include "connection.h"
 #include "job_p.h"
 
@@ -47,19 +47,19 @@ static const int s_idleSlaveLifetime = 1 * 60;
 
 using namespace KIO;
 
-static inline Slave *jobSlave(SimpleJob *job)
+static inline SlaveInterface *jobSlave(SimpleJob *job)
 {
     return SimpleJobPrivate::get(job)->m_slave;
 }
 
-static inline void startJob(SimpleJob *job, Slave *slave)
+static inline void startJob(SimpleJob *job, SlaveInterface *slave)
 {
     SimpleJobPrivate::get(job)->start(slave);
 }
 
 // here be uglies
 // forward declaration to break cross-dependency of SlaveKeeper and SchedulerPrivate
-static void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
+static void setupSlave(KIO::SlaveInterface *slave, const KUrl &url, const QString &protocol,
                        const QStringList &proxyList, bool newSlave);
 // same reason as above
 static Scheduler *scheduler();
@@ -118,7 +118,7 @@ SlaveKeeper::SlaveKeeper()
     connect(&m_grimTimer, SIGNAL(timeout()), this, SLOT(grimReaper()));
 }
 
-void SlaveKeeper::returnSlave(Slave *slave)
+void SlaveKeeper::returnSlave(SlaveInterface *slave)
 {
     Q_ASSERT(slave);
     slave->setIdle();
@@ -126,26 +126,26 @@ void SlaveKeeper::returnSlave(Slave *slave)
     scheduleGrimReaper();
 }
 
-Slave *SlaveKeeper::takeSlaveForJob(SimpleJob *job)
+SlaveInterface *SlaveKeeper::takeSlaveForJob(SimpleJob *job)
 {
     KUrl url = SimpleJobPrivate::get(job)->m_url;
     // TODO take port, username and password into account
-    QMultiHash<QString, Slave *>::Iterator it = m_idleSlaves.find(url.host());
+    QMultiHash<QString, SlaveInterface *>::Iterator it = m_idleSlaves.find(url.host());
     if (it == m_idleSlaves.end()) {
         it = m_idleSlaves.begin();
     }
     if (it == m_idleSlaves.end()) {
         return 0;
     }
-    Slave *slave = it.value();
+    SlaveInterface *slave = it.value();
     m_idleSlaves.erase(it);
     return slave;
 }
 
-bool SlaveKeeper::removeSlave(Slave *slave)
+bool SlaveKeeper::removeSlave(SlaveInterface *slave)
 {
     // ### performance not so great
-    QMultiHash<QString, Slave *>::Iterator it = m_idleSlaves.begin();
+    QMultiHash<QString, SlaveInterface *>::Iterator it = m_idleSlaves.begin();
     for (; it != m_idleSlaves.end(); ++it) {
         if (it.value() == slave) {
             m_idleSlaves.erase(it);
@@ -155,7 +155,7 @@ bool SlaveKeeper::removeSlave(Slave *slave)
     return false;
 }
 
-QList<Slave *> SlaveKeeper::allSlaves() const
+QList<SlaveInterface *> SlaveKeeper::allSlaves() const
 {
     return m_idleSlaves.values();
 }
@@ -170,9 +170,9 @@ void SlaveKeeper::scheduleGrimReaper()
 //private slot
 void SlaveKeeper::grimReaper()
 {
-    QMultiHash<QString, Slave *>::Iterator it = m_idleSlaves.begin();
+    QMultiHash<QString, SlaveInterface *>::Iterator it = m_idleSlaves.begin();
     while (it != m_idleSlaves.end()) {
-        Slave *slave = it.value();
+        SlaveInterface *slave = it.value();
         if (slave->idleTime() >= s_idleSlaveLifetime) {
             it = m_idleSlaves.erase(it);
             if (slave->job()) {
@@ -232,11 +232,11 @@ bool HostQueue::removeJob(SimpleJob *job)
     return false;
 }
 
-QList<Slave *> HostQueue::allSlaves() const
+QList<SlaveInterface *> HostQueue::allSlaves() const
 {
-    QList<Slave *> ret;
+    QList<SlaveInterface *> ret;
     Q_FOREACH (SimpleJob *job, m_runningJobs) {
-        Slave *slave = jobSlave(job);
+        SlaveInterface *slave = jobSlave(job);
         Q_ASSERT(slave);
         ret.append(slave);
     }
@@ -295,7 +295,7 @@ ProtoQueue::ProtoQueue(int maxSlaves, int maxSlavesPerHost)
 
 ProtoQueue::~ProtoQueue()
 {
-    Q_FOREACH (Slave *slave, allSlaves()) {
+    Q_FOREACH (SlaveInterface *slave, allSlaves()) {
         // kill the slave process, then remove the interface in our process
         slave->kill();
         slave->deref();
@@ -415,15 +415,15 @@ void ProtoQueue::removeJob(SimpleJob *job)
     ensureNoDuplicates(&m_queuesBySerial);
 }
 
-Slave *ProtoQueue::createSlave(const QString &protocol, SimpleJob *job, const KUrl &url)
+SlaveInterface *ProtoQueue::createSlave(const QString &protocol, SimpleJob *job, const KUrl &url)
 {
     int error;
     QString errortext;
-    Slave *slave = Slave::createSlave(protocol, url, error, errortext);
+    SlaveInterface *slave = SlaveInterface::createSlave(protocol, url, error, errortext);
     if (slave) {
         connect(
-            slave, SIGNAL(slaveDied(KIO::Slave*)),
-            scheduler(), SLOT(slotSlaveDied(KIO::Slave*))
+            slave, SIGNAL(slaveDied(KIO::SlaveInterface*)),
+            scheduler(), SLOT(slotSlaveDied(KIO::SlaveInterface*))
         );
     } else {
         kError() << "couldn't create slave:" << errortext;
@@ -434,16 +434,16 @@ Slave *ProtoQueue::createSlave(const QString &protocol, SimpleJob *job, const KU
     return slave;
 }
 
-bool ProtoQueue::removeSlave (KIO::Slave *slave)
+bool ProtoQueue::removeSlave (KIO::SlaveInterface *slave)
 {
     const bool removedUnconnected = m_slaveKeeper.removeSlave(slave);
     Q_ASSERT(!removedUnconnected);
     return removedUnconnected;
 }
 
-QList<Slave *> ProtoQueue::allSlaves() const
+QList<SlaveInterface *> ProtoQueue::allSlaves() const
 {
-    QList<Slave *> ret(m_slaveKeeper.allSlaves());
+    QList<SlaveInterface *> ret(m_slaveKeeper.allSlaves());
     Q_FOREACH (const HostQueue &hq, m_queuesByHostname) {
         ret.append(hq.allSlaves());
     }
@@ -500,7 +500,7 @@ void ProtoQueue::startAJob()
         m_runningJobsCount++;
 
         bool isNewSlave = false;
-        Slave *slave = m_slaveKeeper.takeSlaveForJob(startingJob);
+        SlaveInterface *slave = m_slaveKeeper.takeSlaveForJob(startingJob);
         SimpleJobPrivate *jobPriv = SimpleJobPrivate::get(startingJob);
         if (!slave) {
             isNewSlave = true;
@@ -548,7 +548,7 @@ public:
         delete q;
         q = 0;
         Q_FOREACH (ProtoQueue *p, m_protocols) {
-            Q_FOREACH (Slave *slave, p->allSlaves()) {
+            Q_FOREACH (SlaveInterface *slave, p->allSlaves()) {
                 slave->kill();
             }
             p->deleteLater();
@@ -564,14 +564,14 @@ public:
     void doJob(SimpleJob *job);
     void setJobPriority(SimpleJob *job, int priority);
     void cancelJob(SimpleJob *job);
-    void jobFinished(KIO::SimpleJob *job, KIO::Slave *slave);
+    void jobFinished(KIO::SimpleJob *job, KIO::SlaveInterface *slave);
     void registerWindow(QWidget *wid);
 
     MetaData metaDataFor(const QString &protocol, const QStringList &proxyList, const KUrl &url);
-    void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
+    void setupSlave(KIO::SlaveInterface *slave, const KUrl &url, const QString &protocol,
                     const QStringList &proxyList, bool newSlave);
 
-    void slotSlaveDied(KIO::Slave *slave);
+    void slotSlaveDied(KIO::SlaveInterface *slave);
 
     void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&);
 
@@ -657,7 +657,7 @@ void Scheduler::cancelJob(SimpleJob *job)
     schedulerPrivate->cancelJob(job);
 }
 
-void Scheduler::jobFinished(KIO::SimpleJob *job, KIO::Slave *slave)
+void Scheduler::jobFinished(KIO::SimpleJob *job, KIO::SlaveInterface *slave)
 {
     schedulerPrivate->jobFinished(job, slave);
 }
@@ -706,7 +706,7 @@ void SchedulerPrivate::slotReparseSlaveConfiguration(const QString &proto, const
     QHash<QString, ProtoQueue *>::ConstIterator endIt = proto.isEmpty() ? m_protocols.constEnd() :
                                                                           it + 1;
     for (; it != endIt; ++it) {
-        Q_FOREACH(Slave *slave, (*it)->allSlaves()) {
+        Q_FOREACH(SlaveInterface *slave, (*it)->allSlaves()) {
             slave->send(CMD_REPARSECONFIGURATION);
             slave->resetHost();
         }
@@ -744,7 +744,7 @@ void SchedulerPrivate::cancelJob(SimpleJob *job)
         //kDebug(7006) << "Doing nothing because I don't know job" << job;
         return;
     }
-    Slave *slave = jobSlave(job);
+    SlaveInterface *slave = jobSlave(job);
     kDebug(7006) << job << slave;
     if (slave) {
         kDebug(7006) << "Scheduler: killing slave " << slave->pid();
@@ -753,7 +753,7 @@ void SchedulerPrivate::cancelJob(SimpleJob *job)
     jobFinished(job, slave);
 }
 
-void SchedulerPrivate::jobFinished(SimpleJob *job, Slave *slave)
+void SchedulerPrivate::jobFinished(SimpleJob *job, SlaveInterface *slave)
 {
     kDebug(7006) << job << slave;
     if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
@@ -779,7 +779,7 @@ void SchedulerPrivate::jobFinished(SimpleJob *job, Slave *slave)
 }
 
 // static
-void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
+void setupSlave(KIO::SlaveInterface *slave, const KUrl &url, const QString &protocol,
                 const QStringList &proxyList , bool newSlave)
 {
     schedulerPrivate->setupSlave(slave, url, protocol, proxyList, newSlave);
@@ -822,7 +822,7 @@ MetaData SchedulerPrivate::metaDataFor(const QString &protocol, const QStringLis
     return configData;
 }
 
-void SchedulerPrivate::setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
+void SchedulerPrivate::setupSlave(KIO::SlaveInterface *slave, const KUrl &url, const QString &protocol,
                                   const QStringList &proxyList, bool newSlave)
 {
     int port = url.port();
@@ -842,7 +842,7 @@ void SchedulerPrivate::setupSlave(KIO::Slave *slave, const KUrl &url, const QStr
     }
 }
 
-void SchedulerPrivate::slotSlaveDied(KIO::Slave *slave)
+void SchedulerPrivate::slotSlaveDied(KIO::SlaveInterface *slave)
 {
     kDebug(7006) << slave;
     Q_ASSERT(slave);

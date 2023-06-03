@@ -28,7 +28,7 @@
 
 namespace KIO {
 
-    class Slave;
+    class SlaveInterface;
     class SlaveConfig;
 
     class SchedulerPrivate;
@@ -80,7 +80,7 @@ namespace KIO {
      *    // ... Wait for jobs to finish...
      * \endcode
      *
-     * @see KIO::Slave
+     * @see KIO::SlaveInterface
      * @see KIO::Job
      **/
 
@@ -118,7 +118,7 @@ namespace KIO {
          * @param job the finished job
          * @param slave the slave that executed the @p job
          */
-        static void jobFinished(KIO::SimpleJob *job, KIO::Slave *slave);
+        static void jobFinished(KIO::SimpleJob *job, KIO::SlaveInterface *slave);
 
         /**
          * Register the mainwindow @p wid with the KIO subsystem
@@ -147,7 +147,7 @@ namespace KIO {
         Scheduler();
         ~Scheduler();
 
-        Q_PRIVATE_SLOT(d_func(), void slotSlaveDied(KIO::Slave *slave))
+        Q_PRIVATE_SLOT(d_func(), void slotSlaveDied(KIO::SlaveInterface *slave))
 
         // connected to D-Bus signal:
         Q_PRIVATE_SLOT(d_func(), void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&))

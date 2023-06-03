@@ -34,7 +34,7 @@
 #define KIO_ARGS QByteArray packedArgs; QDataStream stream( &packedArgs, QIODevice::WriteOnly ); stream
 
 namespace KIO {
-    class Slave;
+    class SlaveInterface;
 
     /**
      * Commands that can be invoked by a job.
@@ -137,7 +137,7 @@ namespace KIO {
             }
         }
 
-        Slave * m_slave;
+        SlaveInterface * m_slave;
         QByteArray m_packedArgs;
         KUrl m_url;
         KUrl m_subUrl;
@@ -201,7 +201,7 @@ namespace KIO {
          * Called by the scheduler when a slave gets to
          * work on this job.
          **/
-        virtual void start( KIO::Slave *slave );
+        virtual void start( KIO::SlaveInterface *slave );
 
         /**
          * @internal
@@ -322,7 +322,7 @@ namespace KIO {
          * work on this job.
          * @param slave the slave that works on the job
          */
-        virtual void start( KIO::Slave *slave );
+        virtual void start( KIO::SlaveInterface *slave );
         /**
          * @internal
          * Called when the ioslave needs the data to send the server. This slot

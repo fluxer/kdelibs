@@ -33,6 +33,7 @@ class KUrl;
 
 namespace KIO {
 
+class SimpleJob;
 class Connection;
 // better there is one ...
 class SlaveInterfacePrivate;
@@ -85,12 +86,132 @@ class SlaveInterfacePrivate;
 class KIO_EXPORT SlaveInterface : public QObject
 {
     Q_OBJECT
-
-protected:
-    SlaveInterface(SlaveInterfacePrivate &dd, QObject *parent = 0);
 public:
+    explicit SlaveInterface(const QString &protocol, QObject *parent = 0);
 
-    virtual ~SlaveInterface();
+    ~SlaveInterface();
+
+    void setPID(pid_t);
+    pid_t pid() const;
+
+    void setJob(KIO::SimpleJob *job);
+    KIO::SimpleJob *job() const;
+
+    /**
+     * Force termination
+     */
+    void kill();
+
+    /**
+     * @return true if the slave survived the last mission.
+     */
+    bool isAlive() const;
+
+    /**
+     * Set host for url
+     * @param host to connect to.
+     * @param port to connect to.
+     * @param user to login as
+     * @param passwd to login with
+     */
+    void setHost(const QString &host, quint16 port, const QString &user, const QString &passwd);
+
+    /**
+     * Clear host info.
+     */
+    void resetHost();
+
+    /**
+     * Configure slave
+     */
+    void setConfig(const MetaData &config);
+
+    /**
+     * The protocol this slave handles.
+     *
+     * @return name of protocol handled by this slave, as seen by the user
+     */
+    QString protocol() const;
+
+    void setProtocol(const QString &protocol);
+
+    /**
+     * @return Host this slave is (was?) connected to
+     */
+    QString host() const;
+
+    /**
+     * @return port this slave is (was?) connected to
+     */
+    quint16 port() const;
+
+    /**
+     * @return User this slave is (was?) logged in as
+     */
+    QString user() const;
+
+    /**
+     * @return Passwd used to log in
+     */
+    QString passwd() const;
+
+    /**
+     * Creates a new slave.
+     *
+     * @param protocol the protocol
+     * @param url is the url
+     * @param error is the error code on failure and undefined else.
+     * @param error_text is the error text on failure and undefined else.
+     *
+     * @return 0 on failure, or a pointer to a slave otherwise.
+     */
+    static SlaveInterface* createSlave(const QString &protocol, const KUrl &url, int &error, QString &error_text);
+
+    // == communication with connected kioslave ==
+    // whenever possible prefer these methods over the respective
+    // methods in connection()
+    /**
+     * Suspends the operation of the attached kioslave.
+     */
+    void suspend();
+
+    /**
+     * Resumes the operation of the attached kioslave.
+     */
+    void resume();
+
+    /**
+     * Tells whether the kioslave is suspended.
+     * @return true if the kioslave is suspended.
+     */
+    bool suspended() const;
+
+    /**
+     * Sends the given command to the kioslave.
+     * @param cmd command id
+     * @param arr byte array containing data
+     */
+    void send(int cmd, const QByteArray &arr = QByteArray());
+    // == end communication with connected kioslave ==
+
+    /**
+     * @return The time this slave has been idle.
+     */
+    time_t idleTime() const;
+
+    /**
+     * Marks this slave as idle.
+     */
+    void setIdle();
+
+    /**
+     * @return Whether the slave is connected (Connection oriented slaves only)
+     */
+    bool isConnected() const;
+    void setConnected(bool c);
+
+    void ref();
+    void deref();
 
     void setConnection( Connection* connection );
     Connection *connection() const;
@@ -132,7 +253,6 @@ Q_SIGNALS:
     ///////////
     // Messages sent by the slave
     ///////////
-
     void data( const QByteArray & );
     void dataReq( );
     void error( int , const QString & );
@@ -141,9 +261,7 @@ Q_SIGNALS:
     void listEntries( const KIO::UDSEntryList& );
     void statEntry( const KIO::UDSEntry& );
     void needSubUrlData();
-
     void canResume( KIO::filesize_t );
-
     void open();
     void written( KIO::filesize_t );
 
@@ -155,19 +273,22 @@ Q_SIGNALS:
     void processedSize( KIO::filesize_t );
     void redirection( const KUrl& );
     void position( KIO::filesize_t );
-
     void speed( unsigned long );
     void mimeType( const QString & );
     void warning( const QString & );
     void infoMessage( const QString & );
 
+    ///////////
+    // Info sent for the scheduler
+    //////////
+    void slaveDied(KIO::SlaveInterface *slave);
+
 protected:
     /////////////////
     // Dispatching
     ////////////////
-
-    virtual bool dispatch();
-    virtual bool dispatch( int cmd, const QByteArray &data );
+    bool dispatch();
+    bool dispatch( int cmd, const QByteArray &data );
 
     void messageBox( int type, const QString &text, const QString &caption,
                      const QString &buttonYes, const QString &buttonNo );
@@ -178,6 +299,10 @@ protected:
 
 protected Q_SLOTS:
     void calcSpeed();
+    void accept();
+    void gotInput();
+    void timeout();
+
 protected:
     SlaveInterfacePrivate* const d_ptr;
     Q_DECLARE_PRIVATE(SlaveInterface)

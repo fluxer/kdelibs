@@ -47,13 +47,13 @@ class SlaveKeeper : public QObject
     Q_OBJECT
 public:
     SlaveKeeper();
-    void returnSlave(KIO::Slave *slave);
+    void returnSlave(KIO::SlaveInterface *slave);
     // pick suitable slave for job and return it, return null if no slave found.
     // the slave is removed from the keeper.
-    KIO::Slave *takeSlaveForJob(KIO::SimpleJob *job);
+    KIO::SlaveInterface *takeSlaveForJob(KIO::SimpleJob *job);
     // remove slave from keeper
-    bool removeSlave(KIO::Slave *slave);
-    QList<KIO::Slave *> allSlaves() const;
+    bool removeSlave(KIO::SlaveInterface *slave);
+    QList<KIO::SlaveInterface *> allSlaves() const;
 
 private:
     void scheduleGrimReaper();
@@ -62,7 +62,7 @@ private slots:
     void grimReaper();
 
 private:
-    QMultiHash<QString, KIO::Slave *> m_idleSlaves;
+    QMultiHash<QString, KIO::SlaveInterface *> m_idleSlaves;
     QTimer m_grimTimer;
 };
 
@@ -84,7 +84,7 @@ public:
     KIO::SimpleJob *takeFirstInQueue();
     bool removeJob(KIO::SimpleJob *job);
 
-    QList<KIO::Slave *> allSlaves() const;
+    QList<KIO::SlaveInterface *> allSlaves() const;
 private:
     QMap<int, KIO::SimpleJob *> m_queuedJobs;
     QSet<KIO::SimpleJob *> m_runningJobs;
@@ -125,9 +125,9 @@ public:
     void queueJob(KIO::SimpleJob *job);
     void changeJobPriority(KIO::SimpleJob *job, int newPriority);
     void removeJob(KIO::SimpleJob *job);
-    KIO::Slave *createSlave(const QString &protocol, KIO::SimpleJob *job, const KUrl &url);
-    bool removeSlave (KIO::Slave *slave);
-    QList<KIO::Slave *> allSlaves() const;
+    KIO::SlaveInterface *createSlave(const QString &protocol, KIO::SimpleJob *job, const KUrl &url);
+    bool removeSlave (KIO::SlaveInterface *slave);
+    QList<KIO::SlaveInterface *> allSlaves() const;
 
 private slots:
     // start max one (non-connected) job and return

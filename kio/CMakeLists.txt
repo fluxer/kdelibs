@@ -67,7 +67,6 @@ set(kiocore_STAT_SRCS
     kio/renamedialog.cpp
     kio/scheduler.cpp
     kio/skipdialog.cpp
-    kio/slave.cpp
     kio/slavebase.cpp
     kio/slaveconfig.cpp
     kio/slaveinterface.cpp
@@ -182,7 +181,6 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/kio_export.h
     kio/connection.h
     kio/slaveinterface.h
-    kio/slave.h
     kio/slaveconfig.h
     kio/global.h
     kio/netaccess.h

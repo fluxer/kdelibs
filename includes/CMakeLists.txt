@@ -396,7 +396,6 @@ install(
     KIO/Scheduler
     KIO/SimpleJob
     KIO/SkipDialog
-    KIO/Slave
     KIO/SlaveBase
     KIO/SlaveConfig
     KIO/SlaveInterface

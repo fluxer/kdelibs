@@ -5,8 +5,7 @@ libkio uses kioslaves (separate processes) that handle a given protocol.
 
 Connection is the most low-level class, the one that encapsulates the pipe.
 
-SlaveInterface is the main class for transferring anything to the slave
-and Slave, which inherits SlaveInterface, is the sub class that Job should handle.
+SlaveInterface is the class for transferring anything to the slave.
 
 A slave inherits SlaveBase, which is the other half of SlaveInterface.
 

@@ -1,5 +1,7 @@
 /* This file is part of the KDE libraries
    Copyright (C) 2000 David Faure <faure@kde.org>
+   Copyright (c) 2000 Waldo Bastian <bastian@kde.org>
+   Copyright (c) 2000 Stephan Kulow <coolo@kde.org>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -23,23 +25,77 @@
 #include "connection.h"
 #include "job_p.h"
 
+#include <kdebug.h>
+#include <klocale.h>
+#include <kprotocolinfo.h>
+#include <kstandarddirs.h>
+
+#include <QtCore/QProcess>
+#include <QtCore/QDir>
+
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
 
-#include <kdebug.h>
-#include <klocale.h>
-
 using namespace KIO;
+
+#define SLAVE_CONNECTION_TIMEOUT_MIN       2
+
+// Without debug info we consider it an error if the slave doesn't connect
+// within 10 seconds.
+// With debug info we give the slave an hour so that developers have a chance
+// to debug their slave.
+#ifdef NDEBUG
+#define SLAVE_CONNECTION_TIMEOUT_MAX      10
+#else
+#define SLAVE_CONNECTION_TIMEOUT_MAX    3600
+#endif
 
 Q_GLOBAL_STATIC(UserNotificationHandler, globalUserNotificationHandler)
 
-SlaveInterface::SlaveInterface(SlaveInterfacePrivate &dd, QObject *parent)
-    : QObject(parent), d_ptr(&dd)
+SlaveInterfacePrivate::SlaveInterfacePrivate(const QString &protocol)
+    : connection(nullptr),
+    filesize(0),
+    offset(0), last_time(0),
+    nums(0),
+    slave_calcs_speed(false),
+    parentWindow(nullptr),
+    m_protocol(protocol),
+    slaveconnserver(new KIO::ConnectionServer()),
+    m_job(nullptr),
+    m_pid(0),
+    m_port(0),
+    contacted(false),
+    dead(false),
+    contact_started(time(0)),
+    m_idleSince(0),
+    m_refCount(1)
+{
+    start_time.tv_sec = 0;
+    start_time.tv_usec = 0;
+
+    slaveconnserver->listenForRemote();
+    if (!slaveconnserver->isListening()) {
+        kWarning() << "Connection server not listening, could not connect";
+    }
+}
+
+SlaveInterfacePrivate::~SlaveInterfacePrivate()
+{
+    delete slaveconnserver;
+    delete connection;
+}
+
+
+SlaveInterface::SlaveInterface(const QString &protocol, QObject *parent)
+    : QObject(parent), d_ptr(new SlaveInterfacePrivate(protocol))
 {
     connect(&d_ptr->speed_timer, SIGNAL(timeout()), SLOT(calcSpeed()));
+    d_ptr->slaveconnserver->setParent(this);
+    d_ptr->connection = new Connection(this);
+    connect(d_ptr->slaveconnserver, SIGNAL(newConnection()), SLOT(accept()));
 }
 
 SlaveInterface::~SlaveInterface()
@@ -47,6 +103,224 @@ SlaveInterface::~SlaveInterface()
     // Note: no kDebug() here (scheduler is deleted very late)
 
     delete d_ptr;
+}
+
+QString SlaveInterface::protocol() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_protocol;
+}
+
+void SlaveInterface::setProtocol(const QString & protocol)
+{
+    Q_D(SlaveInterface);
+    d->m_protocol = protocol;
+}
+
+QString SlaveInterface::host() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_host;
+}
+
+quint16 SlaveInterface::port() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_port;
+}
+
+QString SlaveInterface::user() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_user;
+}
+
+QString SlaveInterface::passwd() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_passwd;
+}
+
+void SlaveInterface::setIdle()
+{
+    Q_D(SlaveInterface);
+    d->m_idleSince = time(0);
+}
+
+bool SlaveInterface::isConnected() const
+{
+    Q_D(const SlaveInterface);
+    return d->contacted;
+}
+
+void SlaveInterface::setConnected(bool c)
+{
+    Q_D(SlaveInterface);
+    d->contacted = c;
+}
+
+void SlaveInterface::ref()
+{
+    Q_D(SlaveInterface);
+    d->m_refCount++;
+}
+
+void SlaveInterface::deref()
+{
+    Q_D(SlaveInterface);
+    d->m_refCount--;
+    if (!d->m_refCount) {
+        d->connection->disconnect(this);
+        this->disconnect();
+        deleteLater();
+    }
+}
+
+time_t SlaveInterface::idleTime() const
+{
+    Q_D(const SlaveInterface);
+    if (!d->m_idleSince) {
+        return time_t(0);
+    }
+    return time_t(difftime(time(0), d->m_idleSince));
+}
+
+void SlaveInterface::setPID(pid_t pid)
+{
+    Q_D(SlaveInterface);
+    d->m_pid = pid;
+}
+
+pid_t SlaveInterface::pid() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_pid;
+}
+
+void SlaveInterface::setJob(KIO::SimpleJob *job)
+{
+    Q_D(SlaveInterface);
+    d->m_job = job;
+}
+
+KIO::SimpleJob *SlaveInterface::job() const
+{
+    Q_D(const SlaveInterface);
+    return d->m_job;
+}
+
+bool SlaveInterface::isAlive() const
+{
+    Q_D(const SlaveInterface);
+    return !d->dead;
+}
+
+void SlaveInterface::suspend()
+{
+    Q_D(SlaveInterface);
+    d->connection->suspend();
+}
+
+void SlaveInterface::resume()
+{
+    Q_D(SlaveInterface);
+    d->connection->resume();
+}
+
+bool SlaveInterface::suspended() const
+{
+    Q_D(const SlaveInterface);
+    return d->connection->suspended();
+}
+
+void SlaveInterface::send(int cmd, const QByteArray &arr)
+{
+    Q_D(SlaveInterface);
+    d->connection->send(cmd, arr);
+}
+
+void SlaveInterface::kill()
+{
+    Q_D(SlaveInterface);
+    d->dead = true; // OO can be such simple.
+    kDebug(7002) << "killing slave pid" << d->m_pid
+                 << "(" << QString(d->m_protocol) + "://" + d->m_host << ")";
+    if (d->m_pid) {
+       ::kill(d->m_pid, SIGTERM);
+       d->m_pid = 0;
+    }
+}
+
+void SlaveInterface::setHost( const QString &host, quint16 port,
+                     const QString &user, const QString &passwd)
+{
+    Q_D(SlaveInterface);
+    d->m_host = host;
+    d->m_port = port;
+    d->m_user = user;
+    d->m_passwd = passwd;
+
+    QByteArray data;
+    QDataStream stream( &data, QIODevice::WriteOnly );
+    stream << d->m_host << d->m_port << d->m_user << d->m_passwd;
+    d->connection->send( CMD_HOST, data );
+}
+
+void SlaveInterface::resetHost()
+{
+    Q_D(SlaveInterface);
+    d->m_host = "<reset>";
+}
+
+void SlaveInterface::setConfig(const MetaData &config)
+{
+    Q_D(SlaveInterface);
+    QByteArray data;
+    QDataStream stream( &data, QIODevice::WriteOnly );
+    stream << config;
+    d->connection->send( CMD_CONFIG, data );
+}
+
+SlaveInterface* SlaveInterface::createSlave( const QString &protocol, const KUrl& url, int& error, QString& error_text )
+{
+    kDebug(7002) << "createSlave" << protocol << "for" << url;
+    SlaveInterface *slave = new SlaveInterface(protocol);
+    QString slaveAddress = slave->d_func()->slaveconnserver->address();
+
+    const QString slavename = KProtocolInfo::exec(protocol);
+    if (slavename.isEmpty()) {
+        error_text = i18n("Unknown protocol '%1'.", protocol);
+        error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
+        delete slave;
+        return 0;
+    }
+    const QString slaveexe = KStandardDirs::locate("libexec", slavename);
+    if (slaveexe.isEmpty()) {
+        error_text = i18n("Can not find io-slave for protocol '%1'.", protocol);
+        error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
+        delete slave;
+        return 0;
+    }
+
+    kDebug() << "kioslave" << ", " << slaveexe << ", " << protocol << ", " << slaveAddress;
+
+    const QStringList slaveargs = QStringList() << slaveexe << slaveAddress;
+    Q_PID slavepid = 0;
+    const bool result = QProcess::startDetached(
+        KStandardDirs::findExe("kioslave"),
+        slaveargs,
+        QDir::currentPath(),
+        &slavepid
+    );
+    if (!result || !slavepid) {
+        error_text = i18n("Can not start io-slave for protocol '%1'.", protocol);
+        error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
+        delete slave;
+        return 0;
+    }
+    slave->setPID(slavepid);
+
+    return slave;
 }
 
 void SlaveInterface::setConnection( Connection* connection )
@@ -379,6 +653,79 @@ QWidget* SlaveInterface::window() const
 {
     Q_D(const SlaveInterface);
     return d->parentWindow;
+}
+
+void SlaveInterface::accept()
+{
+    Q_D(SlaveInterface);
+    d->slaveconnserver->setNextPendingConnection(d->connection);
+    d->slaveconnserver->deleteLater();
+    d->slaveconnserver = 0;
+
+    connect(d->connection, SIGNAL(readyRead()), SLOT(gotInput()));
+}
+
+void SlaveInterface::gotInput()
+{
+    Q_D(SlaveInterface);
+    if (d->dead) {
+        //already dead? then slaveDied was emitted and we are done
+        return;
+    }
+    ref();
+    if (!dispatch()) {
+        d->connection->close();
+        d->dead = true;
+        QString arg = d->m_protocol;
+        if (!d->m_host.isEmpty())
+            arg += "://"+d->m_host;
+        kDebug(7002) << "slave died pid = " << d->m_pid;
+        // Tell the job about the problem.
+        emit error(ERR_SLAVE_DIED, arg);
+        // Tell the scheduler about the problem.
+        emit slaveDied(this);
+    }
+    deref();
+    // Here we might be dead!!
+}
+
+void SlaveInterface::timeout()
+{
+    Q_D(SlaveInterface);
+    if (d->dead) {
+        //already dead? then slaveDied was emitted and we are done
+        return;
+    }
+    if (d->connection->isConnected()) {
+        return;
+    }
+
+    kDebug(7002) << "slave failed to connect to application pid=" << d->m_pid
+                 << " protocol=" << d->m_protocol;
+    if (d->m_pid && (::kill(d->m_pid, 0) == 0)) {
+        int delta_t = (int) difftime(time(0), d->contact_started);
+        kDebug(7002) << "slave is slow... pid=" << d->m_pid << " t=" << delta_t;
+        if (delta_t < SLAVE_CONNECTION_TIMEOUT_MAX) {
+            QTimer::singleShot(1000*SLAVE_CONNECTION_TIMEOUT_MIN, this, SLOT(timeout()));
+            return;
+        }
+    }
+    kDebug(7002) << "Houston, we lost our slave, pid=" << d->m_pid;
+    d->connection->close();
+    d->dead = true;
+    QString arg = d->m_protocol;
+    if (!d->m_host.isEmpty()) {
+        arg += QString::fromLatin1("://") + d->m_host;
+    }
+    kDebug(7002) << "slave died pid = " << d->m_pid;
+
+    ref();
+    // Tell the job about the problem.
+    emit error(ERR_SLAVE_DIED, arg);
+    // Tell the scheduler about the problem.
+    emit slaveDied(this);
+    // After the above signal we're dead!!
+    deref();
 }
 
 #include "moc_slaveinterface.cpp"

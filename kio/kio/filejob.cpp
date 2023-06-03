@@ -23,7 +23,7 @@
 #include "slavebase.h"
 #include "connection.h"
 #include "scheduler.h"
-#include "slave.h"
+#include "slaveinterface.h"
 
 #include <QTimer>
 #include <kdebug.h>
@@ -56,7 +56,7 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start(Slave *slave);
+    virtual void start(SlaveInterface *slave);
 
     Q_DECLARE_PUBLIC(FileJob)
 
@@ -181,7 +181,7 @@ void FileJobPrivate::slotFinished()
     q->emitResult();
 }
 
-void FileJobPrivate::start(Slave *slave)
+void FileJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(FileJob);
     q->connect( slave, SIGNAL(data(QByteArray)),

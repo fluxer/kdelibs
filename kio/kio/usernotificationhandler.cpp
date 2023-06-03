@@ -18,7 +18,7 @@
 
 #include "usernotificationhandler_p.h"
 
-#include "slave.h"
+#include "slaveinterface.h"
 #include "jobuidelegate.h"
 
 #include <kdebug.h>
@@ -54,7 +54,7 @@ void UserNotificationHandler::requestMessageBox(SlaveInterface* iface, int type,
 {
     Request* r = new Request;
     r->type = type;
-    r->slave = qobject_cast<KIO::Slave*>(iface);
+    r->slave = iface;
     r->data = data;
 
     m_pendingRequests.append(r);

@@ -24,7 +24,7 @@
 #include "clipboardupdater_p.h"
 #include "jobuidelegate.h"
 #include "kmimetype.h"
-#include "slave.h"
+#include "slaveinterface.h"
 #include "scheduler.h"
 #include "kdirwatch.h"
 #include "kprotocolinfo.h"
@@ -55,7 +55,7 @@ using namespace KIO;
 
 #define MAX_READ_BUF_SIZE  (64 * 1024)       // 64 KB at a time seems reasonable...
 
-static inline Slave *jobSlave(SimpleJob *job)
+static inline SlaveInterface *jobSlave(SimpleJob *job)
 {
     return SimpleJobPrivate::get(job)->m_slave;
 }
@@ -339,12 +339,12 @@ SimpleJob::~SimpleJob()
     }
 }
 
-void SimpleJobPrivate::start(Slave *slave)
+void SimpleJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(SimpleJob);
     m_slave = slave;
 
-    // Slave::setJob can send us SSL metadata if there is a persistent connection
+    // SlaveInterface::setJob can send us metadata if there is a persistent connection
     q->connect( slave, SIGNAL(metaData(KIO::MetaData)),
                 SLOT(slotMetaData(KIO::MetaData)) );
 
@@ -553,7 +553,7 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start( Slave *slave );
+    virtual void start( SlaveInterface *slave );
 
     Q_DECLARE_PUBLIC(MkdirJob)
 
@@ -574,7 +574,7 @@ MkdirJob::~MkdirJob()
 {
 }
 
-void MkdirJobPrivate::start(Slave *slave)
+void MkdirJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(MkdirJob);
     q->connect( slave, SIGNAL(redirection(KUrl)),
@@ -719,7 +719,7 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start( Slave *slave );
+    virtual void start( SlaveInterface *slave );
 
     Q_DECLARE_PUBLIC(StatJob)
 
@@ -772,7 +772,7 @@ KUrl StatJob::mostLocalUrl() const
     return url();
 }
 
-void StatJobPrivate::start(Slave *slave)
+void StatJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(StatJob);
     m_outgoingMetaData.insert( "statSide", m_bSource ? "source" : "dest" );
@@ -1085,7 +1085,7 @@ bool TransferJob::doResume()
     return true;
 }
 
-void TransferJobPrivate::start(Slave *slave)
+void TransferJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(TransferJob);
     Q_ASSERT(slave);
@@ -1431,7 +1431,7 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start(Slave *slave);
+    virtual void start(SlaveInterface *slave);
 
     Q_DECLARE_PUBLIC(DirectCopyJob)
 };
@@ -1446,7 +1446,7 @@ DirectCopyJob::~DirectCopyJob()
 {
 }
 
-void DirectCopyJobPrivate::start( Slave* slave )
+void DirectCopyJobPrivate::start( SlaveInterface* slave )
 {
     Q_Q(DirectCopyJob);
     q->connect( slave, SIGNAL(canResume(KIO::filesize_t)),
@@ -2071,7 +2071,7 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start( Slave *slave );
+    virtual void start( SlaveInterface *slave );
 
     void slotListEntries( const KIO::UDSEntryList& list );
     void slotRedirection( const KUrl &url );
@@ -2250,7 +2250,7 @@ ListJob *KIO::listRecursive( const KUrl& url, JobFlags flags, bool includeHidden
     return ListJobPrivate::newJob(url, true, QString(), QString(), includeHidden, flags);
 }
 
-void ListJobPrivate::start(Slave *slave)
+void ListJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(ListJob);
     q->connect( slave, SIGNAL(listEntries(KIO::UDSEntryList)),

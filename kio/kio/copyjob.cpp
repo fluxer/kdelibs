@@ -25,7 +25,6 @@
 #include "deletejob.h"
 #include "clipboardupdater_p.h"
 #include "job_p.h"
-#include "slave.h"
 #include "scheduler.h"
 #include "kdirwatch.h"
 #include "kprotocolmanager.h"
