@@ -103,11 +103,6 @@ public:
     explicit KTemporaryFile(const KComponentData &componentData = KGlobal::mainComponent());
 
     /**
-     * Destructor.
-     */
-    virtual ~KTemporaryFile();
-
-    /**
      * @brief Sets a prefix to use when creating the file.
      *
      * This function sets a prefix to use when creating the file. The random
@@ -144,9 +139,6 @@ public:
      * @param pathtemplate The template to use when generating filepath.
      */
     static QString filePath(const QString &pathtemplate = QString());
-
-private:
-    KTemporaryFilePrivate *const d;
 };
 
 #endif

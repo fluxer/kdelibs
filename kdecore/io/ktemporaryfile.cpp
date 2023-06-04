@@ -25,31 +25,11 @@
 
 #include <QDir>
 
-class KTemporaryFilePrivate
-{
-    public:
-        KTemporaryFilePrivate(const KComponentData &c)
-            : componentData(c)
-        {
-        }
-
-        inline QString defaultPrefix() const
-        {
-            return KStandardDirs::locateLocal("tmp", componentData.componentName(), componentData);
-        }
-
-        KComponentData componentData;
-};
-
 KTemporaryFile::KTemporaryFile(const KComponentData &componentData)
-    : d(new KTemporaryFilePrivate(componentData))
 {
-    setFileTemplate(d->defaultPrefix() + QLatin1String("XXXXXX.tmp"));
-}
-
-KTemporaryFile::~KTemporaryFile()
-{
-    delete d;
+    setFileTemplate(
+        KStandardDirs::locateLocal("tmp", componentData.componentName(), componentData) + QLatin1String("XXXXXX.tmp")
+    );
 }
 
 void KTemporaryFile::setPrefix(const QString &prefix)
@@ -59,7 +39,7 @@ void KTemporaryFile::setPrefix(const QString &prefix)
     QString newPrefix = prefix;
 
     if ( newPrefix.isEmpty() ) {
-        newPrefix = d->defaultPrefix();
+        newPrefix = KGlobal::dirs()->saveLocation("tmp");
     } else {
         if ( !QDir::isAbsolutePath(newPrefix) ) {
             newPrefix.prepend(KGlobal::dirs()->saveLocation("tmp"));
