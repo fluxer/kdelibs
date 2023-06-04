@@ -209,9 +209,3 @@ QString KDeclarative::componentsTarget()
 {
     return defaultComponentsTarget();
 }
-
-QStringList KDeclarative::runtimePlatform()
-{
-    return QStringList();
-}
-
