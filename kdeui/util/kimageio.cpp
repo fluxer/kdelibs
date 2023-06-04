@@ -84,7 +84,7 @@ QStringList KImageIO::types(Mode mode)
     return result;
 }
 
-bool KImageIO::isSupported(const QString& mimeType, Mode mode)
+bool KImageIO::isSupported(const QString &mimeType, Mode mode)
 {
     if (mimeType.isEmpty()) {
         return false;

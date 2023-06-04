@@ -58,7 +58,7 @@ namespace KImageIO
    * @return type id(s) of the MIME type or QStringList() if the MIME type
    *         is not supported
    */
-  KDEUI_EXPORT QStringList typeForMime(const QString& mimeType);
+  KDEUI_EXPORT QStringList typeForMime(const QString &mimeType);
   /**
    * Returns a list of all KImageIO supported formats.
    *
@@ -81,7 +81,7 @@ namespace KImageIO
    * @param _mode Tells whether to check for reading or writing capabilities
    * @return true if the type is supported
    **/
-  KDEUI_EXPORT bool isSupported(const QString& mimeType, Mode mode = Writing);
+  KDEUI_EXPORT bool isSupported(const QString &mimeType, Mode mode = Writing);
 }
 
 #endif // KIMAGEIO_H
