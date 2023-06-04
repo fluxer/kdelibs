@@ -800,9 +800,9 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       break;
 
     case KIO::ERR_COULD_NOT_CLOSEDIR:
-      //result = i18n( "Could not terminate listing %1" ).arg( errorText );
       errorName = i18n( "Could Not Cancel Listing" );
-      techName = i18n( "FIXME: Document this" );
+      description = i18n( "This is a fairly technical error in which an error "
+        "occurred while attempting to list directory." );
       break;
 
     case KIO::ERR_COULD_NOT_MKDIR:
