@@ -26,7 +26,6 @@ class JPGHandler : public QImageIOHandler
 {
 public:
     JPGHandler();
-    ~JPGHandler();
 
     bool canRead() const final;
     bool read(QImage *image) final;

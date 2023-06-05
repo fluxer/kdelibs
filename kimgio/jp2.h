@@ -26,7 +26,6 @@ class JP2Handler : public QImageIOHandler
 {
 public:
     JP2Handler();
-    ~JP2Handler();
 
     bool canRead() const final;
     bool read(QImage *image) final;

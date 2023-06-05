@@ -26,7 +26,6 @@ class TIFFHandler : public QImageIOHandler
 {
 public:
     TIFFHandler();
-    ~TIFFHandler();
 
     bool canRead() const final;
     bool read(QImage *image) final;

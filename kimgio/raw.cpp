@@ -164,10 +164,6 @@ RAWHandler::RAWHandler()
 {
 }
 
-RAWHandler::~RAWHandler()
-{
-}
-
 bool RAWHandler::canRead() const
 {
     if (RAWHandler::canRead(device())) {

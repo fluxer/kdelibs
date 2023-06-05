@@ -57,10 +57,6 @@ JPGHandler::JPGHandler()
 {
 }
 
-JPGHandler::~JPGHandler()
-{
-}
-
 bool JPGHandler::canRead() const
 {
     if (canRead(device())) {

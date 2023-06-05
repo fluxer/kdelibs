@@ -138,10 +138,6 @@ TIFFHandler::TIFFHandler()
 {
 }
 
-TIFFHandler::~TIFFHandler()
-{
-}
-
 bool TIFFHandler::canRead() const
 {
     if (TIFFHandler::canRead(device())) {

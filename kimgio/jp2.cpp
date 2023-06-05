@@ -106,10 +106,6 @@ JP2Handler::JP2Handler()
 {
 }
 
-JP2Handler::~JP2Handler()
-{
-}
-
 bool JP2Handler::canRead() const
 {
     if (JP2Handler::canRead(device())) {

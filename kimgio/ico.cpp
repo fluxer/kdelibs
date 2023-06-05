@@ -83,10 +83,6 @@ ICOHandler::ICOHandler()
 {
 }
 
-ICOHandler::~ICOHandler()
-{
-}
-
 bool ICOHandler::canRead() const
 {
     if (ICOHandler::canRead(device())) {

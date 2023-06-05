@@ -26,7 +26,6 @@ class ICOHandler : public QImageIOHandler
 {
 public:
     ICOHandler();
-    ~ICOHandler();
 
     bool canRead() const final;
     bool read(QImage *image) final;
