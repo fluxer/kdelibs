@@ -29,7 +29,6 @@
 #include "kdirwatch.h"
 #include "kprotocolinfo.h"
 #include "kprotocolmanager.h"
-#include "filejob.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -359,9 +358,6 @@ void SimpleJobPrivate::start(SlaveInterface *slave)
     q->connect( slave, SIGNAL(infoMessage(QString)),
                 SLOT(_k_slotSlaveInfoMessage(QString)) );
 
-    q->connect( slave, SIGNAL(connected()),
-                SLOT(slotConnected()));
-
     q->connect( slave, SIGNAL(finished()),
                 SLOT(slotFinished()) );
 
@@ -411,9 +407,6 @@ void SimpleJobPrivate::slaveDone()
 {
     Q_Q(SimpleJob);
     if (m_slave) {
-        if (m_command == CMD_OPEN) {
-            m_slave->send(CMD_CLOSE);
-        }
         q->disconnect(m_slave); // Remove all signals between slave and job
     }
     // only finish a job once; Scheduler::jobFinished() resets schedSerial to zero.
@@ -473,11 +466,6 @@ void SimpleJob::slotWarning( const QString & errorText )
 void SimpleJobPrivate::_k_slotSlaveInfoMessage( const QString & msg )
 {
     emit q_func()->infoMessage( q_func(), msg );
-}
-
-void SimpleJobPrivate::slotConnected()
-{
-    emit q_func()->connected( q_func() );
 }
 
 void SimpleJobPrivate::slotTotalSize( KIO::filesize_t size )

@@ -253,14 +253,6 @@ namespace KIO {
          */
         void canceled( KJob *job );
 
-        /**
-         * Emitted when the slave successfully connected to the host.
-         * There is no guarantee the slave will send this, and this is
-         * currently unused (in the applications).
-         * @param job the job that emitted this signal
-         */
-        void connected( KIO::Job *job );
-
     protected:
         /**
          * Add a job that has to be finished before a result
@@ -382,7 +374,6 @@ namespace KIO {
          */
         SimpleJob(SimpleJobPrivate &dd);
     private:
-        Q_PRIVATE_SLOT(d_func(), void slotConnected())
         Q_PRIVATE_SLOT(d_func(), void slotProcessedSize( KIO::filesize_t data_size ))
         Q_PRIVATE_SLOT(d_func(), void slotSpeed( unsigned long speed ))
         Q_PRIVATE_SLOT(d_func(), void slotTotalSize( KIO::filesize_t data_size ))

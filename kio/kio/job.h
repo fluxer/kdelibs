@@ -28,8 +28,6 @@ namespace KIO {
 
     enum LoadType { Reload, NoReload };
 
-    class FileJob;
-
     /**
      * Creates a single directory.
      *
@@ -198,18 +196,6 @@ namespace KIO {
      * @return the job handling the operation.
      */
     KIO_EXPORT TransferJob *get( const KUrl& url, LoadType reload = NoReload, JobFlags flags = DefaultFlags );
-
-    /**
-     * Open ( random access I/O )
-     *
-     * The file-job emits open() when opened
-     * @param url the URL of the file
-     * @param mode the access privileges: see \ref OpenMode
-     *
-     * @return The file-handling job. It will never return 0. Errors are handled asynchronously
-     * (emitted as signals).
-     */
-    KIO_EXPORT FileJob *open(const KUrl &url, QIODevice::OpenMode mode);
 
     /**
      * Put (a.k.a. write)

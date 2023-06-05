@@ -381,7 +381,6 @@ install(
     KIO/CopyJob
     KIO/DeleteJob
     KIO/FileCopyJob
-    KIO/FileJob
     KIO/ForwardingSlaveBase
     KIO/Job
     KIO/JobClasses

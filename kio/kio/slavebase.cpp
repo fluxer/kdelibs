@@ -384,13 +384,6 @@ void SlaveBase::dataReq( )
    send( MSG_DATA_REQ );
 }
 
-void SlaveBase::opened()
-{
-   sendMetaData();
-   send( MSG_OPENED );
-   d->inOpenLoop = true;
-}
-
 void SlaveBase::error( int _errid, const QString &_text )
 {
     if (d->m_state == d->ErrorCalled) {
@@ -411,11 +404,6 @@ void SlaveBase::error( int _errid, const QString &_text )
     //reset
     d->totalSize=0;
     d->inOpenLoop=false;
-}
-
-void SlaveBase::connected()
-{
-    send( MSG_CONNECTED );
 }
 
 void SlaveBase::finished()
@@ -489,18 +477,6 @@ void SlaveBase::processedSize( KIO::filesize_t _bytes )
             d->last_tv.tv_usec = tv.tv_usec;
         }
     }
-}
-
-void SlaveBase::written( KIO::filesize_t _bytes )
-{
-    KIO_DATA << KIO_FILESIZE_T(_bytes);
-    send( MSG_WRITTEN, data );
-}
-
-void SlaveBase::position( KIO::filesize_t _pos )
-{
-    KIO_DATA << KIO_FILESIZE_T(_pos);
-    send( INF_POSITION, data );
 }
 
 void SlaveBase::speed( unsigned long _bytes_per_second )
@@ -641,10 +617,6 @@ void SlaveBase::setHost(QString const &, quint16, QString const &, QString const
 {
 }
 
-void SlaveBase::openConnection(void)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CONNECT)); }
-void SlaveBase::closeConnection(void)
-{ } // No response!
 void SlaveBase::stat(KUrl const &)
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_STAT)); }
 void SlaveBase::put(KUrl const &, int, JobFlags )
@@ -655,16 +627,6 @@ void SlaveBase::listDir(KUrl const &)
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_LISTDIR)); }
 void SlaveBase::get(KUrl const & )
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_GET)); }
-void SlaveBase::open(KUrl const &, QIODevice::OpenMode)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_OPEN)); }
-void SlaveBase::read(KIO::filesize_t)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_READ)); }
-void SlaveBase::write(const QByteArray &)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_WRITE)); }
-void SlaveBase::seek(KIO::filesize_t)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SEEK)); }
-void SlaveBase::close()
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CLOSE)); }
 void SlaveBase::mimetype(KUrl const &url)
 { get(url); }
 void SlaveBase::rename(KUrl const &, KUrl const &, JobFlags)
@@ -887,14 +849,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             d->m_state = d->Idle;
             break;
         }
-        case CMD_CONNECT: {
-            openConnection( );
-            break;
-        }
-        case CMD_DISCONNECT: {
-            closeConnection();
-            break;
-        }
         case CMD_REPARSECONFIGURATION: {
             d->m_state = d->InsideMethod;
             reparseConfiguration();
@@ -915,16 +869,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             d->m_state = d->InsideMethod;
             get( url );
             d->verifyState("get()");
-            d->m_state = d->Idle;
-            break;
-        }
-        case CMD_OPEN: {
-            KUrl url;
-            int i;
-            stream >> url >> i;
-            QIODevice::OpenMode mode = QFlag(i);
-            d->m_state = d->InsideMethod;
-            open(url, mode); //krazy:exclude=syscalls
             d->m_state = d->Idle;
             break;
         }
@@ -1120,27 +1064,7 @@ void SlaveBase::dispatchOpenCommand( int command, const QByteArray &data )
     QDataStream stream( data );
 
     switch( command ) {
-        case CMD_READ: {
-            KIO::filesize_t bytes;
-            stream >> bytes;
-            read(bytes);
-            break;
-        }
-        case CMD_WRITE: {
-            write(data);
-            break;
-        }
-        case CMD_SEEK: {
-            KIO::filesize_t offset;
-            stream >> offset;
-            seek(offset);
-            break;
-        }
         case CMD_NONE: {
-            break;
-        }
-        case CMD_CLOSE: {
-            close();                // must call finish(), which will set d->inOpenLoop=false
             break;
         }
         default: {

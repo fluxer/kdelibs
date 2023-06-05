@@ -58,19 +58,6 @@ public:
 
   virtual void setHost( const QString& host, quint16 port, const QString& user, const QString& pass );
 
-  /**
-   * Connects to a ftp server and logs us in
-   * m_bLoggedOn is set to true if logging on was successful.
-   * It is set to false if the connection becomes closed.
-   *
-   */
-  virtual void openConnection();
-
-  /**
-   * Closes the connection
-   */
-  virtual void closeConnection();
-
   virtual void stat( const KUrl &url );
 
   virtual void listDir( const KUrl & url );
@@ -128,12 +115,17 @@ private:
   bool ftpOpenConnection (LoginMode loginMode);
 
   /**
+   * Closes the connection
+   */
+  void ftpCloseConnection();
+
+  /**
    * Executes any auto login macro's as specified in a .netrc file.
    */
   void ftpAutoLoginMacro ();
 
   /**
-   * Called by openConnection. It logs us in.
+   * Called by ftpOpenConnection. It logs us in.
    * m_initialPath is set to the current working directory
    * if logging on was successful.
    *
@@ -261,7 +253,7 @@ private:
   bool ftpRename( const QString & src, const QString & dst, KIO::JobFlags flags );
 
   /**
-   * Called by openConnection. It opens the control connection to the ftp server.
+   * Called by ftpOpenConnection. It opens the control connection to the ftp server.
    *
    * @return true on success.
    */
@@ -391,10 +383,10 @@ private: // data members
   bool m_bTextMode;
 
   /**
-   * true if a data stream is open, used in closeConnection().
+   * true if a data stream is open, used in ftpCloseConnection().
    *
    * When the user cancels a get or put command the Ftp dtor will be called,
-   * which in turn calls closeConnection(). The later would try to send QUIT
+   * which in turn calls ftpCloseConnection(). The later would try to send QUIT
    * which won't work until timeout. ftpOpenCommand sets the m_bBusy flag so
    * that the sockets will be closed immedeately - the server should be
    * capable of handling this and return an error code on thru the control

@@ -315,10 +315,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
 
 KIO_EXPORT QString KIO::unsupportedActionErrorString(const QString &protocol, int cmd) {
   switch (cmd) {
-    case CMD_CONNECT:
-      return i18n("Opening connections is not supported with the protocol %1." , protocol);
-    case CMD_DISCONNECT:
-      return i18n("Closing connections is not supported with the protocol %1." , protocol);
     case CMD_STAT:
       return i18n("Accessing files is not supported with the protocol %1.", protocol);
     case CMD_PUT:
@@ -347,8 +343,6 @@ KIO_EXPORT QString KIO::unsupportedActionErrorString(const QString &protocol, in
       return i18n("Changing the ownership of files is not supported with protocol %1.", protocol);
     case CMD_SUBURL:
       return i18n("Using sub-URLs with %1 is not supported.", protocol);
-    case CMD_OPEN:
-      return i18n("Opening files is not supported with protocol %1.", protocol);
     default:
       return i18n("Protocol %1 does not support action %2.", protocol, cmd);
   }/*end switch*/

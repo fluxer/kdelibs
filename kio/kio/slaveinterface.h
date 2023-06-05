@@ -52,8 +52,7 @@ class SlaveInterfacePrivate;
    INF_WARNING = 23,
    INF_INFOMESSAGE,
    INF_META_DATA,
-   INF_MESSAGEBOX,
-   INF_POSITION
+   INF_MESSAGEBOX
    // add new ones here once a release is done, to avoid breaking binary compatibility
  };
 
@@ -64,15 +63,12 @@ class SlaveInterfacePrivate;
    MSG_DATA = 100,
    MSG_DATA_REQ,
    MSG_ERROR,
-   MSG_CONNECTED,
    MSG_FINISHED,
    MSG_STAT_ENTRY,
    MSG_LIST_ENTRIES,
    MSG_RESUME,
    MSG_NEED_SUBURL_DATA,
-   MSG_CANRESUME,
-   MSG_OPENED,
-   MSG_WRITTEN,
+   MSG_CANRESUME
    // add new ones here once a release is done, to avoid breaking binary compatibility
  };
 
@@ -231,14 +227,11 @@ Q_SIGNALS:
     void data( const QByteArray & );
     void dataReq( );
     void error( int , const QString & );
-    void connected();
     void finished();
     void listEntries( const KIO::UDSEntryList& );
     void statEntry( const KIO::UDSEntry& );
     void needSubUrlData();
     void canResume( KIO::filesize_t );
-    void open();
-    void written( KIO::filesize_t );
 
     ///////////
     // Info sent by the slave
@@ -247,7 +240,6 @@ Q_SIGNALS:
     void totalSize( KIO::filesize_t );
     void processedSize( KIO::filesize_t );
     void redirection( const KUrl& );
-    void position( KIO::filesize_t );
     void speed( unsigned long );
     void mimeType( const QString & );
     void warning( const QString & );

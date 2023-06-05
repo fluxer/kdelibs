@@ -82,12 +82,6 @@ public:
     void dataReq( );
 
     /**
-     * open succedes
-     * @see open
-     */
-    void opened();
-
-    /**
      * Call to signal an error.
      * This also finishes the job, so you must not call
      * finished() after calling this.
@@ -118,13 +112,7 @@ public:
     void error( int _errid, const QString &_text );
 
     /**
-     * Call in openConnection, if you reimplement it, when you're done.
-     */
-    void connected();
-
-    /**
-     * Call to signal successful completion of any command
-     * besides openConnection and closeConnection. Do not
+     * Call to signal successful completion of any command. Do not
      * call this after calling error().
      */
     void finished();
@@ -179,10 +167,6 @@ public:
      * Don't emit it in listDir, listEntries speaks for itself.
      */
     void processedSize( KIO::filesize_t _bytes );
-
-    void position( KIO::filesize_t _pos );
-
-    void written( KIO::filesize_t _bytes );
 
     /**
      * Call this in get and copy, to give the current transfer
@@ -319,27 +303,6 @@ public:
     virtual void setSubUrl(const KUrl&url);
 
     /**
-     * Opens the connection (forced)
-     * When this function gets called the slave is operating in
-     * connection-oriented mode.
-     * When a connection gets lost while the slave operates in
-     * connection oriented mode, the slave should report
-     * ERR_CONNECTION_BROKEN instead of reconnecting. The user is
-     * expected to disconnect the slave in the error handler.
-     */
-    virtual void openConnection();
-
-    /**
-     * Closes the connection (forced)
-     * Called when the application disconnects the slave to close
-     * any open network connections.
-     *
-     * When the slave was operating in connection-oriented mode,
-     * it should reset itself to connectionless (default) mode.
-     */
-    virtual void closeConnection();
-
-    /**
      * get, aka read.
      * @param url the full url for this request. Host, port and user of the URL
      *        can be assumed to be the same as in the last setHost() call.
@@ -359,19 +322,6 @@ public:
      * This mechanism is also described in KIO::get().
      */
     virtual void get( const KUrl& url );
-
-    /**
-     * open.
-     * @param url the full url for this request. Host, port and user of the URL
-     *        can be assumed to be the same as in the last setHost() call.
-     * @param mode see \ref QIODevice::OpenMode
-     */
-    virtual void open( const KUrl &url, QIODevice::OpenMode mode );
-
-    virtual void read( KIO::filesize_t size );
-    virtual void write( const QByteArray &data );
-    virtual void seek( KIO::filesize_t offset );
-    virtual void close();
 
     /**
      * put, i.e. write data into a file.

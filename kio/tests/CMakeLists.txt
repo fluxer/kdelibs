@@ -22,7 +22,6 @@ KIO_UNIT_TESTS(
     kprotocolinfotest
     jobtest
     jobguitest
-    jobremotetest
     kurlcompletiontest
     kfileitemtest
     kbookmarktest

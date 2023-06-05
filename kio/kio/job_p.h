@@ -42,34 +42,27 @@ namespace KIO {
      */
     enum Command {
         CMD_HOST = '0', // 48
-        CMD_CONNECT = '1',
-        CMD_DISCONNECT = '2',
-        CMD_NONE = 'A',
-        CMD_GET = 'B',
-        CMD_PUT = 'C',
-        CMD_STAT = 'D',
-        CMD_MIMETYPE = 'E',
-        CMD_LISTDIR = 'F',
-        CMD_MKDIR = 'G',
-        CMD_RENAME = 'H',
-        CMD_COPY = 'I',
-        CMD_DEL = 'J',
-        CMD_CHMOD = 'K',
-        CMD_SPECIAL = 'L',
-        CMD_SETMODIFICATIONTIME = 'M',
-        CMD_REPARSECONFIGURATION = 'N',
-        CMD_META_DATA = 'O',
-        CMD_SYMLINK = 'P',
-        CMD_SUBURL = 'Q', // Inform the slave about the url it is streaming on.
-        CMD_MESSAGEBOXANSWER = 'R',
-        CMD_RESUMEANSWER = 'S',
-        CMD_CONFIG = 'T',
-        CMD_OPEN = 'U',
-        CMD_CHOWN = 'V',
-        CMD_READ = 'W',
-        CMD_WRITE = 'X',
-        CMD_SEEK = 'Y',
-        CMD_CLOSE = 'Z'
+        CMD_NONE = '1',
+        CMD_GET = '2',
+        CMD_PUT = 'A',
+        CMD_STAT = 'B',
+        CMD_MIMETYPE = 'C',
+        CMD_LISTDIR = 'D',
+        CMD_MKDIR = 'E',
+        CMD_RENAME = 'F',
+        CMD_COPY = 'G',
+        CMD_DEL = 'H',
+        CMD_CHMOD = 'I',
+        CMD_SPECIAL = 'J',
+        CMD_SETMODIFICATIONTIME = 'K',
+        CMD_REPARSECONFIGURATION = 'L',
+        CMD_META_DATA = 'M',
+        CMD_SYMLINK = 'N',
+        CMD_SUBURL = 'O', // Inform the slave about the url it is streaming on.
+        CMD_MESSAGEBOXANSWER = 'P',
+        CMD_RESUMEANSWER = 'Q',
+        CMD_CONFIG = 'R',
+        CMD_CHOWN = 'S'
     };
 
     class JobPrivate: public KCompositeJobPrivate
@@ -165,11 +158,6 @@ namespace KIO {
 
         void simpleJobInit();
 
-        /**
-         * Called on a slave's connected signal.
-         * @see connected()
-         */
-        void slotConnected();
         /**
          * Forward signal from the slave.
          * @param data_size the processed size in bytes

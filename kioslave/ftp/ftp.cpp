@@ -188,7 +188,7 @@ Ftp::Ftp( const QByteArray &app )
 Ftp::~Ftp()
 {
   kDebug(7102);
-  closeConnection();
+  ftpCloseConnection();
 }
 
 /**
@@ -273,8 +273,7 @@ const char* Ftp::ftpResponse(int iOffset)
   return pTxt;
 }
 
-
-void Ftp::closeConnection()
+void Ftp::ftpCloseConnection()
 {
   if(m_control != NULL || m_data != NULL)
     kDebug(7102) << "m_bLoggedOn=" << m_bLoggedOn << " m_bBusy=" << m_bBusy;
@@ -303,17 +302,12 @@ void Ftp::setHost( const QString& _host, quint16 _port, const QString& _user,
 
   if ( m_host != _host || m_port != _port ||
        m_user != _user || m_pass != _pass )
-    closeConnection();
+    ftpCloseConnection();
 
   m_host = _host;
   m_port = _port;
   m_user = _user;
   m_pass = _pass;
-}
-
-void Ftp::openConnection()
-{
-  ftpOpenConnection(loginExplicit);
 }
 
 bool Ftp::ftpOpenConnection (LoginMode loginMode)
@@ -353,7 +347,6 @@ bool Ftp::ftpOpenConnection (LoginMode loginMode)
   }
 
   m_bTextMode = config()->readEntry("textmode", false);
-  connected();
 
   // Redirected due to credential change...
   if (userNameChanged && m_bLoggedOn)
@@ -381,7 +374,7 @@ bool Ftp::ftpOpenConnection (LoginMode loginMode)
 
 
 /**
- * Called by @ref openConnection. It opens the control connection to the ftp server.
+ * Called by @ref ftpOpenConnection. It opens the control connection to the ftp server.
  *
  * @return true on success.
  */
@@ -393,7 +386,7 @@ bool Ftp::ftpOpenControlConnection()
 bool Ftp::ftpOpenControlConnection( const QString &host, int port )
 {
   // implicitly close, then try to open a new connection ...
-  closeConnection();
+  ftpCloseConnection();
   QString sErrorMsg;
 
   // now connect to the server and read the login message ...
@@ -426,13 +419,13 @@ bool Ftp::ftpOpenControlConnection( const QString &host, int port )
   // if there was a problem - report it ...
   if(iErrorCode == 0)             // OK, return success
     return true;
-  closeConnection();              // clean-up on error
+  ftpCloseConnection();              // clean-up on error
   error(iErrorCode, sErrorMsg);
   return false;
 }
 
 /**
- * Called by @ref openConnection. It logs us in.
+ * Called by @ref ftpOpenConnection. It logs us in.
  * @ref m_initialPath is set to the current working directory
  * if logging on was successful.
  *
@@ -735,7 +728,7 @@ bool Ftp::ftpSendCmd( const QByteArray& cmd, int maxretries )
       // the beginning...
       if (maxretries > 0 && !isPassCmd)
       {
-        closeConnection ();
+        ftpCloseConnection ();
         if( ftpOpenConnection(loginDefered) )
           ftpSendCmd ( cmd, maxretries - 1 );
       }
@@ -751,16 +744,16 @@ bool Ftp::ftpSendCmd( const QByteArray& cmd, int maxretries )
         kDebug(7102) << "Was not able to communicate with " << m_host
                       << "Attempting to re-establish connection.";
 
-        closeConnection(); // Close the old connection...
-        openConnection();  // Attempt to re-establish a new connection...
+        ftpCloseConnection(); // Close the old connection...
+        ftpOpenConnection(loginExplicit);  // Attempt to re-establish a new connection...
 
         if (!m_bLoggedOn)
         {
-          if (m_control != NULL)  // if openConnection succeeded ...
+          if (m_control != NULL)  // if ftpOpenConnection succeeded ...
           {
             kDebug(7102) << "Login failure, aborting";
             error (ERR_COULD_NOT_LOGIN, m_host);
-            closeConnection ();
+            ftpCloseConnection ();
           }
           return false;
         }

@@ -66,11 +66,6 @@ public:
   virtual void chown( const KUrl& url, const QString& owner, const QString& group );
   virtual void setModificationTime( const KUrl& url, const QDateTime& mtime );
   virtual void del( const KUrl& url, bool isfile);
-  virtual void open( const KUrl &url, QIODevice::OpenMode mode );
-  virtual void read( KIO::filesize_t size );
-  virtual void write( const QByteArray &data );
-  virtual void seek( KIO::filesize_t offset );
-  virtual void close();
 
   /**
    * Special commands supported by this slave:
@@ -98,8 +93,6 @@ private:
 private:
   mutable QHash<uid_t, QString> mUsercache;
   mutable QHash<gid_t, QString> mGroupcache;
-  int openFd;
-  QString openPath;
 };
 
 #endif

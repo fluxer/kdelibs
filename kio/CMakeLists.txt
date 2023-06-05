@@ -32,7 +32,6 @@ set(kiocore_STAT_SRCS
     kio/defaultviewadapter.cpp
     kio/deletejob.cpp
     kio/directorysizejob.cpp
-    kio/filejob.cpp
     kio/fileundomanager.cpp
     kio/forwardingslavebase.cpp
     kio/global.cpp
@@ -192,7 +191,6 @@ install(
     kio/jobuidelegate.h
     kio/paste.h
     kio/slavebase.h
-    kio/filejob.h
     kio/fileundomanager.h
     kio/forwardingslavebase.h
     kio/chmodjob.h

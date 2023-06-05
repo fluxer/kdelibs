@@ -396,10 +396,6 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             emit dataReq();
             break;
         }
-        case MSG_OPENED: {
-            emit open();
-            break;
-        }
         case MSG_FINISHED: {
             // kDebug(7007) << "Finished [this = " << this << "]";
             d->offset = 0;
@@ -448,17 +444,6 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             emit error(i, str);
             break;
         }
-        case MSG_CONNECTED: {
-            emit connected();
-            break;
-        }
-        case MSG_WRITTEN: {
-            QDataStream stream(rawdata);
-            KIO::filesize_t size;
-            stream >> size;
-            emit written(size);
-            break;
-        }
         case INF_TOTAL_SIZE: {
             QDataStream stream(rawdata);
             KIO::filesize_t size;
@@ -478,13 +463,6 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             QDataStream stream(rawdata);
             stream >> d->filesize;
             emit processedSize(d->filesize);
-            break;
-        }
-        case INF_POSITION: {
-            QDataStream stream(rawdata);
-            KIO::filesize_t pos;
-            stream >> pos;
-            emit position(pos);
             break;
         }
         case INF_SPEED: {
