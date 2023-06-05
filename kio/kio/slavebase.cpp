@@ -55,7 +55,6 @@
 
 #define AUTHINFO_EXTRAFIELD_DOMAIN QLatin1String("domain")
 #define AUTHINFO_EXTRAFIELD_ANONYMOUS QLatin1String("anonymous")
-#define AUTHINFO_EXTRAFIELD_SKIP_CACHING_ON_QUERY QLatin1String("skip-caching-on-query")
 #define AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT QLatin1String("hide-username-line")
 
 extern "C" {
@@ -703,10 +702,6 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
     QWidget *windowWidget = QWidget::find(windowId);
 
     AuthInfo dlgInfo(info);
-    // Prevent queryAuthInfo from caching the user supplied password since
-    // we need the ioslaves to first authenticate against the server with
-    // it to ensure it is valid.
-    dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_SKIP_CACHING_ON_QUERY, true);
 
     KPasswdStore* passwdstore = d->passwdStore();
 
