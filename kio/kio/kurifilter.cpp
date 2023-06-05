@@ -44,7 +44,7 @@ static QString lookupIconNameFor(const KUrl &url, KUriFilterData::UriTypes type)
     switch ( type )
     {
         case KUriFilterData::NetProtocol:
-            iconName = KMimeType::favIconForUrl(url);
+            iconName = KMimeType::favIconForUrl(url, true);
             if (iconName.isEmpty())
                 iconName = KMimeType::iconNameForUrl( url );
             else

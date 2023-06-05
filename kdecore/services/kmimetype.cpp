@@ -447,19 +447,28 @@ QString KMimeType::iconNameForUrl( const KUrl & _url, mode_t mode )
     return !i.isEmpty() ? i : unknown;
 }
 
-QString KMimeType::favIconForUrl( const KUrl& url )
+QString KMimeType::favIconForUrl( const KUrl& url, bool download )
 {
     if (url.isLocalFile()
         || !url.protocol().startsWith(QLatin1String("http"))
-        || !KMimeTypeRepository::self()->useFavIcons())
+        || !KMimeTypeRepository::self()->useFavIcons()) {
         return QString();
+    }
 
     QDBusInterface kded( QString::fromLatin1("org.kde.kded"),
                          QString::fromLatin1("/modules/favicons"),
                          QString::fromLatin1("org.kde.FavIcon") );
-    QDBusReply<QString> result = kded.call( QString::fromLatin1("iconForUrl"), url.url() );
-    if (result.isValid()) {
-        return result.value();
+    QDBusReply<QString> iconreply = kded.call( QString::fromLatin1("iconForUrl"), url.url() );
+    if (iconreply.isValid()) {
+        const QString iconfile = iconreply.value();
+        if (iconfile.isEmpty() && download) {
+            kDebug() << "Downloading icon for" << url.prettyUrl();
+            const QDBusReply<void> downloadreply = kded.call(QString::fromLatin1("downloadHostIcon"), url.url() );
+            if (!downloadreply.isValid()) {
+                kWarning() << "Could not start downloading icon for" << url.prettyUrl();
+            }
+        }
+        return iconfile;
     }
     return QString();
 }
@@ -469,7 +478,6 @@ QString KMimeType::comment( const KUrl &url) const
     Q_D(const KMimeType);
     return d->comment(url);
 }
-
 
 bool KMimeTypePrivate::inherits(const QString& mime) const
 {

@@ -70,14 +70,16 @@ public:
 
     /**
      * Return the "favicon" (see http://www.favicon.com) for the given @p url,
-     * if available. Does NOT attempt to download the favicon, it only returns
-     * one that is already available.
+     * if available. Does NOT attempt to download the favicon by default, it
+     * only returns one that is already available. If @p download is true
+     * then an attempt will be made to download icon for the given @p url but
+     * it will not be available immediately.
      *
      * If unavailable, returns QString().
      * @param url the URL of the favicon
      * @return the name of the favicon, or QString()
      */
-    static QString favIconForUrl( const KUrl& url );
+    static QString favIconForUrl( const KUrl& url, bool download = false );
 
     /**
      * Returns the descriptive comment associated with the MIME type.

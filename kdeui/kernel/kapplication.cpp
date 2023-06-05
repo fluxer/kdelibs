@@ -494,7 +494,6 @@ void KApplicationPrivate::init()
 
   qRegisterMetaType<KUrl>();
   qRegisterMetaType<KUrl::List>();
-
 }
 
 KApplication* KApplication::kApplication()
