@@ -26,7 +26,7 @@ class KMenu;
 class KFileWidget;
 
 /**
- * Note: Ported to new KBookmarkMenu, but untested
+ * NOTE: Ported to new KBookmarkMenu, but untested
  */
 class KFileBookmarkHandler : public QObject, public KBookmarkOwner
 {
@@ -54,9 +54,6 @@ private:
     KFileWidget *m_widget;
     KMenu *m_menu;
     KBookmarkMenu *m_bookmarkMenu;
-
-    class KFileBookmarkHandlerPrivate;
-    KFileBookmarkHandlerPrivate *d;
 };
 
 
