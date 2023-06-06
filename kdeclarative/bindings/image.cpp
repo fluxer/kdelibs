@@ -35,8 +35,7 @@ static QScriptValue imageCtor(QScriptContext *ctx, QScriptEngine *eng)
     if (ctx->argumentCount() > 0) {
         QScriptValue v = ctx->argument(0);
         if (v.isString()) {
-            QImage image = QImage(v.toString());
-            return qScriptValueFromValue(eng, image);
+            return qScriptValueFromValue(eng, QImage(v.toString()));
         } else if (v.isVariant()) {
             QVariant variant = v.toVariant();
             QPixmap p = variant.value<QPixmap>();
