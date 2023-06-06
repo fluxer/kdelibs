@@ -25,8 +25,11 @@
 
 #include <sys/types.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QStack>
+#include <QObject>
+#include <QStack>
+#include <QString>
+#include <QMenu>
+#include <QAction>
 
 #include <klocale.h>
 #include <kaction.h>
@@ -38,11 +41,8 @@
 #include "kbookmark.h"
 #include "kbookmarkmanager.h"
 
-#include <QString>
-#include <QMenu>
 class KBookmark;
 class KAction;
-#include <QAction>
 class KActionMenu;
 class KActionCollection;
 class KBookmarkOwner;

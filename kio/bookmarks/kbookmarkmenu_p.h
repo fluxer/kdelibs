@@ -22,53 +22,9 @@
 #ifndef __kbookmarkmenu_p_h__
 #define __kbookmarkmenu_p_h__
 
-#include <QtCore/QObject>
+#include <QTreeWidget>
 
-#include <kdialog.h>
-#include <kicon.h>
-#include <klocale.h>
-#include <kaction.h>
-#include <kactionmenu.h>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QLabel>
-
-#include "kbookmark.h"
-#include "kbookmarkimporter.h"
-#include "kbookmarkmanager.h"
-
-#include <QString>
-#include <QPushButton>
-class KLineEdit;
-class KBookmark;
 class KBookmarkGroup;
-class KAction;
-class KActionMenu;
-class KActionCollection;
-class KBookmarkOwner;
-class KBookmarkMenu;
-
-class KImportedBookmarkMenu : public KBookmarkMenu
-{
-    friend class KBookmarkMenuImporter;
-  Q_OBJECT
-public:
-  //TODO simplfy
-  KImportedBookmarkMenu( KBookmarkManager* mgr,
-                 KBookmarkOwner * owner, KMenu * parentMenu,
-                 const QString & type, const QString & location );
-  KImportedBookmarkMenu( KBookmarkManager* mgr,
-                 KBookmarkOwner * owner, KMenu * parentMenu);
-  ~KImportedBookmarkMenu();
-  virtual void clear();
-  virtual void refill();
-protected Q_SLOTS:
-  void slotNSLoad();
-private:
-   QString m_type;
-   QString m_location;
-};
-
 
 class KBookmarkTreeItem : public QTreeWidgetItem
 {
@@ -89,43 +45,6 @@ public:
   static KBookmarkSettings *s_self;
   static void readSettings();
   static KBookmarkSettings *self();
-};
-
-/**
- * A class connected to KNSBookmarkImporter, to fill KActionMenus.
- */
-class KBookmarkMenuImporter : public QObject
-{
-  Q_OBJECT
-public:
-  KBookmarkMenuImporter( KBookmarkManager* mgr, KImportedBookmarkMenu * menu ) :
-     m_menu(menu), m_pManager(mgr) {}
-
-  void openBookmarks( const QString &location, const QString &type );
-  void connectToImporter( const QObject &importer );
-
-protected Q_SLOTS:
-  void newBookmark( const QString & text, const QString & url, const QString & );
-  void newFolder( const QString & text, bool, const QString & );
-  void newSeparator();
-  void endFolder();
-
-protected:
-  QStack<KImportedBookmarkMenu*> mstack;
-  KImportedBookmarkMenu * m_menu;
-  KBookmarkManager* m_pManager;
-};
-
-class KImportedBookmarkActionMenu : public KActionMenu, public KBookmarkActionInterface
-{
-public:
-  KImportedBookmarkActionMenu(const KIcon &icon, const QString &text, QObject *parent)
-    : KActionMenu(icon, text, parent),
-      KBookmarkActionInterface(KBookmark())
-  {
-  }
-  ~KImportedBookmarkActionMenu()
-  {}
 };
 
 #endif
