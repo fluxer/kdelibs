@@ -37,13 +37,11 @@ public:
     ~KFileBookmarkHandler();
 
     // KBookmarkOwner interface:
-    virtual QString currentUrl() const;
-    virtual QString currentTitle() const;
+    QString currentUrl() const final;
+    QString currentTitle() const final;
+    void openBookmark(const KBookmark &bm, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers) final;
 
     KMenu *menu() const { return m_menu; }
-
-public Q_SLOTS:
-    void openBookmark(const KBookmark &bm, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
 
 Q_SIGNALS:
     void openUrl(const QString &url);
