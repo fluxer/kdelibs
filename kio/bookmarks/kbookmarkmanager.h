@@ -378,71 +378,64 @@ private:
 class KIO_EXPORT KBookmarkOwner
 {
 public:
-    virtual ~KBookmarkOwner() {}
+    /**
+    * This function is called whenever the user wants to add the
+    * current page to the bookmarks list.  The title will become the
+    * "name" of the bookmark.  You must overload this function if you
+    * wish to give your users the ability to add bookmarks.
+    * The default returns an empty string.
+    *
+    * @return the title of the current page.
+    */
+    virtual QString currentTitle() const { return QString(); }
 
-  /**
-   * This function is called whenever the user wants to add the
-   * current page to the bookmarks list.  The title will become the
-   * "name" of the bookmark.  You must overload this function if you
-   * wish to give your users the ability to add bookmarks.
-   * The default returns an empty string.
-   *
-   * @return the title of the current page.
-   */
-  virtual QString currentTitle() const { return QString(); }
-
-  /**
-   * This function is called whenever the user wants to add the
-   * current page to the bookmarks list.  The URL will become the URL
-   * of the bookmark.  You must overload this function if you wish to
-   * give your users the ability to add bookmarks.
-   * The default returns an empty string.
-   *
-   * @return the URL of the current page.
-   */
-  virtual QString currentUrl() const { return QString(); }
+    /**
+    * This function is called whenever the user wants to add the
+    * current page to the bookmarks list.  The URL will become the URL
+    * of the bookmark.  You must overload this function if you wish to
+    * give your users the ability to add bookmarks.
+    * The default returns an empty string.
+    *
+    * @return the URL of the current page.
+    */
+    virtual QString currentUrl() const { return QString(); }
 
 
-  /**
-   * This function returns whether the owner supports tabs.
-   * The default returns @c false.
-   */
-  virtual bool supportsTabs() const { return false; }
+    /**
+    * This function returns whether the owner supports tabs.
+    * The default returns @c false.
+    */
+    virtual bool supportsTabs() const { return false; }
 
-  /**
-   * Returns a list of title, URL pairs of the open tabs.
-   * The default returns an empty list.
-   */
-  virtual QList<QPair<QString, QString> > currentBookmarkList() const { return QList<QPair<QString, QString> >(); }
+    /**
+    * Returns a list of title, URL pairs of the open tabs.
+    * The default returns an empty list.
+    */
+    virtual QList<QPair<QString, QString> > currentBookmarkList() const { return QList<QPair<QString, QString> >(); }
 
-  enum BookmarkOption { ShowAddBookmark, ShowEditBookmark };
+    enum BookmarkOption { ShowAddBookmark, ShowEditBookmark };
 
+    /** Returns true if \p action should be shown in the menu
+    *  The default is to show both a add and editBookmark Entry
+    *  //TODO ContextMenuAction? to disable the contextMenu?
+    *         Delete and Propeties to disable those in the
+    *         context menu?
+    */
+    virtual bool enableOption(BookmarkOption option) const;
 
-  /** Returns true if \p action should be shown in the menu
-   *  The default is to show both a add and editBookmark Entry
-   *  //TODO ContextMenuAction? to disable the contextMenu?
-   *         Delete and Propeties to disable those in the
-   *         context menu?
-   */
-  virtual bool enableOption(BookmarkOption option) const;
+    /**
+    * Called if a bookmark is selected. You need to override this.
+    */
+    virtual void openBookmark(const KBookmark & bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km) = 0;
 
-  /**
-   * Called if a bookmark is selected. You need to override this.
-   */
-  virtual void openBookmark(const KBookmark & bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km) = 0;
+    /**
+    * Called if the user wants to open every bookmark in this folder in a new tab.
+    * The default implementation does nothing.
+    * This is only called if supportsTabs() returns true
+    */
+    virtual void openFolderinTabs(const KBookmarkGroup &bm);
 
-  /**
-   * Called if the user wants to open every bookmark in this folder in a new tab.
-   * The default implementation does nothing.
-   * This is only called if supportsTabs() returns true
-  */
-  virtual void openFolderinTabs(const KBookmarkGroup &bm);
-
-  virtual KBookmarkDialog * bookmarkDialog(KBookmarkManager * mgr, QWidget *parent);
-
-private:
-  class KBookmarkOwnerPrivate;
-  KBookmarkOwnerPrivate *d;
+    virtual KBookmarkDialog * bookmarkDialog(KBookmarkManager * mgr, QWidget *parent);
 };
 
 #endif
