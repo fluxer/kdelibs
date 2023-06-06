@@ -23,7 +23,6 @@ install(
     KBookmarkActionInterface
     KBookmarkActionMenu
     KBookmarkDialog
-    KBookmarkDomBuilder
     KBookmarkExporterBase
     KBookmarkGroup
     KBookmarkGroupTraverser

@@ -22,7 +22,6 @@
 #include <stdlib.h>
 
 #include <kbookmarkimporter.h>
-#include <kbookmarkdombuilder.h>
 #include <kmenu.h>
 #include <kstandarddirs.h>
 
