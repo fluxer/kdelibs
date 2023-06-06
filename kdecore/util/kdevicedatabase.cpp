@@ -21,6 +21,9 @@
 #include "kdebug.h"
 
 #include <QFile>
+#include <QCoreApplication>
+
+#define KDEVICEDATABASE_TIMEOUT 100
 
 struct KDeviceEntry
 {
@@ -75,12 +78,19 @@ static void extractIDs(QFile *idsfile,
 {
     // qDebug() << Q_FUNC_INFO << idsfile->fileName();
 
+    int counter = 0;
     char idbuffer[5];
     char strbuffer[1024];
     bool classessection = false;
     QByteArray lastvendorid;
     QByteArray lastdeviceid;
     while (!idsfile->atEnd()) {
+        counter++;
+        if (counter >= KDEVICEDATABASE_TIMEOUT) {
+            QCoreApplication::processEvents(QEventLoop::AllEvents, KDEVICEDATABASE_TIMEOUT);
+            counter = 0;
+        }
+
         const QByteArray dbline = idsfile->readLine();
         const QByteArray trimmeddbline = dbline.trimmed();
         // qDebug() << Q_FUNC_INFO << dbline;
