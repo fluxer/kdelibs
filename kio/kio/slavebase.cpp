@@ -806,37 +806,38 @@ int SlaveBase::waitForAnswer( int expected1, int expected2, QByteArray & data, i
 }
 
 
-int SlaveBase::readData( QByteArray &buffer)
+int SlaveBase::readData(QByteArray &buffer)
 {
-   int result = waitForAnswer( MSG_DATA, 0, buffer );
-   //kDebug(7019) << "readData: length = " << result << " ";
-   return result;
+    int result = waitForAnswer(MSG_DATA, 0, buffer);
+    //kDebug(7019) << "readData: length = " << result << " ";
+    return result;
 }
 
 void SlaveBase::setTimeoutSpecialCommand(int timeout, const QByteArray &data)
 {
-   if (timeout > 0)
-      d->timeout = time(0)+(time_t)timeout;
-   else if (timeout == 0)
-      d->timeout = 1; // Immediate timeout
-   else
-      d->timeout = 0; // Canceled
+    if (timeout > 0) {
+        d->timeout = time(0)+(time_t)timeout;
+    } else if (timeout == 0) {
+        d->timeout = 1; // Immediate timeout
+    } else {
+        d->timeout = 0; // Canceled
+    }
 
    d->timeoutData = data;
 }
 
-void SlaveBase::dispatch( int command, const QByteArray &data )
+void SlaveBase::dispatch(int command, const QByteArray &data)
 {
-    QDataStream stream( data );
+    QDataStream stream(data);
 
-    switch( command ) {
+    switch(command) {
         case CMD_HOST: {
             QString passwd;
             QString host, user;
             quint16 port;
             stream >> host >> port >> user >> passwd;
             d->m_state = d->InsideMethod;
-            setHost( host, port, user, passwd );
+            setHost(host, port, user, passwd);
             d->verifyErrorFinishedNotCalled("setHost()");
             d->m_state = d->Idle;
             break;
@@ -859,7 +860,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
-            get( url );
+            get(url);
             d->verifyState("get()");
             d->m_state = d->Idle;
             break;
@@ -869,9 +870,13 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             int permissions;
             qint8 iOverwrite, iResume;
             stream >> url >> iOverwrite >> iResume >> permissions;
-            JobFlags flags;
-            if ( iOverwrite != 0 ) flags |= Overwrite;
-            if ( iResume != 0 ) flags |= Resume;
+            JobFlags flags = DefaultFlags;
+            if (iOverwrite != 0) {
+                flags |= Overwrite;
+            }
+            if (iResume != 0) {
+                flags |= Resume;
+            }
 
             // Remember that we need to send canResume(), TransferJob is expecting
             // it. Well, in theory this shouldn't be done if resume is true.
@@ -879,7 +884,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             d->needSendCanResume = true   /* !resume */;
 
             d->m_state = d->InsideMethod;
-            put( url, permissions, flags);
+            put(url, permissions, flags);
             d->verifyState("put()");
             d->m_state = d->Idle;
             break;
@@ -888,7 +893,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
-            stat( url ); //krazy:exclude=syscalls
+            stat(url);
             d->verifyState("stat()");
             d->m_state = d->Idle;
             break;
@@ -897,7 +902,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
-            mimetype( url );
+            mimetype(url);
             d->verifyState("mimetype()");
             d->m_state = d->Idle;
             break;
@@ -906,7 +911,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
-            listDir( url );
+            listDir(url);
             d->verifyState("listDir()");
             d->m_state = d->Idle;
             break;
@@ -916,7 +921,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             int i;
             stream >> url >> i;
             d->m_state = d->InsideMethod;
-            mkdir( url, i ); //krazy:exclude=syscalls
+            mkdir(url, i);
             d->verifyState("mkdir()");
             d->m_state = d->Idle;
             break;
@@ -926,10 +931,12 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             KUrl url2;
             qint8 iOverwrite;
             stream >> url >> url2 >> iOverwrite;
-            JobFlags flags;
-            if ( iOverwrite != 0 ) flags |= Overwrite;
+            JobFlags flags = DefaultFlags;
+            if (iOverwrite != 0) {
+                flags |= Overwrite;
+            }
             d->m_state = d->InsideMethod;
-            rename( url, url2, flags ); //krazy:exclude=syscalls
+            rename(url, url2, flags);
             d->verifyState("rename()");
             d->m_state = d->Idle;
             break;
@@ -939,10 +946,12 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             QString target;
             qint8 iOverwrite;
             stream >> target >> url >> iOverwrite;
-            JobFlags flags;
-            if ( iOverwrite != 0 ) flags |= Overwrite;
+            JobFlags flags = DefaultFlags;
+            if (iOverwrite != 0) {
+                flags |= Overwrite;
+            }
             d->m_state = d->InsideMethod;
-            symlink( target, url, flags );
+            symlink(target, url, flags);
             d->verifyState("symlink()");
             d->m_state = d->Idle;
             break;
@@ -953,10 +962,12 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             int permissions;
             qint8 iOverwrite;
             stream >> url >> url2 >> permissions >> iOverwrite;
-            JobFlags flags;
-            if ( iOverwrite != 0 ) flags |= Overwrite;
+            JobFlags flags = DefaultFlags;
+            if (iOverwrite != 0) {
+                flags |= Overwrite;
+            }
             d->m_state = d->InsideMethod;
-            copy( url, url2, permissions, flags );
+            copy(url, url2, permissions, flags);
             d->verifyState("copy()");
             d->m_state = d->Idle;
             break;
@@ -966,7 +977,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             qint8 isFile;
             stream >> url >> isFile;
             d->m_state = d->InsideMethod;
-            del( url, isFile != 0);
+            del(url, isFile != 0);
             d->verifyState("del()");
             d->m_state = d->Idle;
             break;
@@ -976,7 +987,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             int i;
             stream >> url >> i;
             d->m_state = d->InsideMethod;
-            chmod( url, i);
+            chmod(url, i);
             d->verifyState("chmod()");
             d->m_state = d->Idle;
             break;
@@ -1026,7 +1037,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
     }
 }
 
-bool SlaveBase::checkCachedAuthentication( AuthInfo& info )
+bool SlaveBase::checkCachedAuthentication(AuthInfo &info)
 {
     KPasswdStore* passwdstore = d->passwdStore();
     if (!passwdstore) {
@@ -1042,11 +1053,10 @@ bool SlaveBase::checkCachedAuthentication( AuthInfo& info )
     return false;
 }
 
-void SlaveBase::dispatchOpenCommand( int command, const QByteArray &data )
+void SlaveBase::dispatchOpenCommand(int command, const QByteArray &data)
 {
-    QDataStream stream( data );
-
-    switch( command ) {
+    QDataStream stream(data);
+    switch(command) {
         case CMD_NONE: {
             break;
         }
@@ -1058,56 +1068,58 @@ void SlaveBase::dispatchOpenCommand( int command, const QByteArray &data )
     }
 }
 
-bool SlaveBase::cacheAuthentication( const AuthInfo& info )
+bool SlaveBase::cacheAuthentication(const AuthInfo &info)
 {
     KPasswdStore* passwdstore = d->passwdStore();
-
     if (!passwdstore) {
         return false;
     }
-
     passwdstore->storePasswd(authInfoKey(info), authInfoToData(info), metaData(QLatin1String("window-id")).toLongLong());
     return true;
 }
 
 int SlaveBase::connectTimeout()
 {
-    bool ok;
+    bool ok = false;
     QString tmp = metaData(QLatin1String("ConnectTimeout"));
     int result = tmp.toInt(&ok);
-    if (ok)
-       return result;
+    if (ok) {
+        return result;
+    }
     return DEFAULT_CONNECT_TIMEOUT;
 }
 
 int SlaveBase::proxyConnectTimeout()
 {
-    bool ok;
+    bool ok = false;
     QString tmp = metaData(QLatin1String("ProxyConnectTimeout"));
     int result = tmp.toInt(&ok);
-    if (ok)
-       return result;
+    if (ok) {
+        return result;
+    }
     return DEFAULT_PROXY_CONNECT_TIMEOUT;
 }
 
 
 int SlaveBase::responseTimeout()
 {
-    bool ok;
+    bool ok = false;
     QString tmp = metaData(QLatin1String("ResponseTimeout"));
     int result = tmp.toInt(&ok);
-    if (ok)
-       return result;
+    if (ok) {
+        return result;
+    }
     return DEFAULT_RESPONSE_TIMEOUT;
 }
 
 int SlaveBase::readTimeout()
 {
-    bool ok;
+    bool ok = false;
     QString tmp = metaData(QLatin1String("ReadTimeout"));
     int result = tmp.toInt(&ok);
-    if (ok)
-       return result;
+    if (ok) {
+        return result;
+    }
     return DEFAULT_READ_TIMEOUT;
 }
 
@@ -1118,14 +1130,17 @@ bool SlaveBase::wasKilled() const
 
 void SlaveBase::setKillFlag()
 {
-   d->wasKilled=true;
+    d->wasKilled=true;
 }
 
-void SlaveBase::send(int cmd, const QByteArray& arr )
+void SlaveBase::send(int cmd, const QByteArray &arr)
 {
-   slaveWriteError = false;
-   if (!d->appConnection.send(cmd, arr))
-       // Note that slaveWriteError can also be set by sigpipe_handler
-       slaveWriteError = true;
-   if (slaveWriteError) exit();
+    slaveWriteError = false;
+    if (!d->appConnection.send(cmd, arr)) {
+        // Note that slaveWriteError can also be set by sigpipe_handler
+        slaveWriteError = true;
+    }
+    if (slaveWriteError) {
+        exit();
+    }
 }
