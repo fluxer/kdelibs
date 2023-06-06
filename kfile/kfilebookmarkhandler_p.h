@@ -51,13 +51,10 @@ Q_SIGNALS:
     void openUrl( const QString& url );
 
 private:
-    void importOldBookmarks( const QString& path, KBookmarkManager *manager );
-
     KFileWidget *m_widget;
     KMenu *m_menu;
     KBookmarkMenu *m_bookmarkMenu;
 
-private:
     class KFileBookmarkHandlerPrivate;
     KFileBookmarkHandlerPrivate *d;
 };
