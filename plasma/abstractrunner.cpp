@@ -30,7 +30,6 @@
 #include <kdebug.h>
 #include <kicon.h>
 #include <kplugininfo.h>
-#include <kservicetypetrader.h>
 #include <kstandarddirs.h>
 
 #include <plasma/querymatch.h>
@@ -236,11 +235,6 @@ RunnerContext::Types AbstractRunner::ignoredTypes() const
 void AbstractRunner::setIgnoredTypes(RunnerContext::Types types)
 {
     d->blackListed = types;
-}
-
-KService::List AbstractRunner::serviceQuery(const QString &serviceType, const QString &constraint) const
-{
-    return KServiceTypeTrader::self()->query(serviceType, constraint);
 }
 
 void AbstractRunner::run(const Plasma::RunnerContext &search, const Plasma::QueryMatch &action)

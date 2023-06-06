@@ -21,7 +21,6 @@
 #define PLASMA_ABSTRACTRUNNER_H
 
 #include <QObject>
-#include <QMutex>
 #include <QStringList>
 #include <QAction>
 #include <QMimeData>
@@ -305,21 +304,6 @@ class PLASMA_EXPORT AbstractRunner : public QObject
          * only after higher priority runners.
          */
         void setPriority(Priority newPriority);
-
-        /**
-         * @deprecated
-         * A blocking method to do queries of installed Services which can provide
-         * a measure of safety for runners running their own threads. This should
-         * be used instead of calling KServiceTypeTrader::query(..) directly.
-         *
-         * @param serviceType a service type like "Plasma/Applet"
-         * @param constraint a constraint to limit the choices returned.
-         * @see KServiceTypeTrader::query(const QString&, const QString&)
-         *
-         * @return a list of services that satisfy the query.
-         */
-        KService::List serviceQuery(const QString &serviceType,
-                                    const QString &constraint = QString()) const;
 
         /**
          * A given match can have more than action that can be performed on it.
