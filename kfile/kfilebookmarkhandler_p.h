@@ -33,10 +33,8 @@ class KFileBookmarkHandler : public QObject, public KBookmarkOwner
     Q_OBJECT
 
 public:
-    KFileBookmarkHandler( KFileWidget *widget );
+    KFileBookmarkHandler(KFileWidget *widget);
     ~KFileBookmarkHandler();
-
-    QMenu * popupMenu();
 
     // KBookmarkOwner interface:
     virtual QString currentUrl() const;
@@ -45,10 +43,10 @@ public:
     KMenu *menu() const { return m_menu; }
 
 public Q_SLOTS:
-    void openBookmark(const KBookmark & bm, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
+    void openBookmark(const KBookmark &bm, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
 
 Q_SIGNALS:
-    void openUrl( const QString& url );
+    void openUrl(const QString &url);
 
 private:
     KFileWidget *m_widget;

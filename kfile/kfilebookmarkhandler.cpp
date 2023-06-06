@@ -27,24 +27,25 @@
 
 #include "kfilewidget.h"
 
-KFileBookmarkHandler::KFileBookmarkHandler( KFileWidget *widget )
-    : QObject( widget ),
-      KBookmarkOwner(),
-      m_widget( widget )
+KFileBookmarkHandler::KFileBookmarkHandler(KFileWidget *widget)
+    : QObject(widget),
+    KBookmarkOwner(),
+    m_widget(widget),
+    m_menu(nullptr),
+    m_bookmarkMenu(nullptr)
 {
-    setObjectName( "KFileBookmarkHandler" );
-    m_menu = new KMenu( widget );
-    m_menu->setObjectName( "bookmark menu" );
+    setObjectName("KFileBookmarkHandler");
+    m_menu = new KMenu(widget);
+    m_menu->setObjectName("bookmark menu");
 
-    QString file = KStandardDirs::locate( "data", "kfile/bookmarks.xml" );
-    if ( file.isEmpty() )
-        file = KStandardDirs::locateLocal( "data", "kfile/bookmarks.xml" );
+    QString file = KStandardDirs::locate("data", "kfile/bookmarks.xml");
+    if (file.isEmpty()) {
+        file = KStandardDirs::locateLocal("data", "kfile/bookmarks.xml");
+    }
+    KBookmarkManager *manager = KBookmarkManager::managerForFile(file, "kfile");
+    manager->setUpdate(true);
 
-    KBookmarkManager *manager = KBookmarkManager::managerForFile( file, "kfile" );
-    manager->setUpdate( true );
-
-    m_bookmarkMenu = new KBookmarkMenu( manager, this, m_menu,
-                                        widget->actionCollection() );
+    m_bookmarkMenu = new KBookmarkMenu(manager, this, m_menu, widget->actionCollection());
 }
 
 KFileBookmarkHandler::~KFileBookmarkHandler()
@@ -52,9 +53,9 @@ KFileBookmarkHandler::~KFileBookmarkHandler()
     delete m_bookmarkMenu;
 }
 
-void KFileBookmarkHandler::openBookmark( const KBookmark & bm, Qt::MouseButtons, Qt::KeyboardModifiers)
+void KFileBookmarkHandler::openBookmark(const KBookmark &bm, Qt::MouseButtons, Qt::KeyboardModifiers)
 {
-  emit openUrl( bm.url().url() );
+  emit openUrl(bm.url().url());
 }
 
 QString KFileBookmarkHandler::currentUrl() const
