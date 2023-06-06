@@ -83,15 +83,21 @@ void KUiServerJobTracker::registerJob(KJob *job)
     }
 
     KComponentData componentData = KGlobal::mainComponent();
-    QString programIconName = componentData.aboutData()->programIconName();
-
-    if (programIconName.isEmpty()) {
-        programIconName = componentData.aboutData()->appName();
+    QString appName = job->property("appName").toString();
+    if (appName.isEmpty()) {
+        appName = componentData.aboutData()->programName();
+    }
+    QString appIconName = job->property("appIconName").toString();
+    if (appIconName.isEmpty()) {
+        appIconName = componentData.aboutData()->programIconName();
+    }
+    if (appIconName.isEmpty()) {
+        appIconName = componentData.aboutData()->appName();
     }
 
     QWeakPointer<KJob> jobWatch = job;
-    QDBusReply<QDBusObjectPath> reply = serverProxy->uiserver().requestView(componentData.aboutData()->programName(),
-                                                                            programIconName,
+    QDBusReply<QDBusObjectPath> reply = serverProxy->uiserver().requestView(appName,
+                                                                            appIconName,
                                                                             job->capabilities());
 
     // If we got a valid reply, register the interface for later usage.

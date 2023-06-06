@@ -42,6 +42,18 @@
       <arg name="number" type="u" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <method name="setAppName">
+      <arg name="message" type="s" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="setAppIconName">
+      <arg name="message" type="s" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="setCapabilities">
+      <arg name="number" type="i" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
     <method name="setDestUrl">
       <arg name="destUrl" type="v" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
