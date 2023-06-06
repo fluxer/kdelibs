@@ -337,15 +337,6 @@ private:
     // consts added to avoid a copy-and-paste of internalDocument
     void parse() const;
 
-    /**
-    * You need to pass a dbusObjectName as the second parameter
-    * In kde 3 managerForFile had the parameters (const QString &, bool)
-    * We want old calls which pass a bool as a second parameter to fail.
-    * Unfortunately C++ can convert a bool to a QString, via QString(char(bool))
-    * This private overloaded method prevents this, as it is a better match,
-    * and thus old calls fail at compile time.
-    */
-    static KBookmarkManager* managerForFile( const QString&, int);
     void init( const QString& dbusPath );
     
     class Private;
