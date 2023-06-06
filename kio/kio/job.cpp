@@ -394,12 +394,6 @@ void SimpleJobPrivate::start(SlaveInterface *slave)
         slave->send( CMD_META_DATA, packedArgs );
     }
 
-    if (!m_subUrl.isEmpty())
-    {
-       KIO_ARGS << m_subUrl;
-       slave->send( CMD_SUBURL, packedArgs );
-    }
-
     slave->send( m_command, m_packedArgs );
 }
 
@@ -1094,9 +1088,6 @@ void TransferJobPrivate::start(SlaveInterface *slave)
     q->connect( slave, SIGNAL(mimeType(QString)),
              SLOT(slotMimetype(QString)) );
 
-    q->connect( slave, SIGNAL(needSubUrlData()),
-             SLOT(slotNeedSubUrlData()) );
-
     q->connect( slave, SIGNAL(canResume(KIO::filesize_t)),
              SLOT(slotCanResume(KIO::filesize_t)) );
 
@@ -1110,25 +1101,6 @@ void TransferJobPrivate::start(SlaveInterface *slave)
     SimpleJobPrivate::start(slave);
     if (m_internalSuspended)
        slave->suspend();
-}
-
-void TransferJobPrivate::slotNeedSubUrlData()
-{
-    Q_Q(TransferJob);
-    // Job needs data from subURL.
-    m_subJob = KIO::get( m_subUrl, NoReload, HideProgressInfo);
-    internalSuspend(); // Put job on hold until we have some data.
-    q->connect(m_subJob, SIGNAL(data(KIO::Job*,QByteArray)),
-            SLOT(slotSubUrlData(KIO::Job*,QByteArray)));
-    q->addSubjob(m_subJob);
-}
-
-void TransferJobPrivate::slotSubUrlData(KIO::Job*, const QByteArray &data)
-{
-    // The Alternating Bitburg protocol in action again.
-    staticData = data;
-    m_subJob->d_func()->internalSuspend(); // Put job on hold until we have delivered the data.
-    internalResume(); // Activate ourselves again.
 }
 
 void TransferJobPrivate::slotCanResume( KIO::filesize_t offset )
@@ -1168,7 +1140,7 @@ void TransferJobPrivate::slotDataReqFromDevice()
 void TransferJob::slotResult( KJob *job)
 {
     Q_D(TransferJob);
-    // This can only be our suburl.
+    // This can only be our subjob.
     Q_ASSERT(job == d->m_subJob);
 
    SimpleJob::slotResult( job );
@@ -1559,8 +1531,7 @@ void FileCopyJobPrivate::slotStart()
           (m_src.host() == m_dest.host()) &&
           (m_src.port() == m_dest.port()) &&
           (m_src.user() == m_dest.user()) &&
-          (m_src.pass() == m_dest.pass()) &&
-          !m_src.hasSubUrl() && !m_dest.hasSubUrl())
+          (m_src.pass() == m_dest.pass()))
       {
          startRenameJob(m_src);
          return;
@@ -1586,8 +1557,7 @@ void FileCopyJobPrivate::startBestCopyMethod()
        (m_src.host() == m_dest.host()) &&
        (m_src.port() == m_dest.port()) &&
        (m_src.user() == m_dest.user()) &&
-       (m_src.pass() == m_dest.pass()) &&
-       !m_src.hasSubUrl() && !m_dest.hasSubUrl())
+       (m_src.pass() == m_dest.pass()))
    {
       startCopyJob();
    }

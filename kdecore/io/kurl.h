@@ -506,40 +506,6 @@ public:
   bool hasRef() const;
 
   /**
-   * Returns the @em unencoded reference (or "fragment") of the URL (everything after '#').
-   * @return the unencoded reference, or QString("") if the reference part is empty,
-   *   or QString() if the URL has no reference.
-   * @see split
-   * @see hasSubUrl
-   * @see encodedHtmlRef
-   */
-  QString htmlRef() const;
-
-  /**
-   * Returns the @em encoded reference (or "fragment") of the URL (everything after '#').
-   * @return the encoded reference, or QString("") if the reference part is empty,
-   *   or QString() if the URL has no reference.
-   * @see ref
-   */
-  QString encodedHtmlRef() const;
-
-  /**
-   * Sets the HTML-style reference.
-   *
-   * @param _ref The new reference. This is considered to be @em not encoded in
-   *         contrast to setRef(). Use QString() to remove it.
-   * @see htmlRef()
-   */
-  void setHTMLRef( const QString& _ref );
-
-  /**
-   * Checks whether there is a HTML reference.
-   * @return true if the URL has an HTML-style reference.
-   * @see htmlRef()
-   */
-  bool hasHTMLRef() const;
-
-  /**
    * Checks whether the file is local.
    * @return true if the file is a plain local file (i.e. uses the file protocol
    *   and no hostname, or the local hostname).
@@ -563,14 +529,6 @@ public:
    *         or QString() if not encoding was specified.
    */
   QString fileEncoding() const;
-
-  /**
-   * Checks whether the URL has any sub URLs. See split()
-   * for examples for sub URLs.
-   * @return true if the file has at least one sub URL.
-   * @see split
-   */
-  bool hasSubUrl() const;
 
   /**
    * Adds to the current path.
@@ -852,40 +810,6 @@ public:
   bool isParentOf( const KUrl& u ) const;
     // (this overload of the QUrl method allows to use the implicit KUrl constructors)
     // but also the equality test
-
-  /**
-   * Splits nested URLs like file:///home/weis/kde.tgz#gzip:/#tar:/kdebase
-   * A URL like http://www.kde.org#tar:/kde/README.hml#ref1 will be split in
-   * http://www.kde.org and tar:/kde/README.html#ref1.
-   * That means in turn that "#ref1" is an HTML-style reference and not a new sub URL.
-   * Since HTML-style references mark
-   * a certain position in a document this reference is appended to every URL.
-   * The idea behind this is that browsers, for example, only look at the first URL while
-   * the rest is not of interest to them.
-   *
-   *
-   * @param _url The URL that has to be split.
-   * @return An empty list on error or the list of split URLs.
-   * @see hasSubUrl
-   */
-  static List split( const QString& _url );
-
-  /**
-   * Splits nested URLs like file:///home/weis/kde.tgz#gzip:/#tar:/kdebase
-   * A URL like http://www.kde.org#tar:/kde/README.hml#ref1 will be split in
-   * http://www.kde.org and tar:/kde/README.html#ref1.
-   * That means in turn that "#ref1" is an HTML-style reference and not a new sub URL.
-   * Since HTML-style references mark
-   * a certain position in a document this reference is appended to every URL.
-   * The idea behind this is that browsers, for example, only look at the first URL while
-   * the rest is not of interest to them.
-   *
-   * @return An empty list on error or the list of split URLs.
-   *
-   * @param _url The URL that has to be split.
-   * @see hasSubUrl
-   */
-  static List split( const KUrl& _url );
 
   /**
    * Reverses split(). Only the first URL may have a reference. This reference

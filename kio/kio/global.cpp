@@ -341,8 +341,6 @@ KIO_EXPORT QString KIO::unsupportedActionErrorString(const QString &protocol, in
       return i18n("Changing the attributes of files is not supported with protocol %1.", protocol);
     case CMD_CHOWN:
       return i18n("Changing the ownership of files is not supported with protocol %1.", protocol);
-    case CMD_SUBURL:
-      return i18n("Using sub-URLs with %1 is not supported.", protocol);
     default:
       return i18n("Protocol %1 does not support action %2.", protocol, cmd);
   }/*end switch*/

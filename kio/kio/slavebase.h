@@ -118,11 +118,6 @@ public:
     void finished();
 
     /**
-     * Call to signal that data from the sub-URL is needed
-     */
-    void needSubUrlData();
-
-    /**
      * Call this from stat() to express details about an object, the
      * UDSEntry customarily contains the atoms describing file name, size,
      * mimetype, etc.
@@ -296,11 +291,6 @@ public:
      * This method is called whenever a change in host, port or user occurs.
      */
     virtual void setHost(const QString& host, quint16 port, const QString& user, const QString& pass);
-
-    /**
-     * Prepare slave for streaming operation
-     */
-    virtual void setSubUrl(const KUrl&url);
 
     /**
      * get, aka read.

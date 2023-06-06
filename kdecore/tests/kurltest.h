@@ -31,7 +31,6 @@ private Q_SLOTS:
     void testSetQuery();
     void testEmptyNullReference();
     void testSetRef();
-    void testSetHTMLRef();
     void testDirectory();
     void testUtf8();
     void testIsLocalFile();
@@ -55,7 +54,6 @@ private Q_SLOTS:
     void testSetUser();
     void testSetEncodedFragment_data();
     void testSetEncodedFragment();
-    void testSubURL();
     void testComparisons();
     void testStreaming();
     void testBrokenStuff();

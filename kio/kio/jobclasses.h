@@ -596,8 +596,6 @@ namespace KIO {
         TransferJob(TransferJobPrivate &dd);
     private:
         Q_PRIVATE_SLOT(d_func(), void slotCanResume( KIO::filesize_t offset ))
-        Q_PRIVATE_SLOT(d_func(), void slotNeedSubUrlData())
-        Q_PRIVATE_SLOT(d_func(), void slotSubUrlData(KIO::Job*, const QByteArray &))
         Q_PRIVATE_SLOT(d_func(), void slotDataReqFromDevice())
         Q_DECLARE_PRIVATE(TransferJob)
 

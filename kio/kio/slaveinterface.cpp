@@ -520,10 +520,6 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             emit metaData(m);
             break;
         }
-        case MSG_NEED_SUBURL_DATA: {
-            emit needSubUrlData();
-            break;
-        }
         default: {
             kWarning(7007) << "Slave sends unknown command (" << cmd << "), dropping slave";
             return false;

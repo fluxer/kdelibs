@@ -67,7 +67,6 @@ class SlaveInterfacePrivate;
    MSG_STAT_ENTRY,
    MSG_LIST_ENTRIES,
    MSG_RESUME,
-   MSG_NEED_SUBURL_DATA,
    MSG_CANRESUME
    // add new ones here once a release is done, to avoid breaking binary compatibility
  };
@@ -230,7 +229,6 @@ Q_SIGNALS:
     void finished();
     void listEntries( const KIO::UDSEntryList& );
     void statEntry( const KIO::UDSEntry& );
-    void needSubUrlData();
     void canResume( KIO::filesize_t );
 
     ///////////

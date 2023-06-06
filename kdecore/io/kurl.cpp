@@ -393,17 +393,6 @@ KUrl::KUrl( const QUrl &u )
 KUrl::KUrl( const KUrl& _u, const QString& _rel_url )
    : QUrl()
 {
-#if 0
-  if (_u.hasSubUrl()) // Operate on the last suburl, not the first
-  {
-    KUrl::List lst = split( _u );
-    KUrl u(lst.last(), _rel_url);
-    lst.erase( --lst.end() );
-    lst.append( u );
-    *this = join( lst );
-    return;
-  }
-#endif
   QString rUrl = _rel_url;
 
   // WORKAROUND THE RFC 1606 LOOPHOLE THAT ALLOWS
@@ -696,7 +685,7 @@ QString KUrl::toLocalFile( AdjustPathOption trailing ) const
 
 bool KUrl::isLocalFile() const
 {
-  if ( scheme().compare(QLatin1String("file"), Qt::CaseInsensitive) != 0 || hasSubUrl() )
+  if ( scheme().compare(QLatin1String("file"), Qt::CaseInsensitive) != 0 )
      return false;
 
   if (host().isEmpty() || (host() == QLatin1String("localhost")))
@@ -755,20 +744,6 @@ QString KUrl::fileEncoding() const
          return s.mid(8);
   }
   return QString();
-}
-
-bool KUrl::hasSubUrl() const
-{
-  // The isValid call triggers QUrlPrivate::validate which needs the full encoded url,
-  // all this takes too much time for isLocalFile()
-  const QString uscheme = scheme();
-  if ( uscheme.isEmpty() /*|| !isValid()*/ )
-    return false;
-  if (fragment().isEmpty())
-     return false;
-  if ( uscheme == QLatin1String("error") ) // anything that starts with error: has suburls
-     return true;
-  return false;
 }
 
 QString KUrl::url( AdjustPathOption trailing ) const
@@ -927,78 +902,10 @@ KUrl KUrl::fromMimeDataByteArray( const QByteArray& str )
   return KUrl( str /*, 106*/ ); // 106 is mib enum for utf8 codec;
 }
 
-KUrl::List KUrl::split( const KUrl& _url )
-{
-  QString ref;
-  bool hasRef;
-  KUrl::List lst;
-  KUrl url = _url;
-
-  while(true)
-  {
-     KUrl u = url;
-     u.setFragment( QString() );
-     lst.append(u);
-     if (url.hasSubUrl())
-     {
-        url = KUrl(url.fragment());
-     }
-     else
-     {
-        ref = url.fragment();
-        hasRef = url.hasFragment();
-        break;
-     }
-  }
-
-  if ( hasRef )
-  {
-    // Set HTML ref in all URLs.
-    KUrl::List::Iterator it;
-    for( it = lst.begin() ; it != lst.end(); ++it )
-    {
-      (*it).setFragment( ref );
-    }
-  }
-
-  return lst;
-}
-
-KUrl::List KUrl::split( const QString& _url )
-{
-  return split(KUrl(_url));
-}
-
-KUrl KUrl::join( const KUrl::List & lst )
-{
-  if (lst.isEmpty()) return KUrl();
-  KUrl tmp;
-
-  bool first = true;
-  QListIterator<KUrl> it(lst);
-  it.toBack();
-  while (it.hasPrevious())
-  {
-     KUrl u(it.previous());
-     if (!first) {
-         u.setEncodedFragment(tmp.url().toLatin1() /* TODO double check encoding */);
-     }
-     tmp = u;
-
-     first = false;
-  }
-
-  return tmp;
-}
-
 QString KUrl::fileName( const DirectoryOptions& options ) const
 {
   Q_ASSERT( options != 0 ); //Disallow options == false
   QString fname;
-  if (hasSubUrl()) { // If we have a suburl, then return the filename from there
-    const KUrl::List list = KUrl::split(*this);
-    return list.last().fileName(options);
-  }
   const QString path = this->path();
 
   int len = path.length();
@@ -1054,15 +961,6 @@ QString KUrl::fileName( const DirectoryOptions& options ) const
 
 void KUrl::addPath( const QString& _txt )
 {
-  if (hasSubUrl())
-  {
-     KUrl::List lst = split( *this );
-     KUrl &u = lst.last();
-     u.addPath(_txt);
-     *this = join( lst );
-     return;
-  }
-
   //m_strPath_encoded.clear();
 
   if ( _txt.isEmpty() )
@@ -1127,21 +1025,12 @@ bool KUrl::cd( const QString& _dir )
   if ( _dir.isEmpty() || !isValid() )
     return false;
 
-  if (hasSubUrl())
-  {
-     KUrl::List lst = split( *this );
-     KUrl &u = lst.last();
-     u.cd(_dir);
-     *this = join( lst );
-     return true;
-  }
-
   // absolute path ?
   if ( _dir[0] == QLatin1Char('/') )
   {
     //m_strPath_encoded.clear();
     setPath( _dir );
-    setHTMLRef( QString() );
+    setFragment( QString() );
     setEncodedQuery( QByteArray() );
     return true;
   }
@@ -1154,7 +1043,7 @@ bool KUrl::cd( const QString& _dir )
     strPath += QLatin1Char('/');
     strPath += _dir.right( strPath.length() - 1 );
     setPath( strPath );
-    setHTMLRef( QString() );
+    setFragment( QString() );
     setEncodedQuery( QByteArray() );
     return true;
   }
@@ -1169,7 +1058,7 @@ bool KUrl::cd( const QString& _dir )
   p = cleanpath( p, true, false );
   setPath( p );
 
-  setHTMLRef( QString() );
+  setFragment( QString() );
   setEncodedQuery( QByteArray() );
 
   return true;
@@ -1187,77 +1076,9 @@ KUrl KUrl::upUrl( ) const
      return u;
   }
 
-  if (!hasSubUrl())
-  {
-     KUrl u(*this);
-     u.cd(QLatin1String("../"));
-     return u;
-  }
-
-  // We have a subURL.
-  KUrl::List lst = split( *this );
-  if (lst.isEmpty())
-      return KUrl(); // Huh?
-  while (true)
-  {
-     KUrl &u = lst.last();
-     const QString old = u.path();
-     u.cd(QLatin1String("../"));
-     if (u.path() != old)
-         break; // Finished.
-     if (lst.count() == 1)
-         break; // Finished.
-     lst.removeLast();
-  }
-  return join( lst );
-}
-
-QString KUrl::htmlRef() const
-{
-  if ( !hasSubUrl() )
-  {
-      return fragment();
-  }
-
-  const List lst = split( *this );
-  return (*lst.begin()).fragment();
-}
-
-QString KUrl::encodedHtmlRef() const
-{
-  if ( !hasSubUrl() )
-  {
-    return ref();
-  }
-
-  const List lst = split( *this );
-  return (*lst.begin()).ref();
-}
-
-void KUrl::setHTMLRef( const QString& _ref )
-{
-  if ( !hasSubUrl() )
-  {
-    setFragment( _ref );
-    return;
-  }
-
-  List lst = split( *this );
-
-  (*lst.begin()).setFragment( _ref );
-
-  *this = join( lst );
-}
-
-bool KUrl::hasHTMLRef() const
-{
-  if ( !hasSubUrl() )
-  {
-    return hasRef();
-  }
-
-  const List lst = split( *this );
-  return (*lst.begin()).hasRef();
+  KUrl u(*this);
+  u.cd(QLatin1String("../"));
+  return u;
 }
 
 void KUrl::setDirectory( const QString &dir)

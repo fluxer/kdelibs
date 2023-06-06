@@ -427,11 +427,6 @@ void SlaveBase::finished()
     d->inOpenLoop=false;
 }
 
-void SlaveBase::needSubUrlData()
-{
-    send( MSG_NEED_SUBURL_DATA );
-}
-
 void SlaveBase::canResume()
 {
     send( MSG_CANRESUME );
@@ -495,8 +490,7 @@ static bool isSubCommand(int cmd)
 {
    return ((cmd == CMD_REPARSECONFIGURATION) ||
            (cmd == CMD_META_DATA) ||
-           (cmd == CMD_CONFIG) ||
-           (cmd == CMD_SUBURL));
+           (cmd == CMD_CONFIG));
 }
 
 void SlaveBase::mimeType( const QString &_type)
@@ -645,8 +639,6 @@ void SlaveBase::setModificationTime(KUrl const &, const QDateTime&)
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SETMODIFICATIONTIME)); }
 void SlaveBase::chown(KUrl const &, const QString &, const QString &)
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CHOWN)); }
-void SlaveBase::setSubUrl(KUrl const &)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SUBURL)); }
 
 void SlaveBase::reparseConfiguration()
 {
@@ -1020,15 +1012,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             //kDebug(7019) << "(" << getpid() << ") Incoming meta-data...";
             stream >> mIncomingMetaData;
             d->rebuildConfig();
-            break;
-        }
-        case CMD_SUBURL: {
-            KUrl url;
-            stream >> url;
-            d->m_state = d->InsideMethod;
-            setSubUrl(url);
-            d->verifyErrorFinishedNotCalled("setSubUrl()");
-            d->m_state = d->Idle;
             break;
         }
         case CMD_NONE: {

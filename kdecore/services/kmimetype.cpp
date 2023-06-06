@@ -174,8 +174,7 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
     const QString fileName( _url.fileName() );
     if ( !fileName.isEmpty() && !path.endsWith( QLatin1Char('/') ) ) {
         // and if we can trust it (e.g. don't trust *.pl over HTTP, could be anything)
-        if ( is_local_file || _url.hasSubUrl() || // Explicitly trust suburls
-             KProtocolInfo::determineMimetypeFromExtension( _url.protocol() ) ) {
+        if ( is_local_file || KProtocolInfo::determineMimetypeFromExtension( _url.protocol() ) ) {
             mimeList = KMimeTypeRepository::self()->findFromFileName( fileName );
         }
     }

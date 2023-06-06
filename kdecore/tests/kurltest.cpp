@@ -126,17 +126,13 @@ void KUrlTest::testEmptyNullReference()
 {
   KUrl url1 = KUrl("http://www.kde.org");
   QVERIFY( !url1.hasRef() );
-  QVERIFY( !url1.hasHTMLRef() );
   QVERIFY( url1.ref().isNull() );
-  QVERIFY( url1.htmlRef().isNull() );
-  QVERIFY( url1.encodedHtmlRef().isNull() );
+  QVERIFY( url1.fragment().isNull() );
 
   url1 = "http://www.kde.org#";
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
   QSTREMPTY( url1.ref() );
-  QSTREMPTY( url1.htmlRef() );
-  QSTREMPTY( url1.encodedHtmlRef() );
+  QSTREMPTY( url1.fragment() );
 }
 
 void KUrlTest::testSetRef()
@@ -157,26 +153,6 @@ void KUrlTest::testSetRef()
 
   url1.setRef( QString() );
   QVERIFY( url1.ref().isNull() );
-  QCOMPARE( url1.url(), QString("http://www.kde.org/foo.cgi") );
-}
-
-void KUrlTest::testSetHTMLRef()
-{
-  KUrl url1 = KUrl( QByteArray( "http://www.kde.org/foo.cgi#foo=bar" ) );
-  QCOMPARE( url1.htmlRef(), QString("foo=bar") );
-  url1.setHTMLRef( "toto=titi&kde=rocks" );
-  QCOMPARE( url1.htmlRef(), QString("toto=titi&kde=rocks") );
-  url1.setHTMLRef( "kde=rocks&a=b" );
-  QCOMPARE( url1.htmlRef(), QString("kde=rocks&a=b") );
-  url1.setHTMLRef( "#" );
-  QCOMPARE( url1.htmlRef(), QString("#") );
-  QCOMPARE( url1.ref(), QString("%23") ); // it's encoded
-  url1.setHTMLRef( "" );
-  QSTREMPTY( url1.htmlRef() );
-  QCOMPARE( url1.url(), QString("http://www.kde.org/foo.cgi#") );
-
-  url1.setHTMLRef( QString() );
-  QVERIFY( url1.htmlRef().isNull() );
   QCOMPARE( url1.url(), QString("http://www.kde.org/foo.cgi") );
 }
 
@@ -252,12 +228,12 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
   KUrl url0;
   url0 = QString("http://www.kde.org#/?:@-._~!$&'()*+,;="); // These fragment's chars should not be %-encoded
   QCOMPARE( url0.ref(),     QString("/?:@-._~!$&'()*+,;=") );
-  QCOMPARE( url0.htmlRef(), QString("/?:@-._~!$&'()*+,;=") );
+  QCOMPARE( url0.fragment(), QString("/?:@-._~!$&'()*+,;=") );
   QCOMPARE( url0.url(), QString("http://www.kde.org#/?:@-._~!$&'()*+,;=") );
 
   url0 = QString("http://www.kde.org#/?:@-._~!$&'()*+,;=%A");
   QCOMPARE( url0.ref(),     QString("/?:@-._~!$&'()*+,;=%25A") );
-  QCOMPARE( url0.htmlRef(), QString("/?:@-._~!$&'()*+,;=%A") );
+  QCOMPARE( url0.fragment(), QString("/?:@-._~!$&'()*+,;=%A") );
   QCOMPARE( url0.url(), QString("http://www.kde.org#/?:@-._~!$&'()*+,;=%25A") );
 
   url0 = "http://www.kde.org/foo.cgi?4=2+2";
@@ -275,9 +251,7 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
   // KDE3 difference: QUrl doesn't resolve file:/ into file:///
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#myref") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
-  QCOMPARE( url1.htmlRef(), QString("myref") );
+  QCOMPARE( url1.fragment(), QString("myref") );
   QCOMPARE( url1.upUrl().url(), QString("file:///home/dfaure/") );
 
 #if 0
@@ -296,77 +270,57 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
   url1 = u1;
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#%2f") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QCOMPARE( url1.ref().toLower(), QString("%2f") );
-  QCOMPARE( url1.encodedHtmlRef().toLower(), QString("%2f") );
-  QCOMPARE( url1.htmlRef(), QString("/") );
+  QCOMPARE( url1.fragment(), QString("/") );
 
   u1 = "file:///home/dfaure/my#%23";
   url1 = u1;
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#%23") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QCOMPARE( url1.ref(), QString("%23") );
-  QCOMPARE( url1.encodedHtmlRef(), QString("%23") );
-  QCOMPARE( url1.htmlRef(), QString("#") );
+  QCOMPARE( url1.fragment(), QString("#") );
 
   url1 = KUrl(url1, "#%6a");
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#j") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QCOMPARE( url1.ref(), QString("j") );
-  QCOMPARE( url1.encodedHtmlRef(), QString("j") );
-  QCOMPARE( url1.htmlRef(), QString("j") );
+  QCOMPARE( url1.fragment(), QString("j") );
 
   url1 = KUrl(url1, "#");
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QSTREMPTY(url1.ref());
-  QSTREMPTY(url1.encodedHtmlRef());
-  QSTREMPTY(url1.htmlRef());
+  QSTREMPTY(url1.fragment());
 
   u1 = "file:///home/dfaure/my#myref";
   url1 = u1;
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#myref") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
-  QCOMPARE( url1.htmlRef(), QString("myref") );
+  QCOMPARE( url1.fragment(), QString("myref") );
   QCOMPARE( url1.upUrl().url(), QString("file:///home/dfaure/") );
 
   u1 = "file:/opt/kde2/qt2/doc/html/showimg-main-cpp.html#QObject::connect";
   url1 = u1;
   QCOMPARE( url1.url(), QString("file:///opt/kde2/qt2/doc/html/showimg-main-cpp.html#QObject::connect") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QCOMPARE( url1.ref(), QString("QObject::connect") );
-  QCOMPARE( url1.htmlRef(), QString("QObject::connect") );
+  QCOMPARE( url1.fragment(), QString("QObject::connect") );
   QCOMPARE( url1.upUrl().url(), QString("file:///opt/kde2/qt2/doc/html/") );
 
   u1 = "file:///opt/kde2/qt2/doc/html/showimg-main-cpp.html#QObject::connect";
   url1 = u1;
   QCOMPARE( url1.url(), QString("file:///opt/kde2/qt2/doc/html/showimg-main-cpp.html#QObject::connect") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QCOMPARE( url1.ref(), QString("QObject::connect") );
-  QCOMPARE( url1.htmlRef(), QString("QObject::connect") );
+  QCOMPARE( url1.fragment(), QString("QObject::connect") );
   QCOMPARE( url1.upUrl().url(), QString("file:///opt/kde2/qt2/doc/html/") );
 
   u1 = "file:/opt/kde2/qt2/doc/html/showimg-main-cpp.html#QObject:connect";
   url1 = u1;
   QCOMPARE( url1.url(), QString("file:///opt/kde2/qt2/doc/html/showimg-main-cpp.html#QObject:connect") );
   QVERIFY( url1.hasRef() );
-  QVERIFY( url1.hasHTMLRef() );
-  QVERIFY( !url1.hasSubUrl() );
   QCOMPARE( url1.ref(), QString("QObject:connect") );
-  QCOMPARE( url1.htmlRef(), QString("QObject:connect") );
+  QCOMPARE( url1.fragment(), QString("QObject:connect") );
   QCOMPARE( url1.upUrl().url(), QString("file:///opt/kde2/qt2/doc/html/") );
 
   KUrl carsten;
@@ -461,8 +415,7 @@ void KUrlTest::testEmptyQueryOrRef()
   QCOMPARE( waba1.url(), QString("http://www.kde.org/cgi/test.cgi#") );
   QVERIFY( waba1.hasRef() );
   QVERIFY( waba1.hasFragment() );
-  QVERIFY( waba1.hasHTMLRef() );
-  QSTREMPTY( waba1.encodedHtmlRef() );
+  QSTREMPTY( waba1.ref() );
   //qurl = QUrl::fromEncoded("http://www.kde.org/cgi/test.cgi#", QUrl::TolerantMode);
   //QCOMPARE( qurl.toEncoded(), QByteArray("http://www.kde.org/cgi/test.cgi#") );
 
@@ -554,7 +507,7 @@ void KUrlTest::testURLsWithoutPath()
   QCOMPARE( waba1.port(), 389 );
   QCOMPARE( waba1.path(), QString( "" ) );
   QCOMPARE( waba1.ref(), QString( "b=c" ) );
-  QCOMPARE( waba1.htmlRef(), QString( "b=c" ) );
+  QCOMPARE( waba1.fragment(), QString( "b=c" ) );
   QCOMPARE( waba1.query(), QString() );
 
   QUrl schemeOnly( "ftp:" );
@@ -688,16 +641,9 @@ void KUrlTest::testSetFileName() // and addPath
   u2.setFileName( "" );
   QCOMPARE( u2.url(), QString("file:///specials/") );
 
-  const char * u3 = "ftp://host/dir1/dir2/myfile.txt";
-  QVERIFY( !KUrl(u3).hasSubUrl() );
-
-  KUrl::List lst = KUrl::split( KUrl(u3) );
-  QCOMPARE( lst.count(), 1 );
-  QCOMPARE( lst.first().url(), QString("ftp://host/dir1/dir2/myfile.txt") );
-
+  KUrl u3("ftp://host/dir1/dir2/myfile.txt");
   // cdUp code
-  KUrl lastUrl = lst.last();
-  QString dir = lastUrl.directory();
+  QString dir = u3.directory();
   QCOMPARE(  dir, QString("/dir1/dir2") );
 
   // files without directories
@@ -1257,17 +1203,6 @@ void KUrlTest::testSetEncodedFragment()
     u.setEncodedFragment(fragment);
     QVERIFY(u.isValid());
     QCOMPARE(QString::fromLatin1(u.toEncoded()), QString::fromLatin1(expected));
-}
-
-void KUrlTest::testSubURL()
-{
-  QString u1 = "error:/?error=14&errText=Unknown%20host%20asdfu.adgi.sdfgoi#http://asdfu.adgi.sdfgoi";
-  KUrl url1 = u1;
-  QCOMPARE( url1.url(), QString("error:/?error=14&errText=Unknown%20host%20asdfu.adgi.sdfgoi#http://asdfu.adgi.sdfgoi") );
-  QVERIFY( url1.hasSubUrl() );
-  QVERIFY( url1.hasRef() );
-  QVERIFY( !url1.isLocalFile() );
-  QVERIFY( !url1.hasHTMLRef() );
 }
 
 void KUrlTest::testSetUser()

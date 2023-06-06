@@ -58,11 +58,10 @@ namespace KIO {
         CMD_REPARSECONFIGURATION = 'L',
         CMD_META_DATA = 'M',
         CMD_SYMLINK = 'N',
-        CMD_SUBURL = 'O', // Inform the slave about the url it is streaming on.
-        CMD_MESSAGEBOXANSWER = 'P',
-        CMD_RESUMEANSWER = 'Q',
-        CMD_CONFIG = 'R',
-        CMD_CHOWN = 'S'
+        CMD_MESSAGEBOXANSWER = 'O',
+        CMD_RESUMEANSWER = 'P',
+        CMD_CONFIG = 'Q',
+        CMD_CHOWN = 'R'
     };
 
     class JobPrivate: public KCompositeJobPrivate
@@ -120,20 +119,11 @@ namespace KIO {
             : m_slave(0), m_packedArgs(packedArgs), m_url(url), m_command(command),
               m_schedSerial(0), m_redirectionHandlingEnabled(true)
         {
-            if (m_url.hasSubUrl())
-            {
-                KUrl::List list = KUrl::split(m_url);
-                list.removeLast();
-                m_subUrl = KUrl::join(list);
-                //kDebug(7007) << "New URL = "  << m_url.url();
-                //kDebug(7007) << "Sub URL = "  << m_subUrl.url();
-            }
         }
 
         SlaveInterface * m_slave;
         QByteArray m_packedArgs;
         KUrl m_url;
-        KUrl m_subUrl;
         int m_command;
 
         // for use in KIO::Scheduler
@@ -320,8 +310,6 @@ namespace KIO {
         virtual void slotDataReqFromDevice();
 
         void slotCanResume( KIO::filesize_t offset );
-        void slotNeedSubUrlData();
-        void slotSubUrlData(KIO::Job*, const QByteArray &);
 
         Q_DECLARE_PUBLIC(TransferJob)
         static inline TransferJob *newJob(const KUrl& url, int command,
