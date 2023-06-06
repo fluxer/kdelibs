@@ -666,17 +666,6 @@ class KDEUI_EXPORT KDialog : public QDialog //krazy:exclude=qclasses
 
   Q_SIGNALS:
     /**
-     * Emitted when the margin size and/or spacing size
-     * have changed.
-     *
-     * Use marginHint() and spacingHint() in your slot
-     * to get the new values.
-     *
-     * @deprecated This signal is not emitted. Listen to QEvent::StyleChange events instead.
-     */
-    void layoutHintChanged();
-
-    /**
      * The Help button was pressed. This signal is only emitted if
      * slotButtonClicked() is not replaced
      */
