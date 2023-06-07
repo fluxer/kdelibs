@@ -66,14 +66,14 @@ public:
     // KIO::TransferJob
     void _k_slotData(KIO::Job *job, const QByteArray &data);
     void _k_slotDataReq(KIO::Job *job, QByteArray &data);
-    void _k_slotMimetype (KIO::Job *job, const QString &type);
-    void _k_slotCanResume (KIO::Job *job, KIO::filesize_t offset);
+    void _k_slotMimetype(KIO::Job *job, const QString &type);
+    void _k_slotCanResume(KIO::Job *job, KIO::filesize_t offset);
 };
 
 ForwardingSlaveBase::ForwardingSlaveBase(const QByteArray &protocol,
                                          const QByteArray &appSocket)
     : QObject(), SlaveBase(protocol, appSocket),
-      d( new ForwardingSlaveBasePrivate(this) )
+      d(new ForwardingSlaveBasePrivate(this))
 {
     d->q = this;
 }
@@ -87,12 +87,9 @@ bool ForwardingSlaveBasePrivate::internalRewriteUrl(const KUrl &url, KUrl &newUR
 {
     bool result = true;
 
-    if ( url.protocol() == q->mProtocol )
-    {
+    if (url.protocol() == q->protocol()) {
         result = q->rewriteUrl(url, newURL);
-    }
-    else
-    {
+    } else {
         newURL = url;
     }
 
@@ -106,28 +103,26 @@ void ForwardingSlaveBase::prepareUDSEntry(KIO::UDSEntry &entry,
 {
     //kDebug() << "listing==" << listing;
 
-    const QString name = entry.stringValue( KIO::UDSEntry::UDS_NAME );
-    QString mimetype = entry.stringValue( KIO::UDSEntry::UDS_MIME_TYPE );
+    const QString name = entry.stringValue(KIO::UDSEntry::UDS_NAME);
+    QString mimetype = entry.stringValue(KIO::UDSEntry::UDS_MIME_TYPE);
     KUrl url;
-    const QString urlStr = entry.stringValue( KIO::UDSEntry::UDS_URL );
+    const QString urlStr = entry.stringValue(KIO::UDSEntry::UDS_URL);
     const bool url_found = !urlStr.isEmpty();
-    if ( url_found )
-    {
+    if (url_found) {
         url = urlStr;
         KUrl new_url = d->m_requestedURL;
-        if (listing)
+        if (listing) {
             new_url.addPath(url.fileName());
+        }
         // ## Didn't find a way to use an iterator instead of re-doing a key lookup
         entry.insert( KIO::UDSEntry::UDS_URL, new_url.url() );
         kDebug() << "URL =" << url;
         kDebug() << "New URL =" << new_url;
     }
 
-    if (mimetype.isEmpty())
-    {
+    if (mimetype.isEmpty()) {
         KUrl new_url = d->m_processedURL;
-        if (url_found && listing)
-        {
+        if (url_found && listing) {
             new_url.addPath( url.fileName() );
         }
         else if (listing)

@@ -32,7 +32,6 @@ class KUrl;
 
 namespace KIO {
 
-class Connection;
 class SlaveBasePrivate;
 
 /**
@@ -717,19 +716,13 @@ public:
 
 protected:
     /**
-     * Name of the protocol supported by this slave
+     * @internal
      */
-    QByteArray mProtocol;
-    //Often used by slaves and unlikely to change
-    MetaData mOutgoingMetaData;
-    MetaData mIncomingMetaData;
+    QByteArray protocol() const;
 
 private:
-#if 0 // TODO KDE5: enable
-    // This helps catching missing tr() calls in error().
-    void error( int _errid, const QByteArray &_text );
-#endif
     void send(int cmd, const QByteArray &arr = QByteArray());
+
     SlaveBasePrivate* const d;
     friend class SlaveBasePrivate;
 };
