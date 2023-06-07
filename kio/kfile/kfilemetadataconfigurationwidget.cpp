@@ -46,7 +46,6 @@ public:
      */
     void slotLoadingFinished();
 
-    int m_visibleDataTypes;
     KFileItemList m_fileItems;
     KFileMetaDataProvider* m_provider;
     QListWidget* m_metaDataList;
@@ -55,11 +54,10 @@ private:
     KFileMetaDataConfigurationWidget* const q;
 };
 
-KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWidget* parent) :
-    m_visibleDataTypes(0),
-    m_fileItems(),
-    m_provider(0),
-    m_metaDataList(0),
+KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWidget* parent)
+    : m_fileItems(),
+    m_provider(nullptr),
+    m_metaDataList(nullptr),
     q(parent)
 {
     m_metaDataList = new QListWidget(q);
