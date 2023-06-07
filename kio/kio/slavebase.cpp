@@ -114,7 +114,6 @@ public:
     bool resume;
     bool needSendCanResume;
     bool wasKilled;
-    bool inOpenLoop;
     bool exit_loop;
     MetaData configData;
     KConfig *config;
@@ -230,7 +229,6 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     d->totalSize = 0;
     d->timeout = 0;
     d->remotefile = 0;
-    d->inOpenLoop = false;
     d->exit_loop = false;
     connectSlave(QFile::decodeName(app_socket));
 }
@@ -267,10 +265,7 @@ void SlaveBase::dispatchLoop()
             ret = d->appConnection.read(&cmd, data);
 
             if (ret != -1) {
-                if (d->inOpenLoop)
-                    dispatchOpenCommand(cmd, data);
-                else
-                    dispatch(cmd, data);
+                dispatch(cmd, data);
             }
         }
 
@@ -297,15 +292,11 @@ void SlaveBase::connectSlave(const QString &address)
 {
     d->appConnection.connectToRemote(address);
 
-    if (!d->appConnection.inited())
-    {
+    if (!d->appConnection.inited()) {
         kDebug(7019) << "failed to connect to" << address << '\n'
                      << "Reason:" << d->appConnection.errorString();
         exit();
-        return;
     }
-
-    d->inOpenLoop = false;
 }
 
 void SlaveBase::disconnectSlave()
@@ -398,12 +389,11 @@ void SlaveBase::error( int _errid, const QString &_text )
     mIncomingMetaData.clear(); // Clear meta data
     d->rebuildConfig();
     mOutgoingMetaData.clear();
-    KIO_DATA << (qint32) _errid << _text;
+    KIO_DATA << (qint32)_errid << _text;
 
-    send( MSG_ERROR, data );
+    send(MSG_ERROR, data);
     //reset
-    d->totalSize=0;
-    d->inOpenLoop=false;
+    d->totalSize = 0;
 }
 
 void SlaveBase::finished()
@@ -420,32 +410,31 @@ void SlaveBase::finished()
     mIncomingMetaData.clear(); // Clear meta data
     d->rebuildConfig();
     sendMetaData();
-    send( MSG_FINISHED );
+    send(MSG_FINISHED);
 
     // reset
-    d->totalSize=0;
-    d->inOpenLoop=false;
+    d->totalSize = 0;
 }
 
 void SlaveBase::canResume()
 {
-    send( MSG_CANRESUME );
+    send(MSG_CANRESUME);
 }
 
-void SlaveBase::totalSize( KIO::filesize_t _bytes )
+void SlaveBase::totalSize(KIO::filesize_t _bytes)
 {
     KIO_DATA << KIO_FILESIZE_T(_bytes);
-    send( INF_TOTAL_SIZE, data );
+    send(INF_TOTAL_SIZE, data);
 
     //this one is usually called before the first item is listed in listDir()
-    d->totalSize=_bytes;
+    d->totalSize = _bytes;
 }
 
-void SlaveBase::processedSize( KIO::filesize_t _bytes )
+void SlaveBase::processedSize(KIO::filesize_t _bytes)
 {
     bool           emitSignal=false;
     struct timeval tv;
-    int            gettimeofday_res=gettimeofday( &tv, 0L );
+    int            gettimeofday_res = gettimeofday(&tv, 0L);
 
     if( _bytes == d->totalSize )
         emitSignal=true;
@@ -880,8 +869,8 @@ void SlaveBase::dispatch(int command, const QByteArray &data)
 
             // Remember that we need to send canResume(), TransferJob is expecting
             // it. Well, in theory this shouldn't be done if resume is true.
-            //   (the resume bool is currently unused)
-            d->needSendCanResume = true   /* !resume */;
+            // (the resume bool is currently unused)
+            d->needSendCanResume = true;
 
             d->m_state = d->InsideMethod;
             put(url, permissions, flags);
@@ -1020,7 +1009,7 @@ void SlaveBase::dispatch(int command, const QByteArray &data)
             break;
         }
         case CMD_META_DATA: {
-            //kDebug(7019) << "(" << getpid() << ") Incoming meta-data...";
+            // kDebug(7019) << "(" << getpid() << ") Incoming meta-data...";
             stream >> mIncomingMetaData;
             d->rebuildConfig();
             break;
@@ -1051,21 +1040,6 @@ bool SlaveBase::checkCachedAuthentication(AuthInfo &info)
         return true;
     }
     return false;
-}
-
-void SlaveBase::dispatchOpenCommand(int command, const QByteArray &data)
-{
-    QDataStream stream(data);
-    switch(command) {
-        case CMD_NONE: {
-            break;
-        }
-        default: {
-            // Some command we don't understand.
-            // Just ignore it, it may come from some future version of KDE.
-            break;
-        }
-    }
 }
 
 bool SlaveBase::cacheAuthentication(const AuthInfo &info)
