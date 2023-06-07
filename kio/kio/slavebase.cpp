@@ -136,12 +136,14 @@ public:
         // mIncomingMetaData cascades over config, so we write config first,
         // to let it be overwritten
         MetaData::ConstIterator end = configData.constEnd();
-        for (MetaData::ConstIterator it = configData.constBegin(); it != end; ++it)
+        for (MetaData::ConstIterator it = configData.constBegin(); it != end; ++it) {
             configGroup->writeEntry(it.key(), it->toUtf8(), KConfigGroup::WriteConfigFlags());
+        }
 
         end = q->mIncomingMetaData.constEnd();
-        for (MetaData::ConstIterator it = q->mIncomingMetaData.constBegin(); it != end; ++it)
+        for (MetaData::ConstIterator it = q->mIncomingMetaData.constBegin(); it != end; ++it) {
             configGroup->writeEntry(it.key(), it->toUtf8(), KConfigGroup::WriteConfigFlags());
+        }
     }
 
     void verifyState(const char* cmdName)
@@ -254,8 +256,9 @@ void SlaveBase::dispatchLoop()
         Q_ASSERT(d->appConnection.inited());
 
         int ms = -1;
-        if (d->timeout)
+        if (d->timeout) {
             ms = 1000 * qMax<time_t>(d->timeout - time(0), 1);
+        }
 
         int ret = -1;
         if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(ms)) {
@@ -306,16 +309,19 @@ void SlaveBase::disconnectSlave()
 
 void SlaveBase::setMetaData(const QString &key, const QString &value)
 {
-    mOutgoingMetaData.insert(key, value); // replaces existing key if already there
+    // replaces existing key if already there
+    mOutgoingMetaData.insert(key, value);
 }
 
 QString SlaveBase::metaData(const QString &key) const
 {
-   if (mIncomingMetaData.contains(key))
-      return mIncomingMetaData[key];
-   if (d->configData.contains(key))
-      return d->configData[key];
-   return QString();
+    if (mIncomingMetaData.contains(key)) {
+        return mIncomingMetaData[key];
+    }
+    if (d->configData.contains(key)) {
+        return d->configData[key];
+    }
+    return QString();
 }
 
 MetaData SlaveBase::allMetaData() const
@@ -325,16 +331,18 @@ MetaData SlaveBase::allMetaData() const
 
 bool SlaveBase::hasMetaData(const QString &key) const
 {
-   if (mIncomingMetaData.contains(key))
-      return true;
-   if (d->configData.contains(key))
-      return true;
-   return false;
+    if (mIncomingMetaData.contains(key)) {
+        return true;
+    }
+    if (d->configData.contains(key)) {
+        return true;
+    }
+    return false;
 }
 
 KConfigGroup *SlaveBase::config()
 {
-   return d->configGroup;
+    return d->configGroup;
 }
 
 void SlaveBase::sendMetaData()
@@ -354,28 +362,29 @@ void SlaveBase::sendAndKeepMetaData()
 
 KRemoteEncoding *SlaveBase::remoteEncoding()
 {
-   if (d->remotefile)
-      return d->remotefile;
-
-   const QByteArray charset (metaData(QLatin1String("Charset")).toLatin1());
-   return (d->remotefile = new KRemoteEncoding( charset ));
+    if (d->remotefile) {
+        return d->remotefile;
+    }
+    const QByteArray charset (metaData(QLatin1String("Charset")).toLatin1());
+    return (d->remotefile = new KRemoteEncoding(charset));
 }
 
-void SlaveBase::data( const QByteArray &data )
+void SlaveBase::data(const QByteArray &data)
 {
-   sendMetaData();
-   send( MSG_DATA, data );
+    sendMetaData();
+    send(MSG_DATA, data);
 }
 
-void SlaveBase::dataReq( )
+void SlaveBase::dataReq()
 {
-   //sendMetaData();
-   if (d->needSendCanResume)
-      canResume(0);
-   send( MSG_DATA_REQ );
+    // sendMetaData();
+    if (d->needSendCanResume) {
+        canResume(0);
+    }
+    send(MSG_DATA_REQ);
 }
 
-void SlaveBase::error( int _errid, const QString &_text )
+void SlaveBase::error(int _errid, const QString &_text)
 {
     if (d->m_state == d->ErrorCalled) {
         kWarning(7019) << "error() called twice! Please fix the KIO slave.";
@@ -432,47 +441,47 @@ void SlaveBase::totalSize(KIO::filesize_t _bytes)
 
 void SlaveBase::processedSize(KIO::filesize_t _bytes)
 {
-    bool           emitSignal=false;
+    bool emitSignal = false;
     struct timeval tv;
-    int            gettimeofday_res = gettimeofday(&tv, 0L);
+    int gettimeofday_res = gettimeofday(&tv, 0L);
 
-    if( _bytes == d->totalSize )
-        emitSignal=true;
-    else if ( gettimeofday_res == 0 ) {
+    if (_bytes == d->totalSize) {
+        emitSignal = true;
+    } else if (gettimeofday_res == 0) {
         time_t msecdiff = 2000;
         if (d->last_tv.tv_sec) {
             // Compute difference, in ms
-            msecdiff = 1000 * ( tv.tv_sec - d->last_tv.tv_sec );
+            msecdiff = 1000 * (tv.tv_sec - d->last_tv.tv_sec);
             time_t usecdiff = tv.tv_usec - d->last_tv.tv_usec;
-            if ( usecdiff < 0 ) {
+            if (usecdiff < 0) {
                 msecdiff--;
                 msecdiff += 1000;
             }
             msecdiff += usecdiff / 1000;
         }
-        emitSignal=msecdiff >= 100; // emit size 10 times a second
+        emitSignal = msecdiff >= 100; // emit size 10 times a second
     }
 
-    if( emitSignal ) {
+    if (emitSignal) {
         KIO_DATA << KIO_FILESIZE_T(_bytes);
-        send( INF_PROCESSED_SIZE, data );
-        if ( gettimeofday_res == 0 ) {
+        send(INF_PROCESSED_SIZE, data);
+        if (gettimeofday_res == 0) {
             d->last_tv.tv_sec = tv.tv_sec;
             d->last_tv.tv_usec = tv.tv_usec;
         }
     }
 }
 
-void SlaveBase::speed( unsigned long _bytes_per_second )
+void SlaveBase::speed(unsigned long _bytes_per_second)
 {
     KIO_DATA << (quint32) _bytes_per_second;
-    send( INF_SPEED, data );
+    send(INF_SPEED, data);
 }
 
-void SlaveBase::redirection( const KUrl& _url )
+void SlaveBase::redirection(const KUrl &_url)
 {
     KIO_DATA << _url;
-    send( INF_REDIRECTION, data );
+    send(INF_REDIRECTION, data);
 }
 
 static bool isSubCommand(int cmd)
@@ -484,42 +493,41 @@ static bool isSubCommand(int cmd)
 
 void SlaveBase::mimeType( const QString &_type)
 {
-  kDebug(7019) << _type;
-  int cmd;
-  do
-  {
-    // Send the meta-data each time we send the mime-type.
-    if (!mOutgoingMetaData.isEmpty())
-    {
-      // kDebug(7019) << "emitting meta data";
-      KIO_DATA << mOutgoingMetaData;
-      send( INF_META_DATA, data );
-    }
-    KIO_DATA << _type;
-    send( INF_MIME_TYPE, data );
-    while(true)
-    {
-       cmd = 0;
-       int ret = -1;
-       if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(-1)) {
-           ret = d->appConnection.read( &cmd, data );
-       }
-       if (ret == -1) {
-           kDebug(7019) << "read error";
-           exit();
-           return;
-       }
-       // kDebug(7019) << "got" << cmd;
-       if ( cmd == CMD_HOST) // Ignore.
-          continue;
-       if (!isSubCommand(cmd))
-          break;
+    kDebug(7019) << _type;
+    int cmd = 0;
+    do {
+        // Send the meta-data each time we send the mime-type.
+        if (!mOutgoingMetaData.isEmpty()) {
+            // kDebug(7019) << "emitting meta data";
+            KIO_DATA << mOutgoingMetaData;
+            send( INF_META_DATA, data );
+        }
+        KIO_DATA << _type;
+        send(INF_MIME_TYPE, data);
+        while (true) {
+            cmd = 0;
+            int ret = -1;
+            if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(-1)) {
+                ret = d->appConnection.read(&cmd, data);
+            }
+            if (ret == -1) {
+                kDebug(7019) << "read error";
+                exit();
+                return;
+            }
+            // kDebug(7019) << "got" << cmd;
+            if (cmd == CMD_HOST) {
+                // Ignore.
+                continue;
+            }
+            if (!isSubCommand(cmd)) {
+                break;
+            }
 
-       dispatch( cmd, data );
-    }
-  }
-  while (cmd != CMD_NONE);
-  mOutgoingMetaData.clear();
+            dispatch(cmd, data );
+        }
+    } while (cmd != CMD_NONE);
+    mOutgoingMetaData.clear();
 }
 
 void SlaveBase::exit()
@@ -530,25 +538,25 @@ void SlaveBase::exit()
     ::exit(255);
 }
 
-void SlaveBase::warning( const QString &_msg)
+void SlaveBase::warning(const QString &_msg)
 {
     KIO_DATA << _msg;
-    send( INF_WARNING, data );
+    send(INF_WARNING, data);
 }
 
-void SlaveBase::infoMessage( const QString &_msg)
+void SlaveBase::infoMessage(const QString &_msg)
 {
     KIO_DATA << _msg;
-    send( INF_INFOMESSAGE, data );
+    send(INF_INFOMESSAGE, data);
 }
 
-void SlaveBase::statEntry( const UDSEntry& entry )
+void SlaveBase::statEntry(const UDSEntry &entry)
 {
     KIO_DATA << entry;
-    send( MSG_STAT_ENTRY, data );
+    send(MSG_STAT_ENTRY, data);
 }
 
-void SlaveBase::listEntry( const UDSEntry& entry, bool _ready )
+void SlaveBase::listEntry(const UDSEntry &entry, bool _ready)
 {
     static const int maximum_updatetime = 300;
 
@@ -575,14 +583,15 @@ void SlaveBase::listEntry( const UDSEntry& entry, bool _ready )
     }
 }
 
-void SlaveBase::listEntries( const UDSEntryList& list )
+void SlaveBase::listEntries(const UDSEntryList &list)
 {
     KIO_DATA << (quint32)list.count();
     UDSEntryList::ConstIterator it = list.begin();
     const UDSEntryList::ConstIterator end = list.end();
-    for (; it != end; ++it)
-      stream << *it;
-    send( MSG_LIST_ENTRIES, data);
+    for (; it != end; ++it) {
+        stream << *it;
+    }
+    send(MSG_LIST_ENTRIES, data);
 }
 
 static void sigpipe_handler (int)
@@ -596,46 +605,46 @@ static void sigpipe_handler (int)
     // Don't add anything else here, especially no debug output
 }
 
-void SlaveBase::setHost(QString const &, quint16, QString const &, QString const &)
+void SlaveBase::setHost(const QString&, quint16, const QString&, QString const &)
 {
 }
 
 void SlaveBase::stat(KUrl const &)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_STAT)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_STAT)); }
 void SlaveBase::put(KUrl const &, int, JobFlags )
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_PUT)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_PUT)); }
 void SlaveBase::special(const QByteArray &)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SPECIAL)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SPECIAL)); }
 void SlaveBase::listDir(KUrl const &)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_LISTDIR)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_LISTDIR)); }
 void SlaveBase::get(KUrl const & )
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_GET)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_GET)); }
 void SlaveBase::mimetype(KUrl const &url)
 { get(url); }
 void SlaveBase::rename(KUrl const &, KUrl const &, JobFlags)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_RENAME)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_RENAME)); }
 void SlaveBase::symlink(QString const &, KUrl const &, JobFlags)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SYMLINK)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SYMLINK)); }
 void SlaveBase::copy(KUrl const &, KUrl const &, int, JobFlags)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_COPY)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_COPY)); }
 void SlaveBase::del(KUrl const &, bool)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_DEL)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_DEL)); }
 void SlaveBase::mkdir(KUrl const &, int)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_MKDIR)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_MKDIR)); }
 void SlaveBase::chmod(KUrl const &, int)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CHMOD)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CHMOD)); }
 void SlaveBase::setModificationTime(KUrl const &, const QDateTime&)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SETMODIFICATIONTIME)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SETMODIFICATIONTIME)); }
 void SlaveBase::chown(KUrl const &, const QString &, const QString &)
-{ error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CHOWN)); }
+{ error(ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CHOWN)); }
 
 void SlaveBase::reparseConfiguration()
 {
     delete d->remotefile;
-    d->remotefile = 0;
+    d->remotefile = nullptr;
 }
 
-bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
+bool SlaveBase::openPasswordDialog(AuthInfo& info, const QString &errorMsg)
 {
     if (metaData(QLatin1String("no-auth-prompt")).compare(QLatin1String("true"), Qt::CaseInsensitive) == 0) {
         return false;
@@ -647,148 +656,153 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
     AuthInfo dlgInfo(info);
 
     KPasswdStore* passwdstore = d->passwdStore();
+    Q_ASSERT(passwdstore);
 
-    if (passwdstore) {
-        // assemble dialog-flags
-        KPasswordDialog::KPasswordDialogFlags dialogFlags;
+    // assemble dialog-flags
+    KPasswordDialog::KPasswordDialogFlags dialogFlags;
+
+    if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid()) {
+        dialogFlags |= KPasswordDialog::ShowDomainLine;
+    }
+
+    if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid()) {
+        dialogFlags |= KPasswordDialog::ShowAnonymousLoginCheckBox;
+    }
+
+    if (!dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT).toBool()) {
+        dialogFlags |= KPasswordDialog::ShowUsernameLine;
+    }
+
+    // If store is not enabled and the caller explicitly requested for it,
+    // do not show the keep password checkbox.
+    if (dlgInfo.keepPassword && !passwdstore->cacheOnly()) {
+        dialogFlags |= KPasswordDialog::ShowKeepPassword;
+    }
+
+    KPasswordDialog* dlg = new KPasswordDialog(windowWidget, dialogFlags);
+
+    QString username = dlgInfo.username;
+    QString password = dlgInfo.password;
+
+    dlg->setPrompt(dlgInfo.prompt);
+    dlg->setUsername(username);
+    if (dlgInfo.caption.isEmpty()) {
+        dlg->setWindowTitle(i18n("Authentication Dialog"));
+    } else {
+        dlg->setWindowTitle(dlgInfo.caption);
+    }
+
+    if (!dlgInfo.comment.isEmpty()) {
+        dlg->addCommentLine(dlgInfo.commentLabel, dlgInfo.comment);
+    }
+
+    if (!password.isEmpty()) {
+        dlg->setPassword(password);
+    }
+
+    if (dlgInfo.readOnly) {
+        dlg->setUsernameReadOnly(true);
+    }
+
+    if (!passwdstore->cacheOnly()) {
+        dlg->setKeepPassword(true);
+    }
+
+    if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid()) {
+        dlg->setDomain(dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).toString());
+    }
+
+    if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid () && password.isEmpty() && username.isEmpty()) {
+        dlg->setAnonymousMode(dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).toBool());
+    }
+
+    KWindowSystem::setMainWindow(dlg, windowId);
+
+    if (dlg->exec() == KPasswordDialog::Accepted) {
+        dlgInfo.username = dlg->username();
+        dlgInfo.password = dlg->password();
+        dlgInfo.keepPassword = dlg->keepPassword();
 
         if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid()) {
-            dialogFlags |= KPasswordDialog::ShowDomainLine;
+            dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_DOMAIN, dlg->domain());
         }
-
         if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid()) {
-            dialogFlags |= KPasswordDialog::ShowAnonymousLoginCheckBox;
+            dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS, dlg->anonymousMode());
         }
 
-        if (!dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT).toBool()) {
-            dialogFlags |= KPasswordDialog::ShowUsernameLine;
-        }
-
-        // If store is not enabled and the caller explicitly requested for it,
-        // do not show the keep password checkbox.
-        if (dlgInfo.keepPassword && !passwdstore->cacheOnly())
-            dialogFlags |= KPasswordDialog::ShowKeepPassword;
-
-        KPasswordDialog* dlg = new KPasswordDialog(windowWidget, dialogFlags);
-
-        QString username = dlgInfo.username;
-        QString password = dlgInfo.password;
-
-        dlg->setPrompt(dlgInfo.prompt);
-        dlg->setUsername(username);
-        if (dlgInfo.caption.isEmpty())
-            dlg->setWindowTitle(i18n("Authentication Dialog"));
-        else
-            dlg->setWindowTitle(dlgInfo.caption);
-
-        if (!dlgInfo.comment.isEmpty() )
-            dlg->addCommentLine(dlgInfo.commentLabel, dlgInfo.comment);
-
-        if (!password.isEmpty())
-            dlg->setPassword(password);
-
-        if (dlgInfo.readOnly)
-            dlg->setUsernameReadOnly(true);
-
-        if (!passwdstore->cacheOnly())
-            dlg->setKeepPassword(true);
-
-        if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid ())
-            dlg->setDomain(dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).toString());
-
-        if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid () && password.isEmpty() && username.isEmpty())
-            dlg->setAnonymousMode(dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).toBool());
-
-        KWindowSystem::setMainWindow(dlg, windowId);
-
-        if (dlg->exec() == KPasswordDialog::Accepted) {
-            dlgInfo.username = dlg->username();
-            dlgInfo.password = dlg->password();
-            dlgInfo.keepPassword = dlg->keepPassword();
-
-            if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid())
-                dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_DOMAIN, dlg->domain());
-            if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid())
-                dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS, dlg->anonymousMode());
-
-            info = dlgInfo;
-            return true;
-        }
+        info = dlgInfo;
+        return true;
     }
 
     return false;
 }
 
-int SlaveBase::messageBox( MessageBoxType type, const QString &text, const QString &caption,
-                           const QString &buttonYes, const QString &buttonNo )
+int SlaveBase::messageBox(MessageBoxType type, const QString &text, const QString &caption,
+                          const QString &buttonYes, const QString &buttonNo)
 {
-    return messageBox( text, type, caption, buttonYes, buttonNo, QString() );
+    return messageBox(text, type, caption, buttonYes, buttonNo, QString());
 }
 
-int SlaveBase::messageBox( const QString &text, MessageBoxType type, const QString &caption,
-                           const QString &buttonYes, const QString &buttonNo,
-                           const QString &dontAskAgainName )
+int SlaveBase::messageBox(const QString &text, MessageBoxType type, const QString &caption,
+                          const QString &buttonYes, const QString &buttonNo,
+                          const QString &dontAskAgainName )
 {
     kDebug(7019) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo;
     KIO_DATA << (qint32)type << text << caption << buttonYes << buttonNo << dontAskAgainName;
-    send( INF_MESSAGEBOX, data );
-    if ( waitForAnswer( CMD_MESSAGEBOXANSWER, 0, data ) != -1 )
-    {
-        QDataStream stream( data );
+    send(INF_MESSAGEBOX, data);
+    if (waitForAnswer(CMD_MESSAGEBOXANSWER, 0, data) != -1) {
+        QDataStream stream(data);
         int answer;
         stream >> answer;
         kDebug(7019) << "got messagebox answer" << answer;
         return answer;
-    } else
-        return 0; // communication failure
+    }
+    // communication failure
+    return 0;
 }
 
-bool SlaveBase::canResume( KIO::filesize_t offset )
+bool SlaveBase::canResume(KIO::filesize_t offset)
 {
     kDebug(7019) << "offset=" << KIO::number(offset);
     d->needSendCanResume = false;
     KIO_DATA << KIO_FILESIZE_T(offset);
-    send( MSG_RESUME, data );
-    if ( offset )
-    {
-        int cmd;
-        if ( waitForAnswer( CMD_RESUMEANSWER, CMD_NONE, data, &cmd ) != -1 )
-        {
+    send(MSG_RESUME, data);
+    if (offset) {
+        int cmd = 0;
+        if (waitForAnswer(CMD_RESUMEANSWER, CMD_NONE, data, &cmd) != -1) {
             kDebug(7019) << "returning" << (cmd == CMD_RESUMEANSWER);
             return cmd == CMD_RESUMEANSWER;
-        } else
-            return false;
+        }
+        return false;
     }
-    else // No resuming possible -> no answer to wait for
-        return true;
+    // No resuming possible -> no answer to wait for
+    return true;
 }
 
 
 
-int SlaveBase::waitForAnswer( int expected1, int expected2, QByteArray & data, int *pCmd )
+int SlaveBase::waitForAnswer(int expected1, int expected2, QByteArray &data, int *pCmd)
 {
-    int cmd, result = -1;
-    for (;;)
-    {
+    int cmd = 0;
+    int result = -1;
+    for (;;) {
         if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(-1)) {
-            result = d->appConnection.read( &cmd, data );
+            result = d->appConnection.read(&cmd, data);
         }
         if (result == -1) {
             kDebug(7019) << "read error.";
             return -1;
         }
 
-        if ( cmd == expected1 || cmd == expected2 )
-        {
-            if ( pCmd ) *pCmd = cmd;
+        if (cmd == expected1 || cmd == expected2) {
+            if (pCmd) {
+                *pCmd = cmd;
+            }
             return result;
         }
-        if ( isSubCommand(cmd) )
-        {
-            dispatch( cmd, data );
-        }
-        else
-        {
+        if (isSubCommand(cmd)) {
+            dispatch(cmd, data);
+        } else {
             kFatal(7019) << "Got cmd " << cmd << " while waiting for an answer!";
         }
     }
@@ -798,7 +812,7 @@ int SlaveBase::waitForAnswer( int expected1, int expected2, QByteArray & data, i
 int SlaveBase::readData(QByteArray &buffer)
 {
     int result = waitForAnswer(MSG_DATA, 0, buffer);
-    //kDebug(7019) << "readData: length = " << result << " ";
+    // kDebug(7019) << "readData: length = " << result << " ";
     return result;
 }
 
@@ -1029,9 +1043,7 @@ void SlaveBase::dispatch(int command, const QByteArray &data)
 bool SlaveBase::checkCachedAuthentication(AuthInfo &info)
 {
     KPasswdStore* passwdstore = d->passwdStore();
-    if (!passwdstore) {
-        return false;
-    }
+    Q_ASSERT(passwdstore);
     const qlonglong windowId = metaData(QLatin1String("window-id")).toLongLong();
     const QByteArray authkey = authInfoKey(info);
     if (passwdstore->hasPasswd(authkey, windowId)) {
@@ -1045,9 +1057,7 @@ bool SlaveBase::checkCachedAuthentication(AuthInfo &info)
 bool SlaveBase::cacheAuthentication(const AuthInfo &info)
 {
     KPasswdStore* passwdstore = d->passwdStore();
-    if (!passwdstore) {
-        return false;
-    }
+    Q_ASSERT(passwdstore);
     passwdstore->storePasswd(authInfoKey(info), authInfoToData(info), metaData(QLatin1String("window-id")).toLongLong());
     return true;
 }
