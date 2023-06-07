@@ -160,31 +160,16 @@ bool KWindowSystemPrivate::x11Event( XEvent * ev )
 
 #ifdef HAVE_XFIXES
     if ( haveXfixes && ev->type == xfixesEventBase + XFixesSelectionNotify ) {
-        if ( ev->xany.window == winId() ) {
-            XFixesSelectionNotifyEvent *event = reinterpret_cast<XFixesSelectionNotifyEvent*>(ev);
-            bool haveOwner = event->owner != None;
+        XFixesSelectionNotifyEvent *event = reinterpret_cast<XFixesSelectionNotifyEvent*>(ev);
+        if (event->selection == net_wm_cm) {
+            const bool haveOwner = XGetSelectionOwner(QX11Info::display(), net_wm_cm) != None;
             if (compositingEnabled != haveOwner) {
                 compositingEnabled = haveOwner;
                 emit s_q->compositingChanged( compositingEnabled );
             }
-            return true;
+            // NOTICE this is not our event, we just randomly captured it from Katie -> pass on
+            return false;
         }
-        // Qt compresses XFixesSelectionNotifyEvents without caring about the actual window
-        // gui/kernel/qapplication_x11.cpp
-        // until that can be assumed fixed, we also react on events on the root (caused by Qts own compositing tracker)
-        if ( ev->xany.window == QX11Info::appRootWindow() ) {
-            XFixesSelectionNotifyEvent *event = reinterpret_cast<XFixesSelectionNotifyEvent*>(ev);
-            if (event->selection == net_wm_cm) {
-                bool haveOwner = event->owner != None;
-                if (compositingEnabled != haveOwner) {
-                    compositingEnabled = haveOwner;
-                    emit s_q->compositingChanged( compositingEnabled );
-                }
-                // NOTICE this is not our event, we just randomly captured it from Qt -> pass on
-                return false;
-            }
-        }
-        return false;
     }
 #endif
 
