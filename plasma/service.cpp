@@ -68,7 +68,7 @@ QString Service::destination() const
 QStringList Service::operationNames() const
 {
     if (d->operationNames.isEmpty()) {
-        kDebug() << "No valid operations scheme has been registered";
+        kDebug() << "No operations are set";
     }
     return d->operationNames;
 }
@@ -93,7 +93,7 @@ ServiceJob *Service::startOperationCall(const QString &operation, const QMap<QSt
             job = createJob(operation, parameters);
         }
     } else {
-        kDebug() << operation << "is not a valid, valid are:" << d->operationNames;
+        kDebug() << operation << "is not valid, valid are:" << d->operationNames;
     }
 
     if (!job) {
