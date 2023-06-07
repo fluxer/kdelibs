@@ -18,7 +18,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "kdynamicjobtracker_p.h"
+#include "kdynamicjobtracker.h"
 
 #include <kuiserverjobtracker.h>
 #include <kwidgetjobtracker.h>
@@ -108,4 +108,4 @@ void KDynamicJobTracker::unregisterJob(KJob *job)
         widgetTracker->unregisterJob(job);
 }
 
-#include "moc_kdynamicjobtracker_p.cpp"
+#include "moc_kdynamicjobtracker.cpp"

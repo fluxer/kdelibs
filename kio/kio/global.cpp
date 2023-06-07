@@ -29,7 +29,7 @@
 #include <kiconloader.h>
 #include <kprotocolmanager.h>
 #include <kmimetype.h>
-#include <kdynamicjobtracker_p.h>
+#include <kdynamicjobtracker.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/qdatetime.h>

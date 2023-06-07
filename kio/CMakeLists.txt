@@ -44,7 +44,6 @@ set(kiocore_STAT_SRCS
     kio/kdirlister.cpp
     kio/kdirmodel.cpp
     kio/kdirnotify.cpp
-    kio/kdynamicjobtracker.cpp
     kio/kfileitem.cpp
     kio/kfileitemlistproperties.cpp
     kio/kfileitemactions.cpp

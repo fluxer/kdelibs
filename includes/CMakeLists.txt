@@ -350,6 +350,8 @@ install(
     KFilterProxySearchLine
     KWidgetItemDelegate
     KWidgetJobTracker
+    KDynamicJobTracker
+    KUiServerJobTracker
     KPixmapSequence
     KPixmapSequenceWidget
     KPixmapSequenceOverlayPainter

@@ -20,6 +20,7 @@
 #ifndef KDYNAMICJOBTRACKER_H
 #define KDYNAMICJOBTRACKER_H
 
+#include <kdeui_export.h>
 #include <kjobtrackerinterface.h>
 
 /**
@@ -28,7 +29,7 @@
  * available. This way, we have the old dialogs as fallback when the user doesn't use a kuiserver
  * applet or application.
  */
-class KDynamicJobTracker : public KJobTrackerInterface
+class KDEUI_EXPORT KDynamicJobTracker : public KJobTrackerInterface
 {
     Q_OBJECT
 
