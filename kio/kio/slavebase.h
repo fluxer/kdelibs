@@ -569,13 +569,6 @@ public:
     void listEntry(const UDSEntry& _entry, bool ready);
 
     /**
-     * internal function to connect a slave to/ disconnect from
-     * either the slave pool or the application
-     */
-    void connectSlave(const QString &path);
-    void disconnectSlave();
-
-    /**
      * Prompt the user for Authorization info (login & password).
      *
      * Use this function to request authorization information from

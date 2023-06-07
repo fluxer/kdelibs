@@ -184,21 +184,20 @@ static void genericsig_handler(int sigNumber)
     kDebug(7019) << "exiting due to signal" << sigNumber;
     // set the flag which will be checked in dispatchLoop() and which *should* be checked
     // in lengthy operations in the various slaves
-    if (globalSlave != 0) {
+    if (globalSlave) {
         globalSlave->setKillFlag();
     }
 }
 
 //////////////
 
-SlaveBase::SlaveBase( const QByteArray &protocol,
-                      const QByteArray &app_socket )
+SlaveBase::SlaveBase(const QByteArray &protocol,
+                     const QByteArray &app_socket)
     : mProtocol(protocol),
       d(new SlaveBasePrivate(this))
 
 {
-    if (qgetenv("KDE_DEBUG").isEmpty())
-    {
+    if (qgetenv("KDE_DEBUG").isEmpty()) {
         KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi | KCrash::NoRestart);
     }
 
@@ -230,9 +229,16 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     d->last_tv.tv_usec = 0;
     d->totalSize = 0;
     d->timeout = 0;
-    d->remotefile = 0;
+    d->remotefile = nullptr;
     d->exit_loop = false;
-    connectSlave(QFile::decodeName(app_socket));
+
+    const QString address = QFile::decodeName(app_socket);
+    d->appConnection.connectToRemote(address);
+    if (!d->appConnection.inited()) {
+        kDebug(7019) << "failed to connect to" << address << '\n'
+                     << "Reason:" << d->appConnection.errorString();
+        exit();
+    }
 }
 
 SlaveBase::~SlaveBase()
@@ -289,22 +295,6 @@ void SlaveBase::dispatchLoop()
 
     // execute deferred deletes
     QCoreApplication::sendPostedEvents(NULL, QEvent::DeferredDelete);
-}
-
-void SlaveBase::connectSlave(const QString &address)
-{
-    d->appConnection.connectToRemote(address);
-
-    if (!d->appConnection.inited()) {
-        kDebug(7019) << "failed to connect to" << address << '\n'
-                     << "Reason:" << d->appConnection.errorString();
-        exit();
-    }
-}
-
-void SlaveBase::disconnectSlave()
-{
-    d->appConnection.close();
 }
 
 void SlaveBase::setMetaData(const QString &key, const QString &value)
@@ -491,7 +481,7 @@ static bool isSubCommand(int cmd)
            (cmd == CMD_CONFIG));
 }
 
-void SlaveBase::mimeType( const QString &_type)
+void SlaveBase::mimeType(const QString &_type)
 {
     kDebug(7019) << _type;
     int cmd = 0;
