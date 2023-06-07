@@ -39,6 +39,7 @@
 
 #include "kglobal.h"
 #include "klocale.h"
+#include "kdevicedatabase.h"
 
 #if defined(LIBCDIO_FOUND)
 #include "udevopticaldisc.h"
@@ -48,6 +49,8 @@
 #include <QDebug>
 
 using namespace Solid::Backends::UDev;
+
+static KDeviceDatabase s_devicedb;
 
 UDevDevice::UDevDevice(const UdevQt::Device device)
     : Solid::Ifaces::Device()
@@ -101,9 +104,9 @@ QString UDevDevice::vendor() const
             if (!idvendorid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    vendor = m_devicedb.lookupPCIVendor(idvendorid);
+                    vendor = s_devicedb.lookupPCIVendor(idvendorid);
                 } else if (idbus == QLatin1String("usb")) {
-                    vendor = m_devicedb.lookupUSBVendor(idvendorid);
+                    vendor = s_devicedb.lookupUSBVendor(idvendorid);
                 }
             }
         }
@@ -145,9 +148,9 @@ QString UDevDevice::product() const
             if (!idvendorid.isEmpty() && !idmodelid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    product = m_devicedb.lookupPCIDevice(idvendorid, idmodelid);
+                    product = s_devicedb.lookupPCIDevice(idvendorid, idmodelid);
                 } else if (idbus == QLatin1String("usb")) {
-                    product = m_devicedb.lookupUSBDevice(idvendorid, idmodelid);
+                    product = s_devicedb.lookupUSBDevice(idvendorid, idmodelid);
                 }
             }
         }

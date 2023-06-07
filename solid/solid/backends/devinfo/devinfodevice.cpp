@@ -24,11 +24,16 @@
 #include "devinfonetworkinterface.h"
 #include "devinfographic.h"
 
+#include "kdevicedatabase.h"
+
 #include <QDebug>
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <devinfo.h>
+
+
+static KDeviceDatabase s_devicedb;
 
 using namespace Solid::Backends::Devinfo;
 
@@ -132,9 +137,9 @@ QString DevinfoDevice::vendor() const
     const QByteArray parent = deviceProperty(DevinfoDevice::DeviceParent);
     QString result;
     if (parent.contains("pci")) {
-        result = m_devicedb.lookupPCIVendor(pnpvendor);
+        result = s_devicedb.lookupPCIVendor(pnpvendor);
     } else {
-        result = m_devicedb.lookupUSBVendor(pnpvendor);
+        result = s_devicedb.lookupUSBVendor(pnpvendor);
     }
 
     return result;
@@ -163,9 +168,9 @@ QString DevinfoDevice::product() const
     const QByteArray parent = deviceProperty(DevinfoDevice::DeviceParent);
     QString result;
     if (parent.contains("pci")) {
-        result = m_devicedb.lookupPCIDevice(pnpvendor, pnpdevice);
+        result = s_devicedb.lookupPCIDevice(pnpvendor, pnpdevice);
     } else {
-        result = m_devicedb.lookupUSBDevice(pnpvendor, pnpdevice);
+        result = s_devicedb.lookupUSBDevice(pnpvendor, pnpdevice);
     }
 
     return result;
