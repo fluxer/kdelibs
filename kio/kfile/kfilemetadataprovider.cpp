@@ -86,11 +86,6 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
     emit loadingFinished();
 }
 
-QString KFileMetaDataProvider::label(const QString& metaDataUri) const
-{
-    return KFileMetaInfo::name(metaDataUri);
-}
-
 KFileItemList KFileMetaDataProvider::items() const
 {
     return m_fileItems;

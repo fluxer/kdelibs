@@ -191,7 +191,7 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
         if (value.isEmpty()) {
             continue;
         }
-        QString itemLabel = m_provider->label(key);
+        QString itemLabel = KFileMetaInfo::name(key);
         itemLabel.append(QLatin1Char(':'));
 
         // Create label

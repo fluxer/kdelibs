@@ -52,12 +52,6 @@ public:
     KFileItemList items() const;
 
     /**
-     * @return Translated string for the label of the meta data represented
-     *         by \p metaDataUri.
-     */
-    QString label(const QString& metaDataUri) const;
-
-    /**
      * @return Meta data for the items that have been set by
      *         KFileMetaDataProvider::setItems(). The method should
      *         be invoked after the signal loadingFinished() has

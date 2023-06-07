@@ -108,10 +108,7 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const QString& uri)
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     KConfigGroup settings = config.group("Show");
 
-    const QString label = (m_provider == 0)
-                          ? KFileMetaInfo::name(uri)
-                          : m_provider->label(uri);
-
+    const QString label = KFileMetaInfo::name(uri);
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);
     item->setData(Qt::UserRole, uri);
     const bool show = settings.readEntry(uri, true);
