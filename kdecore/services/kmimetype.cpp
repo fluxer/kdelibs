@@ -462,7 +462,7 @@ QString KMimeType::favIconForUrl( const KUrl& url, bool download )
         const QString iconfile = iconreply.value();
         if (iconfile.isEmpty() && download) {
             kDebug() << "Downloading icon for" << url.prettyUrl();
-            const QDBusReply<void> downloadreply = kded.call(QString::fromLatin1("downloadHostIcon"), url.url() );
+            const QDBusReply<void> downloadreply = kded.call(QString::fromLatin1("downloadUrlIcon"), url.url() );
             if (!downloadreply.isValid()) {
                 kWarning() << "Could not start downloading icon for" << url.prettyUrl();
             }

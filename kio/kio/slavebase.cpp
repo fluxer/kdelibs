@@ -404,7 +404,7 @@ void SlaveBase::error(int _errid, const QString &_text)
     KIO_DATA << (qint32)_errid << _text;
 
     send(MSG_ERROR, data);
-    //reset
+    // reset
     d->totalSize = 0;
 }
 
@@ -1019,7 +1019,7 @@ void SlaveBase::dispatch(int command, const QByteArray &data)
         }
         case CMD_SPECIAL: {
             d->m_state = SlaveBasePrivate::InsideMethod;
-            special( data );
+            special(data);
             d->verifyState("special()");
             d->m_state = SlaveBasePrivate::Idle;
             break;
@@ -1085,7 +1085,6 @@ int SlaveBase::proxyConnectTimeout()
     }
     return DEFAULT_PROXY_CONNECT_TIMEOUT;
 }
-
 
 int SlaveBase::responseTimeout()
 {
