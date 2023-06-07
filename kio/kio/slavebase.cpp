@@ -1116,7 +1116,7 @@ bool SlaveBase::wasKilled() const
 
 void SlaveBase::setKillFlag()
 {
-    d->wasKilled=true;
+    d->wasKilled = true;
 }
 
 void SlaveBase::send(int cmd, const QByteArray &arr)

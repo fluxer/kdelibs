@@ -565,7 +565,7 @@ public:
      * @param ready set to true after emitting all items. @p _entry is not
      *        used in this case
      */
-    void listEntry(const UDSEntry& _entry, bool ready);
+    void listEntry(const UDSEntry &_entry, bool ready);
 
     /**
      * Prompt the user for Authorization info (login & password).
@@ -672,7 +672,7 @@ public:
      * @param info See AuthInfo.
      * @return @p true if @p info was successfully cached.
      */
-    bool cacheAuthentication( const AuthInfo &info);
+    bool cacheAuthentication(const AuthInfo &info);
 
     /**
      * Wait for an answer to our request, until we get @p expected1 or @p expected2

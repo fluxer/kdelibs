@@ -110,7 +110,7 @@ QString SlaveInterface::protocol() const
     return d->m_protocol;
 }
 
-void SlaveInterface::setProtocol(const QString & protocol)
+void SlaveInterface::setProtocol(const QString &protocol)
 {
     Q_D(SlaveInterface);
     d->m_protocol = protocol;
@@ -248,9 +248,9 @@ void SlaveInterface::setHost( const QString &host, quint16 port,
     d->m_passwd = passwd;
 
     QByteArray data;
-    QDataStream stream( &data, QIODevice::WriteOnly );
+    QDataStream stream(&data, QIODevice::WriteOnly);
     stream << d->m_host << d->m_port << d->m_user << d->m_passwd;
-    d->connection->send( CMD_HOST, data );
+    d->connection->send(CMD_HOST, data);
 }
 
 void SlaveInterface::resetHost()
@@ -263,12 +263,12 @@ void SlaveInterface::setConfig(const MetaData &config)
 {
     Q_D(SlaveInterface);
     QByteArray data;
-    QDataStream stream( &data, QIODevice::WriteOnly );
+    QDataStream stream(&data, QIODevice::WriteOnly);
     stream << config;
-    d->connection->send( CMD_CONFIG, data );
+    d->connection->send(CMD_CONFIG, data);
 }
 
-SlaveInterface* SlaveInterface::createSlave( const QString &protocol, const KUrl& url, int& error, QString& error_text )
+SlaveInterface* SlaveInterface::createSlave(const QString &protocol, const KUrl &url, int &error, QString &error_text)
 {
     kDebug(7002) << "createSlave" << protocol << "for" << url;
     SlaveInterface *slave = new SlaveInterface(protocol);
@@ -310,7 +310,7 @@ SlaveInterface* SlaveInterface::createSlave( const QString &protocol, const KUrl
     return slave;
 }
 
-void SlaveInterface::setConnection( Connection* connection )
+void SlaveInterface::setConnection(Connection* connection)
 {
     Q_D(SlaveInterface);
     d->connection = connection;
@@ -528,7 +528,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
     return true;
 }
 
-void SlaveInterface::setOffset( KIO::filesize_t o)
+void SlaveInterface::setOffset(KIO::filesize_t o)
 {
     Q_D(SlaveInterface);
     d->offset = o;
@@ -540,11 +540,11 @@ KIO::filesize_t SlaveInterface::offset() const
     return d->offset;
 }
 
-void SlaveInterface::sendResumeAnswer( bool resume )
+void SlaveInterface::sendResumeAnswer(bool resume)
 {
     Q_D(SlaveInterface);
     kDebug(7007) << "ok for resuming:" << resume;
-    d->connection->sendnow( resume ? CMD_RESUMEANSWER : CMD_NONE, QByteArray() );
+    d->connection->sendnow(resume ? CMD_RESUMEANSWER : CMD_NONE, QByteArray());
 }
 
 void SlaveInterface::sendMessageBoxAnswer(int result)
