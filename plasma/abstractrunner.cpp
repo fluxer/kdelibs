@@ -24,8 +24,7 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QMutex>
-#include <QTimer>
-#include <QDateTime>
+#include <QElapsedTimer>
 
 #include <kdebug.h>
 #include <kicon.h>
@@ -114,14 +113,14 @@ void AbstractRunner::performMatch(Plasma::RunnerContext &localContext)
         return;
     }
 
-    QTime time;
+    QElapsedTimer time;
     time.restart();
 
     //The local copy is already obtained in the job
     match(localContext);
 
     // automatically rate limit runners that become slooow
-    const int runtime = time.elapsed();
+    const qint64 runtime = time.elapsed();
     bool slowed = speed() == SlowSpeed;
 
     if (!slowed && runtime > reasonableRunTime) {

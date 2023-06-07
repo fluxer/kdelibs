@@ -590,7 +590,6 @@ void KMimeTypeTest::testMimeTypeInheritancePerformance()
     QCOMPARE(mimeTypes.count(), 40);
     KMimeType::Ptr mime = KMimeType::mimeType("text/x-chdr");
     QVERIFY(mime);
-    QTime dt; dt.start();
     QBENCHMARK {
         QString match;
         foreach (const QString& mt, mimeTypes) {

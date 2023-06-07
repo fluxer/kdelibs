@@ -294,7 +294,7 @@ void KWidgetJobTracker::Private::ProgressWidget::totalAmount(KJob::Unit unit, qu
         if (totalSize == amount)
             return;
         totalSize = amount;
-        if (startTime.isNull())
+        if (!startTime.isValid())
             startTime.start();
         break;
 
@@ -409,8 +409,8 @@ void KWidgetJobTracker::Private::ProgressWidget::slotClean()
     processedAmount(KJob::Bytes, totalSize);
     keepOpenCheck->setEnabled(false);
     pauseButton->setEnabled(false);
-    if (!startTime.isNull()) {
-        int s = startTime.elapsed();
+    if (startTime.isValid()) {
+        qint64 s = startTime.elapsed();
         if (!s)
             s = 1;
         speedLabel->setText(i18n("%1/s (done)",

@@ -22,7 +22,7 @@
 #define BACKGROUNDTEST_H
 
 #include <QtCore/QObject>
-#include <QtCore/qdatetime.h>
+#include <QtCore/QElapsedTimer>
 
 #include "backgroundchecker.h"
 
@@ -38,7 +38,7 @@ protected Q_SLOTS:
 
 private:
     Sonnet::BackgroundChecker *m_checker;
-    QTime m_timer;
+    QElapsedTimer m_timer;
     int m_len;
 };
 

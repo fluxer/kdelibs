@@ -35,7 +35,7 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QFile>
 #include <QtCore/QList>
-#include <QtCore/QDateTime>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QCoreApplication>
 
 #include "kdebug.h"
@@ -107,7 +107,7 @@ public:
     ~SlaveBasePrivate();
 
     UDSEntryList pendingListEntries;
-    QTime m_timeSinceLastBatch;
+    QElapsedTimer m_timeSinceLastBatch;
     Connection appConnection;
 
     bool needSendCanResume;

@@ -83,7 +83,7 @@ void SonnetCoreTest::testCore()
           << "hello" << "helo" << "enviroment" << "guvernment" << "farted"
           << "hello" << "helo" << "enviroment" << "guvernment" << "farted";
 
-    QTime mtime;
+    QElapsedTimer mtime;
     mtime.start();
     for (QStringList::Iterator itr = words.begin();
          itr != words.end(); ++itr) {
@@ -151,7 +151,7 @@ void SonnetCoreTest::testCore2()
     words << "Hallo" << "halo" << "Umgebunp" << "Regirung" << "bet";
     words << "Hallo" << "halo" << "Umgebunp" << "Regirung" << "bet";
 
-    QTime mtime;
+    QElapsedTimer mtime;
     mtime.start();
     for (QStringList::Iterator itr = words.begin();
          itr != words.end(); ++itr) {

@@ -26,7 +26,7 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QLabel>
 #include <QProgressBar>
 #include <QQueue>
@@ -112,7 +112,7 @@ public:
     KPushButton *openLocation;
     QCheckBox   *keepOpenCheck;
     KUrl        location;
-    QTime       startTime;
+    QElapsedTimer startTime;
     KPushButton *pauseButton;
     KSqueezedTextLabel *sourceEdit;
     KSqueezedTextLabel *destEdit;

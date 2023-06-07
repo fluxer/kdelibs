@@ -22,9 +22,9 @@
 #include "speller.h"
 
 #include <QCoreApplication>
+#include <QElapsedTimer>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
-#include <QtCore/qdatetime.h>
 
 using namespace Sonnet;
 
@@ -80,7 +80,7 @@ int main( int argc, char** argv )
           << "hello" << "helo" << "enviroment" << "guvernment" << "farted"
           << "hello" << "helo" << "enviroment" << "guvernment" << "farted";
 
-    QTime mtime;
+    QElapsedTimer mtime;
     mtime.start();
     for (QStringList::Iterator itr = words.begin();
          itr != words.end(); ++itr) {

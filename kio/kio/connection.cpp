@@ -24,7 +24,7 @@
 
 #include <QQueue>
 #include <QPointer>
-#include <QDateTime>
+#include <QElapsedTimer>
 
 #include <kdebug.h>
 #include <kcomponentdata.h>
@@ -207,7 +207,7 @@ bool SocketConnectionBackend::waitForIncomingTask(int ms)
         return true;            // there was enough data in the socket
 
     // not enough data in the socket, so wait for more
-    QTime timer;
+    QElapsedTimer timer;
     timer.start();
 
     while (socket->state() == QLocalSocket::ConnectedState && !signalEmitted &&
