@@ -578,7 +578,7 @@ void SlaveBase::listEntry(const UDSEntry &entry, bool _ready)
     }
 
     if (_ready) { // may happen when we started with !ready
-        listEntries( d->pendingListEntries );
+        listEntries(d->pendingListEntries);
         d->pendingListEntries.clear();
 
         // Restart time
