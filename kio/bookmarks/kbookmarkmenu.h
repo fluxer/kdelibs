@@ -23,20 +23,16 @@
 #ifndef KBOOKMARKMENU_H
 #define KBOOKMARKMENU_H
 
-#include <sys/types.h>
+#include "kbookmark.h"
+#include "kbookmarkmanager.h"
 
 #include <QObject>
-#include <QStack>
 #include <QString>
-#include <QMenu>
 #include <QAction>
 
 #include <kaction.h>
 #include <kactionmenu.h>
 #include <kmenu.h>
-
-#include "kbookmark.h"
-#include "kbookmarkmanager.h"
 
 class KActionCollection;
 class KMenu;
@@ -145,7 +141,8 @@ private Q_SLOTS:
     void slotCustomContextMenu(const QPoint &pos);
 
 private:
-    KBookmarkMenuPrivate* d;
+    KBookmarkMenuPrivate* const d;
+    Q_DISABLE_COPY(KBookmarkMenu);
 };
 
 class KIO_EXPORT KBookmarkContextMenu : public KMenu

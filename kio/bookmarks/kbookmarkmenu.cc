@@ -21,6 +21,13 @@
 #include "kbookmarkmenu.h"
 #include "kbookmarkmenu_p.h"
 #include "kbookmarkdialog.h"
+
+#include <QMimeData>
+#include <QStack>
+#include <QClipboard>
+#include <QHeaderView>
+#include <QApplication>
+
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -28,15 +35,8 @@
 #include <kmenu.h>
 #include <kstandardshortcut.h>
 #include <kstandardaction.h>
-#include <kstringhandler.h>
 #include <krun.h>
 #include <kactioncollection.h>
-
-#include <qclipboard.h>
-#include <qmimedata.h>
-#include <QtCore/QStack>
-#include <QtGui/QHeaderView>
-#include <QtGui/QApplication>
 
 /********************************************************************/
 /********************************************************************/
@@ -231,7 +231,6 @@ KMenu* KBookmarkMenu::parentMenu() const
 /********************************************************************/
 /********************************************************************/
 /********************************************************************/
-
 KBookmarkActionInterface::KBookmarkActionInterface(const KBookmark &bk)
     : bm(bk)
 {
@@ -249,8 +248,6 @@ const KBookmark KBookmarkActionInterface::bookmark() const
 /********************************************************************/
 /********************************************************************/
 /********************************************************************/
-
-
 KBookmarkContextMenu::KBookmarkContextMenu(const KBookmark &bk, KBookmarkManager *manager, KBookmarkOwner *owner, QWidget *parent)
     : KMenu(parent), bm(bk), m_pManager(manager), m_pOwner(owner)
 {
@@ -289,7 +286,6 @@ void KBookmarkContextMenu::addFolderActions()
     addAction(KIcon("edit-delete"), i18n("Delete Folder"), this, SLOT(slotRemove()));
 }
 
-
 void KBookmarkContextMenu::addProperties()
 {
     addAction(i18n("Properties"), this, SLOT(slotProperties()));
@@ -319,7 +315,6 @@ void KBookmarkContextMenu::slotEditAt()
 void KBookmarkContextMenu::slotProperties()
 {
     // kDebug(7043) << m_highlightedAddress;
-
     KBookmarkDialog* dlg = m_pOwner->bookmarkDialog(m_pManager, QApplication::activeWindow());
     dlg->editBookmark(bm);
     delete dlg;
@@ -355,11 +350,11 @@ void KBookmarkContextMenu::slotInsert()
 
 void KBookmarkContextMenu::slotRemove()
 {
-  // kDebug(7043) << "slotRemove" << m_highlightedAddress;
+    // kDebug(7043) << "slotRemove" << m_highlightedAddress;
 
-  bool folder = bm.isGroup();
+    bool folder = bm.isGroup();
 
-  if (KMessageBox::warningContinueCancel(
+    if (KMessageBox::warningContinueCancel(
           QApplication::activeWindow(),
           folder ? i18n("Are you sure you wish to remove the bookmark folder\n\"%1\"?", bm.text())
                  : i18n("Are you sure you wish to remove the bookmark\n\"%1\"?", bm.text()),
@@ -414,7 +409,6 @@ KBookmark KBookmarkContextMenu::bookmark() const
 /********************************************************************/
 /********************************************************************/
 /********************************************************************/
-
 void KBookmarkMenu::slotBookmarksChanged(const QString &groupAddress)
 {
     kDebug(7043) << "slotBookmarksChanged" << groupAddress;
@@ -594,8 +588,8 @@ void KBookmarkMenu::slotAddBookmark()
 
     KBookmarkGroup parentBookmark = d->m_pManager->findByAddress(d->m_parentAddress).toGroup();
     if (KBookmarkSettings::self()->m_advancedaddbookmark) {
-        KBookmarkDialog* dlg = d->m_pOwner->bookmarkDialog(d->m_pManager, QApplication::activeWindow() );
-        dlg->addBookmark(d->m_pOwner->currentTitle(), KUrl(d->m_pOwner->currentUrl()), parentBookmark );
+        KBookmarkDialog* dlg = d->m_pOwner->bookmarkDialog(d->m_pManager, QApplication::activeWindow());
+        dlg->addBookmark(d->m_pOwner->currentTitle(), KUrl(d->m_pOwner->currentUrl()), parentBookmark);
         delete dlg;
     } else {
         parentBookmark.addBookmark(d->m_pOwner->currentTitle(), KUrl(d->m_pOwner->currentUrl()));
@@ -623,8 +617,6 @@ void KBookmarkMenu::slotNewFolder()
 /********************************************************************/
 /********************************************************************/
 /********************************************************************/
-
-
 KBookmarkAction::KBookmarkAction(const KBookmark &bk, KBookmarkOwner *owner, QObject *parent)
     : KAction(bk.text().replace('&', "&&"), parent),
     KBookmarkActionInterface(bk),

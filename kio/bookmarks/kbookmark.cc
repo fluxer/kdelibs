@@ -21,17 +21,18 @@
 */
 
 #include "kbookmark.h"
+
 #include <QStack>
+#include <QDateTime>
+
 #include <kdebug.h>
 #include <kmimetype.h>
 #include <kstringhandler.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <assert.h>
 #include <kbookmarkmanager.h>
 
-#include <qdatetime.h>
-#include <qmimedata.h>
+#include <assert.h>
 
 #define METADATA_KDE_OWNER "http://www.kde.org"
 #define METADATA_FREEDESKTOP_OWNER "http://freedesktop.org"

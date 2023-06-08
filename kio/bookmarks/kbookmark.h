@@ -21,12 +21,13 @@
 #define KBOOKMARK_H
 
 #include <kio/kio_export.h>
-
-#include <QtCore/QString>
-#include <QtCore/QList>
-#include <QtCore/QMetaType>
-#include <QtXml/qdom.h>
 #include <kurl.h>
+
+#include <QString>
+#include <QList>
+#include <QMimeData>
+#include <QMetaType>
+#include <QDomDocument>
 
 class KBookmarkManager;
 class KBookmarkGroup;

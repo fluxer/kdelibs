@@ -22,10 +22,12 @@
 #include "kbookmarkmanager.h"
 #include "kbookmarkmenu.h"
 #include "kbookmarkmenu_p.h"
+
 #include <QFormLayout>
 #include <QLabel>
 #include <QTreeWidget>
 #include <QHeaderView>
+
 #include <klineedit.h>
 #include <klocale.h>
 #include <kiconloader.h>

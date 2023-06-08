@@ -20,17 +20,12 @@
 #ifndef KBOOKMARKMANAGER_H
 #define KBOOKMARKMANAGER_H
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QObject>
-#include <QtCore/QPair>
-#include <QtGui/QTreeWidgetItem>
-#include <QtGui/QLabel>
-#include <QtGui/QTreeWidget>
-#include <QtXml/QDomDocument>
-#include <QtDBus/QDBusMessage>
+#include <QString>
+#include <QObject>
+#include <QPair>
+#include <QDomDocument>
+#include <QDBusMessage>
 
-#include <kurl.h>
 #include "kbookmark.h"
 
 class KBookmarkGroup;

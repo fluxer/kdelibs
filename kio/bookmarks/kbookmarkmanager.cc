@@ -21,17 +21,21 @@
 */
 
 #include "kbookmarkmanager.h"
+#include "kbookmarkmenu.h"
+#include "kbookmarkmenu_p.h"
+#include "kbookmarkdialog.h"
+#include "kbookmarkmanageradaptor_p.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcess>
-#include <QtCore/QRegExp>
-#include <QtCore/QTextStream>
-#include <QtCore/QMutex>
-#include <QtCore/QTextCodec>
-#include <QtCore/QThread>
-#include <QtDBus/QtDBus>
-#include <QtGui/QApplication>
+#include <QFile>
+#include <QFileInfo>
+#include <QProcess>
+#include <QRegExp>
+#include <QTextStream>
+#include <QMutex>
+#include <QTextCodec>
+#include <QThread>
+#include <QApplication>
+#include <QDBusConnection>
 
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -41,11 +45,6 @@
 #include <ksavefile.h>
 #include <kstandarddirs.h>
 #include <kmimetype.h>
-
-#include "kbookmarkmenu.h"
-#include "kbookmarkmenu_p.h"
-#include "kbookmarkdialog.h"
-#include "kbookmarkmanageradaptor_p.h"
 
 #define BOOKMARK_CHANGE_NOTIFY_INTERFACE "org.kde.KIO.KBookmarkManager"
 
