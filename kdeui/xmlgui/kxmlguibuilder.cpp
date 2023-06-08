@@ -308,12 +308,7 @@ QAction* KXMLGUIBuilder::createCustomElement( QWidget *parent, int index, const 
       bool isLineSep = true;
 
       QDomNamedNodeMap attributes = element.attributes();
-      // the lenght() method had a TODO which is done in Katie
-#ifdef QT_KATIE
       for (int i = 0; i < attributes.length(); i++ )
-#else
-      for (uint i = 0; i < attributes.length(); i++ )
-#endif
       {
         QDomAttr attr = attributes.item( i ).toAttr();
 

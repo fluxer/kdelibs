@@ -53,11 +53,7 @@ KSettings::~KSettings()
 void KSettings::addSource(const QString &source)
 {
     QSettings settings(source, defaultformat);
-#ifndef QT_KATIE
-    foreach (const QString &key, settings.allKeys()) {
-#else
     foreach (const QString &key, settings.keys()) {
-#endif
         if (!QSettings::contains(key)) {
             QSettings::setValue(key, settings.value(key));
         }
