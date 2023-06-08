@@ -44,7 +44,6 @@
 
 #include "kbookmarkmenu.h"
 #include "kbookmarkmenu_p.h"
-#include "kbookmarkimporter.h"
 #include "kbookmarkdialog.h"
 #include "kbookmarkmanageradaptor_p.h"
 

@@ -23,10 +23,8 @@ install(
     KBookmarkActionInterface
     KBookmarkActionMenu
     KBookmarkDialog
-    KBookmarkExporterBase
     KBookmarkGroup
     KBookmarkGroupTraverser
-    KBookmarkImporterBase
     KBookmarkManager
     KBookmarkMenu
     KBookmarkOwner
@@ -331,7 +329,6 @@ install(
     KWindowInfo
     KWindowSystem
     KWordMacroExpander
-    KXBELBookmarkImporterImpl
     KXErrorHandler
     KXMLGUIBuilder
     KXMLGUIClient

@@ -90,7 +90,6 @@ qt4_add_dbus_interface(kiocore_STAT_SRCS
 
 set(kbookmarks_STAT_SRCS
     bookmarks/kbookmark.cc
-    bookmarks/kbookmarkimporter.cc
     bookmarks/kbookmarkmanager.cc
     bookmarks/kbookmarkmanageradaptor.cc
     bookmarks/kbookmarkmenu.cc
@@ -248,8 +247,6 @@ install(
     kfile/kurlrequester.h
     kfile/kurlrequesterdialog.h
     bookmarks/kbookmark.h
-    bookmarks/kbookmarkexporter.h
-    bookmarks/kbookmarkimporter.h
     bookmarks/kbookmarkmanager.h
     bookmarks/kbookmarkmenu.h
     bookmarks/kbookmarkdialog.h

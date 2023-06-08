@@ -18,10 +18,6 @@
 
 #include "kfilebookmarkhandler_p.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <kbookmarkimporter.h>
 #include <kmenu.h>
 #include <kstandarddirs.h>
 
