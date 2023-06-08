@@ -30,9 +30,6 @@
 #include <QTextCursor>
 #include <QTextDocumentFragment>
 
-#include <configdialog.h>
-#include <dialog.h>
-#include "backgroundchecker.h"
 #include <kdebug.h>
 #include <kaction.h>
 #include <kcursor.h>
@@ -50,6 +47,8 @@
 #include <kmessagebox.h>
 #include <kmenu.h>
 #include <kwindowsystem.h>
+#include <kspellhighlighter.h>
+#include <kspelldialog.h>
 #include <QDebug>
 
 class KTextEdit::Private
@@ -61,14 +60,12 @@ class KTextEdit::Private
         checkSpellingEnabled( false ),
         findReplaceEnabled(true),
         showTabAction(true),
-	showAutoCorrectionButton(false),
         highlighter( 0 ), findDlg(0),find(0),repDlg(0),replace(0), findIndex(0), repIndex(0),
         lastReplacedPosition(-1)
     {
-        //Check the default sonnet settings to see if spellchecking should be enabled.
-        KConfig sonnetKConfig("sonnetrc");
-        KConfigGroup group(&sonnetKConfig, "Spelling");
-        checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
+        //Check the default settings to see if spellchecking should be enabled.
+        KConfigGroup spellgroup(KGlobal::config(), "Spelling");
+        checkSpellingEnabled = spellgroup.readEntry("checkerEnabledByDefault", false);
 
         // i18n: Placeholder text in text edit widgets is the text appearing
         // before any user input, briefly explaining to the user what to type
@@ -101,7 +98,6 @@ class KTextEdit::Private
 
     void spellCheckerMisspelling( const QString &text, int pos );
     void spellCheckerCorrected( const QString &, int,const QString &);
-    void spellCheckerAutoCorrect(const QString&,const QString&);
     void spellCheckerCanceled();
     void spellCheckerFinished();
     void toggleAutoSpellCheck();
@@ -134,66 +130,58 @@ class KTextEdit::Private
     bool checkSpellingEnabled : 1;
     bool findReplaceEnabled: 1;
     bool showTabAction: 1;
-    bool showAutoCorrectionButton: 1;
     QTextDocumentFragment originalDoc;
-    QString spellCheckingConfigFileName;
     QString spellCheckingLanguage;
-    Sonnet::Highlighter *highlighter;
+    KSpellHighlighter *highlighter;
     KFindDialog *findDlg;
     KFind *find;
     KReplaceDialog *repDlg;
     KReplace *replace;
     int findIndex, repIndex;
     int lastReplacedPosition;
-    KConfig *sonnetKConfig;
 };
 
 void KTextEdit::Private::checkSpelling(bool force)
 {
-  if(parent->document()->isEmpty())
-  {
-      KMessageBox::information(parent, i18n("Nothing to spell check."));
-      if(force) {
-	emit parent->spellCheckingFinished();
-      }
-      return;
-  }
-  Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
-  if(!spellCheckingLanguage.isEmpty())
-     backgroundSpellCheck->changeLanguage(spellCheckingLanguage);
-  Sonnet::Dialog *spellDialog = new Sonnet::Dialog(
-      backgroundSpellCheck, force ? parent : 0);
-  backgroundSpellCheck->setParent(spellDialog);
-  spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-  spellDialog->activeAutoCorrect(showAutoCorrectionButton);
-  connect(spellDialog, SIGNAL(replace(QString,int,QString)),
-          parent, SLOT(spellCheckerCorrected(QString,int,QString)));
-  connect(spellDialog, SIGNAL(misspelling(QString,int)),
-          parent, SLOT(spellCheckerMisspelling(QString,int)));
-  connect(spellDialog, SIGNAL(autoCorrect(QString,QString)),
-          parent, SLOT(spellCheckerAutoCorrect(QString,QString)));
-  connect(spellDialog, SIGNAL(done(QString)),
-          parent, SLOT(spellCheckerFinished()));
-  connect(spellDialog, SIGNAL(cancel()),
-          parent, SLOT(spellCheckerCanceled()));
-  //Laurent in sonnet/dialog.cpp we emit done(QString) too => it calls here twice spellCheckerFinished not necessary
-  /*
-  connect(spellDialog, SIGNAL(stop()),
-          parent, SLOT(spellCheckerFinished()));
-  */
-  connect(spellDialog, SIGNAL(spellCheckStatus(QString)),
-          parent, SIGNAL(spellCheckStatus(QString)));
-  connect(spellDialog, SIGNAL(languageChanged(QString)),
-          parent, SIGNAL(languageChanged(QString)));
-  if(force) {
-      connect(spellDialog, SIGNAL(done(QString)),parent, SIGNAL(spellCheckingFinished()));
-      connect(spellDialog, SIGNAL(cancel()), parent, SIGNAL(spellCheckingCanceled()));
-      //Laurent in sonnet/dialog.cpp we emit done(QString) too => it calls here twice spellCheckerFinished not necessary
-      //connect(spellDialog, SIGNAL(stop()), parent, SIGNAL(spellCheckingFinished()));
-  }
-  originalDoc = QTextDocumentFragment(parent->document());
-  spellDialog->setBuffer(parent->toPlainText());
-  spellDialog->show();
+    if (parent->document()->isEmpty()) {
+        KMessageBox::information(parent, i18n("Nothing to spell check."));
+        if (force) {
+            emit parent->spellCheckingFinished();
+        }
+        return;
+    }
+    KSpellDialog *spellDialog = new KSpellDialog(KGlobal::config().data(), force ? parent : 0);
+    if (!spellCheckingLanguage.isEmpty()) {
+        spellDialog->changeLanguage(spellCheckingLanguage);
+    }
+    spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    connect(
+        spellDialog, SIGNAL(replace(QString,int,QString)),
+        parent, SLOT(spellCheckerCorrected(QString,int,QString))
+    );
+    connect(
+        spellDialog, SIGNAL(misspelling(QString,int)),
+        parent, SLOT(spellCheckerMisspelling(QString,int))
+    );
+    connect(
+        spellDialog, SIGNAL(accepted()),
+        parent, SLOT(spellCheckerFinished())
+    );
+    connect(
+        spellDialog, SIGNAL(rejected()),
+        parent, SLOT(spellCheckerCanceled())
+    );
+    connect(
+        spellDialog, SIGNAL(languageChanged(QString)),
+        parent, SIGNAL(languageChanged(QString))
+    );
+    if (force) {
+        connect(spellDialog, SIGNAL(accepted()), parent, SIGNAL(spellCheckingFinished()));
+        connect(spellDialog, SIGNAL(rejected()), parent, SIGNAL(spellCheckingCanceled()));
+    }
+    originalDoc = QTextDocumentFragment(parent->document());
+    spellDialog->setBuffer(parent->toPlainText());
+    spellDialog->show();
 }
 
 
@@ -204,11 +192,6 @@ void KTextEdit::Private::spellCheckerCanceled()
     QTextCursor cursor(doc);
     cursor.insertFragment(originalDoc);
     spellCheckerFinished();
-}
-
-void KTextEdit::Private::spellCheckerAutoCorrect(const QString& currentWord,const QString& autoCorrectWord)
-{
-    emit parent->spellCheckerAutoCorrect(currentWord, autoCorrectWord);
 }
 
 void KTextEdit::Private::spellCheckerMisspelling( const QString &text, int pos )
@@ -325,11 +308,6 @@ KTextEdit::~KTextEdit()
   delete d;
 }
 
-void KTextEdit::setSpellCheckingConfigFileName(const QString &_fileName)
-{
-    d->spellCheckingConfigFileName = _fileName;
-}
-
 const QString& KTextEdit::spellCheckingLanguage() const
 {
     return d->spellCheckingLanguage;
@@ -345,20 +323,6 @@ void KTextEdit::setSpellCheckingLanguage(const QString &_language)
     if (_language != d->spellCheckingLanguage) {
         d->spellCheckingLanguage = _language;
         emit languageChanged(_language);
-    }
-}
-
-void KTextEdit::showSpellConfigDialog(const QString &configFileName,
-                                      const QString &windowIcon)
-{
-    KConfig config(configFileName);
-    Sonnet::ConfigDialog dialog(&config, this);
-    if (!d->spellCheckingLanguage.isEmpty())
-        dialog.setLanguage(d->spellCheckingLanguage);
-    if (!windowIcon.isEmpty())
-        dialog.setWindowIcon(KIcon(windowIcon));
-    if(dialog.exec()) {
-        setSpellCheckingLanguage( dialog.language() );
     }
 }
 
@@ -696,18 +660,18 @@ void KTextEdit::wheelEvent( QWheelEvent *event )
 
 void KTextEdit::createHighlighter()
 {
-    setHighlighter(new Sonnet::Highlighter(this, d->spellCheckingConfigFileName));
+    setHighlighter(new KSpellHighlighter(KGlobal::config().data(), this));
 }
 
-Sonnet::Highlighter* KTextEdit::highlighter() const
+KSpellHighlighter* KTextEdit::highlighter() const
 {
     return d->highlighter;
 }
 
-void KTextEdit::setHighlighter(Sonnet::Highlighter *_highLighter)
+void KTextEdit::setHighlighter(KSpellHighlighter *highLighter)
 {
     delete d->highlighter;
-    d->highlighter = _highLighter;
+    d->highlighter = highLighter;
 }
 
 void KTextEdit::setCheckSpellingEnabled(bool check)
@@ -1093,11 +1057,6 @@ void KTextEdit::paintEvent(QPaintEvent *ev)
         QRect cr = d->clickMessageRect();
         p.drawText(cr, Qt::AlignTop | Qt::TextWordWrap, d->clickMessage);
     }
-}
-
-void KTextEdit::showAutoCorrectButton(bool show)
-{
-    d->showAutoCorrectionButton = show;
 }
 
 #include "moc_ktextedit.cpp"

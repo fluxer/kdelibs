@@ -23,13 +23,13 @@
 
 #include <kdeui_export.h>
 
-#include <QtGui/QWidget>
-#include <QtGui/QStringListModel>
+#include <QWidget>
+#include <QStringListModel>
+#include <QListView>
+#include <QPushButton>
 
 class KLineEdit;
 class KComboBox;
-#include <QListView>
-#include <QPushButton>
 
 class KEditListWidgetPrivate;
 /**

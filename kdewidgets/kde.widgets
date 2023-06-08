@@ -337,11 +337,11 @@ ToolTip=URL Requester (KDE)
 WhatsThis=A widget holding a lineedit and a pushbutton. A "file open" dialog opened when clicking on the pushbutton
 Group=Input (KDE)
 
-[Sonnet::DictionaryComboBox]
-IncludeFile=sonnet/dictionarycombobox.h
+[KSpellDictionaryComboBox]
+IncludeFile=kspelldictionarycombobox.h
 ToolTip=Dictionary Combobox
 WhatsThis=A combobox to select a dictionary for spellchecking
-Group=Sonnet (KDE)
+Group=Spell (KDE)
 
 [KMediaWidget]
 ToolTip=Multimedia files player (KDE)

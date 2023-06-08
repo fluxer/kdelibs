@@ -3,7 +3,6 @@ project(kdeui)
 include_directories(
     ${CMAKE_SOURCE_DIR}/interfaces
     ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
-    ${CMAKE_SOURCE_DIR}/kdecore/sonnet
     ${CMAKE_SOURCE_DIR}/kdeui
     ${KDE4_KDECORE_INCLUDES}
     actions
@@ -20,7 +19,7 @@ include_directories(
     paged
     plotting
     shortcuts
-    sonnet
+    spell
     util
     widgets
     windowmanagement
@@ -29,7 +28,11 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/util
 )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/widgets)
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}/widgets
+    ${ENCHANT_INCLUDE_DIR}
+    "${ENCHANT_INCLUDE_DIR}/.."
+)
 
 if (X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
      set(HAVE_XKB TRUE)
@@ -41,7 +44,6 @@ configure_file(
 
 if(ENABLE_TESTING)
     add_subdirectory( tests )
-    add_subdirectory( sonnet/tests )
 endif()
 
 ########### next target ###############
@@ -172,11 +174,12 @@ set(kdeui_LIB_SRCS
     shortcuts/kglobalshortcutinfo_dbus.cpp
     shortcuts/kacceleratormanager.cpp
     shortcuts/kcheckaccelerators.cpp
-    sonnet/dialog.cpp
-    sonnet/configwidget.cpp
-    sonnet/highlighter.cpp
-    sonnet/configdialog.cpp
-    sonnet/dictionarycombobox.cpp
+    spell/kspeller.cpp
+    spell/kspellhighlighter.cpp
+    spell/kspelldialog.cpp
+    spell/kspelldictionarycombobox.cpp
+    spell/kspellconfigwidget.cpp
+    spell/kspellbackgroundchecker.cpp
     util/kcompletion.cpp
     util/kcompletionbase.cpp
     util/kcrash.cpp
@@ -324,6 +327,7 @@ add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 target_link_libraries(kdeui PRIVATE
     ${X11_LIBRARIES}
     ${KDEUI_EXTRA_LIBS}
+    ${ENCHANT_LIBRARIES}
 )
 
 target_link_libraries(kdeui PUBLIC
@@ -487,6 +491,12 @@ install(
     shortcuts/kglobalshortcutinfo.h
     shortcuts/kglobalshortcutinfo_p.h
     shortcuts/kacceleratormanager.h
+    spell/kspeller.h
+    spell/kspellhighlighter.h
+    spell/kspelldialog.h
+    spell/kspelldictionarycombobox.h
+    spell/kspellconfigwidget.h
+    spell/kspellbackgroundchecker.h
     util/kaccelgen.h
     util/kcompletion.h
     util/kcrash.h
@@ -575,17 +585,6 @@ install(
     widgets/kratingpainter.h
     widgets/kratingwidget.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/nepomuk
-    COMPONENT Devel
-)
-
-install(
-    FILES
-    sonnet/dialog.h
-    sonnet/highlighter.h
-    sonnet/configdialog.h
-    sonnet/configwidget.h
-    sonnet/dictionarycombobox.h
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/sonnet
     COMPONENT Devel
 )
 

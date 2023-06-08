@@ -21,7 +21,7 @@
 #define KTEXTEDIT_H
 
 #include <kdeui_export.h>
-#include <sonnet/highlighter.h>
+#include <kspellhighlighter.h>
 #include <QtGui/QTextEdit>
 
 #define HAVE_SHOWTABACTION 1
@@ -112,25 +112,9 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
     void highlightWord( int length, int pos );
 
     /**
-     * Allows to override the config file where the settings for spell checking,
-     * like the current language or encoding, are stored.
-     * By default, the global config file (kdeglobals) is used, to share
-     * spell check settings between all applications.
-     *
-     * This has to be called before any spell checking is initiated.
-     *
-     * @param fileName the URL of the config file which will be used to
-     *                 read spell settings
-     * @bug this has no effect for the spell dialog, only for the background
-     *      check
-     */
-    void setSpellCheckingConfigFileName(const QString &fileName);
-
-    /**
      * Allows to create a specific highlighter if reimplemented.
      *
-     * By default, it creates a normal highlighter, based on the config
-     * file given to setSpellCheckingConfigFileName().
+     * By default, it creates a normal highlighter.
      *
      * This highlighter is set each time spell checking is toggled on by
      * calling setCheckSpellingEnabled(), but can later be overridden by calling
@@ -138,7 +122,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      *
      * @see setHighlighter()
      * @see highlighter()
-     * @see setSpellCheckingConfigFileName()
      */
     virtual void createHighlighter();
 
@@ -150,7 +133,7 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * @see setHighlighter()
      * @see createHighlighter()
      */
-    Sonnet::Highlighter* highlighter() const;
+    KSpellHighlighter* highlighter() const;
 
     /**
      * Sets a custom backgound spell highlighter for this text edit.
@@ -165,7 +148,7 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * @see createHighlighter()
      * @param highLighter the new highlighter which will be used now
      */
-    void setHighlighter(Sonnet::Highlighter *_highLighter);
+    void setHighlighter(KSpellHighlighter *_highLighter);
 
     /**
      * Return standard KTextEdit popupMenu
@@ -210,11 +193,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
 
     /**
      * @since 4.10
-     */
-    void showAutoCorrectButton(bool show);
-
-    /**
-     * @since 4.10
      * create a modal spellcheck dialogbox and spellCheckingFinished signal we sent when 
      * we finish spell checking or spellCheckingCanceled signal when we cancel spell checking
      */
@@ -227,12 +205,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * @since 4.1
      */
      void checkSpellingChanged( bool );
-
-     /**
-      * Signal sends when spell checking is finished/stopped/completed
-      * @since 4.1
-      */
-     void spellCheckStatus(const QString &);
 
      /**
       * Emitted when the user changes the language in the spellcheck dialog
@@ -259,12 +231,7 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
     void aboutToShowContextMenu(QMenu* menu);
 
     /**
-     * @since 4.10
-     */
-    void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
-
-    /**
-     * signal spellCheckingFinished is sent when we finish spell check or we click on "Terminate" button in sonnet dialogbox
+     * signal spellCheckingFinished is sent when we finish spell check or we click on "Terminate" button in speller dialogbox
      * @since 4.10
      */
     void spellCheckingFinished();
@@ -288,27 +255,11 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
     void setSpellCheckingLanguage(const QString &language);
 
     /**
-     * Show a dialog to check the spelling. The spellCheckStatus() signal
-     * will be emitted when the spell checking dialog is closed.
+     * Show a dialog to check the spelling. The spellCheckingFinished() or
+     * spellCheckingCanceled() signal will be emitted when the spell checking
+     * dialog is closed.
      */
     void checkSpelling();
-
-    /**
-     * Opens a Sonnet::ConfigDialog for this text edit. The config settings the
-     * user makes are read from and stored to the given config file.
-     * The spellcheck language of the config dialog is set to the current spellcheck
-     * language of the textedit. If the user changes the language in that dialog,
-     * the languageChanged() signal is emitted.
-     *
-     * @param configFileName The file which is used to store and load the config
-     *                       settings
-     * @param windowIcon the icon which is used for the titlebar of the spell dialog
-     *                   window. Can be empty, then no icon is set.
-     *
-     * @since 4.2
-     */
-    void showSpellConfigDialog(const QString &configFileName,
-                               const QString &windowIcon = QString());
 
     /**
      * Create replace dialogbox
@@ -380,7 +331,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
     Q_PRIVATE_SLOT( d, void spellCheckerMisspelling( const QString&, int ) )
     Q_PRIVATE_SLOT( d, void spellCheckerCorrected(const QString&, int,const QString&) )
     Q_PRIVATE_SLOT( d, void spellCheckerCanceled())
-    Q_PRIVATE_SLOT( d, void spellCheckerAutoCorrect(const QString&,const QString&) )
     Q_PRIVATE_SLOT( d, void spellCheckerFinished() )
     Q_PRIVATE_SLOT( d, void undoableClear() )
     Q_PRIVATE_SLOT( d, void toggleAutoSpellCheck() )

@@ -25,7 +25,6 @@ include_directories(
     # for kglobalsettings header
     ${KDE4_KDEUI_INCLUDES}
     ${QT_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
 )
 
 # kdecore_OPTIONAL_SRCS is used to collect source files
@@ -37,24 +36,9 @@ set(kdecore_OPTIONAL_LIBS)
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 
-# compile Enchant if available
-if(ENCHANT_FOUND)
-    include_directories(
-        ${ENCHANT_INCLUDE_DIR}
-        "${ENCHANT_INCLUDE_DIR}/.."
-    )
-    set(kdecore_OPTIONAL_SRCS
-        ${kdecore_OPTIONAL_SRCS}
-        sonnet/enchantclient.cpp
-        sonnet/enchantdict.cpp
-    )
-    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${ENCHANT_LIBRARIES})
-endif()
-
 add_subdirectory(kconfig_compiler)
 if(ENABLE_TESTING)
     add_subdirectory(tests)
-    add_subdirectory(sonnet/tests)
 endif()
 
 ########### next target ###############
@@ -133,13 +117,6 @@ set(kdecore_LIB_SRCS
     services/yacc.c
     services/lex.c
     services/kplugininfo.cpp
-    sonnet/loader.cpp
-    sonnet/speller.cpp
-    sonnet/filter.cpp
-    sonnet/settings.cpp
-    sonnet/backgroundchecker.cpp
-    sonnet/backgroundengine.cpp
-    sonnet/globals.cpp
 
     localization/kcatalog.cpp
     localization/kcharsets.cpp
@@ -311,15 +288,6 @@ install(
     util/qtest_kde.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
-)
-
-install(
-    FILES
-    sonnet/backgroundchecker.h
-    sonnet/speller.h
-    sonnet/globals.h
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/sonnet
     COMPONENT Devel
 )
 

@@ -340,7 +340,6 @@ set(KDE4_KDECORE_INCLUDES
     ${CMAKE_SOURCE_DIR}/kdecore/sycoca
     ${CMAKE_SOURCE_DIR}/kdecore/text
     ${CMAKE_SOURCE_DIR}/kdecore/util
-    ${CMAKE_SOURCE_DIR}/kdecore/sonnet
     ${CMAKE_BINARY_DIR}/kdecore
     ${QT_INCLUDES}
     ${_KDE4_PLATFORM_INCLUDE_DIRS}
@@ -363,7 +362,7 @@ set(KDE4_KDEUI_INCLUDES
     ${CMAKE_SOURCE_DIR}/kdeui/paged
     ${CMAKE_SOURCE_DIR}/kdeui/plotting
     ${CMAKE_SOURCE_DIR}/kdeui/shortcuts
-    ${CMAKE_SOURCE_DIR}/kdeui/sonnet
+    ${CMAKE_SOURCE_DIR}/kdeui/spell
     ${CMAKE_SOURCE_DIR}/kdeui/util
     ${CMAKE_SOURCE_DIR}/kdeui/widgets
     ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement

@@ -27,6 +27,7 @@
 #include <QString>
 #include <QStringList>
 #include <QSize>
+#include <QTextFrame>
 
 #include <kdebug.h>
 

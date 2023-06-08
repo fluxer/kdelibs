@@ -358,6 +358,12 @@ install(
     KPty
     KPtyDevice
     KPtyProcess
+    KSpeller
+    KSpellHighlighter
+    KSpellDialog
+    KSpellDictionaryComboBox
+    KSpellConfigWidget
+    KSpellBackgroundChecker
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE
     COMPONENT Devel
 )
@@ -434,18 +440,6 @@ install(
     COMPONENT Devel
 )
 
-
-#install(
-#    FILES
-#    Sonnet/GuessLanguage
-#    Sonnet/UnicodeData
-#    Sonnet/TextBreaks
-#    Sonnet/Spell
-#    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Sonnet
-#    COMPONENT Devel
-#)
-
-
 install(
     FILES
     KTextEditor/Attribute
@@ -515,18 +509,6 @@ install(
     Solid/StorageVolume
     Solid/Graphic
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Solid
-    COMPONENT Devel
-)
-
-
-install(
-    FILES
-    Sonnet/ConfigDialog
-    Sonnet/ConfigWidget
-    Sonnet/Dialog
-    Sonnet/DictionaryComboBox
-    Sonnet/Highlighter
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Sonnet
     COMPONENT Devel
 )
 
