@@ -213,7 +213,7 @@ QString KBookmarkMenu::parentAddress() const
     return d->m_parentAddress;
 }
 
-KBookmarkManager * KBookmarkMenu::manager() const
+KBookmarkManager* KBookmarkMenu::manager() const
 {
     return d->m_pManager;
 }
@@ -324,7 +324,7 @@ void KBookmarkContextMenu::slotProperties()
 {
     // kDebug(7043) << m_highlightedAddress;
 
-    KBookmarkDialog *  dlg = m_pOwner->bookmarkDialog(m_pManager, QApplication::activeWindow());
+    KBookmarkDialog* dlg = m_pOwner->bookmarkDialog(m_pManager, QApplication::activeWindow());
     dlg->editBookmark(bm);
     delete dlg;
 }
@@ -335,7 +335,7 @@ void KBookmarkContextMenu::slotInsert()
 
     QString url = m_pOwner->currentUrl();
     if (url.isEmpty()) {
-        KMessageBox::error( QApplication::activeWindow(), i18n("Cannot add bookmark with empty URL."));
+        KMessageBox::error(QApplication::activeWindow(), i18n("Cannot add bookmark with empty URL."));
         return;
     }
     QString title = m_pOwner->currentTitle();
@@ -346,24 +346,24 @@ void KBookmarkContextMenu::slotInsert()
     if (bm.isGroup()) {
         KBookmarkGroup parentBookmark = bm.toGroup();
         Q_ASSERT(!parentBookmark.isNull());
-        parentBookmark.addBookmark( title, KUrl(url) );
-        m_pManager->emitChanged( parentBookmark );
+        parentBookmark.addBookmark(title, KUrl(url));
+        m_pManager->emitChanged(parentBookmark);
     } else {
         KBookmarkGroup parentBookmark = bm.parentGroup();
         Q_ASSERT(!parentBookmark.isNull());
-        KBookmark newBookmark = parentBookmark.addBookmark( title, KUrl(m_pOwner->currentUrl()) );
-        parentBookmark.moveBookmark( newBookmark, parentBookmark.previous(bm) );
-        m_pManager->emitChanged( parentBookmark );
+        KBookmark newBookmark = parentBookmark.addBookmark(title, KUrl(m_pOwner->currentUrl()));
+        parentBookmark.moveBookmark(newBookmark, parentBookmark.previous(bm));
+        m_pManager->emitChanged(parentBookmark);
     }
 }
 
 void KBookmarkContextMenu::slotRemove()
 {
-  //kDebug(7043) << "KBookmarkMenu::slotRemove" << m_highlightedAddress;
+  // kDebug(7043) << "slotRemove" << m_highlightedAddress;
 
   bool folder = bm.isGroup();
 
-  if(KMessageBox::warningContinueCancel(
+  if (KMessageBox::warningContinueCancel(
           QApplication::activeWindow(),
           folder ? i18n("Are you sure you wish to remove the bookmark folder\n\"%1\"?", bm.text())
                  : i18n("Are you sure you wish to remove the bookmark\n\"%1\"?", bm.text()),
@@ -371,18 +371,19 @@ void KBookmarkContextMenu::slotRemove()
                  : i18n("Bookmark Deletion"),
           KStandardGuiItem::del())
         != KMessageBox::Continue
-     ) {
+     )
+    {
         return;
     }
 
     KBookmarkGroup parentBookmark = bm.parentGroup();
-    parentBookmark.deleteBookmark( bm );
-    m_pManager->emitChanged( parentBookmark );
+    parentBookmark.deleteBookmark(bm);
+    m_pManager->emitChanged(parentBookmark);
 }
 
 void KBookmarkContextMenu::slotCopyLocation()
 {
-    // kDebug(7043) << m_highlightedAddress;
+    // kDebug(7043) << "slotCopyLocation" << m_highlightedAddress;
 
     if (!bm.isGroup()) {
         QMimeData* mimeData = new QMimeData();
@@ -420,7 +421,7 @@ KBookmark KBookmarkContextMenu::bookmark() const
 
 void KBookmarkMenu::slotBookmarksChanged(const QString &groupAddress)
 {
-    kDebug(7043) << groupAddress;
+    kDebug(7043) << "slotBookmarksChanged" << groupAddress;
     if (groupAddress == d->m_parentAddress) {
         // kDebug(7043) << "setting m_bDirty on" << groupAddress;
         d->m_bDirty = true;
@@ -535,7 +536,7 @@ void KBookmarkMenu::addNewFolder()
     if (!d->newBookmarkFolder) {
         d->newBookmarkFolder = new KAction(i18n("New Bookmark Folder..."), this);
         d->newBookmarkFolder->setIcon(KIcon("folder-new"));
-        d->newBookmarkFolder->setHelpText( i18n( "Create a new bookmark folder in this menu"));
+        d->newBookmarkFolder->setHelpText(i18n("Create a new bookmark folder in this menu"));
         connect(d->newBookmarkFolder, SIGNAL(triggered(bool)), this, SLOT(slotNewFolder()));
     }
 
@@ -544,7 +545,7 @@ void KBookmarkMenu::addNewFolder()
 
 void KBookmarkMenu::fillBookmarks()
 {
-    KBookmarkGroup parentBookmark = d->m_pManager->findByAddress(d->m_parentAddress ).toGroup();
+    KBookmarkGroup parentBookmark = d->m_pManager->findByAddress(d->m_parentAddress).toGroup();
     Q_ASSERT(!parentBookmark.isNull());
 
     if (d->m_bIsRoot && !parentBookmark.first().isNull()) { // at least one bookmark

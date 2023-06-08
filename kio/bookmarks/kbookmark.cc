@@ -526,7 +526,7 @@ QString KBookmark::commonParent(const QString &first, const QString &second)
 
 void KBookmark::updateAccessMetadata()
 {
-    kDebug(7043) << "KBookmark::updateAccessMetadata" << address() << url().prettyUrl();
+    kDebug(7043) << "updateAccessMetadata" << address() << url().prettyUrl();
 
     const uint timet = QDateTime::currentDateTime().toTime_t();
     setMetaDataItem("time_added", QString::number(timet), DontOverwriteMetaData);

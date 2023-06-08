@@ -151,7 +151,6 @@ private:
 class KIO_EXPORT KBookmarkContextMenu : public KMenu
 {
     Q_OBJECT
-    
 public:
     KBookmarkContextMenu(const KBookmark &bm, KBookmarkManager *manager, KBookmarkOwner *owner, QWidget *parent = 0);
     virtual ~KBookmarkContextMenu();
@@ -181,8 +180,8 @@ private Q_SLOTS:
 
 private:
     KBookmark bm;
-    KBookmarkManager * m_pManager;
-    KBookmarkOwner * m_pOwner;
+    KBookmarkManager* m_pManager;
+    KBookmarkOwner* m_pOwner;
 };
 
 class KIO_EXPORT KBookmarkActionInterface
