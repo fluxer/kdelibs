@@ -44,7 +44,7 @@ class KBookmarkManagerPrivate;
  *   <folder folded="no">
  *     <title>Title of this folder</title>
  *     <bookmark icon="kde" href="http://www.kde.org"><title>KDE Web Site</title></bookmark>
- *     <folder toolbar="yes">
+ *     <folder>
  *       <title>My own bookmarks</title>
  *       <bookmark href="http://www.koffice.org"><title>KOffice Web Site</title></bookmark>
  *       <separator/>
@@ -123,11 +123,10 @@ public:
     /**
      * Save the bookmarks to the given XML file on disk.
      * @param filename full path to the desired bookmarks file location
-     * @param toolbarCache if true save a cache of the toolbar folder, too
      * @return true if saving was successful
      */
      // KDE5 TODO: Use an enum and not a bool
-    bool saveAs(const QString &filename, bool toolbarCache = true) const;
+    bool saveAs(const QString &filename) const;
 
     /**
      * Update access time stamps for a given url.
@@ -160,14 +159,6 @@ public:
     KBookmarkGroup root() const;
 
     /**
-     * This returns the root of the toolbar menu.
-     * In the XML, this is the group with the attribute toolbar=yes
-     * 
-     * @return the toolbar group
-     */
-    KBookmarkGroup toolbar();
-
-    /**
      * @return the bookmark designated by @p address
      * @param address the address belonging to the bookmark you're looking for
      * @param tolerate when true tries to find the most tolerable bookmark position
@@ -193,11 +184,9 @@ public:
      * You should use emitChanged() instead of this function, it saves
      * and notifies everyone that the file has changed.
      * Only use this if you don't want the emitChanged signal.
-     * @param toolbarCache if true save a cache of the toolbar folder, too
      * @return true if saving was successful
      */
-     // KDE5 TODO: Use an enum and not a bool
-    bool save(bool toolbarCache = true) const;
+    bool save() const;
 
 
     void emitConfigChanged();

@@ -238,27 +238,6 @@ void KBookmarkGroup::deleteBookmark(const KBookmark &bk)
     element.removeChild(bk.element);
 }
 
-bool KBookmarkGroup::isToolbarGroup() const
-{
-    return (element.attribute("toolbar") == "yes");
-}
-
-QDomElement KBookmarkGroup::findToolbar() const
-{
-    if (element.attribute("toolbar") == "yes") {
-        return element;
-    }
-    for (QDomElement e = element.firstChildElement("folder"); !e.isNull();
-        e = e.nextSiblingElement("folder") )
-    {
-        QDomElement result = KBookmarkGroup(e).findToolbar();
-        if (!result.isNull()) {
-            return result;
-        }
-    }
-    return QDomElement();
-}
-
 QList<KUrl> KBookmarkGroup::groupUrlList() const
 {
     QList<KUrl> urlList;

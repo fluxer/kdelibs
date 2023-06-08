@@ -128,7 +128,6 @@ public:
     }
 
     mutable QDomDocument m_doc;
-    mutable QDomDocument m_toolbarDoc;
     QString m_bookmarksFile;
     QString m_dbusObjectName;
     mutable bool m_docIsLoaded;
@@ -302,7 +301,6 @@ QDomDocument KBookmarkManager::internalDocument() const
 {
     if (!d->m_docIsLoaded) {
         parse();
-        d->m_toolbarDoc.clear();
     }
     return d->m_doc;
 }
@@ -354,32 +352,14 @@ void KBookmarkManager::parse() const
     d->m_map.setNeedsUpdate();
 }
 
-bool KBookmarkManager::save(bool toolbarCache) const
+bool KBookmarkManager::save() const
 {
-    return saveAs(d->m_bookmarksFile, toolbarCache);
+    return saveAs(d->m_bookmarksFile);
 }
 
-bool KBookmarkManager::saveAs(const QString &filename, bool toolbarCache) const
+bool KBookmarkManager::saveAs(const QString &filename) const
 {
-    kDebug(7043) << "save as" << filename << toolbarCache;
-
-    // Save the bookmark toolbar folder for quick loading
-    // but only when it will actually make things quicker
-    const QString cacheFilename = filename + QLatin1String(".tbcache");
-    if(toolbarCache && !root().isToolbarGroup()) {
-        KSaveFile cacheFile(cacheFilename);
-        if (cacheFile.open()) {
-            QString str;
-            QTextStream stream(&str, QIODevice::WriteOnly);
-            stream << root().findToolbar();
-            const QByteArray cstr = str.toUtf8();
-            cacheFile.write(cstr.data(), cstr.length());
-            cacheFile.finalize();
-        }
-    } else {
-        // remove any (now) stale cache
-        QFile::remove(cacheFilename);
-    }
+    kDebug(7043) << "save as" << filename;
 
     KSaveFile file(filename);
     if (file.open()) {
@@ -420,46 +400,6 @@ QString KBookmarkManager::path() const
 KBookmarkGroup KBookmarkManager::root() const
 {
     return KBookmarkGroup(internalDocument().documentElement());
-}
-
-KBookmarkGroup KBookmarkManager::toolbar()
-{
-    // kDebug(7043) << "toolbar begin";
-    // Only try to read from a toolbar cache if the full document isn't loaded
-    if (!d->m_docIsLoaded) {
-        kDebug(7043) << "trying toolbar cache";
-        const QString cacheFilename = d->m_bookmarksFile + QLatin1String(".tbcache");
-        QFileInfo bmInfo(d->m_bookmarksFile);
-        QFileInfo cacheInfo(cacheFilename);
-        if (d->m_toolbarDoc.isNull() &&
-            QFile::exists(cacheFilename) &&
-            bmInfo.lastModified() < cacheInfo.lastModified())
-        {
-            kDebug(7043) << "reading file toolbar cache";
-            QFile file(cacheFilename);
-            if (file.open(QIODevice::ReadOnly)) {
-                d->m_toolbarDoc = QDomDocument("cache");
-                d->m_toolbarDoc.setContent(&file);
-                kDebug(7043) << "toolbar cache opened";
-            }
-        }
-        if (!d->m_toolbarDoc.isNull()) {
-            kDebug(7043) << "returning toolbar element";
-            QDomElement elem = d->m_toolbarDoc.firstChild().toElement();
-            return KBookmarkGroup(elem);
-        }
-    }
-
-    // Fallback to the normal way if there is no cache or if the bookmark file
-    // is already loaded
-    QDomElement elem = root().findToolbar();
-    if (elem.isNull()) {
-        // Root is the bookmark toolbar if none has been set.
-        // Make it explicit to speed up invocations of findToolbar()
-        root().internalElement().setAttribute("toolbar", "yes");
-        return root();
-    }
-    return KBookmarkGroup(elem);
 }
 
 KBookmark KBookmarkManager::findByAddress(const QString &address)

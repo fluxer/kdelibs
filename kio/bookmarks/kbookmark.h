@@ -393,15 +393,6 @@ public:
     void deleteBookmark(const KBookmark &bk);
 
     /**
-     * @return true if this is the toolbar group
-     */
-    bool isToolbarGroup() const;
-    /**
-     * @internal
-     */
-    QDomElement findToolbar() const;
-
-    /**
      * @return the list of urls of bookmarks at top level of the group
      */
     QList<KUrl> groupUrlList() const;
