@@ -135,7 +135,7 @@ public:
     /**
      * Save the bookmarks to the given XML file on disk.
      * @param filename full path to the desired bookmarks file location
-     * @param toolbarCache iff true save a cache of the toolbar folder, too
+     * @param toolbarCache if true save a cache of the toolbar folder, too
      * @return true if saving was successful
      */
      // KDE5 TODO: Use an enum and not a bool
@@ -205,7 +205,7 @@ public:
      * You should use emitChanged() instead of this function, it saves
      * and notifies everyone that the file has changed.
      * Only use this if you don't want the emitChanged signal.
-     * @param toolbarCache iff true save a cache of the toolbar folder, too
+     * @param toolbarCache if true save a cache of the toolbar folder, too
      * @return true if saving was successful
      */
      // KDE5 TODO: Use an enum and not a bool
@@ -220,7 +220,7 @@ public:
      * in order to provide a slightly differing outer shell depending
      * on the bookmarks file / app which calls it.
      * @param caption the --caption string, for instance "Konsole"
-     * @param browser iff false display no browser specific
+     * @param browser if false display no browser specific
      *            menu items in keditbookmarks :: --nobrowser
      */
      // KDE5 TODO: Use an enum and not a bool

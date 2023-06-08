@@ -80,7 +80,6 @@ public:
         static KBookmark::List fromMimeData( const QMimeData *mimeData, QDomDocument& parentDocument );
     };
 
-
     /**
      * Constructs a null bookmark, i.e. a bookmark for which isNull() returns true
      * If you want to create a new bookmark use eitehr KBookmarkGroup.addBookmark
@@ -398,7 +397,6 @@ public:
      * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
      */
     bool moveBookmark( const KBookmark & bookmark, const KBookmark & after);
-
 
     /**
      * Delete a bookmark - it has to be one of our children !
