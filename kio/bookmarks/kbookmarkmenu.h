@@ -80,7 +80,7 @@ public:
      * @todo KDE 5: give ownership of the bookmarkmenu to another qobject, e.g. parentMenu.
      * Currently this is a QObject without a parent, use setParent to benefit from automatic deletion.
      */
-    KBookmarkMenu(KBookmarkManager *mgr, KBookmarkOwner* owner, KMenu *parentMenu, KActionCollection *collec);
+    KBookmarkMenu(KBookmarkManager *mgr, KBookmarkOwner *owner, KMenu *parentMenu, KActionCollection *collec);
 
     /**
      * Creates a bookmark submenu
@@ -141,34 +141,11 @@ protected:
      */
     KMenu* parentMenu() const;
 
-    /**
-     * List of our sub menus
-     */
-    QList<KBookmarkMenu*> m_lstSubMenus;
-
-    // This is used to "export" our actions into an actionlist
-    // we got in the constructor. So that the program can show our 
-    // actions in their shortcut dialog
-    KActionCollection* m_actionCollection;
-    /**
-     * List of our actions.   
-     */
-    QList<QAction*> m_actions;
-
 private Q_SLOTS:
     void slotCustomContextMenu(const QPoint &pos);
 
 private:
     KBookmarkMenuPrivate* d;
-
-    bool m_bIsRoot;
-    bool m_bDirty;
-    KBookmarkManager* m_pManager;
-    KBookmarkOwner* m_pOwner;
-
-    KMenu* m_parentMenu;
-
-    QString m_parentAddress;
 };
 
 class KIO_EXPORT KBookmarkContextMenu : public KMenu
