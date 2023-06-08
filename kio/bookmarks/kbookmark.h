@@ -193,19 +193,6 @@ public:
     void setMimeType(const QString &mimeType);
 
     /**
-     * @return if the bookmark should be shown in the toolbar
-     * (used by the filtered toolbar)
-     *
-     */
-    bool showInToolbar() const;
-
-    /**
-     * Set whether this bookmark is show in a filterd toolbar
-     */
-    void setShowInToolbar(bool show);
-
-
-    /**
      * @return the group containing this bookmark
      */
     KBookmarkGroup parentGroup() const;
@@ -394,13 +381,13 @@ public:
     /**
      * Moves @p bookmark after @p after (which should be a child of ours).
      * If after is null, @p bookmark is moved as the first child.
-     * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
+     * Don't forget to use KBookmarkManager::self()->emitChanged(parentBookmark);
      */
     bool moveBookmark(const KBookmark &bookmark, const KBookmark &after);
 
     /**
      * Delete a bookmark - it has to be one of our children !
-     * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
+     * Don't forget to use KBookmarkManager::self()->emitChanged(parentBookmark);
      */
     void deleteBookmark(const KBookmark &bk);
 
@@ -419,10 +406,11 @@ public:
     QList<KUrl> groupUrlList() const;
 
 protected:
-    QDomElement nextKnownTag( const QDomElement &start, bool goNext ) const;
+    QDomElement nextKnownTag(const QDomElement &start, bool goNext) const;
 };
 
-class KIO_EXPORT KBookmarkGroupTraverser {
+class KIO_EXPORT KBookmarkGroupTraverser
+{
 protected:
     virtual ~KBookmarkGroupTraverser();
     void traverse(const KBookmarkGroup &);

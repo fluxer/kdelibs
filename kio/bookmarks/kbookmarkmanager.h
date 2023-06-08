@@ -326,7 +326,7 @@ private:
     // consts added to avoid a copy-and-paste of internalDocument
     void parse() const;
 
-    KBookmarkManagerPrivate * const d;
+    KBookmarkManagerPrivate* const d;
     Q_DISABLE_COPY(KBookmarkManager);
 };
 

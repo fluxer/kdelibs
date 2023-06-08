@@ -119,7 +119,7 @@ private:
     void fillGroup(QTreeWidgetItem *parentItem, const KBookmarkGroup &group);
     void fillGroup(QTreeWidgetItem *parentItem, const KBookmarkGroup &group, const KBookmarkGroup &selectGroup);
 
-    KBookmarkDialogPrivate * const d;
+    KBookmarkDialogPrivate* const d;
     friend KBookmarkDialogPrivate;
     Q_DISABLE_COPY(KBookmarkDialog);
 };

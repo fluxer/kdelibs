@@ -198,7 +198,6 @@ private:
  * A wrapper around KActionMenu to provide a nice constructor for bookmark groups.
  *
  */
-
 class KIO_EXPORT KBookmarkActionMenu : public KActionMenu, public KBookmarkActionInterface
 {
 public:
@@ -212,7 +211,6 @@ public:
  * And on triggered uses the owner to open the bookmark.
  *
  */
-
 class KIO_EXPORT KBookmarkAction : public KAction, public KBookmarkActionInterface
 {
     Q_OBJECT
