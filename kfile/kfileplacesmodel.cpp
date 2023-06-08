@@ -19,8 +19,6 @@
 */
 #include "kfileplacesmodel.h"
 #include "kfileplacesitem_p.h"
-#include "kfileplacessharedbookmarks_p.h"
-
 
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
@@ -37,13 +35,10 @@
 #include <kicon.h>
 #include <kmimetype.h>
 #include <kdebug.h>
-
 #include <kbookmarkmanager.h>
 #include <kbookmark.h>
-
 #include <kio/netaccess.h>
 #include <kprotocolinfo.h>
-
 #include <solid/devicenotifier.h>
 #include <solid/storageaccess.h>
 #include <solid/storagedrive.h>
@@ -56,10 +51,9 @@
 class KFilePlacesModel::Private
 {
 public:
-    Private(KFilePlacesModel *self) : q(self), bookmarkManager(0), sharedBookmarks(0) {}
+    Private(KFilePlacesModel *self) : q(self), bookmarkManager(0) {}
     ~Private()
     {
-        delete sharedBookmarks;
         qDeleteAll(items);
     }
 
@@ -71,7 +65,6 @@ public:
 
     Solid::Predicate predicate;
     KBookmarkManager *bookmarkManager;
-    KFilePlacesSharedBookmarks * sharedBookmarks;
 
     void reloadAndSignal();
     QList<KFilePlacesItem *> loadBookmarkList();
@@ -89,20 +82,12 @@ public:
 KFilePlacesModel::KFilePlacesModel(QObject *parent)
     : QAbstractItemModel(parent), d(new Private(this))
 {
+    // TODO: use XDG shortcuts.xbel instead, see:
+    // https://www.freedesktop.org/wiki/Specifications/desktop-bookmark-spec/
     const QString file = KStandardDirs::locateLocal("data", "kfileplaces/bookmarks.xml");
     d->bookmarkManager = KBookmarkManager::managerForFile(file, "kfilePlaces");
-
-    // Let's put some places in there if it's empty. We have a corner case here:
-    // Given you have bookmarked some folders (which have been saved on
-    // ~/.local/share/user-places.xbel (according to freedesktop bookmarks spec), and
-    // deleted the home directory ~/.kde, the call managerForFile() will return the
-    // bookmark manager for the fallback "kfilePlaces", making root.first().isNull() being
-    // false (you have your own items bookmarked), resulting on only being added your own
-    // bookmarks, and not the default ones too. So, we also check if kfileplaces/bookmarks.xml
-    // file exists, and if it doesn't, we also add the default places. (ereslibre)
     KBookmarkGroup root = d->bookmarkManager->root();
-    if (root.first().isNull() || !QFile::exists(file)) {
-
+    if (root.first().isNull()) {
         // NOTE: The context for these I18N_NOOP2 calls has to be "KFile System Bookmarks".
         // The real i18nc call is made later, with this context, so the two must match.
         //
@@ -124,16 +109,9 @@ KFilePlacesModel::KFilePlacesModel(QObject *parent)
                                               "Trash", I18N_NOOP2("KFile System Bookmarks", "Trash"),
                                               KUrl("trash:/"), "user-trash");
 
-        // Force bookmarks to be saved. If on open/save dialog and the bookmarks are not saved, QFile::exists
-        // will always return false, which opening/closing all the time the open/save dialog would case the
-        // bookmarks to be added once each time, having lots of times each bookmark. This forces the defaults
-        // to be saved on the bookmarks.xml file. Of course, the complete list of bookmarks (those that come from
-        // user-places.xbel will be filled later). (ereslibre)
+        // Force bookmarks to be saved.
         d->bookmarkManager->saveAs(file);
     }
-
-    // create after, so if we have own places, they are added afterwards, in case of equal priorities
-    d->sharedBookmarks = new KFilePlacesSharedBookmarks(d->bookmarkManager);
 
     QString predicate("[[[[ StorageVolume.ignored == false AND [ StorageVolume.usage == 'FileSystem' OR StorageVolume.usage == 'Encrypted' ]]"
         " OR "

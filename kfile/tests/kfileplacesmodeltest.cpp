@@ -77,10 +77,6 @@ void KFilePlacesModelTest::initTestCase()
     // Ensure we'll have a clean bookmark file to start
     const QString file = KStandardDirs::locateLocal("data", "kfileplaces/bookmarks.xml");
     QFile::remove(file);
-    
-    // Erase the shared bookmarks file also
-    const QString sharedBookmarksFile = KStandardDirs().localxdgdatadir() + "/user-places.xbel";
-    QFile::remove(sharedBookmarksFile);
 
     qRegisterMetaType<QModelIndex>();
     setenv("SOLID_FAKEHW", TEST_DATA, 1);
