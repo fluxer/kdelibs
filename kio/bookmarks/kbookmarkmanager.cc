@@ -146,7 +146,6 @@ public:
 
 // ################
 // KBookmarkManager
-
 static KBookmarkManager* lookupExisting(const QString &bookmarksFile)
 {
     for (KBookmarkManagerList::ConstIterator bmit = s_pSelf->constBegin(), bmend = s_pSelf->constEnd();
@@ -261,8 +260,7 @@ KBookmarkManager::KBookmarkManager(const QString &bookmarksFile)
 
 void KBookmarkManager::slotFileChanged(const QString &path)
 {
-    if (path == d->m_bookmarksFile)
-    {
+    if (path == d->m_bookmarksFile) {
         kDebug(7043) << "file changed (KDirWatch)" << path;
         // Reparse
         parse();
@@ -440,7 +438,7 @@ void KBookmarkManager::emitChanged()
 
 void KBookmarkManager::emitChanged(const KBookmarkGroup &group)
 {
-    (void) save(); // KDE5 TODO: emitChanged should return a bool? Maybe rename it to saveAndEmitChanged?
+    (void) save(); // TODO: emitChanged should return a bool? Maybe rename it to saveAndEmitChanged?
 
     // Tell the other processes too
     // kDebug(7043) << "broadcasting change " << group.address();
@@ -603,7 +601,7 @@ bool KBookmarkOwner::enableOption(BookmarkOption action) const
     return false;
 }
 
-KBookmarkDialog * KBookmarkOwner::bookmarkDialog(KBookmarkManager * mgr, QWidget * parent)
+KBookmarkDialog* KBookmarkOwner::bookmarkDialog(KBookmarkManager *mgr, QWidget *parent)
 {
     return new KBookmarkDialog(mgr, parent);
 }

@@ -73,7 +73,7 @@ public:
      *
      * @note If you pass a null KBookmarkOwner to the constructor, the
      * openBookmark signal is not emitted, instead KRun is used to open the bookmark.
-     * @todo KDE 5: give ownership of the bookmarkmenu to another qobject, e.g. parentMenu.
+     * @todo give ownership of the bookmarkmenu to another qobject, e.g. parentMenu.
      * Currently this is a QObject without a parent, use setParent to benefit from automatic deletion.
      */
     KBookmarkMenu(KBookmarkManager *mgr, KBookmarkOwner *owner, KMenu *parentMenu, KActionCollection *collec);
@@ -81,7 +81,7 @@ public:
     /**
      * Creates a bookmark submenu
      *
-     * @todo KDE 5: give ownership of the bookmarkmenu to another qobject, e.g. parentMenu.
+     * @todo give ownership of the bookmarkmenu to another qobject, e.g. parentMenu.
      * Currently this is a QObject without a parent, use setParent to benefit from automatic deletion.
      */
     KBookmarkMenu(KBookmarkManager *mgr, KBookmarkOwner *owner,

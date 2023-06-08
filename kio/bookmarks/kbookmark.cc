@@ -496,7 +496,7 @@ void KBookmark::updateAccessMetadata()
     setMetaDataItem("time_added", QString::number(timet), DontOverwriteMetaData);
     setMetaDataItem("time_visited", QString::number(timet));
 
-    QString countStr = metaDataItem("visit_count"); // TODO use spec'ed name
+    QString countStr = metaDataItem("visit_count"); // TODO: use spec'ed name
     bool ok = false;
     int currentCount = countStr.toInt(&ok);
     if (!ok) {
@@ -505,7 +505,7 @@ void KBookmark::updateAccessMetadata()
     currentCount++;
     setMetaDataItem("visit_count", QString::number(currentCount));
 
-    // TODO - for 4.0 - time_modified
+    // TODO: time_modified
 }
 
 QString KBookmark::parentAddress(const QString &address)
@@ -619,11 +619,12 @@ void KBookmarkGroupTraverser::visitLeave(const KBookmarkGroup &)
 void KBookmark::populateMimeData(QMimeData *mimeData) const
 {
     KBookmark::List bookmarkList;
-    bookmarkList.append( *this );
-    bookmarkList.populateMimeData( mimeData );
+    bookmarkList.append(*this);
+    bookmarkList.populateMimeData(mimeData);
 }
 
-KBookmark::List::List() : QList<KBookmark>()
+KBookmark::List::List()
+    : QList<KBookmark>()
 {
 }
 

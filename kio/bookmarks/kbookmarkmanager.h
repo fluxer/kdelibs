@@ -125,7 +125,6 @@ public:
      * @param filename full path to the desired bookmarks file location
      * @return true if saving was successful
      */
-     // KDE5 TODO: Use an enum and not a bool
     bool saveAs(const QString &filename) const;
 
     /**
@@ -200,7 +199,6 @@ public:
      * @param browser if false display no browser specific
      *            menu items in keditbookmarks :: --nobrowser
      */
-     // KDE5 TODO: Use an enum and not a bool
     void setEditorOptions(const QString &caption, bool browser);
 
     /**
@@ -289,7 +287,7 @@ Q_SIGNALS:
      * has been modified by the caller @p caller.
      * connect to this
      */
-    void changed( const QString &groupAddress, const QString &caller);
+    void changed(const QString &groupAddress, const QString &caller);
 
     /**
      * Signals that the config changed
@@ -374,12 +372,13 @@ public:
 
     enum BookmarkOption { ShowAddBookmark, ShowEditBookmark };
 
-    /** Returns true if \p action should be shown in the menu
-    *  The default is to show both a add and editBookmark Entry
-    *  //TODO ContextMenuAction? to disable the contextMenu?
-    *         Delete and Propeties to disable those in the
-    *         context menu?
-    */
+    /**
+     * Returns true if \p action should be shown in the menu.
+     * The default is to show both a add and editBookmark Entry
+     * @todo ContextMenuAction? to disable the contextMenu?
+     *       Delete and Propeties to disable those in the
+     *       context menu?
+     */
     virtual bool enableOption(BookmarkOption option) const;
 
     /**

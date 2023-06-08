@@ -53,17 +53,17 @@ public:
     ~KBookmarkDialog();
     /**
      * shows a propeties dialog
-     * @note That this updates the bookmark and calls KBookmarkManager::emitChanged
+     * @note This updates the bookmark and calls KBookmarkManager::emitChanged
      */
     KBookmark editBookmark(const KBookmark &bm);
     /**
      * shows a add Bookmark dialog
-     * @note That this updates the bookmark and calls KBookmarkManager::emitChanged   
+     * @note This updates the bookmark and calls KBookmarkManager::emitChanged   
      */
     KBookmark addBookmark(const QString &title, const KUrl &url, KBookmark parent = KBookmark());
     /**
      * Creates a folder from a list of bookmarks
-     * @note That this updates the bookmark and calls KBookmarkManager::emitChanged
+     * @note This updates the bookmark and calls KBookmarkManager::emitChanged
      */
     KBookmarkGroup addBookmarks(const QList<QPair<QString, QString>> &list, const QString &name = QString(),  KBookmarkGroup parent = KBookmarkGroup());
     /**

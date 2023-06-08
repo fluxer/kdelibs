@@ -47,7 +47,7 @@ public:
       , m_titleLabel(nullptr)
       , m_urlLabel(nullptr)
       , m_commentLabel(nullptr)
-      , m_folderTree(0)
+      , m_folderTree(nullptr)
       , m_mgr(mgr)
       , m_layout(false)
     {
@@ -278,7 +278,7 @@ void KBookmarkDialog::slotButtonClicked(int button)
             }
             d->m_bm = parent.createNewFolder(d->m_title->text());
             d->m_bm.setDescription(d->m_comment->text());
-            QList< QPair<QString, QString> >::iterator  it, end;
+            QList<QPair<QString, QString>>::iterator it, end;
             end = d->m_list.end();
             for(it = d->m_list.begin(); it!= d->m_list.end(); ++it) {
                 d->m_bm.toGroup().addBookmark( (*it).first, KUrl((*it).second));
@@ -332,7 +332,7 @@ void KBookmarkDialog::initLayoutPrivate()
 
     d->m_title = new KLineEdit(d->m_main);
     d->m_title->setMinimumWidth(300);
-    d->m_titleLabel = new QLabel(i18nc("@label:textbox", "Name:" ), d->m_main);
+    d->m_titleLabel = new QLabel(i18nc("@label:textbox", "Name:"), d->m_main);
     d->m_titleLabel->setBuddy(d->m_title);
 
     d->m_url = new KLineEdit( d->m_main);
@@ -349,8 +349,8 @@ void KBookmarkDialog::initLayoutPrivate()
     d->m_folderTree->setColumnCount(1);
     d->m_folderTree->header()->hide();
     d->m_folderTree->setSortingEnabled(false);
-    d->m_folderTree->setSelectionMode( QTreeWidget::SingleSelection);
-    d->m_folderTree->setSelectionBehavior( QTreeWidget::SelectRows);
+    d->m_folderTree->setSelectionMode(QTreeWidget::SingleSelection);
+    d->m_folderTree->setSelectionBehavior(QTreeWidget::SelectRows);
     d->m_folderTree->setMinimumSize(60, 100);
     QTreeWidgetItem *root = new KBookmarkTreeItem(d->m_folderTree);    
     fillGroup(root, d->m_mgr->root());
@@ -424,11 +424,11 @@ KBookmarkTreeItem::KBookmarkTreeItem(QTreeWidget *tree)
     tree->setItemSelected(this, true);
 }
 
-KBookmarkTreeItem::KBookmarkTreeItem(QTreeWidgetItem * parent, QTreeWidget * tree, const KBookmarkGroup &bk)
+KBookmarkTreeItem::KBookmarkTreeItem(QTreeWidgetItem *parent, QTreeWidget *tree, const KBookmarkGroup &bk)
     : QTreeWidgetItem(parent)
 {
     setIcon(0, SmallIcon(bk.icon()));
-    setText(0, bk.fullText() );
+    setText(0, bk.fullText());
     tree->expandItem(this);
     m_address = bk.address();
 }

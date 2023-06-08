@@ -86,7 +86,7 @@ KBookmarkMenu::KBookmarkMenu(KBookmarkManager *mgr,
     d->m_pManager = mgr;
     d->m_pOwner = owner;
     d->m_parentMenu = parentMenu;
-    d->m_parentAddress = QString(""); //TODO KBookmarkAdress::root
+    d->m_parentAddress = QString(""); // TODO: KBookmarkAdress::root
     d->m_actionCollection = actionCollection;
     d->m_parentMenu->setKeyboardShortcutsEnabled(true);
 
@@ -563,7 +563,7 @@ QAction* KBookmarkMenu::actionForBookmark(const KBookmark &bm)
         return sa;
     }
     // kDebug(7043) << "Creating bookmark menu item for " << bm.text();
-    KAction * action = new KBookmarkAction(bm, d->m_pOwner, this);
+    KAction* action = new KBookmarkAction(bm, d->m_pOwner, this);
     d->m_actions.append(action);
     return action;
 }
@@ -575,7 +575,7 @@ void KBookmarkMenu::slotAddBookmarksList()
     }
 
     KBookmarkGroup parentBookmark = d->m_pManager->findByAddress(d->m_parentAddress).toGroup();
-    KBookmarkDialog * dlg = d->m_pOwner->bookmarkDialog(d->m_pManager, QApplication::activeWindow());
+    KBookmarkDialog* dlg = d->m_pOwner->bookmarkDialog(d->m_pManager, QApplication::activeWindow());
     dlg->addBookmarks(d->m_pOwner->currentBookmarkList(), "", parentBookmark);
     delete dlg;
 }
