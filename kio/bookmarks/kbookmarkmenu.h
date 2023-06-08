@@ -153,7 +153,7 @@ class KIO_EXPORT KBookmarkContextMenu : public KMenu
     Q_OBJECT
 public:
     KBookmarkContextMenu(const KBookmark &bm, KBookmarkManager *manager, KBookmarkOwner *owner, QWidget *parent = 0);
-    virtual ~KBookmarkContextMenu();
+
     virtual void addActions();
 
 public Q_SLOTS:
@@ -203,8 +203,7 @@ class KIO_EXPORT KBookmarkActionMenu : public KActionMenu, public KBookmarkActio
 {
 public:
     KBookmarkActionMenu(const KBookmark &bm, QObject *parent);
-    KBookmarkActionMenu(const KBookmark &bm, const QString & text, QObject *parent);
-    virtual ~KBookmarkActionMenu();
+    KBookmarkActionMenu(const KBookmark &bm, const QString &text, QObject *parent);
 };
 
 /***
@@ -219,7 +218,6 @@ class KIO_EXPORT KBookmarkAction : public KAction, public KBookmarkActionInterfa
     Q_OBJECT
 public:
     KBookmarkAction(const KBookmark &bk, KBookmarkOwner* owner, QObject *parent);
-    virtual ~KBookmarkAction();
 
 public Q_SLOTS:
     void slotSelected(Qt::MouseButtons mb, Qt::KeyboardModifiers km);

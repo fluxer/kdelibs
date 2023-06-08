@@ -274,10 +274,6 @@ void KBookmarkContextMenu::addActions()
     }
 }
 
-KBookmarkContextMenu::~KBookmarkContextMenu()
-{
-}
-
 void KBookmarkContextMenu::addBookmark()
 {
     if (m_pOwner && m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark)) {
@@ -630,7 +626,7 @@ void KBookmarkMenu::slotNewFolder()
 
 
 KBookmarkAction::KBookmarkAction(const KBookmark &bk, KBookmarkOwner *owner, QObject *parent)
-    : KAction( bk.text().replace('&', "&&"), parent),
+    : KAction(bk.text().replace('&', "&&"), parent),
     KBookmarkActionInterface(bk),
     m_pOwner(owner)
 {
@@ -647,16 +643,12 @@ KBookmarkAction::KBookmarkAction(const KBookmark &bk, KBookmarkOwner *owner, QOb
     );
 }
 
-KBookmarkAction::~KBookmarkAction()
-{
-}
-
 void KBookmarkAction::slotSelected(Qt::MouseButtons mb, Qt::KeyboardModifiers km)
 {
     if (!m_pOwner) {
         new KRun(bookmark().url(), (QWidget*)0);
     } else {
-        m_pOwner->openBookmark( bookmark(), mb, km );
+        m_pOwner->openBookmark(bookmark(), mb, km);
     }
 }
 
@@ -671,10 +663,6 @@ KBookmarkActionMenu::KBookmarkActionMenu(const KBookmark &bm, QObject *parent)
 KBookmarkActionMenu::KBookmarkActionMenu(const KBookmark &bm, const QString &text, QObject *parent)
     : KActionMenu(text, parent),
     KBookmarkActionInterface(bm)
-{
-}
-
-KBookmarkActionMenu::~KBookmarkActionMenu()
 {
 }
 

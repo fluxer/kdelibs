@@ -431,10 +431,6 @@ KBookmarkTreeItem::KBookmarkTreeItem(QTreeWidgetItem * parent, QTreeWidget * tre
     m_address = bk.address();
 }
 
-KBookmarkTreeItem::~KBookmarkTreeItem()
-{
-}
-
 QString KBookmarkTreeItem::address()
 {
     return m_address;
