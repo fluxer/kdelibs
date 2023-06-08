@@ -24,13 +24,15 @@
 #include <kdialog.h>
 #include <kurl.h>
 
-class KBookmarkManager;
 #include <QWidget>
 #include <QLabel>
 #include <QTreeWidget>
-class KLineEdit;
 #include <QTreeWidgetItem>
 #include <QGridLayout>
+
+class KBookmarkManager;
+class KLineEdit;
+class KBookmarkDialogPrivate;
 
 /**
  * This class provides a Dialog for editing properties, adding Bookmarks and creating new folders.
@@ -40,7 +42,7 @@ class KLineEdit;
  * If you want to customize those dialogs, derive from KBookmarkOwner and reimplement bookmarkDialog(),
  * return a KBookmarkDialog subclass and reimplement initLayout(), aboutToShow() and save().
 **/
-
+// TODO KDE5: make as many methods private as possible.
 class KIO_EXPORT KBookmarkDialog : public KDialog
 {
   Q_OBJECT
@@ -50,6 +52,10 @@ public:
    * Creates a new KBookmarkDialog
    */
   KBookmarkDialog(  KBookmarkManager *, QWidget * = 0);
+  /**
+   * Destructor
+   */
+  ~KBookmarkDialog();
   /**
    * shows a propeties dialog
    * Note: That this  updates the bookmark and calls KBookmarkManager::emitChanged
@@ -109,23 +115,7 @@ protected:
 
   void slotButtonClicked(int);
 
-  // TODO KDE5: move all these variables to a d pointer; make as many methods private as possible.
-  BookmarkDialogMode m_mode;
   void fillGroup( QTreeWidgetItem * parentItem, const KBookmarkGroup &group);
-  QWidget * m_main;
-  KLineEdit * m_url;
-  KLineEdit * m_title;
-  KLineEdit * m_comment;
-  QLabel * m_titleLabel;
-  QLabel * m_urlLabel;
-  QLabel * m_commentLabel;
-  QTreeWidget * m_folderTree;
-  KBookmarkManager * m_mgr;
-  KBookmark m_bm;
-  QList<QPair<QString, QString> > m_list;
-  bool m_layout;
-  // WARNING: do not add new member variables here; replace one of the pointers with a d pointer,
-  // assuming that variable isn't used anywhere in apps...
 
   void initLayoutPrivate();
 
@@ -134,6 +124,10 @@ protected Q_SLOTS:
 
 private:
   void fillGroup(QTreeWidgetItem* parentItem, const KBookmarkGroup& group, const KBookmarkGroup& selectGroup);
+
+  KBookmarkDialogPrivate * const d;
+  friend KBookmarkDialogPrivate;
+  Q_DISABLE_COPY(KBookmarkDialog);
 };
 
 #endif

@@ -37,6 +37,7 @@ class KBookmarkGroup;
 class KLineEdit;
 class KMenu;
 class KBookmarkDialog;
+class KBookmarkManagerPrivate;
 
 /**
  * This class implements the reading/writing of bookmarks in XML.
@@ -338,11 +339,9 @@ private:
     void parse() const;
 
     void init( const QString& dbusPath );
-    
-    class Private;
-    Private * const d;
 
-    friend class KBookmarkGroup;
+    KBookmarkManagerPrivate * const d;
+    Q_DISABLE_COPY(KBookmarkManager);
 };
 
 /**

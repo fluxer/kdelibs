@@ -32,29 +32,62 @@
 #include <kinputdialog.h>
 #include <kstandardguiitem.h>
 
+// #########################
+// KBookmarkDialogPrivate
+class KBookmarkDialogPrivate
+{
+public:
+    KBookmarkDialogPrivate(KBookmarkManager * mgr)
+      : m_main(nullptr)
+      , m_url(nullptr)
+      , m_title(nullptr)
+      , m_comment(nullptr)
+      , m_titleLabel(nullptr)
+      , m_urlLabel(nullptr)
+      , m_commentLabel(nullptr)
+      , m_folderTree(0)
+      , m_mgr(mgr)
+      , m_layout(false)
+    {}
+
+    KBookmarkDialog::BookmarkDialogMode m_mode;
+    QWidget * m_main;
+    KLineEdit * m_url;
+    KLineEdit * m_title;
+    KLineEdit * m_comment;
+    QLabel * m_titleLabel;
+    QLabel * m_urlLabel;
+    QLabel * m_commentLabel;
+    QTreeWidget * m_folderTree;
+    KBookmarkManager * m_mgr;
+    KBookmark m_bm;
+    QList<QPair<QString, QString> > m_list;
+    bool m_layout;
+};
+
 
 KBookmark KBookmarkDialog::editBookmark(const KBookmark & bm)
 {
-    if(!m_layout)
+    if(!d->m_layout)
         initLayoutPrivate();
     setButtons( Ok | Cancel );
     setButtonGuiItem( KDialog::Ok, KGuiItem(i18nc("@action:button", "Update" )) );
     setCaption( i18nc("@title:window","Bookmark Properties") );
-    m_url->setVisible(!bm.isGroup());
-    m_urlLabel->setVisible(!bm.isGroup());
-    m_bm = bm;
-    m_title->setText(bm.fullText());
-    m_url->setText(bm.url().url());
-    m_comment->setVisible(true);
-    m_commentLabel->setVisible(true);
-    m_comment->setText(bm.description());
-    m_folderTree->setVisible(false);
+    d->m_url->setVisible(!bm.isGroup());
+    d->m_urlLabel->setVisible(!bm.isGroup());
+    d->m_bm = bm;
+    d->m_title->setText(bm.fullText());
+    d->m_url->setText(bm.url().url());
+    d->m_comment->setVisible(true);
+    d->m_commentLabel->setVisible(true);
+    d->m_comment->setText(bm.description());
+    d->m_folderTree->setVisible(false);
 
-    m_mode = EditBookmark;
-    aboutToShow(m_mode);
+    d->m_mode = EditBookmark;
+    aboutToShow(d->m_mode);
 
     if(exec() == QDialog::Accepted)
-        return m_bm;
+        return d->m_bm;
     else
         return KBookmark();
 
@@ -62,115 +95,115 @@ KBookmark KBookmarkDialog::editBookmark(const KBookmark & bm)
 
 KBookmark KBookmarkDialog::addBookmark(const QString & title, const KUrl & url, KBookmark parent)
 {
-    if(!m_layout)
+    if(!d->m_layout)
         initLayoutPrivate();
     if(parent.isNull())
-        parent = m_mgr->root();
+        parent = d->m_mgr->root();
     setButtons( User1 | Ok | Cancel );
     setButtonGuiItem( KDialog::Ok,  KGuiItem( i18nc("@action:button", "Add" ), "bookmark-new") );
     setCaption( i18nc("@title:window","Add Bookmark") );
     setButtonGuiItem( User1, KGuiItem( i18nc("@action:button", "&New Folder..." ), "folder-new") );
-    m_url->setVisible(true);
-    m_urlLabel->setVisible(true);
-    m_title->setText(title);    
-    m_url->setText(url.url());
-    m_comment->setText(QString());
-    m_comment->setVisible(true);
-    m_commentLabel->setVisible(true);
+    d->m_url->setVisible(true);
+    d->m_urlLabel->setVisible(true);
+    d->m_title->setText(title);    
+    d->m_url->setText(url.url());
+    d->m_comment->setText(QString());
+    d->m_comment->setVisible(true);
+    d->m_commentLabel->setVisible(true);
     setParentBookmark(parent);
-    m_folderTree->setVisible(true);
+    d->m_folderTree->setVisible(true);
 
-    m_mode = NewBookmark;
-    aboutToShow(m_mode);
+    d->m_mode = NewBookmark;
+    aboutToShow(d->m_mode);
 
     if(exec() == QDialog::Accepted)
-        return m_bm;
+        return d->m_bm;
     else
         return KBookmark();
 }
 
 KBookmarkGroup KBookmarkDialog::addBookmarks(const QList<QPair<QString, QString> > & list, const QString & name, KBookmarkGroup parent)
 {
-    if(!m_layout)
+    if(!d->m_layout)
         initLayoutPrivate();
     if(parent.isNull())
-        parent = m_mgr->root();
+        parent = d->m_mgr->root();
 
-    m_list = list;
+    d->m_list = list;
 
     setButtons( User1 | Ok | Cancel);
     setButtonGuiItem( KDialog::Ok,  KGuiItem( i18nc("@action:button", "Add" ), "bookmark-new") );
     setCaption( i18nc("@title:window","Add Bookmarks") );
     setButtonGuiItem( User1, KGuiItem( i18nc("@action:button", "&New Folder..." ), "folder-new") );
-    m_url->setVisible(false);
-    m_urlLabel->setVisible(false);
-    m_title->setText(name);
-    m_comment->setVisible(true);
-    m_commentLabel->setVisible(true);
-    m_comment->setText(QString());
+    d->m_url->setVisible(false);
+    d->m_urlLabel->setVisible(false);
+    d->m_title->setText(name);
+    d->m_comment->setVisible(true);
+    d->m_commentLabel->setVisible(true);
+    d->m_comment->setText(QString());
     setParentBookmark(parent);
-    m_folderTree->setVisible(true);
+    d->m_folderTree->setVisible(true);
 
-    m_mode = NewMultipleBookmarks;
-    aboutToShow(m_mode);
+    d->m_mode = NewMultipleBookmarks;
+    aboutToShow(d->m_mode);
     
     if(exec() == QDialog::Accepted)
-        return m_bm.toGroup();
+        return d->m_bm.toGroup();
     else
         return KBookmarkGroup();
 }
 
 KBookmarkGroup KBookmarkDialog::selectFolder(KBookmark parent)
 {
-    if(!m_layout)
+    if(!d->m_layout)
         initLayoutPrivate();
     if(parent.isNull())
-        parent = m_mgr->root();
+        parent = d->m_mgr->root();
     setButtons( User1 | Ok | Cancel );
     setButtonGuiItem( KDialog::Ok, KStandardGuiItem::ok() );
     setButtonGuiItem( User1, KGuiItem( i18nc("@action:button", "&New Folder..." ), "folder-new") );
     setCaption( i18nc("@title:window","Select Folder"));
-    m_url->setVisible(false);
-    m_urlLabel->setVisible(false);
-    m_title->setVisible(false);
-    m_titleLabel->setVisible(false);
-    m_comment->setVisible(false);
-    m_commentLabel->setVisible(false);
+    d->m_url->setVisible(false);
+    d->m_urlLabel->setVisible(false);
+    d->m_title->setVisible(false);
+    d->m_titleLabel->setVisible(false);
+    d->m_comment->setVisible(false);
+    d->m_commentLabel->setVisible(false);
     setParentBookmark(parent);
-    m_folderTree->setVisible(true);
+    d->m_folderTree->setVisible(true);
 
-    m_mode = SelectFolder;
-    aboutToShow(m_mode);
+    d->m_mode = SelectFolder;
+    aboutToShow(d->m_mode);
 
     if(exec() == QDialog::Accepted)
-        return m_bm.toGroup();
+        return d->m_bm.toGroup();
     else
         return KBookmarkGroup();
 }
 
 KBookmarkGroup KBookmarkDialog::createNewFolder(const QString & name, KBookmark parent)
 {
-    if(!m_layout)
+    if(!d->m_layout)
         initLayoutPrivate();
     if(parent.isNull())
-        parent = m_mgr->root();
+        parent = d->m_mgr->root();
     setButtons( Ok | Cancel );
     setButtonGuiItem( KDialog::Ok, KStandardGuiItem::ok() );
     setCaption( i18nc("@title:window","New Folder"));
-    m_url->setVisible(false);
-    m_urlLabel->setVisible(false);
-    m_comment->setVisible(true);
-    m_commentLabel->setVisible(true);
-    m_comment->setText(QString());
-    m_title->setText(name);
+    d->m_url->setVisible(false);
+    d->m_urlLabel->setVisible(false);
+    d->m_comment->setVisible(true);
+    d->m_commentLabel->setVisible(true);
+    d->m_comment->setText(QString());
+    d->m_title->setText(name);
     setParentBookmark(parent);
-    m_folderTree->setVisible(true);
+    d->m_folderTree->setVisible(true);
 
-    m_mode = NewFolder;
-    aboutToShow(m_mode);
+    d->m_mode = NewFolder;
+    aboutToShow(d->m_mode);
 
     if(exec() == QDialog::Accepted)
-        return m_bm.toGroup();
+        return d->m_bm.toGroup();
     else
         return KBookmarkGroup();
 }
@@ -178,12 +211,12 @@ KBookmarkGroup KBookmarkDialog::createNewFolder(const QString & name, KBookmark 
 void KBookmarkDialog::setParentBookmark(const KBookmark & bm)
 {
     QString address = bm.address();
-    KBookmarkTreeItem * item = static_cast<KBookmarkTreeItem *>(m_folderTree->topLevelItem(0));
+    KBookmarkTreeItem * item = static_cast<KBookmarkTreeItem *>(d->m_folderTree->topLevelItem(0));
     while(true)
     {
         if(item->address() == bm.address())
         {
-            m_folderTree->setCurrentItem(item);
+            d->m_folderTree->setCurrentItem(item);
             return;
         }
         for(int i=0; i<item->childCount(); ++i)
@@ -200,57 +233,57 @@ void KBookmarkDialog::setParentBookmark(const KBookmark & bm)
 
 KBookmarkGroup KBookmarkDialog::parentBookmark()
 {
-    KBookmarkTreeItem *item = dynamic_cast<KBookmarkTreeItem *>(m_folderTree->currentItem());
+    KBookmarkTreeItem *item = dynamic_cast<KBookmarkTreeItem *>(d->m_folderTree->currentItem());
     if(!item)
-        return m_mgr->root();
+        return d->m_mgr->root();
     const QString &address = item->address();
-    return m_mgr->findByAddress(address).toGroup();
+    return d->m_mgr->findByAddress(address).toGroup();
 }
 
 void KBookmarkDialog::slotButtonClicked(int button)
 {
     if(button == Ok)
     {
-        if(m_mode == NewFolder)
+        if(d->m_mode == NewFolder)
         {
             KBookmarkGroup parent = parentBookmark();
-            if(m_title->text().isEmpty())
-                m_title->setText("New Folder");
-            m_bm = parent.createNewFolder(m_title->text());
-            m_bm.setDescription(m_comment->text());
-            save(m_mode, m_bm);
-            m_mgr->emitChanged(parent);
-        } else if(m_mode == NewBookmark) {
+            if(d->m_title->text().isEmpty())
+                d->m_title->setText("New Folder");
+            d->m_bm = parent.createNewFolder(d->m_title->text());
+            d->m_bm.setDescription(d->m_comment->text());
+            save(d->m_mode, d->m_bm);
+            d->m_mgr->emitChanged(parent);
+        } else if(d->m_mode == NewBookmark) {
             KBookmarkGroup parent = parentBookmark();
-            if(m_title->text().isEmpty())
-                m_title->setText("New Bookmark");
-            m_bm = parent.addBookmark(m_title->text(), KUrl(m_url->text()));
-            m_bm.setDescription(m_comment->text());
-            save(m_mode, m_bm);
-            m_mgr->emitChanged(parent);
-        } else if(m_mode == NewMultipleBookmarks) {
+            if(d->m_title->text().isEmpty())
+                d->m_title->setText("New Bookmark");
+            d->m_bm = parent.addBookmark(d->m_title->text(), KUrl(d->m_url->text()));
+            d->m_bm.setDescription(d->m_comment->text());
+            save(d->m_mode, d->m_bm);
+            d->m_mgr->emitChanged(parent);
+        } else if(d->m_mode == NewMultipleBookmarks) {
             KBookmarkGroup parent = parentBookmark();
-            if(m_title->text().isEmpty())
-                m_title->setText("New Folder");
-            m_bm = parent.createNewFolder(m_title->text());
-            m_bm.setDescription(m_comment->text());
+            if(d->m_title->text().isEmpty())
+                d->m_title->setText("New Folder");
+            d->m_bm = parent.createNewFolder(d->m_title->text());
+            d->m_bm.setDescription(d->m_comment->text());
             QList< QPair<QString, QString> >::iterator  it, end;
-            end = m_list.end();
-            for(it = m_list.begin(); it!= m_list.end(); ++it)
+            end = d->m_list.end();
+            for(it = d->m_list.begin(); it!= d->m_list.end(); ++it)
             {
-                m_bm.toGroup().addBookmark( (*it).first, KUrl((*it).second));
+                d->m_bm.toGroup().addBookmark( (*it).first, KUrl((*it).second));
             }
-            save(m_mode, m_bm);
-            m_mgr->emitChanged(parent);
-        } else if(m_mode == EditBookmark) {
-            m_bm.setFullText(m_title->text());
-            m_bm.setUrl(KUrl(m_url->text()));
-            m_bm.setDescription(m_comment->text());
-            save(m_mode, m_bm);
-            m_mgr->emitChanged(m_bm.parentGroup());
-        } else if(m_mode == SelectFolder) {
-            m_bm = parentBookmark();
-            save(m_mode, m_bm);
+            save(d->m_mode, d->m_bm);
+            d->m_mgr->emitChanged(parent);
+        } else if(d->m_mode == EditBookmark) {
+            d->m_bm.setFullText(d->m_title->text());
+            d->m_bm.setUrl(KUrl(d->m_url->text()));
+            d->m_bm.setDescription(d->m_comment->text());
+            save(d->m_mode, d->m_bm);
+            d->m_mgr->emitChanged(d->m_bm.parentGroup());
+        } else if(d->m_mode == SelectFolder) {
+            d->m_bm = parentBookmark();
+            save(d->m_mode, d->m_bm);
         }
     }
     KDialog::slotButtonClicked(button);
@@ -268,60 +301,64 @@ void KBookmarkDialog::aboutToShow(BookmarkDialogMode mode)
 
 void KBookmarkDialog::initLayout()
 {
-    QBoxLayout *vbox = new QVBoxLayout( m_main );
+    QBoxLayout *vbox = new QVBoxLayout( d->m_main );
     vbox->setMargin(0);
     QFormLayout * form = new QFormLayout();
     vbox->addLayout(form);
 
-    form->addRow( m_titleLabel, m_title );
-    form->addRow( m_urlLabel, m_url );
-    form->addRow( m_commentLabel, m_comment );
+    form->addRow( d->m_titleLabel, d->m_title );
+    form->addRow( d->m_urlLabel, d->m_url );
+    form->addRow( d->m_commentLabel, d->m_comment );
 
-    vbox->addWidget(m_folderTree);
+    vbox->addWidget(d->m_folderTree);
 }
 
 
 void KBookmarkDialog::initLayoutPrivate()
 {
-    m_main = new QWidget( this );
-    setMainWidget( m_main );
+    d->m_main = new QWidget( this );
+    setMainWidget( d->m_main );
     connect( this, SIGNAL( user1Clicked() ), SLOT( newFolderButton() ) );
 
-    m_title = new KLineEdit( m_main );
-    m_title->setMinimumWidth(300);
-    m_titleLabel = new QLabel( i18nc("@label:textbox", "Name:" ), m_main );
-    m_titleLabel->setBuddy( m_title );
+    d->m_title = new KLineEdit( d->m_main );
+    d->m_title->setMinimumWidth(300);
+    d->m_titleLabel = new QLabel( i18nc("@label:textbox", "Name:" ), d->m_main );
+    d->m_titleLabel->setBuddy( d->m_title );
 
-    m_url = new KLineEdit( m_main );
-    m_url->setMinimumWidth(300);
-    m_urlLabel = new QLabel( i18nc("@label:textbox", "Location:" ), m_main );
-    m_urlLabel->setBuddy( m_url );
+    d->m_url = new KLineEdit( d->m_main );
+    d->m_url->setMinimumWidth(300);
+    d->m_urlLabel = new QLabel( i18nc("@label:textbox", "Location:" ), d->m_main );
+    d->m_urlLabel->setBuddy( d->m_url );
 
-    m_comment = new KLineEdit( m_main );
-    m_comment->setMinimumWidth(300);
-    m_commentLabel = new QLabel( i18nc("@label:textbox", "Comment:" ), m_main );
-    m_commentLabel->setBuddy( m_comment );
+    d->m_comment = new KLineEdit( d->m_main );
+    d->m_comment->setMinimumWidth(300);
+    d->m_commentLabel = new QLabel( i18nc("@label:textbox", "Comment:" ), d->m_main );
+    d->m_commentLabel->setBuddy( d->m_comment );
 
-    m_folderTree = new QTreeWidget(m_main);
-    m_folderTree->setColumnCount(1);
-    m_folderTree->header()->hide();
-    m_folderTree->setSortingEnabled(false);
-    m_folderTree->setSelectionMode( QTreeWidget::SingleSelection );
-    m_folderTree->setSelectionBehavior( QTreeWidget::SelectRows );
-    m_folderTree->setMinimumSize( 60, 100 );
-    QTreeWidgetItem *root = new KBookmarkTreeItem(m_folderTree);    
-    fillGroup( root, m_mgr->root() );
+    d->m_folderTree = new QTreeWidget(d->m_main);
+    d->m_folderTree->setColumnCount(1);
+    d->m_folderTree->header()->hide();
+    d->m_folderTree->setSortingEnabled(false);
+    d->m_folderTree->setSelectionMode( QTreeWidget::SingleSelection );
+    d->m_folderTree->setSelectionBehavior( QTreeWidget::SelectRows );
+    d->m_folderTree->setMinimumSize( 60, 100 );
+    QTreeWidgetItem *root = new KBookmarkTreeItem(d->m_folderTree);    
+    fillGroup( root, d->m_mgr->root() );
 
     initLayout();
-    m_layout = true;
+    d->m_layout = true;
 }
 
 
 KBookmarkDialog::KBookmarkDialog(KBookmarkManager * mgr, QWidget * parent )
   : KDialog(parent),
-    m_folderTree(0), m_mgr(mgr), m_layout(false)
+    d(new KBookmarkDialogPrivate(mgr))
 {
- 
+}
+
+KBookmarkDialog::~KBookmarkDialog()
+{
+    delete d;
 }
 
 void KBookmarkDialog::newFolderButton()
@@ -340,10 +377,10 @@ void KBookmarkDialog::newFolderButton()
     if ( !group.isNull() )
     {
         KBookmarkGroup parentGroup = group.parentGroup();
-        m_mgr->emitChanged( parentGroup );
-        m_folderTree->clear();
-        QTreeWidgetItem *root = new KBookmarkTreeItem(m_folderTree);
-        fillGroup(root, m_mgr->root(), group);
+        d->m_mgr->emitChanged( parentGroup );
+        d->m_folderTree->clear();
+        QTreeWidgetItem *root = new KBookmarkTreeItem(d->m_folderTree);
+        fillGroup(root, d->m_mgr->root(), group);
     }
 }
 
@@ -357,9 +394,9 @@ void KBookmarkDialog::fillGroup(QTreeWidgetItem* parentItem, const KBookmarkGrou
   for (KBookmark bk = group.first() ; !bk.isNull() ; bk = group.next(bk)) {
     if (bk.isGroup()) {
       const KBookmarkGroup bkGroup = bk.toGroup();
-      QTreeWidgetItem* item = new KBookmarkTreeItem(parentItem, m_folderTree, bkGroup);
+      QTreeWidgetItem* item = new KBookmarkTreeItem(parentItem, d->m_folderTree, bkGroup);
       if (selectGroup == bkGroup) {
-        m_folderTree->setCurrentItem(item);
+        d->m_folderTree->setCurrentItem(item);
       }
       fillGroup(item, bkGroup, selectGroup);
     }

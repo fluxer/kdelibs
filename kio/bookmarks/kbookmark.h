@@ -317,11 +317,6 @@ public:
 
 protected:
     QDomElement element;
-    // Note: you can't add new member variables here.
-    // The KBookmarks are created on the fly, as wrappers
-    // around internal QDomElements. Any additional information
-    // has to be implemented as an attribute of the QDomElement.
-
 };
 
 /**
@@ -427,13 +422,6 @@ public:
 
 protected:
     QDomElement nextKnownTag( const QDomElement &start, bool goNext ) const;
-
-private:
-
-    // Note: you can't add other member variables here, except for caching info.
-    // The KBookmarks are created on the fly, as wrappers
-    // around internal QDomElements. Any additional information
-    // has to be implemented as an attribute of the QDomElement.
 };
 
 class KIO_EXPORT KBookmarkGroupTraverser {
@@ -445,7 +433,6 @@ protected:
     virtual void visitLeave(const KBookmarkGroup &);
 };
 
-#define KIO_KBOOKMARK_METATYPE_DEFINED 1
 Q_DECLARE_METATYPE( KBookmark )
 
 #endif
