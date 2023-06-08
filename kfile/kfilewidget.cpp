@@ -56,6 +56,7 @@
 #include <kio/kfileitemdelegate.h>
 #include <kde_file.h>
 
+#include <QtCore/QTimer>
 #include <QtGui/QCheckBox>
 #include <QtGui/QDockWidget>
 #include <QtGui/QLayout>
