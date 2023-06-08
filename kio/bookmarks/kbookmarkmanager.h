@@ -34,8 +34,6 @@
 #include "kbookmark.h"
 
 class KBookmarkGroup;
-class KLineEdit;
-class KMenu;
 class KBookmarkDialog;
 class KBookmarkManagerPrivate;
 
@@ -82,14 +80,14 @@ private:
      * The final DBus object path is /KBookmarkManager/dbusObjectName
      * An empty dbusObjectName disables the registration to dbus (used for temporary managers)
      */
-    KBookmarkManager( const QString & bookmarksFile, const QString& dbusObjectName );
+    KBookmarkManager(const QString &bookmarksFile, const QString &dbusObjectName);
 
     /**
      * Creates a bookmark manager for an external file
      * (Using KDirWatch for change monitoring)
      * @since 4.1
      */
-    KBookmarkManager( const QString & bookmarksFile );
+    KBookmarkManager(const QString &bookmarksFile);
 
 public:
     /**
@@ -119,13 +117,13 @@ public:
     * @since 4.6
     * @see autoErrorHandlingEnabled()
     */
-    void setAutoErrorHandlingEnabled( bool enable, QWidget *parent );
+    void setAutoErrorHandlingEnabled(bool enable, QWidget *parent);
 
     /**
      * Set the update flag. Defaults to true.
      * @param update if true then KBookmarkManager will listen to DBUS update requests.
      */
-    void setUpdate( bool update );
+    void setUpdate(bool update);
 
     /**
      * Save the bookmarks to the given XML file on disk.
@@ -134,21 +132,21 @@ public:
      * @return true if saving was successful
      */
      // KDE5 TODO: Use an enum and not a bool
-    bool saveAs( const QString & filename, bool toolbarCache = true ) const;
+    bool saveAs(const QString &filename, bool toolbarCache = true) const;
 
     /**
      * Update access time stamps for a given url.
      * @param url the viewed url
      * @return true if any metadata was modified (bookmarks file is not saved automatically)
      */
-    bool updateAccessMetadata( const QString &url );
+    bool updateAccessMetadata(const QString &url);
 
     /*
      * Update favicon url for a given url.
      * @param url the viewed url
      * @param faviconurl the favicion url
      */
-    void updateFavicon( const QString &url, const QString &faviconurl );
+    void updateFavicon(const QString &url, const QString &faviconurl);
 
     /**
      * This will return the path that this manager is using to read
@@ -180,7 +178,7 @@ public:
      * @param tolerate when true tries to find the most tolerable bookmark position
      * @see KBookmark::address
      */
-    KBookmark findByAddress( const QString & address);
+    KBookmark findByAddress(const QString &address);
 
 
     /**
@@ -193,7 +191,7 @@ public:
      * Saves the bookmark file and notifies everyone.
      * @param group the parent of all changed bookmarks
      */
-    void emitChanged( const KBookmarkGroup & group );
+    void emitChanged(const KBookmarkGroup &group);
 
     /**
      * Save the bookmarks to an XML file on disk.
@@ -204,7 +202,7 @@ public:
      * @return true if saving was successful
      */
      // KDE5 TODO: Use an enum and not a bool
-    bool save( bool toolbarCache = true ) const;
+    bool save(bool toolbarCache = true) const;
 
 
     void emitConfigChanged();
@@ -219,7 +217,7 @@ public:
      *            menu items in keditbookmarks :: --nobrowser
      */
      // KDE5 TODO: Use an enum and not a bool
-    void setEditorOptions( const QString& caption, bool browser );
+    void setEditorOptions(const QString &caption, bool browser);
 
     /**
      * This static function will return an instance of the
@@ -240,8 +238,8 @@ public:
      * An empty dbusObjectName disables the registration to dbus (used for temporary managers)
      *
      */
-    static KBookmarkManager* managerForFile( const QString& bookmarksFile,
-                                             const QString& dbusObjectName );
+    static KBookmarkManager* managerForFile(const QString &bookmarksFile,
+                                            const QString &dbusObjectName);
 
     /**
      * Returns a KBookmarkManager, which will use KDirWatch for change detection
@@ -249,7 +247,7 @@ public:
      * @param bookmarksFile full path to the bookmarks file
      * @since 4.1
      */
-    static KBookmarkManager* managerForExternalFile( const QString& bookmarksFile);
+    static KBookmarkManager* managerForExternalFile(const QString &bookmarksFile);
 
     /**
      * Returns a pointer to the user's main (konqueror) bookmark collection.
@@ -263,7 +261,7 @@ public:
 
 public Q_SLOTS:
     void slotEditBookmarks();
-    void slotEditBookmarksAtAddress( const QString& address );
+    void slotEditBookmarksAtAddress(const QString &address);
 
     /**
      * Reparse the whole bookmarks file and notify about the change
@@ -271,7 +269,7 @@ public Q_SLOTS:
      * You probably want to use emitChanged()
      *
      */
-    void notifyCompleteChange( const QString &caller );
+    void notifyCompleteChange(const QString &caller);
 
     /**
      * Emit the changed signal for the group whose address is given
@@ -281,7 +279,7 @@ public Q_SLOTS:
      * Does not send signal over DBUS to the other Bookmark Managers
      * You probably want to call emitChanged()
      */
-    void notifyChanged( const QString &groupAddress, const QDBusMessage &msg );
+    void notifyChanged(const QString &groupAddress, const QDBusMessage &msg);
 
     void notifyConfigChanged();
 
@@ -289,12 +287,12 @@ Q_SIGNALS:
     /**
      * Signal send over DBUS
      */
-    void bookmarkCompleteChange( QString caller );
+    void bookmarkCompleteChange(QString caller);
 
     /**
      * Signal send over DBUS
      */
-    void bookmarksChanged( QString groupAddress );
+    void bookmarksChanged(QString groupAddress);
 
     /**
      * Signal send over DBUS
@@ -307,7 +305,7 @@ Q_SIGNALS:
      * has been modified by the caller @p caller.
      * connect to this
      */
-    void changed( const QString & groupAddress, const QString & caller );
+    void changed( const QString &groupAddress, const QString &caller);
 
     /**
      * Signals that the config changed
@@ -322,7 +320,7 @@ Q_SIGNALS:
     void error(const QString &errorMessage);
 
 private Q_SLOTS:    
-    void slotFileChanged(const QString& path); // external bookmarks
+    void slotFileChanged(const QString &path); // external bookmarks
     
 private:
     // consts added to avoid a copy-and-paste of internalDocument
@@ -404,7 +402,7 @@ public:
     /**
     * Called if a bookmark is selected. You need to override this.
     */
-    virtual void openBookmark(const KBookmark & bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km) = 0;
+    virtual void openBookmark(const KBookmark &bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km) = 0;
 
     /**
     * Called if the user wants to open every bookmark in this folder in a new tab.
@@ -413,8 +411,7 @@ public:
     */
     virtual void openFolderinTabs(const KBookmarkGroup &bm);
 
-    virtual KBookmarkDialog * bookmarkDialog(KBookmarkManager * mgr, QWidget *parent);
+    virtual KBookmarkDialog* bookmarkDialog(KBookmarkManager *mgr, QWidget *parent);
 };
 
-#endif
-
+#endif // KBOOKMARKMANAGER_H

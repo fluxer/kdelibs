@@ -55,12 +55,12 @@ public:
          *
          * @param mimeData the QMimeData instance used to drag or copy this bookmark
          */
-        void populateMimeData( QMimeData* mimeData ) const;
+        void populateMimeData(QMimeData *mimeData) const;
 
         /**
          * Return true if @p mimeData contains bookmarks
          */
-        static bool canDecode( const QMimeData *mimeData );
+        static bool canDecode(const QMimeData *mimeData);
 
         /**
          * Return the list of mimeTypes that can be decoded by fromMimeData
@@ -77,7 +77,7 @@ public:
          * @return the list of bookmarks
          * @since 4.3.2
          */
-        static KBookmark::List fromMimeData( const QMimeData *mimeData, QDomDocument& parentDocument );
+        static KBookmark::List fromMimeData(const QMimeData *mimeData, QDomDocument &parentDocument);
     };
 
     /**
@@ -85,19 +85,19 @@ public:
      * If you want to create a new bookmark use eitehr KBookmarkGroup.addBookmark
      * or if you want an interactive dialog use KBookmarkDialog.
      */
-    KBookmark( );
+    KBookmark();
 
     /**
      * Creates the KBookmark wrapper for @param elem
      * Mostly for internal usage.
      */
 
-    explicit KBookmark( const QDomElement &elem );
+    explicit KBookmark(const QDomElement &elem);
 
     /**
      * Creates a stand alone bookmark. This is fairly expensive since a new QDom Tree is build.
      */
-    static KBookmark standaloneBookmark( const QString & text, const KUrl & url, const QString & icon = QString() );
+    static KBookmark standaloneBookmark(const QString &text, const KUrl &url, const QString &icon = QString());
 
     /**
      * Whether the bookmark is a group or a normal bookmark
@@ -252,30 +252,30 @@ public:
     /**
      * @return address of parent
      */
-    static QString parentAddress( const QString & address );
+    static QString parentAddress(const QString &address);
 
     /**
      * @return position in parent (e.g. /4/5/2 -> 2)
      */
-    static uint positionInParent( const QString & address );
+    static uint positionInParent(const QString &address);
 
     /**
      * @return address of previous sibling (e.g. /4/5/2 -> /4/5/1)
      * Returns QString() for a first child
      */
-    static QString previousAddress( const QString & address );
+    static QString previousAddress(const QString &address);
 
     /**
      * @return address of next sibling (e.g. /4/5/2 -> /4/5/3)
      * This doesn't check whether it actually exists
      */
-    static QString nextAddress( const QString & address );
+    static QString nextAddress(const QString &address);
 
     /**
      * @return the common parent of both addresses which
      * has the greatest depth
      */
-    static QString commonParent( const QString &A, const QString &B );
+    static QString commonParent(const QString &A, const QString &B);
 
     /**
      * @return the metadata container node for a certain matadata owner
@@ -289,7 +289,7 @@ public:
      * @return Value of the metadata item. QString() is returned in case
      * the specified key does not exist.
      */
-    QString metaDataItem( const QString &key ) const;
+    QString metaDataItem(const QString &key) const;
 
     /**
      * Change the value of a specific metadata item, or create the given item
@@ -298,7 +298,7 @@ public:
      * @param value Value to use for the specified metadata item
      * @param mode Whether to overwrite the item's value if it exists already or not.
      */
-    void setMetaDataItem( const QString &key, const QString &value, MetaDataOverwriteMode mode = OverwriteMetaData );
+    void setMetaDataItem(const QString &key, const QString &value, MetaDataOverwriteMode mode = OverwriteMetaData);
 
     /**
      * Adds this bookmark into the given QMimeData.
@@ -307,12 +307,12 @@ public:
      *
      * @param mimeData the QMimeData instance used to drag or copy this bookmark
      */
-    void populateMimeData( QMimeData* mimeData ) const;
+    void populateMimeData(QMimeData* mimeData) const;
 
     /**
      * Comparison operator
      */
-    bool operator==(const KBookmark& rhs) const;
+    bool operator==(const KBookmark &rhs) const;
 
 protected:
     QDomElement element;
@@ -335,7 +335,7 @@ public:
     /**
      * Create a bookmark group as specified by the given element
      */
-    KBookmarkGroup( const QDomElement &elem );
+    KBookmarkGroup(const QDomElement &elem);
 
     /**
      * @return true if the bookmark folder is opened in the bookmark editor
@@ -350,59 +350,59 @@ public:
      * Return the prevous sibling of a child bookmark of this group
      * @param current has to be one of our child bookmarks.
      */
-    KBookmark previous( const KBookmark & current ) const;
+    KBookmark previous(const KBookmark &current) const;
     /**
      * Return the next sibling of a child bookmark of this group
      * @param current has to be one of our child bookmarks.
      */
-    KBookmark next( const KBookmark & current ) const;
+    KBookmark next(const KBookmark &current) const;
 
     /**
      * Return the index of a child bookmark, -1 if not found
      */
-    int indexOf(const KBookmark& child) const;
+    int indexOf(const KBookmark &child) const;
 
     /**
      * Create a new bookmark folder, as the last child of this group
      * @param text for the folder.
      * If you want an dialog use KBookmarkDialog
      */
-    KBookmarkGroup createNewFolder( const QString & text );
+    KBookmarkGroup createNewFolder(const QString &text);
     /**
      * Create a new bookmark separator
-     * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
+     * Don't forget to use KBookmarkManager::self()->emitChanged(parentBookmark);
      */
     KBookmark createNewSeparator();
 
     /**
      * Create a new bookmark, as the last child of this group
-     * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
+     * Don't forget to use KBookmarkManager::self()->emitChanged(parentBookmark);
      * @param bm the bookmark to add
      */
-    KBookmark addBookmark( const KBookmark &bm );
+    KBookmark addBookmark(const KBookmark &bm);
 
     /**
      * Create a new bookmark, as the last child of this group
-     * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
+     * Don't forget to use KBookmarkManager::self()->emitChanged(parentBookmark);
      * @param text for the bookmark
      * @param url the URL that the bookmark points to
      * @param icon the name of the icon to associate with the bookmark. A suitable default
      * will be determined from the URL if not specified.
      */
-    KBookmark addBookmark( const QString & text, const KUrl & url, const QString & icon = QString() );
+    KBookmark addBookmark(const QString &text, const KUrl &url, const QString &icon = QString());
 
     /**
      * Moves @p bookmark after @p after (which should be a child of ours).
      * If after is null, @p bookmark is moved as the first child.
      * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
      */
-    bool moveBookmark( const KBookmark & bookmark, const KBookmark & after);
+    bool moveBookmark(const KBookmark &bookmark, const KBookmark &after);
 
     /**
      * Delete a bookmark - it has to be one of our children !
      * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
      */
-    void deleteBookmark( const KBookmark &bk );
+    void deleteBookmark(const KBookmark &bk);
 
     /**
      * @return true if this is the toolbar group
@@ -431,6 +431,6 @@ protected:
     virtual void visitLeave(const KBookmarkGroup &);
 };
 
-Q_DECLARE_METATYPE( KBookmark )
+Q_DECLARE_METATYPE(KBookmark)
 
-#endif
+#endif // KBOOKMARK_H

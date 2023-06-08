@@ -19,8 +19,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef __kbookmarkmenu_p_h__
-#define __kbookmarkmenu_p_h__
+#ifndef KBOOKMARKMENU_P_H
+#define KBOOKMARKMENU_P_H
 
 #include <QTreeWidget>
 
@@ -29,8 +29,8 @@ class KBookmarkGroup;
 class KBookmarkTreeItem : public QTreeWidgetItem
 {
 public:
-    KBookmarkTreeItem(QTreeWidget * tree);
-    KBookmarkTreeItem(QTreeWidgetItem * parent, QTreeWidget * tree, const KBookmarkGroup &bk);
+    KBookmarkTreeItem(QTreeWidget *tree);
+    KBookmarkTreeItem(QTreeWidgetItem *parent, QTreeWidget *tree, const KBookmarkGroup &bk);
     ~KBookmarkTreeItem();
     QString address();
 private:
@@ -40,11 +40,11 @@ private:
 class KBookmarkSettings
 {
 public:
-  bool m_advancedaddbookmark;
-  bool m_contextmenu;
-  static KBookmarkSettings *s_self;
-  static void readSettings();
-  static KBookmarkSettings *self();
+    bool m_advancedaddbookmark;
+    bool m_contextmenu;
+    static KBookmarkSettings *s_self;
+    static void readSettings();
+    static KBookmarkSettings *self();
 };
 
-#endif
+#endif // KBOOKMARKMENU_P_H

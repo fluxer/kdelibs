@@ -636,15 +636,15 @@ void KBookmarkAction::slotSelected(Qt::MouseButtons mb, Qt::KeyboardModifiers km
 }
 
 KBookmarkActionMenu::KBookmarkActionMenu(const KBookmark &bm, QObject *parent)
-  : KActionMenu(KIcon(bm.icon()), bm.text().replace('&', "&&"), parent),
+    : KActionMenu(KIcon(bm.icon()), bm.text().replace('&', "&&"), parent),
     KBookmarkActionInterface(bm)
 {
-  setToolTip( bm.description() );
-  setIconText(text());
+    setToolTip(bm.description());
+    setIconText(text());
 }
 
 KBookmarkActionMenu::KBookmarkActionMenu(const KBookmark &bm, const QString & text, QObject *parent)
-  : KActionMenu(text, parent),
+    : KActionMenu(text, parent),
     KBookmarkActionInterface(bm)
 {
 }

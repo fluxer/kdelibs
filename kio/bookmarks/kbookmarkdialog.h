@@ -31,7 +31,6 @@
 #include <QGridLayout>
 
 class KBookmarkManager;
-class KLineEdit;
 class KBookmarkDialogPrivate;
 
 /**
@@ -44,87 +43,85 @@ class KBookmarkDialogPrivate;
 **/
 class KIO_EXPORT KBookmarkDialog : public KDialog
 {
-  Q_OBJECT
-
+    Q_OBJECT
 public:
-  /**
-   * Creates a new KBookmarkDialog
-   */
-  KBookmarkDialog(  KBookmarkManager *, QWidget * = 0);
-  /**
-   * Destructor
-   */
-  ~KBookmarkDialog();
-  /**
-   * shows a propeties dialog
-   * Note: That this  updates the bookmark and calls KBookmarkManager::emitChanged
-   */
-  KBookmark editBookmark(const KBookmark & bm);
-  /**
-   * shows a add Bookmark dialog
-   * Note: That this  updates the bookmark and calls KBookmarkManager::emitChanged   
-   */
-  KBookmark addBookmark(const QString & title, const KUrl & url, KBookmark parent = KBookmark());
-  /**
-   * Creates a folder from a list of bookmarks
-   * Note: That this  updates the bookmark and calls KBookmarkManager::emitChanged
-   */
-  KBookmarkGroup addBookmarks(const QList< QPair<QString, QString> > & list, const QString & name = QString(),  KBookmarkGroup parent = KBookmarkGroup());
-  /**
-   * A dialog to create a new folder.
-   */
-  KBookmarkGroup createNewFolder(const QString & name, KBookmark parent = KBookmark());
-  /**
-   * A dialog to select a folder.
-   */
-  KBookmarkGroup selectFolder(KBookmark start = KBookmark());
+    /**
+     * Creates a new KBookmarkDialog
+     */
+    KBookmarkDialog(KBookmarkManager *mgr, QWidget *parent = 0);
+    /**
+     * Destructor
+     */
+    ~KBookmarkDialog();
+    /**
+     * shows a propeties dialog
+     * @note That this  updates the bookmark and calls KBookmarkManager::emitChanged
+     */
+    KBookmark editBookmark(const KBookmark &bm);
+    /**
+     * shows a add Bookmark dialog
+     * @note That this  updates the bookmark and calls KBookmarkManager::emitChanged   
+     */
+    KBookmark addBookmark(const QString &title, const KUrl &url, KBookmark parent = KBookmark());
+    /**
+     * Creates a folder from a list of bookmarks
+     * @note That this  updates the bookmark and calls KBookmarkManager::emitChanged
+     */
+    KBookmarkGroup addBookmarks(const QList<QPair<QString, QString>> &list, const QString &name = QString(),  KBookmarkGroup parent = KBookmarkGroup());
+    /**
+     * A dialog to create a new folder.
+     */
+    KBookmarkGroup createNewFolder(const QString &name, KBookmark parent = KBookmark());
+    /**
+     * A dialog to select a folder.
+     */
+    KBookmarkGroup selectFolder(KBookmark start = KBookmark());
 
 protected:
-  typedef enum { NewFolder, NewBookmark, EditBookmark, NewMultipleBookmarks, SelectFolder } BookmarkDialogMode;
-  /**
-   * initLayout is called to set the dialog up, indepent from the mode
-   * If you want to add widgets or a custom layout, reimplement this function.
-   * The default implementation is rather simple, take a look at the source.
-   * 
-   */
-  virtual void initLayout();
-  /**
-   *  aboutToShow is called immediately before exec()
-   *  Reimplement this to show or hide UI elements for certain modes.
-   *  
-  */
-  virtual void aboutToShow(BookmarkDialogMode mode);
-  /** 
-   * save all your custom data in this method
-   * This is called after the users has accepted() the dialog.
-   *
-  */
-  virtual void save(BookmarkDialogMode mode, const KBookmark &);
+    typedef enum { NewFolder, NewBookmark, EditBookmark, NewMultipleBookmarks, SelectFolder } BookmarkDialogMode;
+    /**
+     * initLayout is called to set the dialog up, indepent from the mode
+     * If you want to add widgets or a custom layout, reimplement this function.
+     * The default implementation is rather simple, take a look at the source.
+     * 
+     */
+    virtual void initLayout();
+    /**
+     *  aboutToShow is called immediately before exec()
+     *  Reimplement this to show or hide UI elements for certain modes.
+     *  
+     */
+    virtual void aboutToShow(BookmarkDialogMode mode);
+    /** 
+     * save all your custom data in this method
+     * This is called after the users has accepted() the dialog.
+     *
+     */
+    virtual void save(BookmarkDialogMode mode, const KBookmark &bm);
 
-  /**
-   * selects the specified bookmark in the folder tree
-   */
-  void setParentBookmark(const KBookmark & bm);
-  /**
-   * returns the selected bookmark in the folder tree, or the root (top-level)
-   * bookmark if none was selected
-   */
-  KBookmarkGroup parentBookmark();
+    /**
+     * selects the specified bookmark in the folder tree
+     */
+    void setParentBookmark(const KBookmark &bm);
+    /**
+     * returns the selected bookmark in the folder tree, or the root (top-level)
+     * bookmark if none was selected
+     */
+    KBookmarkGroup parentBookmark();
 
-  void slotButtonClicked(int);
+    void slotButtonClicked(int);
 
 protected Q_SLOTS:
-  void newFolderButton();
+    void newFolderButton();
 
 private:
-  void initLayoutPrivate();
-  void fillGroup(QTreeWidgetItem * parentItem, const KBookmarkGroup &group);
-  void fillGroup(QTreeWidgetItem* parentItem, const KBookmarkGroup& group, const KBookmarkGroup& selectGroup);
+    void initLayoutPrivate();
+    void fillGroup(QTreeWidgetItem *parentItem, const KBookmarkGroup &group);
+    void fillGroup(QTreeWidgetItem *parentItem, const KBookmarkGroup &group, const KBookmarkGroup &selectGroup);
 
-  KBookmarkDialogPrivate * const d;
-  friend KBookmarkDialogPrivate;
-  Q_DISABLE_COPY(KBookmarkDialog);
+    KBookmarkDialogPrivate * const d;
+    friend KBookmarkDialogPrivate;
+    Q_DISABLE_COPY(KBookmarkDialog);
 };
 
-#endif
-
+#endif // KBOOKMARKDIALOG_H
