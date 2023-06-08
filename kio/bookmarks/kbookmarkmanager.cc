@@ -185,15 +185,6 @@ KBookmarkManager* KBookmarkManager::managerForExternalFile( const QString& bookm
     return mgr;
 }
 
-
-// principally used for filtered toolbars
-KBookmarkManager* KBookmarkManager::createTempManager()
-{
-    KBookmarkManager* mgr = new KBookmarkManager();
-    s_pSelf->append( mgr );
-    return mgr;
-}
-
 #define PI_DATA "version=\"1.0\" encoding=\"UTF-8\""
 
 static QDomElement createXbelTopLevelElement(QDomDocument & doc)
@@ -210,11 +201,20 @@ static QDomElement createXbelTopLevelElement(QDomDocument & doc)
 KBookmarkManager::KBookmarkManager( const QString & bookmarksFile, const QString & dbusObjectName)
  : d(new KBookmarkManagerPrivate(false, dbusObjectName))
 {
-    if(dbusObjectName.isNull()) // get dbusObjectName from file
-        if ( QFile::exists(d->m_bookmarksFile) )
-            parse(); //sets d->m_dbusObjectName
+    if(dbusObjectName.isNull()) {
+        // get dbusObjectName from file
+        if ( QFile::exists(d->m_bookmarksFile) ) {
+            // sets d->m_dbusObjectName
+            parse();
+        }
+    }
 
-    init( "/KBookmarkManager/"+d->m_dbusObjectName );
+    new KBookmarkManagerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject( d->m_dbusObjectName, this );
+    QDBusConnection::sessionBus().connect(QString(), d->m_dbusObjectName, BOOKMARK_CHANGE_NOTIFY_INTERFACE,
+                                "bookmarksChanged", this, SLOT(notifyChanged(QString,QDBusMessage)));
+    QDBusConnection::sessionBus().connect(QString(), d->m_dbusObjectName, BOOKMARK_CHANGE_NOTIFY_INTERFACE,
+                                "bookmarkConfigChanged", this, SLOT(notifyConfigChanged()));
 
     d->m_update = true;
 
@@ -255,31 +255,6 @@ KBookmarkManager::KBookmarkManager(const QString & bookmarksFile)
     QObject::connect(d->m_kDirWatch, SIGNAL(dirty(const QString&)),
             this, SLOT(slotFileChanged(const QString&)));
     kDebug(7043) << "starting KDirWatch for " << d->m_bookmarksFile;
-}
-
-KBookmarkManager::KBookmarkManager( )
-    : d(new KBookmarkManagerPrivate(true))
-{
-    init( "/KBookmarkManager/generated" );
-    d->m_update = false; // TODO - make it read/write
-
-    createXbelTopLevelElement(d->m_doc);
-}
-
-void KBookmarkManager::init( const QString& dbusPath )
-{
-    // A KBookmarkManager without a dbus name is a temporary one, like those used by importers;
-    // no need to register them to dbus
-    if ( dbusPath != "/KBookmarkManager/" && dbusPath != "/KBookmarkManager/generated")
-    {
-        new KBookmarkManagerAdaptor(this);
-        QDBusConnection::sessionBus().registerObject( dbusPath, this );
-
-        QDBusConnection::sessionBus().connect(QString(), dbusPath, BOOKMARK_CHANGE_NOTIFY_INTERFACE,
-                                    "bookmarksChanged", this, SLOT(notifyChanged(QString,QDBusMessage)));
-        QDBusConnection::sessionBus().connect(QString(), dbusPath, BOOKMARK_CHANGE_NOTIFY_INTERFACE,
-                                    "bookmarkConfigChanged", this, SLOT(notifyConfigChanged()));
-    }
 }
 
 void KBookmarkManager::slotFileChanged(const QString& path)

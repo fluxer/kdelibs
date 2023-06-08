@@ -90,11 +90,6 @@ private:
      * @since 4.1
      */
     KBookmarkManager( const QString & bookmarksFile );
-    
-    /**
-     * Creates a temp bookmark manager
-     */
-    KBookmarkManager();
 
 public:
     /**
@@ -255,11 +250,6 @@ public:
      * @since 4.1
      */
     static KBookmarkManager* managerForExternalFile( const QString& bookmarksFile);
-    
-    /**
-     * only used for KBookmarkBar
-     */
-    static KBookmarkManager* createTempManager();
 
     /**
      * Returns a pointer to the user's main (konqueror) bookmark collection.
@@ -337,8 +327,6 @@ private Q_SLOTS:
 private:
     // consts added to avoid a copy-and-paste of internalDocument
     void parse() const;
-
-    void init( const QString& dbusPath );
 
     KBookmarkManagerPrivate * const d;
     Q_DISABLE_COPY(KBookmarkManager);
