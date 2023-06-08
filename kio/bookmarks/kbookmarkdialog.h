@@ -42,7 +42,6 @@ class KBookmarkDialogPrivate;
  * If you want to customize those dialogs, derive from KBookmarkOwner and reimplement bookmarkDialog(),
  * return a KBookmarkDialog subclass and reimplement initLayout(), aboutToShow() and save().
 **/
-// TODO KDE5: make as many methods private as possible.
 class KIO_EXPORT KBookmarkDialog : public KDialog
 {
   Q_OBJECT
@@ -112,17 +111,14 @@ protected:
    */
   KBookmarkGroup parentBookmark();
 
-
   void slotButtonClicked(int);
-
-  void fillGroup( QTreeWidgetItem * parentItem, const KBookmarkGroup &group);
-
-  void initLayoutPrivate();
 
 protected Q_SLOTS:
   void newFolderButton();
 
 private:
+  void initLayoutPrivate();
+  void fillGroup(QTreeWidgetItem * parentItem, const KBookmarkGroup &group);
   void fillGroup(QTreeWidgetItem* parentItem, const KBookmarkGroup& group, const KBookmarkGroup& selectGroup);
 
   KBookmarkDialogPrivate * const d;
