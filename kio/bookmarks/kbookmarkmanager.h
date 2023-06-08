@@ -331,11 +331,10 @@ private:
 };
 
 /**
- * The KBookmarkMenu and KBookmarkBar classes gives the user
- * the ability to either edit bookmarks or add their own.  In the
- * first case, the app may want to open the bookmark in a special way.
- * In the second case, the app <em>must</em> supply the name and the
- * URL for the bookmark.
+ * The KBookmarkMenu class gives the user the ability to either edit
+ * bookmarks or add their own. In the first case, the app may want to
+ * open the bookmark in a special way. In the second case, the app
+ * <em>must</em> supply the name and the URL for the bookmark.
  *
  * This class gives the app this callback-like ability.
  *
