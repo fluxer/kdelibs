@@ -70,7 +70,11 @@ public:
     KExiv2Private(const QString &path);
 
 #if defined(HAVE_EXIV2)
+#  if defined(EXIV2_TEST_VERSION) && EXIV2_TEST_VERSION(0, 28, 0)
+    Exiv2::Image::UniquePtr m_exiv2image;
+#  else
     Exiv2::Image::AutoPtr m_exiv2image;
+#  endif
 #endif
     const QByteArray m_path;
 };
@@ -88,7 +92,7 @@ KExiv2Private::KExiv2Private(const QString &path)
         }
         m_exiv2image->readMetadata();
     } catch(Exiv2::Error &err) {
-        kWarning() << err.what() << err.code();
+        kWarning() << err.what() << static_cast<int>(err.code());
     } catch(std::exception &err) {
         kWarning() << err.what();
     } catch (...) {
@@ -142,7 +146,7 @@ QImage KExiv2::preview() const
                 }
             }
         } catch(Exiv2::Error &err) {
-            kWarning() << err.what() << err.code();
+            kWarning() << err.what() << static_cast<int>(err.code());
         } catch(std::exception &err) {
             kWarning() << err.what();
         } catch (...) {
@@ -169,12 +173,16 @@ bool KExiv2::rotateImage(QImage &image) const
                 if (key != s_orientationkey) {
                     continue;
                 }
+#if defined(EXIV2_TEST_VERSION) && EXIV2_TEST_VERSION(0, 28, 0)
+                orientation = (*it).value().toInt64();
+#else
                 orientation = (*it).value().toLong();
+#endif
                 kDebug() << "Found orientation Exif data" << orientation;
                 break;
             }
         } catch(Exiv2::Error &err) {
-            kWarning() << err.what() << err.code();
+            kWarning() << err.what() << static_cast<int>(err.code());
         } catch(std::exception &err) {
             kWarning() << err.what();
         } catch (...) {
@@ -285,7 +293,7 @@ KExiv2PropertyList KExiv2::metadata() const
                 result.append(kexiv2property);
             }
         } catch(Exiv2::Error &err) {
-            kWarning() << err.what() << err.code();
+            kWarning() << err.what() << static_cast<int>(err.code());
         } catch(std::exception &err) {
             kWarning() << err.what();
         } catch (...) {
