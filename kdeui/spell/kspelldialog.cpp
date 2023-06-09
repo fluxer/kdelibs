@@ -160,6 +160,8 @@ KSpellDialog::KSpellDialog(KConfig *config, QWidget *parent)
     : KDialog(parent),
     d(new KSpellDialogPrivate(config))
 {
+    setCaption(i18nc("@title:window", "Check Spelling"));
+
     d->dialogwidget = new QWidget(this);
     d->layout = new QGridLayout(d->dialogwidget);
     d->layout->setSpacing(KDialog::spacingHint());
