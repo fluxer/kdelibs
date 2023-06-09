@@ -282,7 +282,9 @@ void KSpellDialog::_done()
     d->spellerthread->wait();
     delete d->spellerthread;
     d->spellerthread = nullptr;
-    KMessageBox::information(this, i18n("Spell check complete."), i18nc("@title:window", "Check Spelling"));
+    if (d->showcompletionmessage) {
+        KMessageBox::information(this, i18n("Spell check complete."), i18nc("@title:window", "Check Spelling"));
+    }
     KDialog::accept();
 }
 
