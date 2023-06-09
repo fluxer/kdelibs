@@ -72,37 +72,37 @@ KSpellDialogThread::KSpellDialogThread(QObject *parent, KSpeller *speller, const
 void KSpellDialogThread::run()
 {
     while (!m_interrupt) {
-        if (m_findnext) {
-            // kDebug() << "Looking for the next word";
-            const int finderresult = m_finder.toNextBoundary();
-            if (finderresult < 0) {
-                m_findnext = false;
-                emit atEnd();
-                break;
-            }
-
-            QTextBoundaryFinder::BoundaryReasons boundary = m_finder.boundaryReasons();
-            if (boundary & QTextBoundaryFinder::StartWord) {
-                m_wordstart = m_finder.position();
-            }
-            if (boundary & QTextBoundaryFinder::EndWord) {
-                QString word = m_text.mid(m_wordstart, m_finder.position() - m_wordstart);
-                if (word.size() < 2) {
-                    continue;
-                }
-                if (word.at(word.size() - 1).isPunct()) {
-                    word = word.mid(0, word.size() - 1);
-                }
-                // qDebug() << Q_FUNC_INFO << boundary << m_wordstart << m_finder.position() << word;
-                if (!m_speller->check(word)) {
-                    m_findnext = false;
-                    emit foundWord(word);
-                }
-            }
-        } else {
+        if (!m_findnext) {
             // kDebug() << "Busy loop for 200ms";
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
             QThread::msleep(100);
+            continue;
+        }
+
+        kDebug() << "Looking for the next word";
+        const int finderresult = m_finder.toNextBoundary();
+        if (finderresult < 0) {
+            emit atEnd();
+            break;
+        }
+
+        QTextBoundaryFinder::BoundaryReasons boundary = m_finder.boundaryReasons();
+        if (boundary & QTextBoundaryFinder::StartWord) {
+            m_wordstart = m_finder.position();
+        }
+        if (boundary & QTextBoundaryFinder::EndWord) {
+            QString word = m_text.mid(m_wordstart, m_finder.position() - m_wordstart);
+            if (word.size() < 2) {
+                continue;
+            }
+            if (word.at(word.size() - 1).isPunct()) {
+                word = word.mid(0, word.size() - 1);
+            }
+            kDebug() << "Found word at" << m_wordstart << m_finder.position() << word;
+            if (!m_speller->check(word)) {
+                m_findnext = false;
+                emit foundWord(word);
+            }
         }
     }
 }
@@ -244,17 +244,6 @@ void KSpellDialog::changeLanguage(const QString &lang)
 {
     d->speller.setDictionary(lang);
     emit languageChanged(lang);
-}
-
-void KSpellDialog::slotButtonClicked(int button)
-{
-    if (d->spellerthread) {
-        d->spellerthread->interrupt();
-        d->spellerthread->wait();
-        delete d->spellerthread;
-        d->spellerthread = nullptr;
-    }
-    KDialog::slotButtonClicked(button);
 }
 
 void KSpellDialog::_correct()

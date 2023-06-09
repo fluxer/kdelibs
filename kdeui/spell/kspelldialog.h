@@ -50,10 +50,6 @@ Q_SIGNALS:
     void replace(const QString &oldWord, int start, const QString &newWord);
     void languageChanged(const QString &language);
 
-protected Q_SLOTS:
-    // reimplementation
-    virtual void slotButtonClicked(int button);
-
 private Q_SLOTS:
     void _correct();
     void _next();
