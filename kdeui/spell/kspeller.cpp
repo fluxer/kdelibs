@@ -139,6 +139,13 @@ bool KSpeller::setDictionary(const QString &dictionary)
         return false;
     }
     d->dictionary = dictionary;
+    foreach (const QString &word, d->personalwords) {
+        const QByteArray wordbytes = word.toUtf8();
+        enchant_dict_add(
+            d->enchantdict,
+            wordbytes.constData(), wordbytes.size()
+        );
+    }
     return true;
 }
 
