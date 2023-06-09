@@ -149,7 +149,7 @@ KSpellDialogPrivate::KSpellDialogPrivate(KConfig *config)
     suggestionswidget(nullptr),
     correctbutton(nullptr),
     nextbutton(nullptr),
-    showcompletionmessage(false),
+    showcompletionmessage(true),
     continueaftercorrect(false),
     speller(config),
     spellerthread(nullptr)
