@@ -18,6 +18,7 @@
 
 #include "kspellhighlighter.h"
 #include "kspeller.h"
+#include "kcolorscheme.h"
 #include "kdebug.h"
 
 #include <QTextBoundaryFinder>
@@ -28,11 +29,16 @@ public:
     KSpellHighlighterPrivate(KConfig *config);
 
     KSpeller speller;
+    QTextCharFormat charformat;
 };
 
 KSpellHighlighterPrivate::KSpellHighlighterPrivate(KConfig *config)
     : speller(config)
 {
+    charformat.setFontUnderline(true);
+    charformat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
+    // NOTE: same as the default of Kate
+    charformat.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::NegativeText).color());
 }
 
 KSpellHighlighter::KSpellHighlighter(KConfig *config, QTextEdit *parent)
@@ -103,11 +109,7 @@ void KSpellHighlighter::highlightBlock(const QString &text)
                 word = word.mid(0, word.size() - 1);
             }
             if (!d->speller.check(word)) {
-                QTextCharFormat format;
-                format.setFontUnderline(true);
-                format.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
-                format.setUnderlineColor(QColor(Qt::red));
-                setFormat(wordstart, word.size(), format);
+                setFormat(wordstart, word.size(), d->charformat);
             } else {
                 setFormat(wordstart, word.size(), QTextCharFormat());
             }
