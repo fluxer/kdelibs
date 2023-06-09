@@ -1,5 +1,9 @@
 project(kparts)
 
+add_definitions(
+    -DKDE_DEFAULT_DEBUG_AREA=1000
+)
+
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()

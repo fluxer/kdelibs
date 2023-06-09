@@ -97,13 +97,13 @@ KSelectionOwner::~KSelectionOwner()
 
 Window KSelectionOwner::ownerWindow() const
 {
-    kDebug(240) << "Owner of" << d->atomname << "is" << d->x11window;
+    kDebug() << "Owner of" << d->atomname << "is" << d->x11window;
     return d->x11window;
 }
 
 Window KSelectionOwner::currentOwnerWindow() const
 {
-    kDebug(240) << "Current" << d->atomname << "owner is" << d->x11window;
+    kDebug() << "Current" << d->atomname << "owner is" << d->x11window;
     return XGetSelectionOwner(d->x11display, d->x11atom);
 }
 
@@ -111,11 +111,11 @@ bool KSelectionOwner::claim(const bool force)
 {
     Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
     if (currentowner != None && !force) {
-        kDebug(240) << d->atomname << "is owned";
+        kDebug() << d->atomname << "is owned";
         return false;
     }
     if (currentowner != None) {
-        kDebug(240) << d->atomname << "is owned, killing owner via kill()";
+        kDebug() << d->atomname << "is owned, killing owner via kill()";
         KXErrorHandler kx11errorhandler(d->x11display);
         KXErrorHandler handler;
         NETWinInfo netwininfo(
@@ -125,32 +125,32 @@ bool KSelectionOwner::claim(const bool force)
             NET::WMPid
         );
         if (kx11errorhandler.error(true)) {
-            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             return false;
         }
         const int currentownerpid = netwininfo.pid();
         if (currentownerpid > 0) {
             ::kill(currentownerpid, SIGTERM);
             // ::kill(currentownerpid, YOUSHALLDIEONEWAYORTHEOTHER);
-            kDebug(240) << "Waiting for" << d->atomname << "owner";
+            kDebug() << "Waiting for" << d->atomname << "owner";
             currentowner = kWaitForOwner(d->x11display, d->x11atom, currentowner);
         } else {
-            kDebug(240) << "Invalid" << d->atomname << "PID";
+            kDebug() << "Invalid" << d->atomname << "PID";
         }
     }
     if (currentowner != None) {
-        kDebug(240) << d->atomname << "is owned, killing owner via XKillClient()";
+        kDebug() << d->atomname << "is owned, killing owner via XKillClient()";
         KXErrorHandler kx11errorhandler(d->x11display);
         XKillClient(d->x11display, currentowner);
         XFlush(d->x11display);
-        kDebug(240) << "Waiting for" << d->atomname << "owner";
+        kDebug() << "Waiting for" << d->atomname << "owner";
         currentowner = kWaitForOwner(d->x11display, d->x11atom, currentowner);
     }
     if (currentowner != None) {
-        kWarning(240) << d->atomname << "is still owned";
+        kWarning() << d->atomname << "is still owned";
         return false;
     }
-    kDebug(240) << "Creating" << d->atomname << "owner";
+    kDebug() << "Creating" << d->atomname << "owner";
     KXErrorHandler kx11errorhandler(d->x11display);
     d->x11window = XCreateSimpleWindow(
         d->x11display,
@@ -160,7 +160,7 @@ bool KSelectionOwner::claim(const bool force)
         0, 0, 0 // border width, border and background pixels
     );
     if (kx11errorhandler.error(true)) {
-        kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+        kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
         return false;
     }
     NETWinInfo netwininfo(
@@ -179,19 +179,19 @@ bool KSelectionOwner::claim(const bool force)
 void KSelectionOwner::release()
 {
     if (d->x11window == None) {
-        kDebug(240) << "No" << d->atomname << "owner";
+        kDebug() << "No" << d->atomname << "owner";
         return;
     }
     if (d->timerid > 0) {
         killTimer(d->timerid);
         d->timerid = 0;
     }
-    kDebug(240) << "Destroying" << d->atomname << "owner window";
+    kDebug() << "Destroying" << d->atomname << "owner window";
     KXErrorHandler kx11errorhandler(d->x11display);
     XDestroyWindow(d->x11display, d->x11window);
     XFlush(d->x11display);
     if (kx11errorhandler.error(true)) {
-        kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+        kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
     }
     d->x11window = None;
 }
@@ -199,11 +199,11 @@ void KSelectionOwner::release()
 void KSelectionOwner::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == d->timerid) {
-        // kDebug(240) << "Checking owner for" << d->atomname;
+        // kDebug() << "Checking owner for" << d->atomname;
         Q_ASSERT(d->x11window != None);
         Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
         if (currentowner != d->x11window) {
-            kDebug(240) << d->atomname << "owner changed";
+            kDebug() << d->atomname << "owner changed";
             killTimer(d->timerid);
             d->timerid = 0;
             emit lostOwnership();

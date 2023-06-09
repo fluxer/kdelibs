@@ -75,7 +75,7 @@ void KDialogPrivate::queuedLayoutUpdate()
     QPointer<QWidget> focusWidget = mMainWidget ? mMainWidget->focusWidget() : 0;
 
   if (q->layout() && q->layout() != mTopLayout) {
-      kWarning(240) << q->metaObject()->className() << "created with a layout; don't do that, KDialog takes care of it, use mainWidget or setMainWidget instead";
+      kWarning() << q->metaObject()->className() << "created with a layout; don't do that, KDialog takes care of it, use mainWidget or setMainWidget instead";
       delete q->layout();
   }
 

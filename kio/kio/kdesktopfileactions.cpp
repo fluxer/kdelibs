@@ -56,7 +56,7 @@ bool KDesktopFileActions::run( const KUrl& u, bool _is_local )
         return false;
     }
 
-    //kDebug(7000) << "TYPE = " << type.data();
+    // kDebug() << "TYPE = " << type.data();
 
     if ( cfg.hasDeviceType() )
         return runFSDevice( u, cfg );
@@ -221,9 +221,9 @@ QList<KServiceAction> KDesktopFileActions::userDefinedServices( const KService& 
             if (keys.isEmpty())
                 return result;
         } else {
-            kWarning(7000) << "The desktop file" << service.entryPath()
-                           << "has an invalid X-KDE-GetActionMenu entry."
-                           << "Syntax is: app object interface function";
+            kWarning() << "The desktop file" << service.entryPath()
+                       << "has an invalid X-KDE-GetActionMenu entry."
+                       << "Syntax is: app object interface function";
         }
     }
 
@@ -243,13 +243,13 @@ QList<KServiceAction> KDesktopFileActions::userDefinedServices( const KService& 
 
 void KDesktopFileActions::executeService( const KUrl::List& urls, const KServiceAction& action )
 {
-    //kDebug(7000) << "EXECUTING Service " << action.name();
+    // kDebug() << "EXECUTING Service " << action.name();
 
     int actionData = action.data().toInt();
     if ( actionData == ST_MOUNT || actionData == ST_UNMOUNT ) {
         Q_ASSERT( urls.count() == 1 );
         const QString path = urls.first().toLocalFile();
-        //kDebug(7000) << "MOUNT&UNMOUNT";
+        // kDebug() << "MOUNT&UNMOUNT";
 
         KDesktopFile cfg( path );
         if (cfg.hasDeviceType()) { // path to desktop file
@@ -264,7 +264,7 @@ void KDesktopFileActions::executeService( const KUrl::List& urls, const KService
             if ( actionData == ST_MOUNT ) {
                 // Already mounted? Strange, but who knows ...
                 if ( mp ) {
-                    kDebug(7000) << "ALREADY Mounted";
+                    kDebug() << "ALREADY Mounted";
                     return;
                 }
 

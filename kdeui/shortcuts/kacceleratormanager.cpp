@@ -167,7 +167,7 @@ void KAcceleratorManagerPrivate::manage(QWidget *widget)
 {
     if (!widget)
     {
-        kDebug(240) << "null pointer given to manage";
+        kDebug() << "null pointer given to manage";
         return;
     }
 
@@ -629,7 +629,7 @@ void KAccelString::calculateWeights(int initialWeight)
     // try to preserve the wanted accelarators
     if ((int)pos == accel()) {
         weight += KAccelManagerAlgorithm::WANTED_ACCEL_EXTRA_WEIGHT;
-        // kDebug(240) << "wanted " << m_pureText << " " << KAcceleratorManagerPrivate::standardName(m_origText);
+        // kDebug() << "wanted " << m_pureText << " " << KAcceleratorManagerPrivate::standardName(m_origText);
         if (KAcceleratorManagerPrivate::standardName(m_origText))  {
             weight += KAccelManagerAlgorithm::STANDARD_ACCEL;
         }

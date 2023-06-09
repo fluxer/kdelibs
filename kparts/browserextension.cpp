@@ -281,7 +281,7 @@ void BrowserExtension::BrowserExtensionPrivate::createActionSlotMap()
     ActionSlotMap::ConstIterator itEnd = s_actionSlotMap->constEnd();
     for ( int i=0 ; it != itEnd ; ++it, ++i )
     {
-        //kDebug(1000) << " action " << it.key() << " number " << i;
+        // kDebug() << " action " << it.key() << " number " << i;
         s_actionNumberMap->insert( it.key(), i );
     }
 }

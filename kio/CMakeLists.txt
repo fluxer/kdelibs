@@ -18,6 +18,8 @@ include_directories(
     ${CMAKE_BINARY_DIR}/kutils/kexiv2
 )
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=7000)
+
 add_subdirectory(misc)
 add_subdirectory(metadata)
 if(ENABLE_TESTING)
@@ -267,7 +269,6 @@ install(
     kio/accept-languages.codes
     DESTINATION ${KDE4_CONFIG_INSTALL_DIR}
 )
-
 
 install(
     FILES

@@ -71,9 +71,9 @@ MainWindow::~MainWindow()
 void MainWindow::createGUI( Part * part )
 {
 #if 0
-  kDebug(1000) << "part=" << part
-                << ( part ? part->metaObject()->className() : "" )
-                << ( part ? part->objectName() : "" );
+  kDebug() << "part=" << part
+           << ( part ? part->metaObject()->className() : "" )
+           << ( part ? part->objectName() : "" );
 #endif
   KXMLGUIFactory *factory = guiFactory();
 
@@ -82,9 +82,9 @@ void MainWindow::createGUI( Part * part )
   if ( d->m_activePart )
   {
 #if 0
-    kDebug(1000) << "deactivating GUI for" << d->m_activePart
-                  << d->m_activePart->metaObject()->className()
-                  << d->m_activePart->objectName();
+    kDebug() << "deactivating GUI for" << d->m_activePart
+             << d->m_activePart->metaObject()->className()
+             << d->m_activePart->objectName();
 #endif
 
     GUIActivateEvent ev( false );

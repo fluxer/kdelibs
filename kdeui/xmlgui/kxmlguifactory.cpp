@@ -131,7 +131,7 @@ QString KXMLGUIFactory::readConfigFile( const QString &filename, const KComponen
     QFile file( xml_file );
     if ( xml_file.isEmpty() || !file.open( QIODevice::ReadOnly ) )
     {
-        kError(240) << "No such XML file" << filename;
+        kError() << "No such XML file" << filename;
         return QString();
     }
 
@@ -151,7 +151,7 @@ bool KXMLGUIFactory::saveConfigFile( const QDomDocument& doc,
     QFile file( xml_file );
     if ( xml_file.isEmpty() || !file.open( QIODevice::WriteOnly ) )
     {
-        kError(240) << "Could not write to" << filename;
+        kError() << "Could not write to" << filename;
         return false;
     }
 
@@ -354,7 +354,7 @@ void KXMLGUIFactoryPrivate::saveDefaultActionProperties(const QList<QAction *>& 
             // QAction::setShortcut on an KAction. Print out a warning and
             // correct the mistake
             if ((!activeShortcut.isEmpty()) && defaultShortcut.isEmpty()) {
-                kError(240) << "Shortcut for KAction " << kaction->objectName() << kaction->text() << "set with QShortcut::setShortcut()! See KAction documentation.";
+                kError() << "Shortcut for KAction " << kaction->objectName() << kaction->text() << "set with QShortcut::setShortcut()! See KAction documentation.";
                 kaction->setProperty("_k_DefaultShortcut", activeShortcut);
             } else {
                 kaction->setProperty("_k_DefaultShortcut", defaultShortcut);
@@ -364,7 +364,7 @@ void KXMLGUIFactoryPrivate::saveDefaultActionProperties(const QList<QAction *>& 
         {
             // A QAction used with KXMLGUI? Set our property and ignore it.
 	    if ( !action->isSeparator() )
-              kError(240) << "Attempt to use QAction" << action->objectName() << "with KXMLGUIFactory!";
+              kError() << "Attempt to use QAction" << action->objectName() << "with KXMLGUIFactory!";
             action->setProperty("_k_DefaultShortcut", KShortcut());
         }
 

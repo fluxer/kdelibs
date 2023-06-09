@@ -1003,7 +1003,7 @@ QPixmap KFileItem::pixmap( int _size, int _state ) const
             if ( mimeType )
                 return DesktopIcon( mimeType->iconName(), _size, _state );
             else
-                kWarning(7000) << "No mimetype for inode/directory could be found. Check your installation.";
+                kWarning() << "No mimetype for inode/directory could be found. Check your installation.";
         }
         return DesktopIcon( "unknown", _size, _state );
     }

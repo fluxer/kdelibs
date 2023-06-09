@@ -702,12 +702,12 @@ void BuildHelper::processMergeElement( const QString &tag, const QString &name, 
     {
         if ( tag == tagDefineGroup )
         {
-            kError(240) << "cannot define group without name!";
+            kError() << "cannot define group without name!";
             return;
         }
         if ( tag == tagActionList )
         {
-            kError(240) << "cannot define actionlist without name!";
+            kError() << "cannot define actionlist without name!";
             return;
         }
         mergingName = defaultMergingName;

@@ -132,7 +132,7 @@ Part::~Part()
 {
     Q_D(Part);
 
-    // kDebug(1000) << this;
+    // kDebug() << this;
 
     if ( d->m_widget )
     {
@@ -145,7 +145,7 @@ Part::~Part()
 
     if ( d->m_widget && d->m_autoDeleteWidget )
     {
-        kDebug(1000) << "deleting widget" << d->m_widget << d->m_widget->objectName();
+        kDebug() << "deleting widget" << d->m_widget << d->m_widget->objectName();
         delete static_cast<QWidget*>(d->m_widget);
     }
 
@@ -293,7 +293,7 @@ void Part::slotWidgetDestroyed()
 
     d->m_widget = 0;
     if (d->m_autoDeletePart) {
-        kDebug(1000) << "deleting part" << objectName();
+        kDebug() << "deleting part" << objectName();
         delete this; // ouch, this should probably be deleteLater()
     }
 }
@@ -484,8 +484,8 @@ bool ReadOnlyPart::openUrl( const KUrl &url )
 
 bool ReadOnlyPart::openFile()
 {
-    kWarning(1000) << "Default implementation of ReadOnlyPart::openFile called!"
-                   << metaObject()->className() << "should reimplement either openUrl or openFile.";
+    kWarning() << "Default implementation of ReadOnlyPart::openFile called!"
+               << metaObject()->className() << "should reimplement either openUrl or openFile.";
     return false;
 }
 
@@ -544,12 +544,12 @@ void ReadOnlyPart::abortLoad()
     Q_D(ReadOnlyPart);
 
     if ( d->m_statJob ) {
-        //kDebug(1000) << "Aborting job" << d->m_statJob;
+        // kDebug() << "Aborting job" << d->m_statJob;
         d->m_statJob->kill();
         d->m_statJob = 0;
     }
     if ( d->m_job ) {
-        //kDebug(1000) << "Aborting job" << d->m_job;
+        // kDebug() << "Aborting job" << d->m_job;
         d->m_job->kill();
         d->m_job = 0;
     }
@@ -612,7 +612,7 @@ void ReadOnlyPartPrivate::_k_slotJobFinished( KJob * job )
 
 void ReadOnlyPartPrivate::_k_slotGotMimeType(KIO::Job *job, const QString &mime)
 {
-    kDebug(1000) << mime;
+    kDebug() << mime;
     Q_ASSERT(job == m_job); Q_UNUSED(job)
     // set the mimetype only if it was not already set (for example, by the host application)
     if (m_arguments.mimeType().isEmpty()) {
@@ -629,7 +629,7 @@ void ReadOnlyPart::guiActivateEvent( GUIActivateEvent * event )
     {
         if (!d->m_url.isEmpty())
         {
-            kDebug(1000) << d->m_url;
+            kDebug() << d->m_url;
             emit setWindowCaption( d->m_url.prettyUrl() );
         } else emit setWindowCaption( "" );
     }
@@ -703,10 +703,10 @@ void ReadWritePart::setModified( bool modified )
 {
     Q_D(ReadWritePart);
 
-    kDebug(1000) << "setModified(" << (modified ? "true" : "false") << ")";
+    kDebug() << "setModified(" << (modified ? "true" : "false") << ")";
     if ( !d->m_bReadWrite && modified )
     {
-        kError(1000) << "Can't set a read-only document to 'modified' !";
+        kError() << "Can't set a read-only document to 'modified' !";
         return;
     }
     d->m_bModified = modified;
@@ -801,7 +801,7 @@ bool ReadWritePart::saveAs( const KUrl & kurl )
 
     if (!kurl.isValid())
     {
-        kError(1000) << "saveAs: Malformed URL " << kurl.url();
+        kError() << "saveAs: Malformed URL " << kurl.url();
         return false;
     }
     d->m_duringSaveAs = true;

@@ -285,7 +285,7 @@ void KToolInvocation::invokeBrowser(const QString &url, const QByteArray& startu
         exe = QString::fromLatin1("kde-open"); // it's from kdebase-runtime, it has to be there.
     }
 
-    kDebug(180) << "Using" << exe << "to open" << url;
+    kDebug() << "Using" << exe << "to open" << url;
     if (kdeinitExec(exe, args, &error, startup_id ))
     {
         KMessage::message(KMessage::Error,

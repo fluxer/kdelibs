@@ -533,8 +533,8 @@ public:
      * @param comment     description of the time zone, if any
      */
     KTimeZone(KTimeZoneSource *source, const QString &name,
-        const QString &countryCode = QString(), float latitude = UNKNOWN, float longitude = UNKNOWN,
-        const QString &comment = QString());
+              const QString &countryCode = QString(), float latitude = UNKNOWN, float longitude = UNKNOWN,
+              const QString &comment = QString());
 
     KTimeZone(const KTimeZone &tz);
     KTimeZone &operator=(const KTimeZone &tz);

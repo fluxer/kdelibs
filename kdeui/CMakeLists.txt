@@ -26,9 +26,6 @@ include_directories(
     xmlgui
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/util
-)
-
-include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/widgets
     ${ENCHANT_INCLUDE_DIR}
     "${ENCHANT_INCLUDE_DIR}/.."
@@ -40,6 +37,10 @@ endif()
 configure_file(
     util/config-kkeyserver.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/util/config-kkeyserver.h
+)
+
+add_definitions(
+    -DKDE_DEFAULT_DEBUG_AREA=240
 )
 
 if(ENABLE_TESTING)

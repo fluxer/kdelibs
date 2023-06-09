@@ -104,7 +104,7 @@ static QString checkExecutable( const QString& path, bool ignoreExecBit )
         absoluteinfo.makeAbsolute();
         return absoluteinfo.filePath();
     }
-    //kDebug(180) << "checkExecutable(): failed, returning empty string";
+    // kDebug() << "checkExecutable(): failed, returning empty string";
     return QString();
 }
 
@@ -159,7 +159,7 @@ static void lookupDirectory(const QString& path, const QString &relPart,
             {
                 KDE_struct_stat buff;
                 if ( KDE::stat( pathfn, &buff ) != 0 ) {
-                    kDebug(180) << "Error stat'ing " << pathfn << " : " << ::strerror(errno);
+                    kDebug() << "Error stat'ing " << pathfn << " : " << ::strerror(errno);
                     continue; // Couldn't stat (e.g. no read permissions)
                 }
                 isReg = S_ISREG (buff.st_mode);
@@ -265,7 +265,7 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
                 QString pathfn = path + fn;
                 KDE_struct_stat buff;
                 if ( KDE::stat( fn, &buff ) != 0 ) {
-                    kDebug(180) << "Error stat'ing " << fn << " : " << ::strerror(errno);
+                    kDebug() << "Error stat'ing " << fn << " : " << ::strerror(errno);
                     continue; // Couldn't stat (e.g. no read permissions)
                 }
                 isDir = S_ISDIR (buff.st_mode);
@@ -616,9 +616,9 @@ QString KStandardDirs::findResource(const char *type,
     }
 
 #if 0
-    kDebug(180) << "Find resource: " << type;
+    kDebug() << "Find resource: " << type;
     foreach (const QString &it, d->m_prefixes) {
-        kDebug(180) << "Prefix: " << it;
+        kDebug() << "Prefix: " << it;
     }
 #endif
 
@@ -696,7 +696,7 @@ QString KStandardDirs::findResourceDir(const char *type,
 
 #ifndef NDEBUG
     if(false && strcmp(type, "locale"))
-        kDebug(180) << "KStdDirs::findResDir(): can't find \"" << filename << "\" in type \"" << type << "\".";
+        kDebug() << "KStdDirs::findResDir(): can't find \"" << filename << "\" in type \"" << type << "\".";
 #endif
 
     return QString();
@@ -932,7 +932,7 @@ QStringList KStandardDirs::resourceDirs(const char *type) const
     }
 
 #if 0
-    kDebug(180) << "found dirs for resource" << type << ":" << candidates;
+    kDebug() << "found dirs for resource" << type << ":" << candidates;
 #endif
 
     return candidates;
@@ -960,31 +960,31 @@ QString KStandardDirs::findExe(const QString &appname,
                                const QString &pstr,
                                SearchOptions options)
 {
-    //kDebug(180) << "findExe(" << appname << ", pstr, " << ignoreExecBit << ") called";
+    // kDebug() << "findExe(" << appname << ", pstr, " << ignoreExecBit << ") called";
 
     // absolute or relative path?
     if (appname.contains(QDir::separator())) {
-        //kDebug(180) << "findExe(): absolute path given";
+        // kDebug() << "findExe(): absolute path given";
         return checkExecutable(appname, options & IgnoreExecBit);
     }
 
-    //kDebug(180) << "findExe(): relative path given";
+    // kDebug) << "findExe(): relative path given";
 
     QString p = installPath("libexec") + appname;
     QString result = checkExecutable(p, options & IgnoreExecBit);
     if (!result.isEmpty()) {
-        //kDebug(180) << "findExe(): returning " << result;
+        // kDebug() << "findExe(): returning " << result;
         return result;
     }
 
-    //kDebug(180) << "findExe(): checking system paths";
+    //kDebug() << "findExe(): checking system paths";
     foreach (const QString &it, systemPaths(pstr)) {
         p = it + QLatin1Char('/') + appname;
 
         // Check for executable in this tokenized path
         result = checkExecutable(p, options & IgnoreExecBit);
         if (!result.isEmpty()) {
-            //kDebug(180) << "findExe(): returning " << result;
+            //kDebug() << "findExe(): returning " << result;
             return result;
         }
     }
@@ -993,14 +993,14 @@ QString KStandardDirs::findExe(const QString &appname,
     p = installPath("exe") + appname;
     result = checkExecutable(p, options & IgnoreExecBit);
     if (!result.isEmpty()) {
-        //kDebug(180) << "findExe(): returning " << result;
+        // kDebug() << "findExe(): returning " << result;
         return result;
     }
 
     // If we reach here, the executable wasn't found.
     // So return empty string.
 
-    //kDebug(180) << "findExe(): failed, nothing matched";
+    // kDebug() << "findExe(): failed, nothing matched";
     return QString();
 }
 

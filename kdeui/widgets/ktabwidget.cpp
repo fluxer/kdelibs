@@ -368,7 +368,7 @@ void KTabWidget::setTabText( int index, const QString &text )
 
     if ( index != -1 ) {
         if (index >= d->m_tabNames.count()) {
-            kWarning(240) << "setTabText(" << index << ") called but d->m_tabNames has only" << d->m_tabNames.count() << "entries";
+            kWarning() << "setTabText(" << index << ") called but d->m_tabNames has only" << d->m_tabNames.count() << "entries";
             while (index >= d->m_tabNames.count()) {
                 d->m_tabNames.append(QString());
             }

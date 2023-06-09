@@ -102,14 +102,14 @@ public:
     }
     void dump() const
     {
-        kDebug(240) << "XmlData" << this << "type" << s_XmlTypeToString[m_type] << "xmlFile:" << m_xmlFile;
+        kDebug() << "XmlData" << this << "type" << s_XmlTypeToString[m_type] << "xmlFile:" << m_xmlFile;
         foreach (const QDomElement& element, m_barList) {
-            kDebug(240) << "    ToolBar:" << toolBarText( element );
+            kDebug() << "    ToolBar:" << toolBarText( element );
         }
         if ( m_actionCollection )
-            kDebug(240) << "    " << m_actionCollection->actions().count() << "actions in the collection.";
+            kDebug() << "    " << m_actionCollection->actions().count() << "actions in the collection.";
         else
-            kDebug(240) << "    no action collection.";
+            kDebug() << "    no action collection.";
     }
     QString xmlFile() const { return m_xmlFile; }
     XmlType type() const { return m_type; }
@@ -425,7 +425,7 @@ public:
     QDomElement findElementForToolBarItem( const ToolBarItem* item ) const
     {
         static const QString attrName    = QString::fromLatin1( "name" );
-        //kDebug(240) << "looking for name=" << item->internalName() << "and tag=" << item->internalTag();
+        // kDebug() << "looking for name=" << item->internalName() << "and tag=" << item->internalTag();
         for(QDomNode n = m_currentToolBarElem.firstChild(); !n.isNull(); n = n.nextSibling())
         {
             QDomElement elem = n.toElement();
@@ -433,7 +433,7 @@ public:
                 (elem.tagName() == item->internalTag()))
                 return elem;
         }
-        //kDebug(240) << "no item found in the DOM with name=" << item->internalName() << "and tag=" << item->internalTag();
+        // kDebug() << "no item found in the DOM with name=" << item->internalName() << "and tag=" << item->internalTag();
         return QDomElement();
     }
 
@@ -613,7 +613,7 @@ void KEditToolBarPrivate::_k_slotDefault()
             const QString file = client->localXMLFile();
             if (file.isEmpty())
                 continue;
-            kDebug(240) << "Deleting local xml file" << file;
+            kDebug() << "Deleting local xml file" << file;
             // << "for client" << client << typeid(*client).name();
             if ( QFile::exists( file ) )
                 if ( !QFile::remove( file ) )
@@ -808,7 +808,7 @@ void KEditToolBarWidgetPrivate::initFromFactory(KXMLGUIFactory* factory,
 
 bool KEditToolBarWidget::save()
 {
-  //kDebug(240) << "KEditToolBarWidget::save";
+  //kDebug() << "KEditToolBarWidget::save";
   XmlDataList::Iterator it = d->m_xmlFiles.begin();
   for ( ; it != d->m_xmlFiles.end(); ++it)
   {
@@ -832,7 +832,7 @@ bool KEditToolBarWidget::save()
 
     kDebug() << (*it).domDocument().toString();
 
-    kDebug(240) << "Saving " << (*it).xmlFile();
+    kDebug() << "Saving " << (*it).xmlFile();
     // if we got this far, we might as well just save it
     KXMLGUIFactory::saveConfigFile((*it).domDocument(), (*it).xmlFile());
   }
@@ -851,7 +851,7 @@ void KEditToolBarWidget::rebuildKXMLGUIClients()
         return;
 
     const QList<KXMLGUIClient*> clients = d->m_factory->clients();
-    //kDebug(240) << "factory: " << clients.count() << " clients";
+    // kDebug() << "factory: " << clients.count() << " clients";
 
     // remove the elements starting from the last going to the first
     if (!clients.count())
@@ -861,17 +861,17 @@ void KEditToolBarWidget::rebuildKXMLGUIClients()
     clientIterator.toBack();
     while (clientIterator.hasPrevious()) {
         KXMLGUIClient* client = clientIterator.previous();
-        //kDebug(240) << "factory->removeClient " << client;
+        // kDebug() << "factory->removeClient " << client;
         d->m_factory->removeClient(client);
     }
 
   KXMLGUIClient *firstClient = clients.first();
 
   // now, rebuild the gui from the first to the last
-  //kDebug(240) << "rebuilding the gui";
+  // kDebug() << "rebuilding the gui";
   foreach (KXMLGUIClient* client, clients)
   {
-    //kDebug(240) << "updating client " << client << " " << client->componentData().componentName() << "  xmlFile=" << client->xmlFile();
+    //kDebug() << "updating client " << client << " " << client->componentData().componentName() << "  xmlFile=" << client->xmlFile();
     QString file( client->xmlFile() ); // before setting ui_standards!
     if ( !file.isEmpty() )
     {
@@ -1534,7 +1534,7 @@ void KEditToolBarWidgetPrivate::slotChangeIcon()
   m_kdialogProcess->setReadChannel(QProcess::StandardOutput);
   m_kdialogProcess->start(kdialogExe, kdialogArgs, QIODevice::ReadOnly | QIODevice::Text);
   if ( !m_kdialogProcess->waitForStarted() ) {
-    kError(240) << "Can't run " << kdialogExe;
+    kError() << "Can't run " << kdialogExe;
     delete m_kdialogProcess;
     m_kdialogProcess = 0;
     return;
@@ -1600,13 +1600,13 @@ void KEditToolBarWidgetPrivate::slotProcessExited()
   QString icon;
 
   if (!m_kdialogProcess) {
-         kError(240) << "Something is wrong here! m_kdialogProcess is zero!";
-         return;
+    kError() << "Something is wrong here! m_kdialogProcess is zero!";
+    return;
   }
 
   icon = QString::fromLocal8Bit( m_kdialogProcess->readLine() );
   icon = icon.left( icon.indexOf( '\n' ) );
-  kDebug(240) << "icon=" << icon;
+  kDebug() << "icon=" << icon;
   if ( m_kdialogProcess->exitStatus() != QProcess::NormalExit ||
        icon.isEmpty() ) {
     delete m_kdialogProcess;

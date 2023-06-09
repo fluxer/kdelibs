@@ -104,18 +104,18 @@ static void quit_handler(int sig)
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
         const QWidgetList toplevelwidgets = QApplication::topLevelWidgets();
         if (!toplevelwidgets.isEmpty()) {
-            kDebug(240) << "closing top-level main windows";
+            kDebug() << "closing top-level main windows";
             foreach (QWidget* topwidget, toplevelwidgets) {
                 if (!topwidget || !topwidget->isWindow() || !topwidget->inherits("QMainWindow")) {
                     continue;
                 }
-                kDebug(240) << "closing" << topwidget;
+                kDebug() << "closing" << topwidget;
                 if (!topwidget->close()) {
-                    kDebug(240) << "not quiting because a top-level window did not close";
+                    kDebug() << "not quiting because a top-level window did not close";
                     return;
                 }
             }
-            kDebug(240) << "all top-level main windows closed";
+            kDebug() << "all top-level main windows closed";
         }
     }
     KDE_signal(sig, SIG_DFL);
@@ -421,8 +421,8 @@ void KApplicationPrivate::init()
   QDBusConnection sessionBus = QDBusConnection::sessionBus();
   QDBusConnectionInterface *bus = 0;
   if (!sessionBus.isConnected() || !(bus = sessionBus.interface())) {
-      kFatal(240) << "Session bus not found, to circumvent this problem try the following command (with Linux and bash)\n"
-                  << "export $(dbus-launch)";
+      kFatal() << "Session bus not found, to circumvent this problem try the following command (with Linux and bash)\n"
+               << "export $(dbus-launch)";
       ::exit(125);
   }
 
@@ -442,7 +442,7 @@ void KApplicationPrivate::init()
       const QString pidSuffix = QString::number( getpid() ).prepend( QLatin1String("-") );
       const QString serviceName = reversedDomain + q->applicationName() + pidSuffix;
       if ( bus->registerService(serviceName) == QDBusConnectionInterface::ServiceNotRegistered ) {
-          kError(240) << "Couldn't register name '" << serviceName << "' with DBUS - another process owns it already!";
+          kError() << "Couldn't register name '" << serviceName << "' with DBUS - another process owns it already!";
           ::exit(126);
       }
   }
@@ -842,7 +842,7 @@ void KApplication::quitOnSignal()
 void KApplication::quitOnDisconnected()
 {
   if (!qApp) {
-    kWarning(240) << "KApplication::quitOnDisconnected() called before application instance is created";
+    kWarning() << "KApplication::quitOnDisconnected() called before application instance is created";
     return;
   }
   QDBusConnection::sessionBus().connect(

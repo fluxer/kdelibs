@@ -287,7 +287,7 @@ bool KSaveFile::backupFile( const QString& qFilename, const QString& backupDir )
         backupFileName = backupDir + QLatin1Char('/') + fileInfo.fileName() + extension;
     }
 
-//    kDebug(180) << "KSaveFile copying " << qFilename << " to " << backupFileName;
+    // kDebug() << "KSaveFile copying " << qFilename << " to " << backupFileName;
     QFile::remove(backupFileName);
     return QFile::copy(qFilename, backupFileName);
 }

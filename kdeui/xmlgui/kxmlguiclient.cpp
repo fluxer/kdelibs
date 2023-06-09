@@ -100,7 +100,7 @@ KXMLGUIClient::~KXMLGUIClient()
   }
 
   if ( d->m_factory ) {
-      kWarning(240) << this << "deleted without having been removed from the factory first. This will leak standalone popupmenus and could lead to crashes.";
+      kWarning() << this << "deleted without having been removed from the factory first. This will leak standalone popupmenus and could lead to crashes.";
     d->m_factory->forgetClient(this);
   }
 
@@ -268,7 +268,7 @@ void KXMLGUIClient::setXML( const QString &document, bool merge )
         setDOMDocument( doc, merge );
     } else {
 #ifdef NDEBUG
-        kError(240) << "Error parsing XML document:" << errorMsg << "at line" << errorLine << "column" << errorColumn;
+        kError() << "Error parsing XML document:" << errorMsg << "at line" << errorLine << "column" << errorColumn;
         setDOMDocument(QDomDocument(), merge); // otherwise empty menus from ui_standards.rc stay around
 #else
         kFatal() << "Error parsing XML document:" << errorMsg << "at line" << errorLine << "column" << errorColumn;

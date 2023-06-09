@@ -7,6 +7,8 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=250)
+
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()

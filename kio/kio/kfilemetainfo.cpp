@@ -93,13 +93,13 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
                 }
 
                 if (mimematches) {
-                    kDebug(7000) << "Extracting metadata via" << kfmdname;
+                    kDebug() << "Extracting metadata via" << kfmdname;
                     KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
                     if (kfmdplugininstance) {
                         items.append(kfmdplugininstance->metaData(url, w));
                         delete kfmdplugininstance;
                     } else {
-                        kWarning(7000) << "Could not create KFileMetaDataPlugin instance";
+                        kWarning() << "Could not create KFileMetaDataPlugin instance";
                     }
                     break;
                 }
@@ -116,7 +116,7 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
             itemkeys.append(it->key());
             it++;
         } else {
-            kDebug(7000) << "Multiple entries for the same key" << it->key();
+            kDebug() << "Multiple entries for the same key" << it->key();
             it = items.erase(it);
         }
     }

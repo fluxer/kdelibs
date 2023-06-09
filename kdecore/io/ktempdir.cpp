@@ -39,21 +39,21 @@
 // Auxiliary recursive function for removeDirs
 static bool rmtree(const QByteArray &name)
 {
-    //kDebug(180) << "Checking directory for remove" << name;
+    // kDebug() << "Checking directory for remove" << name;
     KDE_struct_stat st;
     if (KDE_lstat(name.constData(), &st) == -1) { // Do not dereference symlink!
         return false;
     }
     if (S_ISDIR(st.st_mode)) {
         // This is a directory, so process it
-        //kDebug(180) << "File" << name << "is DIRECTORY!";
+        // kDebug() << "File" << name << "is DIRECTORY!";
         KDE_struct_dirent* ep;
         DIR* dp = ::opendir(name.constData());
         if (!dp) {
             return false;
         }
         while ((ep = KDE_readdir(dp))) {
-            //kDebug(180) << "CHECKING" << name << "/" << ep->d_name;
+            // kDebug() << "CHECKING" << name << "/" << ep->d_name;
             if (qstrcmp(ep->d_name, "." ) == 0 || qstrcmp(ep->d_name, "..") == 0) {
                 continue;
             }
@@ -69,11 +69,11 @@ static bool rmtree(const QByteArray &name)
              * - limited number of file descriptors for opendir/readdir/closedir
              */
             if (::closedir(dp)) {
-                kDebug(180) << "Error closing" << name;
+                kDebug() << "Error closing" << name;
                 return false;
             }
             // Recurse!
-            //kDebug(180) << "RECURSE: " << newName;
+            // kDebug() << "RECURSE: " << newName;
             if (!rmtree(newName)) {
                 return false;
             }
@@ -84,14 +84,14 @@ static bool rmtree(const QByteArray &name)
             }
         }
         if (::closedir(dp)) {
-            kDebug(180) << "Error closing" << name;
+            kDebug() << "Error closing" << name;
             return false;
         }
-        //kDebug(180) << "RMDIR dir " << name;
+        // kDebug() << "RMDIR dir " << name;
         return (::rmdir(name) == 0);
     }
     // This is a non-directory file, so remove it
-    //kDebug(180) << "KTempDir: unlinking file" << name;
+    // kDebug() << "KTempDir: unlinking file" << name;
     return (::unlink(name) == 0);
 }
 
@@ -124,8 +124,8 @@ KTempDir::KTempDir(const QString &_directoryPrefix, int mode)
     if (realName == 0) {
         // Recreate it for the warning, mkdtemps emptied it
         nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
-        kWarning(180) << "KTempDir: Error trying to create " << nme.data()
-                      << ": " << ::strerror(errno);
+        kWarning() << "KTempDir: Error trying to create " << nme.data()
+                   << ": " << ::strerror(errno);
         d->error = errno;
         d->tmpName.clear();
         return;
@@ -133,12 +133,12 @@ KTempDir::KTempDir(const QString &_directoryPrefix, int mode)
 
     QByteArray realNameStr(realName);
     d->tmpName = QFile::decodeName(realNameStr)+QLatin1Char('/');
-    kDebug(180) << "KTempDir: Temporary directory created :" << d->tmpName;
+    kDebug() << "KTempDir: Temporary directory created :" << d->tmpName;
 
     mode_t umsk = KGlobal::umask();
     if (::chmod(nme, mode & (~umsk)) < 0) {
-        kWarning(180) << "KTempDir: Unable to change permissions on" << d->tmpName
-                      << ":" << ::strerror(errno);
+        kWarning() << "KTempDir: Unable to change permissions on" << d->tmpName
+                   << ":" << ::strerror(errno);
         d->error = errno;
         d->tmpName.clear();
         (void) ::rmdir(realName); // Cleanup created directory
@@ -151,8 +151,8 @@ KTempDir::KTempDir(const QString &_directoryPrefix, int mode)
     // Set uid/gid (necessary for SUID programs)
     if (::chown(nme, ::getuid(), ::getgid()) < 0) {
         // Just warn, but don't failover yet
-        kWarning(180) << "KTempDir: Unable to change owner on" << d->tmpName
-                      << ":" << ::strerror(errno);
+        kWarning() << "KTempDir: Unable to change owner on" << d->tmpName
+                   << ":" << ::strerror(errno);
    }
 }
 
@@ -204,7 +204,7 @@ void KTempDir::unlink()
 
 bool KTempDir::removeDir(const QString &path)
 {
-    // kDebug(180) << path;
+    // kDebug() << path;
     if (!QDir(path).exists()) {
         // The goal is that there is no directory
         return true;

@@ -109,14 +109,14 @@ KShortcut::KShortcut(const QString &s)
         // Complain about a unusable shortcuts sequence only if we have got
         // something.
         if (d->primary.isEmpty() && !k.isEmpty()) {
-            kDebug(240) << "unusable primary shortcut sequence " << sCuts[0];
+            kDebug() << "unusable primary shortcut sequence " << sCuts[0];
         }
     }
 
     if (sCuts.count() >= 2) {
         d->alternate = QKeySequence::fromString(sCuts.at(1));
         if (d->alternate.isEmpty()) {
-            kDebug(240) << "unusable alternate shortcut sequence " << sCuts[1];
+            kDebug() << "unusable alternate shortcut sequence " << sCuts[1];
         }
     }
 }

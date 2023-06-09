@@ -67,7 +67,7 @@ KPixmap::KPixmap(const Qt::HANDLE pixmap)
         );
         d->size = QSize(x11width, x11height);
         if (kx11errorhandler.error(true)) {
-            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             // in the worst case the pixmap will be leaked
             d->handle = XNone;
             d->size = QSize();
@@ -81,7 +81,7 @@ KPixmap::KPixmap(const QPixmap &pixmap)
     if (!pixmap.isNull()) {
         d->handle = pixmap.toX11Pixmap();
         if (!d->handle) {
-            kWarning(240) << "Could not convert pixmap";
+            kWarning() << "Could not convert pixmap";
             return;
         }
         d->size = pixmap.size();
@@ -104,7 +104,7 @@ KPixmap::KPixmap(const QSize &size)
             32
         );
         if (kx11errorhandler.error(true)) {
-            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             d->handle = XNone;
             return;
         }
@@ -139,14 +139,14 @@ Qt::HANDLE KPixmap::handle() const
 void KPixmap::release()
 {
     if (d->handle == XNone) {
-        kDebug(240) << "No handle";
+        kDebug() << "No handle";
         return;
     }
     // NOTE: catching errors here is done to not get fatal I/O
     KXErrorHandler kx11errorhandler;
     XFreePixmap(QX11Info::display(), d->handle);
     if (kx11errorhandler.error(true)) {
-        kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+        kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
     }
     d->handle = XNone;
     d->size = QSize();
@@ -155,7 +155,7 @@ void KPixmap::release()
 QImage KPixmap::toImage() const
 {
     if (isNull()) {
-        kWarning(240) << "Null pixmap";
+        kWarning() << "Null pixmap";
         return QImage();
     }
     return QPixmap::fromX11Pixmap(d->handle).toImage();

@@ -34,7 +34,10 @@ set(kdecore_OPTIONAL_SRCS)
 # same for optional libs
 set(kdecore_OPTIONAL_LIBS)
 
-add_definitions(-DQT_NO_CAST_FROM_ASCII)
+add_definitions(
+    -DQT_NO_CAST_FROM_ASCII
+    -DKDE_DEFAULT_DEBUG_AREA=180
+)
 
 add_subdirectory(kconfig_compiler)
 if(ENABLE_TESTING)
