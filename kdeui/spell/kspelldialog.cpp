@@ -78,7 +78,7 @@ void KSpellDialogThread::run()
             if (finderresult < 0) {
                 m_findnext = false;
                 emit atEnd();
-                continue;
+                break;
             }
 
             QTextBoundaryFinder::BoundaryReasons boundary = m_finder.boundaryReasons();
