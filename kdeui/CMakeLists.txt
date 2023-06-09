@@ -177,7 +177,6 @@ set(kdeui_LIB_SRCS
     shortcuts/kcheckaccelerators.cpp
     spell/kspeller.cpp
     spell/kspellhighlighter.cpp
-    spell/kspelldialog.cpp
     spell/kspelldictionarycombobox.cpp
     spell/kspellconfigwidget.cpp
     spell/kspellbackgroundchecker.cpp
@@ -494,7 +493,6 @@ install(
     shortcuts/kacceleratormanager.h
     spell/kspeller.h
     spell/kspellhighlighter.h
-    spell/kspelldialog.h
     spell/kspelldictionarycombobox.h
     spell/kspellconfigwidget.h
     spell/kspellbackgroundchecker.h

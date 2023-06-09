@@ -191,13 +191,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      */
     void showTabAction(bool show);
 
-    /**
-     * @since 4.10
-     * create a modal spellcheck dialogbox and spellCheckingFinished signal we sent when 
-     * we finish spell checking or spellCheckingCanceled signal when we cancel spell checking
-     */
-    void forceSpellChecking();
-
   Q_SIGNALS:
     /**
      * emit signal when we activate or not autospellchecking
@@ -207,8 +200,7 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      void checkSpellingChanged( bool );
 
      /**
-      * Emitted when the user changes the language in the spellcheck dialog
-      * shown by checkSpelling() or when calling setSpellCheckingLanguage().
+      * Emitted when calling setSpellCheckingLanguage().
       *
       * @param language the new language the user selected
       * @since 4.1
@@ -230,20 +222,7 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      */
     void aboutToShowContextMenu(QMenu* menu);
 
-    /**
-     * signal spellCheckingFinished is sent when we finish spell check or we click on "Terminate" button in speller dialogbox
-     * @since 4.10
-     */
-    void spellCheckingFinished();
-
-    /**
-     * signal spellCheckingCanceled is sent when we cancel spell checking. 
-     * @since 4.10
-     */
-    void spellCheckingCanceled();
-
   public Q_SLOTS:
-
     /**
      * Set the spell check language which will be used for highlighting spelling
      * mistakes and for the spellcheck dialog.
@@ -253,13 +232,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * @since 4.1
      */
     void setSpellCheckingLanguage(const QString &language);
-
-    /**
-     * Show a dialog to check the spelling. The spellCheckingFinished() or
-     * spellCheckingCanceled() signal will be emitted when the spell checking
-     * dialog is closed.
-     */
-    void checkSpelling();
 
     /**
      * Create replace dialogbox
@@ -328,10 +300,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void spellCheckerMisspelling( const QString&, int ) )
-    Q_PRIVATE_SLOT( d, void spellCheckerCorrected(const QString&, int,const QString&) )
-    Q_PRIVATE_SLOT( d, void spellCheckerCanceled())
-    Q_PRIVATE_SLOT( d, void spellCheckerFinished() )
     Q_PRIVATE_SLOT( d, void undoableClear() )
     Q_PRIVATE_SLOT( d, void toggleAutoSpellCheck() )
     Q_PRIVATE_SLOT( d, void slotAllowTab() )

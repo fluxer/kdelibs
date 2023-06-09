@@ -48,7 +48,6 @@
 #include <kmenu.h>
 #include <kwindowsystem.h>
 #include <kspellhighlighter.h>
-#include <kspelldialog.h>
 #include <QDebug>
 
 class KTextEdit::Private
@@ -96,10 +95,6 @@ class KTextEdit::Private
      */
     bool handleShortcut(const QKeyEvent* e);
 
-    void spellCheckerMisspelling( const QString &text, int pos );
-    void spellCheckerCorrected( const QString &, int,const QString &);
-    void spellCheckerCanceled();
-    void spellCheckerFinished();
     void toggleAutoSpellCheck();
 
     void slotFindHighlight(const QString& text, int matchingIndex, int matchingLength);
@@ -118,11 +113,9 @@ class KTextEdit::Private
 
     void init();
 
-    void checkSpelling(bool force);
     KTextEdit *parent;
     QAction *autoSpellCheckAction;
     QAction *allowTab;
-    QAction *spellCheckAction;
     QString clickMessage;
     bool italicizePlaceholder : 1;
     bool customPalette : 1;
@@ -140,85 +133,6 @@ class KTextEdit::Private
     int findIndex, repIndex;
     int lastReplacedPosition;
 };
-
-void KTextEdit::Private::checkSpelling(bool force)
-{
-    if (parent->document()->isEmpty()) {
-        KMessageBox::information(parent, i18n("Nothing to spell check."));
-        if (force) {
-            emit parent->spellCheckingFinished();
-        }
-        return;
-    }
-    KSpellDialog *spellDialog = new KSpellDialog(KGlobal::config().data(), force ? parent : 0);
-    if (!spellCheckingLanguage.isEmpty()) {
-        spellDialog->changeLanguage(spellCheckingLanguage);
-    }
-    spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    connect(
-        spellDialog, SIGNAL(replace(QString,int,QString)),
-        parent, SLOT(spellCheckerCorrected(QString,int,QString))
-    );
-    connect(
-        spellDialog, SIGNAL(misspelling(QString,int)),
-        parent, SLOT(spellCheckerMisspelling(QString,int))
-    );
-    connect(
-        spellDialog, SIGNAL(accepted()),
-        parent, SLOT(spellCheckerFinished())
-    );
-    connect(
-        spellDialog, SIGNAL(rejected()),
-        parent, SLOT(spellCheckerCanceled())
-    );
-    connect(
-        spellDialog, SIGNAL(languageChanged(QString)),
-        parent, SIGNAL(languageChanged(QString))
-    );
-    if (force) {
-        connect(spellDialog, SIGNAL(accepted()), parent, SIGNAL(spellCheckingFinished()));
-        connect(spellDialog, SIGNAL(rejected()), parent, SIGNAL(spellCheckingCanceled()));
-    }
-    originalDoc = QTextDocumentFragment(parent->document());
-    spellDialog->setBuffer(parent->toPlainText());
-    spellDialog->show();
-}
-
-
-void KTextEdit::Private::spellCheckerCanceled()
-{
-    QTextDocument *doc = parent->document();
-    doc->clear();
-    QTextCursor cursor(doc);
-    cursor.insertFragment(originalDoc);
-    spellCheckerFinished();
-}
-
-void KTextEdit::Private::spellCheckerMisspelling( const QString &text, int pos )
-{
-    //kDebug()<<"TextEdit::Private::spellCheckerMisspelling :"<<text<<" pos :"<<pos;
-    parent->highlightWord( text.length(), pos );
-}
-
-void KTextEdit::Private::spellCheckerCorrected( const QString& oldWord, int pos,const QString& newWord)
-{
-  //kDebug()<<" oldWord :"<<oldWord<<" newWord :"<<newWord<<" pos : "<<pos;
-  if (oldWord != newWord ) {
-    QTextCursor cursor(parent->document());
-    cursor.setPosition(pos);
-    cursor.setPosition(pos+oldWord.length(),QTextCursor::KeepAnchor);
-    cursor.insertText(newWord);
-  }
-}
-
-void KTextEdit::Private::spellCheckerFinished()
-{
-   QTextCursor cursor(parent->document());
-   cursor.clearSelection();
-   parent->setTextCursor(cursor);
-   if (parent->highlighter())
-       parent->highlighter()->rehighlight();
-}
 
 void KTextEdit::Private::toggleAutoSpellCheck()
 {
@@ -242,9 +156,7 @@ void KTextEdit::Private::slotAllowTab()
 
 void KTextEdit::Private::menuActivated( QAction* action )
 {
-  if ( action == spellCheckAction )
-    parent->checkSpelling();
-  else if ( action == autoSpellCheckAction )
+  if ( action == autoSpellCheckAction )
     toggleAutoSpellCheck();
   else if ( action == allowTab )
     slotAllowTab();
@@ -500,10 +412,6 @@ QMenu *KTextEdit::mousePopupMenu()
   if( !isReadOnly() )
   {
       popup->addSeparator();
-      d->spellCheckAction = popup->addAction( KIcon( "tools-check-spelling" ),
-                                              i18n( "Check Spelling..." ) );
-      if ( emptyDocument )
-        d->spellCheckAction->setEnabled( false );
       d->autoSpellCheckAction = popup->addAction( i18n( "Auto Spell Check" ) );
       d->autoSpellCheckAction->setCheckable( true );
       d->autoSpellCheckAction->setChecked( checkSpellingEnabled() );
@@ -743,16 +651,6 @@ void KTextEdit::setReadOnly( bool readOnly )
   }
 
   QTextEdit::setReadOnly( readOnly );
-}
-
-void KTextEdit::checkSpelling()
-{
-  d->checkSpelling(false);
-}
-
-void KTextEdit::forceSpellChecking()
-{
-  d->checkSpelling(true);
 }
 
 void KTextEdit::highlightWord( int length, int pos )

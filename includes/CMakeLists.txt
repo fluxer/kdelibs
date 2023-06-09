@@ -360,7 +360,6 @@ install(
     KPtyProcess
     KSpeller
     KSpellHighlighter
-    KSpellDialog
     KSpellDictionaryComboBox
     KSpellConfigWidget
     KSpellBackgroundChecker
