@@ -28,6 +28,7 @@ class KSpellDialogPrivate;
     Dialog to check spelling and apply correction interactively.
 
     @since 4.23
+    @warning Recommended use of this dialog is on selected words
 */
 class KDEUI_EXPORT KSpellDialog : public KDialog
 {
