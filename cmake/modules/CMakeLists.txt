@@ -42,7 +42,6 @@ set(cmakeFiles
     FindLibATASmart.cmake
     FindLibDeflate.cmake
     FindLibDRM.cmake
-    FindLibKonq.cmake
     FindLibLZMA.cmake
     FindLibMms.cmake
     FindLIBPARTED.cmake
