@@ -136,35 +136,12 @@ if(NOT Katie_FOUND)
     return()
 endif()
 
-# are we trying to compile kdelibs? then enter bootstrap mode
-# kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
-
-if(kdelibs_SOURCE_DIR)
-    set(_kdeBootStrapping TRUE)
-    message(STATUS "Building kdelibs...")
-else(kdelibs_SOURCE_DIR)
-    set(_kdeBootStrapping FALSE)
-endif(kdelibs_SOURCE_DIR)
-
 # Used in configure_file() and install(EXPORT)
 set(KDE4_TARGET_PREFIX KDE4::)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-
 #######################  #now try to find some kde stuff  ################################
 
-if (_kdeBootStrapping)
-    set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
-
-    set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX})
-    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX})
-
-    set(KDE4_LIB_DIR ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR})
-
-    set(KDE4_INSTALLED_VERSION_OK TRUE)
-else(_kdeBootStrapping)
+if(NOT _kdeBootStrapping)
     # These files contain information about the installed kdelibs
     include(${kde_cmake_module_dir}/KDE4Config.cmake)
     include(${kde_cmake_module_dir}/KDE4Version.cmake)
@@ -175,7 +152,6 @@ else(_kdeBootStrapping)
     if(NOT "${KDE_VERSION}" VERSION_LESS "${KDE_MIN_VERSION}")
         set(KDE4_INSTALLED_VERSION_OK TRUE)
     endif()
-
 
     # KDE4_LIB_INSTALL_DIR and KDE4_INCLUDE_INSTALL_DIR are set in KDE4Config.cmake,
     # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
@@ -212,7 +188,6 @@ else(_kdeBootStrapping)
             endforeach()
         endif()
     endforeach(dir)
-
 
     # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
     # the library target "kdeui" is exported as "KDE4::kdeui". The "KDE4::" is used as
@@ -280,42 +255,6 @@ endif()
 
 #####################  some more settings   ##########################################
 
-# if bootstrap set the variables now, otherwise they will be set by KDE4Config
-if(_kdeBootStrapping)
-    include(GNUInstallDirs)
-
-    set(KDE4_EXEC_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH "KDE installation prefix")
-    set(KDE4_SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_FULL_DATADIR}" CACHE PATH "KDE shared data installation prefix")
-    set(KDE4_BIN_INSTALL_DIR "${CMAKE_INSTALL_FULL_BINDIR}" CACHE PATH "KDE binaries installation directory")
-    set(KDE4_SBIN_INSTALL_DIR "${CMAKE_INSTALL_FULL_SBINDIR}" CACHE PATH "KDE system binaries installation directory")
-    set(KDE4_LIB_INSTALL_DIR "${CMAKE_INSTALL_FULL_LIBDIR}" CACHE PATH "KDE libraries installation directory")
-    set(KDE4_LIBEXEC_INSTALL_DIR "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kde4" CACHE PATH "KDE libraries executables installation directory")
-    set(KDE4_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_FULL_INCLUDEDIR}" CACHE PATH "KDE headers installation directory")
-
-    set(KDE4_PLUGIN_INSTALL_DIR "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE PATH "KDE plugins installation directory")
-    set(KDE4_IMPORTS_INSTALL_DIR "${KDE4_PLUGIN_INSTALL_DIR}/imports" CACHE PATH "KDE imports installation directory")
-    set(KDE4_CONFIG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config" CACHE PATH "KDE config installation directory")
-    set(KDE4_DATA_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/apps" CACHE PATH "KDE data installation directory")
-    set(KDE4_ICON_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/icons" CACHE PATH "KDE icon installation directory")
-    set(KDE4_KCFG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config.kcfg" CACHE PATH "KDE kcfg installation directory")
-    set(KDE4_LOCALE_INSTALL_DIR "${KATIE_TRANSLATIONS_PATH}/kde4" CACHE PATH "KDE locale installation directory")
-    set(KDE4_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/services" CACHE PATH "KDE services installation directory")
-    set(KDE4_SERVICETYPES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/servicetypes" CACHE PATH "KDE service types installation directory")
-    set(KDE4_SOUND_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/sounds" CACHE PATH "KDE sounds installation directory")
-    set(KDE4_TEMPLATES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/templates" CACHE PATH "KDE templates installation directory")
-    set(KDE4_WALLPAPER_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/wallpapers" CACHE PATH "KDE wallpapers installation directory")
-    set(KDE4_AUTOSTART_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/autostart" CACHE PATH "KDE autostart installation directory")
-
-    set(KDE4_XDG_APPS_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/applications/kde4" CACHE PATH "KDE XDG applications installation directory")
-    set(KDE4_XDG_DIRECTORY_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/desktop-directories" CACHE PATH "KDE XDG directories installation directory")
-    set(KDE4_XDG_MIME_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/mime/packages" CACHE PATH "KDE XDG MIME packages installation directory")
-
-    set(KDE4_SYSCONF_INSTALL_DIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}" CACHE PATH "KDE system config installation directory")
-    set(KDE4_DBUS_INTERFACES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/interfaces" CACHE PATH "KDE D-Bus interfaces installation directory")
-    set(KDE4_DBUS_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/services" CACHE PATH "KDE D-Bus services installation directory")
-    set(KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/system-services" CACHE PATH "KDE D-Bus system services installation directory")
-endif()
-
 # For more documentation see above.
 # The COMPONENT Devel argument has the effect that static libraries belong to the
 # "Devel" install component. If we use this also for all install() commands
@@ -367,7 +306,7 @@ set(_KDE4_PLATFORM_DEFINITIONS)
 if(Q_WS_X11)
    find_package(X11 REQUIRED)
    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
-   set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
+   set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
 endif()
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")

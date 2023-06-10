@@ -26,6 +26,12 @@ set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
 set(CMAKE_C_VISIBILITY_PRESET "hidden")
 set(CMAKE_CXX_VISIBILITY_PRESET "hidden")
 
+# place all binaries in the same directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+# place all libraries, static and shared, in the same directory
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
 # define the generic version of the libraries here, this makes it easy to
 # advance it when the next KDE release comes. Use this version number for
 # libraries
