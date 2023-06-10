@@ -155,9 +155,7 @@ target_link_libraries(plasma PUBLIC
     ${PLASMA_EXTRA_LIBS}
 )
 
-if(X11_FOUND)
-   target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
-endif(X11_FOUND)
+target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
 
 set_target_properties(plasma PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}

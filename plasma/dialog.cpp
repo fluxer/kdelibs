@@ -25,9 +25,6 @@
 
 #include <QPainter>
 #include <QtGui/qevent.h>
-#ifdef Q_WS_X11
-#include <QtGui/qx11info_x11.h>
-#endif
 #include <QBitmap>
 #include <QTimer>
 #include <QtGui/QVBoxLayout>
@@ -52,10 +49,6 @@
 #include "plasma/theme.h"
 #include "plasma/widgets/scrollwidget.h"
 #include "plasma/windoweffects.h"
-
-#ifdef Q_WS_X11
-#include <X11/Xlib.h>
-#endif
 
 namespace Plasma
 {

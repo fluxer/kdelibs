@@ -35,13 +35,15 @@ set(LIBRARY_TYPE SHARED)
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
 
-if(UNIX AND Q_WS_X11)
-    #X11 Session Management (SM) is required
-    #X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
-    if(NOT X11_SM_FOUND)
-        message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
-    endif(NOT X11_SM_FOUND)
-endif(UNIX AND Q_WS_X11)
+# X11 Session Management (SM) is required
+# X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
+if(NOT X11_SM_FOUND)
+    message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
+endif(NOT X11_SM_FOUND)
+
+if(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
+    message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")
+endif(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
 
 if(ENABLE_TESTING)
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
@@ -89,23 +91,17 @@ set_package_properties(CURL PROPERTIES
 )
 
 # optional features
-if(X11_FOUND)
-    kde4_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
-    kde4_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)
-    kde4_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)
-    kde4_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)
-    kde4_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)
+kde4_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
+kde4_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)
+kde4_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)
+kde4_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)
+kde4_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)
 
-    add_feature_info("X Test Extension (libXTest)" HAVE_XTEST "Support for notfication restriction")
-    add_feature_info("X Cursor Extension (Xcursor)" HAVE_XCURSOR "Support for loading cursors depending on theme")
-    add_feature_info("X Fixes Extension (libXfixes)" HAVE_XFIXES "Support for damage/fixes cursor and window management")
-    add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
-    add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime")
-
-    if(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
-        message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")
-    endif(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
-endif(X11_FOUND)
+add_feature_info("X Test Extension (libXTest)" HAVE_XTEST "Support for notfication restriction")
+add_feature_info("X Cursor Extension (Xcursor)" HAVE_XCURSOR "Support for loading cursors depending on theme")
+add_feature_info("X Fixes Extension (libXfixes)" HAVE_XFIXES "Support for damage/fixes cursor and window management")
+add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
+add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime")
 
 kde4_optional_find_package(MPV 0.23.0)
 set_package_properties(MPV PROPERTIES

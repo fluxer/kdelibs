@@ -27,7 +27,6 @@
 #include <QTimer>
 #include <QCache>
 #include <QBuffer>
-#include <QX11Info>
 
 #include <kcolorscheme.h>
 #include <kcomponentdata.h>
