@@ -74,7 +74,7 @@ set_package_properties(SharedMimeInfo PROPERTIES
 find_package(ENCHANT 1.4.0)
 set_package_properties(ENCHANT PROPERTIES
     DESCRIPTION "Generic spell checking library"
-    URL "http://www.abisource.com/projects/enchant/"
+    URL "https://www.abisource.com/projects/enchant/"
     TYPE REQUIRED
     PURPOSE "Spell checking support via Enchant"
 )
