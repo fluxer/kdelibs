@@ -54,66 +54,63 @@ check_function_exists(fdatasync          HAVE_FDATASYNC)                    # kd
 check_function_exists(arc4random_uniform HAVE_ARC4RANDOM_UNIFORM)           # kdecore
 check_function_exists(sendfile           HAVE_SENDFILE)                     # kioslave
 
-if (UNIX)
-  # for kpty
-  check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)
-  check_include_files(termio.h      HAVE_TERMIO_H)
-  check_include_files(pty.h         HAVE_PTY_H)
-  check_include_files(sys/stropts.h HAVE_SYS_STROPTS_H)
-  check_include_files(sys/filio.h   HAVE_SYS_FILIO_H)
+# for kpty
+check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)
+check_include_files(termio.h      HAVE_TERMIO_H)
+check_include_files(pty.h         HAVE_PTY_H)
+check_include_files(sys/stropts.h HAVE_SYS_STROPTS_H)
+check_include_files(sys/filio.h   HAVE_SYS_FILIO_H)
 
-  set(UTIL_LIBRARY)
+set(UTIL_LIBRARY)
 
-  check_symbol_exists(setutxent "utmpx.h" HAVE_UTMPX)
-  if (HAVE_UTMPX)
+check_symbol_exists(setutxent "utmpx.h" HAVE_UTMPX)
+if(HAVE_UTMPX)
     set(utmp utmpx)
-  else ()
+else()
     set(utmp utmp)
-  endif ()
+endif()
 
-  cmake_reset_check_state()
-  set(CMAKE_REQUIRED_LIBRARIES "util")
-  check_symbol_exists(loginx "util.h" HAVE_UTIL_LOGINX)
-  cmake_reset_check_state()
-  check_symbol_exists(login "${utmp}.h" HAVE_LOGIN)
-  if (NOT HAVE_LOGIN)
+cmake_reset_check_state()
+set(CMAKE_REQUIRED_LIBRARIES "util")
+check_symbol_exists(loginx "util.h" HAVE_UTIL_LOGINX)
+cmake_reset_check_state()
+check_symbol_exists(login "${utmp}.h" HAVE_LOGIN)
+if (NOT HAVE_LOGIN)
     cmake_reset_check_state()
     set(CMAKE_REQUIRED_LIBRARIES "util")
     check_symbol_exists(login "util.h" HAVE_UTIL_LOGIN)
     cmake_reset_check_state()
-  endif ()
+endif()
 
-  if (HAVE_UTIL_LOGINX OR HAVE_UTIL_LOGIN)
+if(HAVE_UTIL_LOGINX OR HAVE_UTIL_LOGIN)
     set(UTIL_LIBRARY "util")
-  endif ()
+endif()
 
-  check_struct_has_member("struct ${utmp}" "ut_user" "${utmp}.h"    HAVE_STRUCT_UTMP_UT_USER)
-  check_struct_has_member("struct ${utmp}" "ut_type" "${utmp}.h"    HAVE_STRUCT_UTMP_UT_TYPE)
-  check_struct_has_member("struct ${utmp}" "ut_pid" "${utmp}.h"     HAVE_STRUCT_UTMP_UT_PID)
-  check_struct_has_member("struct ${utmp}" "ut_session" "${utmp}.h" HAVE_STRUCT_UTMP_UT_SESSION)
-  check_struct_has_member("struct ${utmp}" "ut_syslen" "${utmp}.h"  HAVE_STRUCT_UTMP_UT_SYSLEN)
-  check_struct_has_member("struct ${utmp}" "ut_id" "${utmp}.h"      HAVE_STRUCT_UTMP_UT_ID)
+check_struct_has_member("struct ${utmp}" "ut_user" "${utmp}.h"    HAVE_STRUCT_UTMP_UT_USER)
+check_struct_has_member("struct ${utmp}" "ut_type" "${utmp}.h"    HAVE_STRUCT_UTMP_UT_TYPE)
+check_struct_has_member("struct ${utmp}" "ut_pid" "${utmp}.h"     HAVE_STRUCT_UTMP_UT_PID)
+check_struct_has_member("struct ${utmp}" "ut_session" "${utmp}.h" HAVE_STRUCT_UTMP_UT_SESSION)
+check_struct_has_member("struct ${utmp}" "ut_syslen" "${utmp}.h"  HAVE_STRUCT_UTMP_UT_SYSLEN)
+check_struct_has_member("struct ${utmp}" "ut_id" "${utmp}.h"      HAVE_STRUCT_UTMP_UT_ID)
 
-  check_function_exists(openpty openpty_in_libc)
-  if (NOT openpty_in_libc)
+check_function_exists(openpty openpty_in_libc)
+if (NOT openpty_in_libc)
     check_library_exists(util openpty "" openpty_in_libutil)
-    if (openpty_in_libutil)
-      set(UTIL_LIBRARY util)
-    endif (openpty_in_libutil)
-  endif (NOT openpty_in_libc)
-  if (openpty_in_libc OR openpty_in_libutil)
+    if(openpty_in_libutil)
+        set(UTIL_LIBRARY util)
+    endif()
+endif()
+if (openpty_in_libc OR openpty_in_libutil)
     set(HAVE_OPENPTY 1)
-  else (openpty_in_libc OR openpty_in_libutil)
+else()
     set(HAVE_OPENPTY 0)
 
     check_function_exists(revoke     HAVE_REVOKE)
-  endif (openpty_in_libc OR openpty_in_libutil)
+endif()
 
-  check_function_exists(ptsname_r  HAVE_PTSNAME_R)
-endif (UNIX)
-
-check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore, kio
-check_function_exists(setmntent  HAVE_SETMNTENT)         # solid, kio, kdecore
+check_function_exists(ptsname_r  HAVE_PTSNAME_R)         # kpty
+check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore
+check_function_exists(setmntent  HAVE_SETMNTENT)         # kdecore
 
 # check for existing datatypes
 
