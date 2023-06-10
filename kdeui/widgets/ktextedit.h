@@ -24,11 +24,6 @@
 #include <kspellhighlighter.h>
 #include <QtGui/QTextEdit>
 
-#define HAVE_SHOWTABACTION 1
-#define HAVE_AUTOCORRECTFEATURE 1
-#define HAVE_FORCESPELLCHECKING 1
-#define HAVE_MOUSEPOPUPMENUIMPLEMENTATION 1
-
 /**
  * @short A KDE'ified QTextEdit
  *
