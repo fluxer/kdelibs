@@ -21,7 +21,9 @@
 #include "kdebug.h"
 
 #include <QLocale>
+#include <QTextBoundaryFinder>
 
+#include <stdlib.h>
 #include <enchant.h>
 
 class KSpellerPrivate
@@ -40,6 +42,8 @@ public:
     QString dictionary;
     QStringList dictionaries;
     QStringList personalwords;
+    QString text;
+    bool interrupt;
 
     EnchantBroker* enchantbroker;
     EnchantDict* enchantdict;
@@ -48,7 +52,8 @@ public:
 KSpellerPrivate::KSpellerPrivate(KConfig *kconfig)
     : config(kconfig),
     enchantbroker(nullptr),
-    enchantdict(nullptr)
+    enchantdict(nullptr),
+    interrupt(false)
 {
     enchantbroker = enchant_broker_init();
     if (!enchantbroker) {
@@ -249,6 +254,53 @@ QString KSpeller::defaultLanguage()
     }
     // qDebug() << Q_FUNC_INFO << result;
     return result;
+}
+
+void KSpeller::setText(const QString &text)
+{
+    d->text = text;
+    start();
+}
+
+QString KSpeller::text() const
+{
+    return d->text;
+}
+
+void KSpeller::start()
+{
+    // qDebug() << Q_FUNC_INFO << d->text.size() << d->text;
+    d->interrupt = false;
+    int wordstart = 0;
+    QTextBoundaryFinder finder(QTextBoundaryFinder::Word, d->text);
+    while (finder.toNextBoundary() >= 0) {
+        if (d->interrupt) {
+            break;
+        }
+        const QTextBoundaryFinder::BoundaryReasons boundary = finder.boundaryReasons();
+        if (boundary & QTextBoundaryFinder::StartWord) {
+            wordstart = finder.position();
+        }
+        if (boundary & QTextBoundaryFinder::EndWord) {
+            QString word = d->text.mid(wordstart, finder.position() - wordstart);
+            if (word.size() < 2) {
+                continue;
+            }
+            if (word.at(word.size() - 1).isPunct()) {
+                word = word.mid(0, word.size() - 1);
+            }
+            // qDebug() << Q_FUNC_INFO << boundary << wordstart << finder.position() << word;
+            if (!check(word)) {
+                emit misspelling(word, wordstart);
+            }
+        }
+    }
+    emit done();
+}
+
+void KSpeller::stop()
+{
+    d->interrupt = true;
 }
 
 #include "moc_kspeller.cpp"

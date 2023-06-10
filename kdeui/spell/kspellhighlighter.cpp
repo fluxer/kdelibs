@@ -93,10 +93,10 @@ void KSpellHighlighter::highlightBlock(const QString &text)
     if (text.isEmpty() || d->speller.dictionary().isEmpty()) {
         return;
     }
-    QTextBoundaryFinder finder(QTextBoundaryFinder::Word, text);
     int wordstart = 0;
+    QTextBoundaryFinder finder(QTextBoundaryFinder::Word, text);
     while (finder.toNextBoundary() >= 0) {
-        QTextBoundaryFinder::BoundaryReasons boundary = finder.boundaryReasons();
+        const QTextBoundaryFinder::BoundaryReasons boundary = finder.boundaryReasons();
         if (boundary & QTextBoundaryFinder::StartWord) {
             wordstart = finder.position();
         }
@@ -116,6 +116,5 @@ void KSpellHighlighter::highlightBlock(const QString &text)
         }
     }
 }
-
 
 #include "moc_kspellhighlighter.cpp"

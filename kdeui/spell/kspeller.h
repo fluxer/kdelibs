@@ -53,9 +53,20 @@ public:
 
     static QString defaultLanguage();
 
+    void setText(const QString &text);
+    QString text() const;
+
+public Q_SLOTS:
+    void start();
+    void stop();
+
+Q_SIGNALS:
+    void misspelling(const QString &word, int start);
+    void done();
+
 private:
-    Q_DISABLE_COPY(KSpeller);
     KSpellerPrivate *d;
+    Q_DISABLE_COPY(KSpeller);
 };
 
 #endif // KSPELLER_H 

@@ -51,8 +51,8 @@ protected:
     virtual void highlightBlock(const QString &text);
 
 private:
-    Q_DISABLE_COPY(KSpellHighlighter);
     KSpellHighlighterPrivate *d;
+    Q_DISABLE_COPY(KSpellHighlighter);
 };
 
 #endif // KSPELLHIGHLIGHTER_H 

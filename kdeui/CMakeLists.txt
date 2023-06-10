@@ -179,7 +179,6 @@ set(kdeui_LIB_SRCS
     spell/kspellhighlighter.cpp
     spell/kspelldictionarycombobox.cpp
     spell/kspellconfigwidget.cpp
-    spell/kspellbackgroundchecker.cpp
     util/kcompletion.cpp
     util/kcompletionbase.cpp
     util/kcrash.cpp
@@ -495,7 +494,6 @@ install(
     spell/kspellhighlighter.h
     spell/kspelldictionarycombobox.h
     spell/kspellconfigwidget.h
-    spell/kspellbackgroundchecker.h
     util/kaccelgen.h
     util/kcompletion.h
     util/kcrash.h

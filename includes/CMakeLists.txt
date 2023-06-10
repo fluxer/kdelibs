@@ -362,7 +362,6 @@ install(
     KSpellHighlighter
     KSpellDictionaryComboBox
     KSpellConfigWidget
-    KSpellBackgroundChecker
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE
     COMPONENT Devel
 )
