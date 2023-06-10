@@ -192,7 +192,7 @@ bool ICOHandler::read(QImage *image)
 
             // fallbacks
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
-            const int imageheight = (icoheight ? icoheight : bmpheight);
+            const int imageheight = (icoheight ? icoheight : (bmpheight / 2));
 
             int imageboundary = 0;
             QImage::Format imageformat = QImage::Format_ARGB32;
@@ -232,8 +232,7 @@ bool ICOHandler::read(QImage *image)
                 return false;
             }
 
-            if (bmpimagesize != imageboundary) {
-                // data may be padded
+            if (Q_UNLIKELY(bmpimagesize != imageboundary)) {
                 kDebug() << "BMP and QImage bytes count mismatch" << bmpimagesize << imageboundary;
             }
 
@@ -264,8 +263,24 @@ bool ICOHandler::read(QImage *image)
                     break;
                 }
             }
-            // image is flipped vertically
+
+            // NOTE: image and mask are flipped vertically
+            const bool bmphasmask = (bmpbpp != 32 && bmpheight && bmpheight == (icoheight * 2));
+            if (bmphasmask) {
+                QImage bmpmask(imagewidth, imageheight, QImage::Format_Mono);
+                bmpmask.setColor(0, qRgba(255, 255, 255, 255)); // white
+                bmpmask.setColor(1, qRgba(0, 0, 0, 255)); // black
+                char* maskbytes = reinterpret_cast<char*>(bmpmask.bits());
+                if (datastream.readRawData(maskbytes, bmpmask.byteCount()) != bmpmask.byteCount()) {
+                    kWarning() << "Could not read image mask data";
+                } else {
+                    kDebug() << "Masking image";
+                    bmpimage.setAlphaChannel(bmpmask.mirrored(false, true));
+                }
+            }
+
             *image = bmpimage.mirrored(false, true);
+
             kDebug() << "Valid BMP image" << ii;
             return true;
         }
