@@ -12,7 +12,7 @@ set(kemail_LIB_SRCS
     kemaildialog.cpp
 )
 
-add_library(kemail ${LIBRARY_TYPE} ${kemail_LIB_SRCS})
+add_library(kemail SHARED ${kemail_LIB_SRCS})
 
 target_link_libraries(kemail PUBLIC
     ${KDE4_KDECORE_LIBS}

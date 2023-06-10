@@ -321,7 +321,7 @@ install(FILES ${kglobalaccel_component_xml} DESTINATION ${KDE4_DBUS_INTERFACES_I
 set(knotify_xml notifications/org.kde.KNotify.xml)
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 
-add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
+add_library(kdeui SHARED ${kdeui_LIB_SRCS})
 
 target_link_libraries(kdeui PRIVATE
     ${X11_LIBRARIES}

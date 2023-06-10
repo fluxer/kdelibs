@@ -10,7 +10,7 @@ set(kpowermanager_LIB_SRCS
     kpowermanager.cpp
 )
 
-add_library(kpowermanager ${LIBRARY_TYPE} ${kpowermanager_LIB_SRCS})
+add_library(kpowermanager SHARED ${kpowermanager_LIB_SRCS})
 
 target_link_libraries(kpowermanager PUBLIC
     ${KDE4_KDECORE_LIBS}

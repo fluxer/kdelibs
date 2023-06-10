@@ -8,7 +8,7 @@ set(kpty_LIB_SRCS
     kptyprocess.cpp
 )
 
-add_library(kpty ${LIBRARY_TYPE} ${kpty_LIB_SRCS})
+add_library(kpty SHARED ${kpty_LIB_SRCS})
 
 target_link_libraries(kpty PRIVATE
     ${UTIL_LIBRARY}

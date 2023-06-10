@@ -19,7 +19,7 @@ set(knotifyconfig_LIB_SRCS
     knotifyconfigwidget.cpp
 )
 
-add_library(knotifyconfig ${LIBRARY_TYPE} ${knotifyconfig_LIB_SRCS})
+add_library(knotifyconfig SHARED ${knotifyconfig_LIB_SRCS})
 
 # Needs KIO for KUrlRequester
 target_link_libraries(knotifyconfig PUBLIC

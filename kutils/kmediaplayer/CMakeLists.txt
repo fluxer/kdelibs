@@ -15,7 +15,7 @@ set(kmediaplayer_LIB_SRCS
     kmediawidget.cpp
 )
 
-add_library(kmediaplayer ${LIBRARY_TYPE} ${kmediaplayer_LIB_SRCS})
+add_library(kmediaplayer SHARED ${kmediaplayer_LIB_SRCS})
 
 target_link_libraries(kmediaplayer PUBLIC
     ${KDE4_KDECORE_LIBS}

@@ -33,7 +33,7 @@ set(ktexteditor_LIB_SRCS
     messageinterface.cpp
 )
 
-add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
+add_library(ktexteditor SHARED ${ktexteditor_LIB_SRCS})
 
 target_link_libraries(ktexteditor
     ${KDE4_KDECORE_LIBS}

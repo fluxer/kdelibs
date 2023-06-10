@@ -65,8 +65,6 @@ set(KDE4_DBUS_INTERFACES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/interf
 set(KDE4_DBUS_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/services" CACHE PATH "KDE D-Bus services installation directory")
 set(KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/system-services" CACHE PATH "KDE D-Bus system services installation directory")
 
-set(LIBRARY_TYPE SHARED)
-
 ################# now find all used packages #################
 
 find_package(KDE4Internal REQUIRED)

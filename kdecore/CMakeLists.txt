@@ -162,7 +162,7 @@ if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
     add_definitions(-DNO_DISPLAY)
 endif()
 
-add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
+add_library(kdecore SHARED ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}

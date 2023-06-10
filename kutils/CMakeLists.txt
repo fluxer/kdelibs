@@ -42,7 +42,7 @@ if(Q_WS_X11)
     endif()
 endif(Q_WS_X11)
 
-add_library(kidletime ${LIBRARY_TYPE} ${kidletime_LIB_SRCS})
+add_library(kidletime SHARED ${kidletime_LIB_SRCS})
 
 target_link_libraries(kidletime PUBLIC
     ${KDE4_KDECORE_LIBS}
@@ -98,7 +98,7 @@ set(kcmutils_LIB_SRCS
     ksettings/componentsdialog.cpp
 )
 
-add_library(kcmutils ${LIBRARY_TYPE} ${kcmutils_LIB_SRCS})
+add_library(kcmutils SHARED ${kcmutils_LIB_SRCS})
 
 target_link_libraries(kcmutils PUBLIC
     ${KDE4_KDECORE_LIBS}

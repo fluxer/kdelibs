@@ -130,7 +130,7 @@ set(kio_LIB_SRCS
    ${kfile_STAT_SRCS}
 )
 
-add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
+add_library(kio SHARED ${kio_LIB_SRCS})
 
 target_link_libraries(kio PUBLIC
     ${KDE4_KDECORE_LIBS}

@@ -30,7 +30,7 @@ set(kdeclarative_LIB_SRCS
     bindings/url.cpp
 )
 
-add_library(kdeclarative ${LIBRARY_TYPE} ${kdeclarative_LIB_SRCS})
+add_library(kdeclarative SHARED ${kdeclarative_LIB_SRCS})
 
 set_target_properties(kdeclarative PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}

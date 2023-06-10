@@ -16,7 +16,7 @@ set(kpasswdstore_LIB_SRCS
     kpasswdroulettedialog.ui
 )
 
-add_library(kpasswdstore ${LIBRARY_TYPE} ${kpasswdstore_LIB_SRCS})
+add_library(kpasswdstore SHARED ${kpasswdstore_LIB_SRCS})
 
 target_link_libraries(kpasswdstore PUBLIC
     ${KDE4_KDECORE_LIBS}

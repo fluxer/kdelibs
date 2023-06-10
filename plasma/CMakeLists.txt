@@ -140,7 +140,7 @@ set(plasma_LIB_SRCS
     widgets/textedit.cpp
 )
 
-add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
+add_library(plasma SHARED ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma PUBLIC
     ${QT_QTUITOOLS_LIBRARY}

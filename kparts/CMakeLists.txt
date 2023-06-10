@@ -22,7 +22,7 @@ set(kparts_LIB_SRCS
     statusbarextension.cpp
 )
 
-add_library(kparts ${LIBRARY_TYPE} ${kparts_LIB_SRCS})
+add_library(kparts SHARED ${kparts_LIB_SRCS})
 
 target_link_libraries(kparts PUBLIC
     ${KDE4_KDECORE_LIBS}

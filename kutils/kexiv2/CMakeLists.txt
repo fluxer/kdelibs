@@ -9,7 +9,7 @@ set(kexiv2_LIB_SRCS
     kexiv2.cpp
 )
 
-add_library(kexiv2 ${LIBRARY_TYPE} ${kexiv2_LIB_SRCS})
+add_library(kexiv2 SHARED ${kexiv2_LIB_SRCS})
 
 target_link_libraries(kexiv2 PUBLIC
     ${KDE4_KDECORE_LIBS}

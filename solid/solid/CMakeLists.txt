@@ -187,7 +187,7 @@ qt4_add_dbus_interface(solid_LIB_SRCS
     org_kde_solid_networking_client
 )
 
-add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
+add_library(solid SHARED ${solid_LIB_SRCS})
 
 target_link_libraries(solid PRIVATE
     ${solid_OPTIONAL_LIBS}

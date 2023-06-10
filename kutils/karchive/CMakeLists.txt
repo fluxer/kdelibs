@@ -19,7 +19,7 @@ set(karchive_LIB_SRCS
     kdecompressor.cpp
 )
 
-add_library(karchive ${LIBRARY_TYPE} ${karchive_LIB_SRCS})
+add_library(karchive SHARED ${karchive_LIB_SRCS})
 
 target_link_libraries(karchive PUBLIC
     ${KDE4_KDECORE_LIBS}
