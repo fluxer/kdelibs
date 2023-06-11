@@ -121,7 +121,11 @@ void DeclarativeWidgetPrivate::scheduleExecutionEnd()
     if (component->isReady() || component->isError()) {
         finishExecute();
     } else {
+#if QT_VERSION < 0x041300
         QObject::connect(component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), q, SLOT(finishExecute()));
+#else
+        QObject::connect(component, SIGNAL(statusChanged(QDeclarativeComponent::ComponentStatus)), q, SLOT(finishExecute()));
+#endif
     }
 }
 
