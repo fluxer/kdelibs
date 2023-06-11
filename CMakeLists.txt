@@ -73,11 +73,11 @@ include(KDE4Defaults)
 # X11 Session Management (SM) is required
 # X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
 if(NOT X11_SM_FOUND)
-    message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
+    message(FATAL_ERROR "The X11 Session Management (SM) development package could not be found")
 endif(NOT X11_SM_FOUND)
 
 if(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
-    message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")
+    message(FATAL_ERROR "Neither the XSync (libXext) nor XScreensaver (libXss) development package was found")
 endif(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
 
 if(ENABLE_TESTING)
