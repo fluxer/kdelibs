@@ -32,6 +32,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+# big number, ensures all source files are included from one unity file
+set(CMAKE_UNITY_BUILD_BATCH_SIZE 200)
+
 # define the generic version of the libraries here, this makes it easy to
 # advance it when the next KDE release comes. Use this version number for
 # libraries

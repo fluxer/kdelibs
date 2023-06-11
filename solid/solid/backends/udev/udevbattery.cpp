@@ -27,11 +27,11 @@ using namespace Solid::Backends::UDev;
 // linux/drivers/power/supply/power_supply_sysfs.c
 // include/linux/power_supply.h
 
-static const QList<QByteArray> powersupplysubsystems = QList<QByteArray>() << "power_supply";
+static const QList<QByteArray> batterysubsystems = QList<QByteArray>() << "power_supply";
 
 Battery::Battery(UDevDevice *device)
     : DeviceInterface(device),
-    m_client(new UdevQt::Client(powersupplysubsystems)),
+    m_client(new UdevQt::Client(batterysubsystems)),
     m_chargepercent(0),
     m_capacity(0),
     m_chargestate(Solid::Battery::UnknownCharge),

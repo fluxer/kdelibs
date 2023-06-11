@@ -321,6 +321,25 @@ install(FILES ${kglobalaccel_component_xml} DESTINATION ${KDE4_DBUS_INTERFACES_I
 set(knotify_xml notifications/org.kde.KNotify.xml)
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 
+set_source_files_properties(
+    ${CMAKE_SOURCE_DIR}/kdeui/colors/kcolordialog.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/kernel/kapplication.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/kernel/kglobalsettings.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/kernel/kuniqueapplication.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/notifications/knotificationrestrictions.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kcrash.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kcursor.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kkeyserver_x11.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kpixmap.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kselectionowner.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kxerrorhandler.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/util/kxmessages.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement/kwindowinfo_x11.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement/kwindowsystem_x11.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement/netwm.cpp
+    PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE
+)
+
 add_library(kdeui SHARED ${kdeui_LIB_SRCS})
 
 target_link_libraries(kdeui PRIVATE

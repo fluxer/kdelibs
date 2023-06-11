@@ -23,24 +23,28 @@ set(kidletime_LIB_SRCS
     kidletime/widgetbasedpoller.cpp
 )
 
-if(Q_WS_X11)
-    if (HAVE_XSCREENSAVER)
-        set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS}
-            kidletime/xscreensaverbasedpoller.cpp
-        )
-        qt4_add_dbus_interface(kidletime_LIB_SRCS
-            kidletime/org.freedesktop.ScreenSaver.xml
-            screensaver_interface
-        )
-    endif()
+if (HAVE_XSCREENSAVER)
+    set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS}
+        kidletime/xscreensaverbasedpoller.cpp
+    )
+    qt4_add_dbus_interface(kidletime_LIB_SRCS
+        kidletime/org.freedesktop.ScreenSaver.xml
+        screensaver_interface
+    )
+endif()
 
-    if(HAVE_XSYNC)
-        set(kidletime_LIB_SRCS
-            ${kidletime_LIB_SRCS}
-            kidletime/xsyncbasedpoller.cpp
-        )
-    endif()
-endif(Q_WS_X11)
+if(HAVE_XSYNC)
+    set(kidletime_LIB_SRCS
+        ${kidletime_LIB_SRCS}
+        kidletime/xsyncbasedpoller.cpp
+    )
+endif()
+
+set_source_files_properties(
+    ${CMAKE_SOURCE_DIR}/kutils/kidletime/xscreensaverbasedpoller.cpp
+    ${CMAKE_SOURCE_DIR}/kutils/kidletime/xsyncbasedpoller.cpp
+    PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE
+)
 
 add_library(kidletime SHARED ${kidletime_LIB_SRCS})
 

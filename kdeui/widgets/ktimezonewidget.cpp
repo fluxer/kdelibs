@@ -50,7 +50,8 @@ public:
     bool singleSelection;
 };
 
-static bool localeLessThan (const QString &a, const QString &b)
+// TODO: duplicate
+static bool timeZoneLocaleLessThan (const QString &a, const QString &b)
 {
     return QString::localeAwareCompare(a, b) < 0;
 }
@@ -89,7 +90,7 @@ KTimeZoneWidget::KTimeZoneWidget( QWidget *parent, KTimeZones *db )
     cities.append( key );
     zonesByCity.insert( key, zone );
   }
-  qSort( cities.begin(), cities.end(), localeLessThan );
+  qSort( cities.begin(), cities.end(), timeZoneLocaleLessThan );
 
   foreach ( const QString &key, cities ) {
     const KTimeZone zone = zonesByCity.value(key);

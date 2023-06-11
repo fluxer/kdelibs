@@ -22,11 +22,11 @@
 
 using namespace Solid::Backends::UDev;
 
-static const QList<QByteArray> powersupplysubsystems = QList<QByteArray>() << "power_supply";
+static const QList<QByteArray> acadaptersubsystems = QList<QByteArray>() << "power_supply";
 
 AcAdapter::AcAdapter(UDevDevice *device)
     : DeviceInterface(device),
-    m_client(new UdevQt::Client(powersupplysubsystems)),
+    m_client(new UdevQt::Client(acadaptersubsystems)),
     m_isplugged(false)
 {
     m_isplugged = isPlugged();

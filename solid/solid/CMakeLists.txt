@@ -13,6 +13,12 @@ make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/udev)
 
 set(solid_OPTIONAL_LIBS)
 
+set_source_files_properties(
+    ${CMAKE_SOURCE_DIR}/solid/solid/predicate_lexer.c
+    ${CMAKE_SOURCE_DIR}/solid/solid/predicate_parser.c
+    PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE
+)
+
 set(solid_LIB_SRCS
     networking.cpp
     solidnamespace.cpp

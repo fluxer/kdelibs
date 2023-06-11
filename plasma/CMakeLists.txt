@@ -140,6 +140,16 @@ set(plasma_LIB_SRCS
     widgets/textedit.cpp
 )
 
+set_source_files_properties(
+    ${CMAKE_SOURCE_DIR}/plasma/dialogshadows.cpp
+    ${CMAKE_SOURCE_DIR}/plasma/windoweffects.cpp
+    ${CMAKE_SOURCE_DIR}/plasma/widgets/label.cpp
+    ${CMAKE_SOURCE_DIR}/plasma/widgets/pushbutton.cpp
+    ${CMAKE_SOURCE_DIR}/plasma/widgets/scrollwidget.cpp
+    ${CMAKE_SOURCE_DIR}/plasma/view.cpp
+    PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE
+)
+
 add_library(plasma SHARED ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma PUBLIC

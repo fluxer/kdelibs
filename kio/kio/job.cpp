@@ -54,6 +54,7 @@ using namespace KIO;
 
 #define MAX_READ_BUF_SIZE  (64 * 1024)       // 64 KB at a time seems reasonable...
 
+// TODO: duplicate
 static inline SlaveInterface *jobSlave(SimpleJob *job)
 {
     return SimpleJobPrivate::get(job)->m_slave;

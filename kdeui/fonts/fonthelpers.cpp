@@ -86,7 +86,8 @@ QString translateFontName (const QString &name)
     return trfont;
 }
 
-static bool localeLessThan (const QString &a, const QString &b)
+// TODO: duplicate
+static bool fontLocaleLessThan (const QString &a, const QString &b)
 {
     return QString::localeAwareCompare(a, b) < 0;
 }
@@ -111,7 +112,7 @@ QStringList translateFontNameList (const QStringList &names,
     }
 
     // Sort real fonts alphabetically.
-    qSort(trNames.begin(), trNames.end(), localeLessThan);
+    qSort(trNames.begin(), trNames.end(), fontLocaleLessThan);
 
     // Prepend generic fonts, in the predefined order.
     foreach (const QString &genericName, genericNames) {

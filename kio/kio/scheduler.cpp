@@ -47,7 +47,8 @@ static const int s_idleSlaveLifetime = 1 * 60;
 
 using namespace KIO;
 
-static inline SlaveInterface *jobSlave(SimpleJob *job)
+// TODO: duplicate
+static inline SlaveInterface *getJobSlave(SimpleJob *job)
 {
     return SimpleJobPrivate::get(job)->m_slave;
 }
@@ -236,7 +237,7 @@ QList<SlaveInterface *> HostQueue::allSlaves() const
 {
     QList<SlaveInterface *> ret;
     Q_FOREACH (SimpleJob *job, m_runningJobs) {
-        SlaveInterface *slave = jobSlave(job);
+        SlaveInterface *slave = getJobSlave(job);
         Q_ASSERT(slave);
         ret.append(slave);
     }
@@ -744,7 +745,7 @@ void SchedulerPrivate::cancelJob(SimpleJob *job)
         //kDebug(7006) << "Doing nothing because I don't know job" << job;
         return;
     }
-    SlaveInterface *slave = jobSlave(job);
+    SlaveInterface *slave = getJobSlave(job);
     kDebug(7006) << job << slave;
     if (slave) {
         kDebug(7006) << "Scheduler: killing slave " << slave->pid();
