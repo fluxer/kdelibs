@@ -28,6 +28,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/extensions/sync.h>
+#include <fixx11h.h>
 
 class XSyncBasedPoller : public AbstractSystemPoller
 {
