@@ -166,28 +166,19 @@ if(NOT _kdeBootStrapping)
     set(KDE4_KCFGC_EXECUTABLE             ${KDE4_TARGET_PREFIX}kconfig_compiler)
     set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets)
 
-    # allow searching cmake modules in all given kde install locations (KDEDIRS based)
-    execute_process(
-        COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data
-        OUTPUT_VARIABLE _data_DIR
-        ERROR_QUIET
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
-    foreach(dir ${_data_DIR})
-        set(apath "${dir}/cmake/modules")
-        if(EXISTS "${apath}")
-            string(TOLOWER "${apath}" _apath)
-            # ignore already added pathes, case insensitive
-            foreach(adir ${CMAKE_MODULE_PATH})
-                string(TOLOWER "${adir}" _adir)
-                if(NOT "${_adir}" STREQUAL "${_apath}")
-                    message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
-                    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
-                endif()
-            endforeach()
-        endif()
-    endforeach(dir)
+    # allow searching cmake modules in the kde install locations
+    set(kde_modules_install_dir "${KDE4_DATA_INSTALL_DIR}/cmake/modules")
+    if(EXISTS "${kde_modules_install_dir}")
+        string(TOLOWER "${kde_modules_install_dir}" _apath)
+        # ignore already added pathes, case insensitive
+        foreach(adir ${CMAKE_MODULE_PATH})
+            string(TOLOWER "${adir}" _adir)
+            if(NOT "${_adir}" STREQUAL "${_apath}")
+                message(STATUS "Adding ${kde_modules_install_dir} to CMAKE_MODULE_PATH")
+                set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${kde_modules_install_dir}")
+            endif()
+        endforeach()
+    endif()
 
     # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
     # the library target "kdeui" is exported as "KDE4::kdeui". The "KDE4::" is used as
@@ -303,11 +294,9 @@ endif()
 set(_KDE4_PLATFORM_INCLUDE_DIRS)
 set(_KDE4_PLATFORM_DEFINITIONS)
 
-if(Q_WS_X11)
-   find_package(X11 REQUIRED)
-   # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
-   set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
-endif()
+find_package(X11 REQUIRED)
+# UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
+set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -DNDEBUG")
@@ -376,7 +365,7 @@ if(NOT KDE4Internal_FIND_QUIETLY)
     kde4_print_results()
 endif()
 
-# add the found Qt and KDE include directories to the current include path
+# add the found Katie and KDE include directories to the current include path
 # the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
 set(KDE4_INCLUDES
    ${KDE4_INCLUDE_DIR}
