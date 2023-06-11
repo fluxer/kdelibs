@@ -51,8 +51,6 @@
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOption>
 
-#include <fixx11h.h>
-
 using namespace KDEPrivate;
 
 struct LocationData

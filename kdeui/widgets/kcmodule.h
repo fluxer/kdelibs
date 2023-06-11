@@ -25,14 +25,14 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QVariant>
-#include <QtGui/QWidget>
+#include <QVariant>
+#include <QStringList>
+#include <QWidget>
 
 #ifdef Q_WS_X11
 #include <fixx11h.h>
 #endif
 
-#include <QStringList>
 class KAboutData;
 class KConfigDialogManager;
 class KCoreConfigSkeleton;

@@ -32,7 +32,6 @@
 #include "klocale.h"
 #include "kdeversion.h"
 
-#include <fixx11h.h> // for enable-final
 #include <QPrintDialog>
 #include <QLabel>
 
