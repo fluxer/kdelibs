@@ -47,10 +47,10 @@ static QScriptValue imageCtor(QScriptContext *ctx, QScriptEngine *eng)
     return qScriptValueFromValue(eng, QImage());
 }
 
-static QScriptValue isNull(QScriptContext *ctx, QScriptEngine *eng)
+static QScriptValue imageIsNull(QScriptContext *ctx, QScriptEngine *eng)
 {
     Q_UNUSED(eng)
-    DECLARE_SELF(QImage, isNull);
+    DECLARE_SELF(QImage, null);
     return self->isNull();
 }
 
@@ -59,7 +59,7 @@ QScriptValue constructImageClass(QScriptEngine *eng)
     QScriptValue proto = qScriptValueFromValue(eng, QImage());
     QScriptValue::PropertyFlags getter = QScriptValue::PropertyGetter;
     // QScriptValue::PropertyFlags setter = QScriptValue::PropertySetter;
-    proto.setProperty("null", eng->newFunction(isNull), getter);
+    proto.setProperty("null", eng->newFunction(imageIsNull), getter);
 
     QScriptValue ctorFun = eng->newFunction(imageCtor, proto);
 

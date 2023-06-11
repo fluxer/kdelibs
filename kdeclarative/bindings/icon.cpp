@@ -47,7 +47,7 @@ static QScriptValue iconCtor(QScriptContext *ctx, QScriptEngine *eng)
     return qScriptValueFromValue(eng, QIcon());
 }
 
-static QScriptValue addPixmap(QScriptContext *ctx, QScriptEngine *eng)
+static QScriptValue iconAddPixmap(QScriptContext *ctx, QScriptEngine *eng)
 {
     DECLARE_SELF(QIcon, addPixmap);
 
@@ -66,7 +66,7 @@ static QScriptValue addPixmap(QScriptContext *ctx, QScriptEngine *eng)
     return eng->undefinedValue();
 }
 
-static QScriptValue addFile(QScriptContext *ctx, QScriptEngine *eng)
+static QScriptValue iconAddFile(QScriptContext *ctx, QScriptEngine *eng)
 {
     DECLARE_SELF(QIcon, addFile);
 
@@ -81,10 +81,10 @@ static QScriptValue addFile(QScriptContext *ctx, QScriptEngine *eng)
     return eng->undefinedValue();
 }
 
-static QScriptValue isNull(QScriptContext *ctx, QScriptEngine *eng)
+static QScriptValue iconIsNull(QScriptContext *ctx, QScriptEngine *eng)
 {
     Q_UNUSED(eng)
-    DECLARE_SELF(QIcon, isNull);
+    DECLARE_SELF(QIcon, null);
     return self->isNull();
 }
 
@@ -93,9 +93,9 @@ QScriptValue constructIconClass(QScriptEngine *eng)
     QScriptValue proto = qScriptValueFromValue(eng, QIcon());
     QScriptValue::PropertyFlags getter = QScriptValue::PropertyGetter;
     // QScriptValue::PropertyFlags setter = QScriptValue::PropertySetter;
-    proto.setProperty("addPixmap", eng->newFunction(addPixmap));
-    proto.setProperty("addFile", eng->newFunction(addFile));
-    proto.setProperty("null", eng->newFunction(isNull), getter);
+    proto.setProperty("addPixmap", eng->newFunction(iconAddPixmap));
+    proto.setProperty("addFile", eng->newFunction(iconAddFile));
+    proto.setProperty("null", eng->newFunction(iconIsNull), getter);
 
     QScriptValue ctorFun = eng->newFunction(iconCtor, proto);
     ADD_ENUM_VALUE(ctorFun, QIcon, Normal);
