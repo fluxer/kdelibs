@@ -28,8 +28,6 @@
 #include <kdebug.h>
 
 #include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <kicon.h>
