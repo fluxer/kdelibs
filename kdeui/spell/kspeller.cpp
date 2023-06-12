@@ -283,12 +283,26 @@ void KSpeller::start()
         }
         if (boundary & QTextBoundaryFinder::EndWord) {
             QString word = d->text.mid(wordstart, finder.position() - wordstart);
-            if (word.size() < 2) {
-                continue;
+
+            // remove whitespace at the start and end
+            while (!word.isEmpty() && word.at(0).isSpace()) {
+                word = word.mid(1, word.size() - 1);
+                wordstart++;
             }
+            while (!word.isEmpty() && word.at(word.size() - 1).isSpace()) {
+                word = word.mid(0, word.size() - 1);
+            }
+
+            // chop punctuation
             if (word.at(word.size() - 1).isPunct()) {
                 word = word.mid(0, word.size() - 1);
             }
+
+            // not worth checking if it is less than two characters
+            if (word.size() < 2) {
+                continue;
+            }
+
             // qDebug() << Q_FUNC_INFO << boundary << wordstart << finder.position() << word;
             if (!check(word)) {
                 emit misspelling(word, wordstart);
