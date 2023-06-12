@@ -17,7 +17,6 @@ include_directories(
     kernel
     notifications
     paged
-    plotting
     shortcuts
     spell
     util

@@ -391,7 +391,6 @@ set(KDE4_KDEUI_INCLUDES
     ${CMAKE_SOURCE_DIR}/kdeui/kernel
     ${CMAKE_SOURCE_DIR}/kdeui/notifications
     ${CMAKE_SOURCE_DIR}/kdeui/paged
-    ${CMAKE_SOURCE_DIR}/kdeui/plotting
     ${CMAKE_SOURCE_DIR}/kdeui/shortcuts
     ${CMAKE_SOURCE_DIR}/kdeui/spell
     ${CMAKE_SOURCE_DIR}/kdeui/util
