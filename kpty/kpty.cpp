@@ -74,7 +74,7 @@ extern "C" {
 }
 
 #ifdef HAVE_SYS_STROPTS_H
-# include <sys/stropts.h>	// Defines I_PUSH
+# include <sys/stropts.h> // Defines I_PUSH
 # define _NEW_TTY_CTRL
 #endif
 
@@ -93,8 +93,8 @@ extern "C" {
 // private data //
 //////////////////
 
-KPtyPrivate::KPtyPrivate(KPty* parent) :
-    masterFd(-1), slaveFd(-1), ownMaster(true), q_ptr(parent)
+KPtyPrivate::KPtyPrivate(KPty* parent)
+    : masterFd(-1), slaveFd(-1), ownMaster(true), q_ptr(parent)
 {
 }
 
@@ -106,13 +106,13 @@ KPtyPrivate::~KPtyPrivate()
 // public member functions //
 /////////////////////////////
 
-KPty::KPty() :
-    d_ptr(new KPtyPrivate(this))
+KPty::KPty()
+    : d_ptr(new KPtyPrivate(this))
 {
 }
 
-KPty::KPty(KPtyPrivate *d) :
-    d_ptr(d)
+KPty::KPty(KPtyPrivate *d)
+    : d_ptr(d)
 {
     d_ptr->q_ptr = this;
 }
@@ -127,48 +127,47 @@ bool KPty::open()
 {
   Q_D(KPty);
 
-  if (d->masterFd >= 0)
-    return true;
+    if (d->masterFd >= 0) {
+        return true;
+    }
 
-  d->ownMaster = true;
+    d->ownMaster = true;
 
-  // Find a master pty that we can open ////////////////////////////////
+    // Find a master pty that we can open ////////////////////////////////
 
-  // Because not all the pty animals are created equal, they want to
-  // be opened by several different methods.
+    // Because not all the pty animals are created equal, they want to
+    // be opened by several different methods.
 
-  // We try, as we know them, one by one.
+    // We try, as we know them, one by one.
 
 #ifdef HAVE_OPENPTY
-
-  char ptsn[PATH_MAX];
-  ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
-  if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0))
-  {
-    d->masterFd = -1;
-    d->slaveFd = -1;
-    kWarning(175) << "Can't open a pseudo teletype";
-    return false;
-  }
-  d->ttyName = ptsn;
-
-#else // HAVE_OPENPTY
-
-  d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
-  if (d->masterFd >= 0)
-  {
-#ifdef HAVE_PTSNAME_R
-    char ptsn[32];
+    char ptsn[PATH_MAX];
     ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
-    if (::ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
-        d->ttyName = ptsn;
+    if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0)) {
+        d->masterFd = -1;
+        d->slaveFd = -1;
+        kWarning(175) << "Can't open a pseudo teletype";
+        return false;
+    }
+    d->ttyName = ptsn;
+#else // HAVE_OPENPTY
+    d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
+    if (d->masterFd >= 0) {
+#ifdef HAVE_PTSNAME_R
+        char ptsn[32];
+        ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
+        if (::ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
+            d->ttyName = ptsn;
+        }
 #else // HAVE_PTSNAME_R
-    char *ptsn = ::ptsname(d->masterFd);
-    if (ptsn) {
-        d->ttyName = ptsn;
+        char *ptsn = ::ptsname(d->masterFd);
+        if (ptsn) {
+            d->ttyName = ptsn;
+        }
 #endif // HAVE_PTSNAME_R
-        if (::grantpt(d->masterFd) == 0)
+        if (::grantpt(d->masterFd) == 0) {
            goto grantedpt;
+        }
     }
     ::close(d->masterFd);
     d->masterFd = -1;
@@ -177,49 +176,48 @@ bool KPty::open()
   kWarning(175) << "Can't open a pseudo teletype";
   return false;
 
- grantedpt:
+grantedpt:
 #ifdef HAVE_REVOKE
-  revoke(d->ttyName.data());
+    revoke(d->ttyName.data());
 #endif
 
-  unlockpt(d->masterFd);
+    unlockpt(d->masterFd);
 
-  d->slaveFd = KDE_open(d->ttyName.data(), O_RDWR | O_NOCTTY);
-  if (d->slaveFd < 0)
-  {
-    kWarning(175) << "Can't open slave pseudo teletype";
-    ::close(d->masterFd);
-    d->masterFd = -1;
-    return false;
-  }
+    d->slaveFd = KDE_open(d->ttyName.data(), O_RDWR | O_NOCTTY);
+    if (d->slaveFd < 0) {
+        kWarning(175) << "Can't open slave pseudo teletype";
+        ::close(d->masterFd);
+        d->masterFd = -1;
+        return false;
+    }
 
 #if defined(Q_OS_SOLARIS)
-  // Solaris uses STREAMS for terminal handling. It is possible
-  // for the pty handling modules to be left off the stream; in that
-  // case push them on. ioctl(fd, I_FIND, ...) is documented to return
-  // 1 if the module is on the stream already.
-  {
-    static const char *pt = "ptem";
-    static const char *ld = "ldterm";
-    if (ioctl(d->slaveFd, I_FIND, pt) == 0)
-      ioctl(d->slaveFd, I_PUSH, pt);
-    if (ioctl(d->slaveFd, I_FIND, ld) == 0)
-      ioctl(d->slaveFd, I_PUSH, ld);
-  }
+    // Solaris uses STREAMS for terminal handling. It is possible
+    // for the pty handling modules to be left off the stream; in that
+    // case push them on. ioctl(fd, I_FIND, ...) is documented to return
+    // 1 if the module is on the stream already.
+    {
+        static const char *pt = "ptem";
+        static const char *ld = "ldterm";
+        if (ioctl(d->slaveFd, I_FIND, pt) == 0) {
+            ioctl(d->slaveFd, I_PUSH, pt);
+        }
+        if (ioctl(d->slaveFd, I_FIND, ld) == 0) {
+            ioctl(d->slaveFd, I_PUSH, ld);
+        }
+    }
 #endif // Q_OS_SOLARIS
-
 #endif // HAVE_OPENPTY
 
-  fcntl(d->masterFd, F_SETFD, FD_CLOEXEC);
-  fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);
+    fcntl(d->masterFd, F_SETFD, FD_CLOEXEC);
+    fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);
 
-  return true;
+    return true;
 }
 
 bool KPty::open(int fd)
 {
     Q_D(KPty);
-
     if (d->masterFd >= 0) {
         kWarning(175) << "Attempting to open an already open pty";
         return false;
@@ -254,9 +252,9 @@ bool KPty::open(int fd)
 void KPty::closeSlave()
 {
     Q_D(KPty);
-
-    if (d->slaveFd < 0)
+    if (d->slaveFd < 0) {
         return;
+    }
     ::close(d->slaveFd);
     d->slaveFd = -1;
 }
@@ -264,9 +262,9 @@ void KPty::closeSlave()
 bool KPty::openSlave()
 {
     Q_D(KPty);
-
-    if (d->slaveFd >= 0)
+    if (d->slaveFd >= 0) {
         return true;
+    }
     if (d->masterFd < 0) {
         kWarning(175) << "Attempting to open pty slave while master is closed";
         return false;
@@ -283,9 +281,9 @@ bool KPty::openSlave()
 void KPty::close()
 {
     Q_D(KPty);
-
-    if (d->masterFd < 0)
+    if (d->masterFd < 0) {
         return;
+    }
     closeSlave();
     if (d->ownMaster) {
 #ifndef HAVE_OPENPTY
@@ -310,9 +308,6 @@ void KPty::close()
 void KPty::setCTty()
 {
     Q_D(KPty);
-
-    // Setup job control //////////////////////////////////
-
     // Become session leader, process group leader,
     // and get rid of the old controlling terminal.
     setsid();
@@ -336,28 +331,30 @@ void KPty::login(const char *user, const char *remotehost)
 #else
     struct utmp l_struct;
 #endif
-    memset(&l_struct, 0, sizeof(l_struct));
+    ::memset(&l_struct, 0, sizeof(l_struct));
     // note: strncpy without terminators _is_ correct here. man 4 utmp
 
-    if (user)
+    if (user) {
 #ifdef HAVE_STRUCT_UTMP_UT_USER
-      strncpy(l_struct.ut_user, user, sizeof(l_struct.ut_user));
+        strncpy(l_struct.ut_user, user, sizeof(l_struct.ut_user));
 #else
-      strncpy(l_struct.ut_name, user, sizeof(l_struct.ut_name));
+        strncpy(l_struct.ut_name, user, sizeof(l_struct.ut_name));
 #endif
+    }
 
     if (remotehost) {
-      strncpy(l_struct.ut_host, remotehost, sizeof(l_struct.ut_host));
+        strncpy(l_struct.ut_host, remotehost, sizeof(l_struct.ut_host));
 #ifdef HAVE_STRUCT_UTMP_UT_SYSLEN
-      l_struct.ut_syslen = qMin(strlen(remotehost), sizeof(l_struct.ut_host));
+        l_struct.ut_syslen = qMin(strlen(remotehost), sizeof(l_struct.ut_host));
 #endif
     }
 
 #ifndef __GLIBC__
     Q_D(KPty);
     const char *str_ptr = d->ttyName.data();
-    if (!memcmp(str_ptr, "/dev/", 5))
+    if (!memcmp(str_ptr, "/dev/", 5)) {
         str_ptr += 5;
+    }
     strncpy(l_struct.ut_line, str_ptr, sizeof(l_struct.ut_line));
 # ifdef HAVE_STRUCT_UTMP_UT_ID
     strncpy(l_struct.ut_id,
@@ -490,9 +487,10 @@ void KPty::logout()
 bool KPty::tcGetAttr(struct ::termios *ttmode) const
 {
     Q_D(const KPty);
-
 #ifdef Q_OS_SOLARIS
-    if (::tcgetattr(d->slaveFd, ttmode) == 0) return true;
+    if (::tcgetattr(d->slaveFd, ttmode) == 0) {
+        return true;
+    }
 #endif
     return ::tcgetattr(d->masterFd, ttmode) == 0;
 }
@@ -500,9 +498,10 @@ bool KPty::tcGetAttr(struct ::termios *ttmode) const
 bool KPty::tcSetAttr(struct ::termios *ttmode)
 {
     Q_D(KPty);
-
 #ifdef Q_OS_SOLARIS
-    if (::tcsetattr(d->slaveFd, TCSANOW, ttmode) == 0) return true;
+    if (::tcsetattr(d->slaveFd, TCSANOW, ttmode) == 0) {
+        return true;
+    }
 #endif
     return ::tcsetattr(d->masterFd, TCSANOW, ttmode) == 0;
 }
@@ -510,9 +509,8 @@ bool KPty::tcSetAttr(struct ::termios *ttmode)
 bool KPty::setWinSize(int lines, int columns)
 {
     Q_D(KPty);
-
     struct winsize winSize;
-    memset(&winSize, 0, sizeof(winSize));
+    ::memset(&winSize, 0, sizeof(winSize));
     winSize.ws_row = (unsigned short)lines;
     winSize.ws_col = (unsigned short)columns;
     return ioctl(d->masterFd, TIOCSWINSZ, (char *)&winSize) == 0;
@@ -521,32 +519,31 @@ bool KPty::setWinSize(int lines, int columns)
 bool KPty::setEcho(bool echo)
 {
     struct ::termios ttmode;
-    if (!tcGetAttr(&ttmode))
+    if (!tcGetAttr(&ttmode)) {
         return false;
-    if (!echo)
+    }
+    if (!echo) {
         ttmode.c_lflag &= ~ECHO;
-    else
+    } else {
         ttmode.c_lflag |= ECHO;
+    }
     return tcSetAttr(&ttmode);
 }
 
 const char *KPty::ttyName() const
 {
     Q_D(const KPty);
-
     return d->ttyName.data();
 }
 
 int KPty::masterFd() const
 {
     Q_D(const KPty);
-
     return d->masterFd;
 }
 
 int KPty::slaveFd() const
 {
     Q_D(const KPty);
-
     return d->slaveFd;
 }
