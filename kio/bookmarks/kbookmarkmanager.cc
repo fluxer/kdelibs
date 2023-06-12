@@ -87,10 +87,10 @@ void KBookmarkMap::update(KBookmarkManager *manager)
         KBookmarkGroup root = manager->root();
         traverse(root);
 
-        QMapIterator<QString, KBookmarkList> iter(m_bk_map);
+        QMutableMapIterator<QString, KBookmarkList> iter(m_bk_map);
         while (iter.hasNext()) {
             iter.next();
-            foreach (KBookmark it, iter.value()) {
+            foreach (KBookmark &it, iter.value()) {
                 kDebug() << "updating favicon for" << it.url();
                 it.setIcon(KMimeType::favIconForUrl(it.url()));
             }
@@ -538,7 +538,7 @@ bool KBookmarkManager::updateAccessMetadata(const QString &url)
 {
     d->m_map.update(this);
     QList<KBookmark> list = d->m_map.find(url);
-    foreach (KBookmark it, list) {
+    foreach (KBookmark &it, list) {
         it.updateAccessMetadata();
     }
     return true;
@@ -548,7 +548,7 @@ void KBookmarkManager::updateFavicon(const QString &url, const QString &faviconu
 {
     d->m_map.update(this);
     QList<KBookmark> list = d->m_map.find(url);
-    foreach (KBookmark it, list) {
+    foreach (KBookmark &it, list) {
         KUrl iconurl(faviconurl);
         it.setIcon(KMimeType::favIconForUrl(iconurl));
     }
