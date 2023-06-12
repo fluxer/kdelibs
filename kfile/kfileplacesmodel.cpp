@@ -422,10 +422,10 @@ QList<KFilePlacesItem *> KFilePlacesModel::Private::loadBookmarkList()
         if ((udi.isEmpty() && allowedHere) || deviceAvailable) {
             KFilePlacesItem *item;
             if (deviceAvailable) {
-                item = new KFilePlacesItem(bookmarkManager, bookmark.address(), udi);
+                item = new KFilePlacesItem(bookmark, udi);
                 // TODO: Update bookmark internal element
             } else {
-                item = new KFilePlacesItem(bookmarkManager, bookmark.address());
+                item = new KFilePlacesItem(bookmark);
             }
             connect(item, SIGNAL(itemChanged(QString)),
                     q, SLOT(_k_itemChanged(QString)));
@@ -439,8 +439,7 @@ QList<KFilePlacesItem *> KFilePlacesModel::Private::loadBookmarkList()
     foreach (const QString &udi, devices) {
         bookmark = KFilePlacesItem::createDeviceBookmark(bookmarkManager, udi);
         if (!bookmark.isNull()) {
-            KFilePlacesItem *item = new KFilePlacesItem(bookmarkManager,
-                                                        bookmark.address(), udi);
+            KFilePlacesItem *item = new KFilePlacesItem(bookmark, udi);
             connect(item, SIGNAL(itemChanged(QString)),
                     q, SLOT(_k_itemChanged(QString)));
             // TODO: Update bookmark internal element

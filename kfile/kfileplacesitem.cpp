@@ -34,13 +34,12 @@
 
 #include <QtCore/QDateTime>
 
-KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
-                                 const QString &address,
+KFilePlacesItem::KFilePlacesItem(const KBookmark &bookmark,
                                  const QString &udi)
     : m_isCdrom(false), m_isAccessible(false),
     m_trashIsEmpty(false), m_device(udi)
 {
-    setBookmark(manager->findByAddress(address));
+    setBookmark(bookmark);
 
     if (udi.isEmpty() && m_bookmark.metaDataItem("ID").isEmpty()) {
         m_bookmark.setMetaDataItem("ID", generateNewId());
@@ -119,15 +118,10 @@ Solid::Device KFilePlacesItem::device() const
 
 QVariant KFilePlacesItem::data(int role) const
 {
-    QVariant returnData;
-
     if (role!=KFilePlacesModel::HiddenRole && role!=Qt::BackgroundRole && isDevice()) {
-        returnData = deviceData(role);
-    } else {
-        returnData = bookmarkData(role);
+        return deviceData(role);
     }
-
-    return returnData;
+    return bookmarkData(role);
 }
 
 QVariant KFilePlacesItem::bookmarkData(int role) const

@@ -40,8 +40,7 @@ class KFilePlacesItem : public QObject
 {
     Q_OBJECT
 public:
-    KFilePlacesItem(KBookmarkManager *manager,
-                    const QString &address,
+    KFilePlacesItem(const KBookmark &bookmark,
                     const QString &udi = QString());
     ~KFilePlacesItem();
 
