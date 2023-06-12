@@ -117,10 +117,9 @@ public:
       , m_docIsLoaded(bDocIsloaded)
       , m_update(false)
       , m_dialogAllowed(true)
-      , m_dialogParent(0)
+      , m_dialogParent(nullptr)
       , m_browserEditor(false)
-      , m_typeExternal(false)
-      , m_kDirWatch(0)
+      , m_kDirWatch(nullptr)
     {}
 
     ~KBookmarkManagerPrivate() {
@@ -138,7 +137,6 @@ public:
     bool m_browserEditor;
     QString m_editorCaption;
 
-    bool m_typeExternal;
     KDirWatch* m_kDirWatch; // for external bookmark files
 
     KBookmarkMap m_map;
@@ -235,7 +233,6 @@ KBookmarkManager::KBookmarkManager(const QString &bookmarksFile)
     : d(new KBookmarkManagerPrivate(false))
 {
     // use KDirWatch to monitor this bookmarks file
-    d->m_typeExternal = true;
     d->m_update = true;
 
     Q_ASSERT(!bookmarksFile.isEmpty());
