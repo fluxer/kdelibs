@@ -1038,11 +1038,6 @@ void KUrlNavigator::keyPressEvent(QKeyEvent* event)
     }
 }
 
-void KUrlNavigator::keyReleaseEvent(QKeyEvent* event)
-{
-    QWidget::keyReleaseEvent(event);
-}
-
 void KUrlNavigator::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::MiddleButton) {
