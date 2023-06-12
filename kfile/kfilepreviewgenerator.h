@@ -22,12 +22,12 @@
 
 #include <kfile_export.h>
 
-#include <QtCore/QObject>
+#include <QObject>
+#include <QAbstractItemView>
+#include <QAbstractProxyModel>
 
 class KAbstractViewAdapter;
 class KDirModel;
-#include <QAbstractItemView>
-#include <QAbstractProxyModel>
 
 /**
  * @brief Generates previews for files of an item view.

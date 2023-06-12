@@ -18,8 +18,8 @@
  *******************************************************************************/
 
 #include "kfilepreviewgenerator.h"
+#include "kdefaultviewadapter_p.h"
 
-#include "../kio/kio/defaultviewadapter_p.h" // KDE5 TODO: move this class here
 #include <kconfiggroup.h>
 #include <kfileitem.h>
 #include <kiconeffect.h>
@@ -466,8 +466,7 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
     m_scrollAreaTimer->setInterval(200);
     connect(m_scrollAreaTimer, SIGNAL(timeout()),
             q, SLOT(resumeIconUpdates()));
-    m_viewAdapter->connect(KAbstractViewAdapter::ScrollBarValueChanged,
-                           q, SLOT(pauseIconUpdates()));
+    m_viewAdapter->connectScrollBar(q, SLOT(pauseIconUpdates()));
 
     m_changedItemsTimer = new QTimer(q);
     m_changedItemsTimer->setSingleShot(true);
@@ -1159,7 +1158,7 @@ void KFilePreviewGenerator::Private::rowsAboutToBeRemoved(const QModelIndex& par
 
 KFilePreviewGenerator::KFilePreviewGenerator(QAbstractItemView* parent) :
     QObject(parent),
-    d(new Private(this, new KIO::DefaultViewAdapter(parent, this), parent->model()))
+    d(new Private(this, new KDefaultViewAdapter(parent, this), parent->model()))
 {
     d->m_itemView = parent;
 }

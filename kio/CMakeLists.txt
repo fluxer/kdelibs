@@ -31,7 +31,6 @@ set(kiocore_STAT_SRCS
     kio/chmodjob.cpp
     kio/connection.cpp
     kio/copyjob.cpp
-    kio/defaultviewadapter.cpp
     kio/deletejob.cpp
     kio/directorysizejob.cpp
     kio/fileundomanager.cpp
@@ -209,6 +208,7 @@ install(
 install(
     FILES
     kio/kabstractfileitemactionplugin.h
+    kio/kabstractviewadapter.h
     kio/kacl.h
     kio/kautomount.h
     kio/kbuildsycocaprogressdialog.h

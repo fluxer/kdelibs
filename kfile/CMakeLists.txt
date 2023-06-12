@@ -38,6 +38,7 @@ set(kfile_LIB_SRCS
     kurlnavigatortogglebutton.cpp
     kurlnavigator.cpp
     kurlnavigatormenu.cpp
+    kdefaultviewadapter.cpp
 )
 
 add_library(kfile SHARED ${kfile_LIB_SRCS})

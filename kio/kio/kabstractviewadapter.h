@@ -20,7 +20,7 @@
 #ifndef KABSTRACTVIEWADAPTER_H
 #define KABSTRACTVIEWADAPTER_H
 
-#include <QObject>
+#include <kio/kio_export.h>
 
 #include <QAbstractItemModel>
 #include <QModelIndex>
@@ -33,12 +33,9 @@
  * for files. The interface allows KFilePreviewGenerator to be
  * independent from the view implementation.
  */
-class KAbstractViewAdapter : public QObject
+class KIO_EXPORT KAbstractViewAdapter : public QObject
 {
-
 public:
-    enum Signal { ScrollBarValueChanged };
-
     KAbstractViewAdapter(QObject *parent) : QObject(parent) {}
     virtual ~KAbstractViewAdapter() {}
     virtual QAbstractItemModel *model() const = 0;
@@ -46,8 +43,8 @@ public:
     virtual QPalette palette() const = 0;
     virtual QRect visibleArea() const = 0;
     virtual QRect visualRect(const QModelIndex &index) const = 0;
-    virtual void connect(Signal signal, QObject *receiver, const char *slot) = 0;
+    virtual void connectScrollBar(QObject *receiver, const char *slot) = 0;
 };
 
-#endif
+#endif // KABSTRACTVIEWADAPTER_H
 
