@@ -177,7 +177,6 @@ Message::MessagePosition Message::position() const
 
 
 MessageInterface::MessageInterface()
-  : d (0)
 {
 }
 

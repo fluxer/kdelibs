@@ -423,9 +423,6 @@ class KTEXTEDITOR_EXPORT MessageInterface
      * @return @e true, if @p message was posted. @e false, if message == 0.
      */
     virtual bool postMessage(Message* message) = 0;
-
-  private:
-    class MessageInterfacePrivate * const d;
 };
 
 }
