@@ -419,9 +419,9 @@ void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
 void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
 {
     kDebug(7103) << "Received" << received << "from" << total;
-    emit processedSize(received);
+    processedSize(received);
     if (total > 0 && received != total) {
-        emit totalSize(total);
+        totalSize(total);
     }
 }
 
