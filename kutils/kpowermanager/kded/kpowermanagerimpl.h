@@ -51,7 +51,6 @@ Q_SIGNALS:
     void ResumeFromSuspend();
 
 private Q_SLOTS:
-    void slotPropertiesChanged(QString interface, QVariantMap changed_properties, QStringList invalidated_properties);
     void slotPrepareForSleep(bool start);
 
 private:

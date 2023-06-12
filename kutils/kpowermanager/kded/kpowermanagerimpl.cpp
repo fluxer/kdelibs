@@ -163,15 +163,6 @@ void KPowerManagerImpl::Suspend()
     }
 }
 
-void KPowerManagerImpl::slotPropertiesChanged(QString interface, QVariantMap changed_properties, QStringList invalidated_properties)
-{
-    Q_UNUSED(interface);
-    Q_UNUSED(changed_properties);
-    Q_UNUSED(invalidated_properties);
-
-    emitSignals();
-}
-
 void KPowerManagerImpl::slotPrepareForSleep(bool start)
 {
     if (!start) {

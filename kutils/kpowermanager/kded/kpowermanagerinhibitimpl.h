@@ -37,9 +37,6 @@ public Q_SLOTS:
 Q_SIGNALS:
     void HasInhibitChanged(bool has_inhibit);
 
-private Q_SLOTS:
-    void slotPropertiesChanged(QString interface, QVariantMap changed_properties, QStringList invalidated_properties);
-
 private:
     void timerEvent(QTimerEvent *event) final;
 
