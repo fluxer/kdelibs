@@ -31,7 +31,7 @@
 #include <errno.h>
 
 #define KLOCKFILE_TIMEOUT 150
-#define KLOCKFILE_SLEEPTIME 150
+#define KLOCKFILE_SLEEPTIME 50
 
 class KLockFilePrivate
 {
