@@ -19,6 +19,9 @@
 #include "kpasswdstore.h"
 #include "kconfig.h"
 #include "kconfiggroup.h"
+#include "kglobal.h"
+#include "kstandarddirs.h"
+#include "klockfile.h"
 
 #include <QApplication>
 #include <QDBusInterface>
@@ -39,6 +42,11 @@ static QByteArray getCookie()
         return qRandomUuid();
     }
     return QByteArray::number(::getuid());
+}
+
+static QString getLockName(const QByteArray &cookie, const QString &storeid)
+{
+    return QString::fromLatin1("%1/%2-%3").arg(KGlobal::dirs()->saveLocation("tmp"), cookie, storeid);
 }
 
 class KPasswdStorePrivate
@@ -95,7 +103,10 @@ void KPasswdStore::setStoreID(const QString &id)
 bool KPasswdStore::openStore(const qlonglong windowid)
 {
     d->ensureInterface();
+    KLockFile klockfile(getLockName(d->cookie, d->storeid));
+    klockfile.lock();
     QDBusReply<bool> result = d->interface->call("openStore", d->cookie, d->storeid, windowid);
+    klockfile.unlock();
     return result.value();
 }
 
@@ -118,6 +129,9 @@ bool KPasswdStore::hasPasswd(const QByteArray &key, const qlonglong windowid)
 
 QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
 {
+    if (!openStore(windowid)) {
+        return QString();
+    }
     d->ensureInterface();
     QDBusReply<QString> result = d->interface->call("getPasswd", d->cookie, d->storeid, key, windowid);
     return result.value();
@@ -125,7 +139,9 @@ QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
 
 bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, const qlonglong windowid)
 {
-    d->ensureInterface();
+    if (!openStore(windowid)) {
+        return false;
+    }
     QDBusReply<bool> result = d->interface->call("storePasswd", d->cookie, d->storeid, key, passwd, windowid);
     return result.value();
 }
