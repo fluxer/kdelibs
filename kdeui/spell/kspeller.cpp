@@ -78,10 +78,10 @@ KSpellerPrivate::~KSpellerPrivate()
 }
 
 void KSpellerPrivate::dictsCallback(const char* const lang_tag,
-                                  const char* const provider_name,
-                                  const char* const provider_desc,
-                                  const char* const provider_file,
-                                  void* user_data)
+                                    const char* const provider_name,
+                                    const char* const provider_desc,
+                                    const char* const provider_file,
+                                    void* user_data)
 {
     // qDebug() << Q_FUNC_INFO << lang_tag << provider_name << provider_desc << provider_file;
     Q_UNUSED(provider_name);
@@ -294,7 +294,7 @@ void KSpeller::start()
             }
 
             // chop punctuation
-            if (word.at(word.size() - 1).isPunct()) {
+            if (!word.isEmpty() && word.at(word.size() - 1).isPunct()) {
                 word = word.mid(0, word.size() - 1);
             }
 

@@ -113,7 +113,7 @@ void KSpellHighlighter::highlightBlock(const QString &text)
             }
 
             // chop punctuation
-            if (word.at(word.size() - 1).isPunct()) {
+            if (!word.isEmpty() && word.at(word.size() - 1).isPunct()) {
                 word = word.mid(0, word.size() - 1);
             }
 
