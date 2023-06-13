@@ -24,6 +24,9 @@
 #include <solid/ifaces/storageaccess.h>
 #include "udevdeviceinterface.h"
 
+#include <QFile>
+#include <QTimer>
+
 namespace Solid
 {
 namespace Backends
@@ -51,6 +54,15 @@ Q_SIGNALS:
     void teardownDone(Solid::ErrorType error, QVariant data, const QString &udi);
     void setupRequested(const QString &udi);
     void teardownRequested(const QString &udi);
+
+private Q_SLOTS:
+    void slotEmitSignals();
+
+private:
+    QTimer m_mtabtimer;
+    QFile m_mtabfile;
+    QByteArray m_mtabdata;
+    bool m_isaccessible;
 };
 }
 }

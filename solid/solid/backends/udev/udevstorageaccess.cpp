@@ -28,8 +28,18 @@
 using namespace Solid::Backends::UDev;
 
 StorageAccess::StorageAccess(UDevDevice *device)
-    : DeviceInterface(device)
+    : DeviceInterface(device),
+    m_isaccessible(false)
 {
+    m_isaccessible = isAccessible();
+
+    // NOTE: stat() always returns the same result for it if actually in /proc/self/mounts
+    m_mtabfile.setFileName("/etc/mtab");
+    if (m_mtabfile.open(QFile::ReadOnly)) {
+        m_mtabtimer.setInterval(2000);
+        m_mtabtimer.start();
+        QObject::connect(&m_mtabtimer, SIGNAL(timeout()), this, SLOT(slotEmitSignals()));
+    }
 }
 
 StorageAccess::~StorageAccess()
@@ -126,4 +136,19 @@ bool StorageAccess::teardown()
 
     emit teardownDone(replyvalue, Solid::errorString(replyvalue), m_device->udi());
     return (replyvalue == Solid::NoError);
+}
+
+void StorageAccess::slotEmitSignals()
+{
+    const QByteArray previousmtabdata = m_mtabdata;
+    m_mtabfile.seek(0);
+    m_mtabdata = m_mtabfile.readAll();
+    // qDebug() << Q_FUNC_INFO << m_mtabdata;
+    if (previousmtabdata != m_mtabdata) {
+        const bool previousisaccessible = m_isaccessible;
+        m_isaccessible = isAccessible();
+        if (previousisaccessible != m_isaccessible) {
+            emit accessibilityChanged(m_isaccessible, m_device->udi());
+        }
+    }
 }
