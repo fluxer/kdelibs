@@ -50,7 +50,7 @@ set(KDE4_CONFIG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config" CACHE PATH "KD
 set(KDE4_DATA_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/apps" CACHE PATH "KDE data installation directory")
 set(KDE4_ICON_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/icons" CACHE PATH "KDE icon installation directory")
 set(KDE4_KCFG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config.kcfg" CACHE PATH "KDE kcfg installation directory")
-set(KDE4_LOCALE_INSTALL_DIR "${KATIE_TRANSLATIONS_PATH}/kde4" CACHE PATH "KDE locale installation directory")
+set(KDE4_LOCALE_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/translations/kde4" CACHE PATH "KDE locale installation directory")
 set(KDE4_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/services" CACHE PATH "KDE services installation directory")
 set(KDE4_SERVICETYPES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/servicetypes" CACHE PATH "KDE service types installation directory")
 set(KDE4_SOUND_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/sounds" CACHE PATH "KDE sounds installation directory")
