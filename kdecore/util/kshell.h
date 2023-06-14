@@ -22,7 +22,6 @@
 #define KSHELL_H
 
 #include <kdecore_export.h>
-#include <qglobal.h>
 
 #include <QStringList>
 #include <QString>
