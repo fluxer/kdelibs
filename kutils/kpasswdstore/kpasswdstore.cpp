@@ -117,7 +117,6 @@ void KPasswdStore::setCacheOnly(const bool cacheonly)
 
 bool KPasswdStore::cacheOnly() const
 {
-    d->ensureInterface();
     QDBusReply<bool> result = d->interface->call("cacheOnly", d->cookie, d->storeid);
     return result.value();
 }

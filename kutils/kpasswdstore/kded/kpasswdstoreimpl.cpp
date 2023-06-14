@@ -18,7 +18,7 @@
 
 #include "kpasswdstoreimpl.h"
 #include "kstandarddirs.h"
-#include "kconfiggroup.h"
+#include "ksettings.h"
 #include "kpassworddialog.h"
 #include "knewpassworddialog.h"
 #include "kmessagebox.h"
@@ -78,10 +78,9 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
     m_opensslblocklen = EVP_CIPHER_block_size(EVP_aes_256_cbc());
 #endif
 
-    KConfig kconfig("kpasswdstorerc", KConfig::SimpleConfig);
-    KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
-    m_retries = kconfiggroup.readEntry("Retries", kpasswdstore_passretries);
-    m_timeout = (kconfiggroup.readEntry("Timeout", kpasswdstore_passtimeout) * 60000);
+    KSettings ksettings("kpasswdstorerc", KSettings::SimpleConfig);
+    m_retries = ksettings.value("KPasswdStore/Retries", kpasswdstore_passretries).toUInt();
+    m_timeout = (ksettings.value("KPasswdStore/Timeout", kpasswdstore_passtimeout).toUInt() * 60000);
 }
 
 KPasswdStoreImpl::~KPasswdStoreImpl()
@@ -143,8 +142,11 @@ QString KPasswdStoreImpl::getPasswd(const QByteArray &key, const qlonglong windo
     }
 
     bool ok = false;
-    KConfig kconfig(m_passwdstore);
-    const QString passwd = kconfig.group(m_storeid).readEntry(key.constData(), QString());
+    KSettings ksettings(m_passwdstore, KSettings::SimpleConfig);
+    QString storekey = m_storeid;
+    storekey.append(QLatin1Char('/'));
+    storekey.append(QString::fromLatin1(key.constData(), key.size()));
+    const QString passwd = ksettings.value(storekey).toString();
     if (passwd.isEmpty()) {
         return QString();
     }
@@ -167,10 +169,11 @@ bool KPasswdStoreImpl::storePasswd(const QByteArray &key, const QString &passwd,
     }
 
     bool ok = false;
-    KConfig kconfig(m_passwdstore);
-    KConfigGroup kconfiggroup = kconfig.group(m_storeid);
-    kconfiggroup.writeEntry(key.constData(), encryptPasswd(passwd, &ok));
-    kconfiggroup.sync();
+    KSettings ksettings(m_passwdstore, KSettings::SimpleConfig);
+    QString storekey = m_storeid;
+    storekey.append(QLatin1Char('/'));
+    storekey.append(QString::fromLatin1(key.constData(), key.size()));
+    ksettings.setValue(storekey, encryptPasswd(passwd, &ok));
     return ok;
 }
 
@@ -189,9 +192,10 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
         // the only reason to encrypt and decrypt passwords is to obscure them
         // for the naked eye, if one can overwrite, delete or otherwise alter
         // the password store then there are more possibilities for havoc
-        KConfig kconfig(m_passwdstore);
-        KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
-        const QString storepasswdhash = kconfiggroup.readEntry(m_storeid, QString());
+        KSettings ksettings(m_passwdstore, KSettings::SimpleConfig);
+        QString storekey = QString::fromLatin1("KPasswdStore/");
+        storekey.append(m_storeid);
+        const QString storepasswdhash = ksettings.value(storekey).toString();
         if (storepasswdhash.isEmpty()) {
             KNewPasswordDialog knewpasswddialog(widgetForWindowID(windowid));
             knewpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", m_storeid));
@@ -239,7 +243,7 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
         }
 
         if (storepasswdhash.isEmpty()) {
-            kconfiggroup.writeEntry(m_storeid, passhash);
+            ksettings.setValue(storekey, passhash);
             return true;
         }
         if (passhash != storepasswdhash) {
