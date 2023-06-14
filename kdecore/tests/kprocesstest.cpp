@@ -96,7 +96,7 @@ static void recursor(char **argv)
     if (argv[1]) {
         KProcess p;
         p.setShellCommand("echo " EOUT "; echo " EERR " >&2");
-        p.setOutputChannelMode((KProcess::OutputChannelMode)atoi(argv[1]));
+        p.setProcessChannelMode((QProcess::ProcessChannelMode)atoi(argv[1]));
         fputs(POUT, stdout);
         fflush(stdout);
         p.execute();

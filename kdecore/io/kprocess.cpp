@@ -24,42 +24,6 @@
 #include <kstandarddirs.h>
 #include <kshell.h>
 
-#include <unistd.h>
-#include <errno.h>
-
-void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
-{
-    int off = 0;
-    do {
-        int ret = ::write(fd, buf.constData() + off, buf.size() - off);
-        if (ret < 0) {
-            if (errno != EINTR)
-                return;
-        } else {
-            off += ret;
-        }
-    } while (off < buf.size());
-}
-
-void KProcessPrivate::forwardStd(KProcess::ProcessChannel good, int fd)
-{
-    Q_Q(KProcess);
-    QProcess::ProcessChannel oc = q->readChannel();
-    q->setReadChannel(good);
-    writeAll(q->readAll(), fd);
-    q->setReadChannel(oc);
-}
-
-void KProcessPrivate::_k_forwardStdout()
-{
-    forwardStd(KProcess::StandardOutput, STDOUT_FILENO);
-}
-
-void KProcessPrivate::_k_forwardStderr()
-{
-    forwardStd(KProcess::StandardError, STDERR_FILENO);
-}
-
 /////////////////////////////
 // public member functions //
 /////////////////////////////
@@ -69,7 +33,7 @@ KProcess::KProcess(QObject *parent) :
     d_ptr(new KProcessPrivate())
 {
     d_ptr->q_ptr = this;
-    setOutputChannelMode(ForwardedChannels);
+    setProcessChannelMode(QProcess::ForwardedChannels);
 }
 
 KProcess::KProcess(KProcessPrivate *d, QObject *parent) :
@@ -77,41 +41,12 @@ KProcess::KProcess(KProcessPrivate *d, QObject *parent) :
     d_ptr(d)
 {
     d_ptr->q_ptr = this;
-    setOutputChannelMode(ForwardedChannels);
+    setProcessChannelMode(QProcess::ForwardedChannels);
 }
 
 KProcess::~KProcess()
 {
     delete d_ptr;
-}
-
-void KProcess::setOutputChannelMode(OutputChannelMode mode)
-{
-    Q_D(KProcess);
-    d->outputChannelMode = mode;
-    disconnect(this, SIGNAL(readyReadStandardOutput()));
-    disconnect(this, SIGNAL(readyReadStandardError()));
-    switch (mode) {
-        case OnlyStdoutChannel: {
-            connect(this, SIGNAL(readyReadStandardError()), SLOT(_k_forwardStderr()));
-            break;
-        }
-        case OnlyStderrChannel: {
-            connect(this, SIGNAL(readyReadStandardOutput()), SLOT(_k_forwardStdout()));
-            break;
-        }
-        default: {
-            QProcess::setProcessChannelMode((ProcessChannelMode)mode);
-            return;
-        }
-    }
-    Q_UNREACHABLE();
-}
-
-KProcess::OutputChannelMode KProcess::outputChannelMode() const
-{
-    Q_D(const KProcess);
-    return d->outputChannelMode;
 }
 
 void KProcess::setNextOpenMode(QIODevice::OpenMode mode)

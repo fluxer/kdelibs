@@ -47,25 +47,6 @@ class KDECORE_EXPORT KProcess : public QProcess
     Q_DECLARE_PRIVATE(KProcess)
 
 public:
-
-    /**
-     * Modes in which the output channels can be opened.
-     */
-    enum OutputChannelMode {
-        SeparateChannels = QProcess::SeparateChannels,
-            /**< Standard output and standard error are handled by KProcess
-                 as separate channels */
-        MergedChannels = QProcess::MergedChannels,
-            /**< Standard output and standard error are handled by KProcess
-                 as one channel */
-        ForwardedChannels = QProcess::ForwardedChannels,
-            /**< Both standard output and standard error are forwarded
-                 to the parent process' respective channel */
-        OnlyStdoutChannel,
-            /**< Only standard output is handled; standard error is forwarded */
-        OnlyStderrChannel  /**< Only standard error is handled; standard output is forwarded */
-    };
-
     /**
      * Constructor
      */
@@ -75,26 +56,6 @@ public:
      * Destructor
      */
     virtual ~KProcess();
-
-    /**
-     * Set how to handle the output channels of the child process.
-     *
-     * The default is ForwardedChannels, which is unlike in QProcess.
-     * Do not request more than you actually handle, as this output is
-     * simply lost otherwise.
-     *
-     * This function must be called before starting the process.
-     *
-     * @param mode the output channel handling mode
-     */
-    void setOutputChannelMode(OutputChannelMode mode);
-
-    /**
-     * Query how the output channels of the child process are handled.
-     *
-     * @return the output channel handling mode
-     */
-    OutputChannelMode outputChannelMode() const;
 
     /**
      * Set the QIODevice open mode the process will be opened in.
@@ -312,14 +273,6 @@ protected:
      * @internal
      */
     KProcessPrivate * const d_ptr;
-
-private:
-    // hide those
-    using QProcess::setProcessChannelMode;
-    using QProcess::processChannelMode;
-
-    Q_PRIVATE_SLOT(d_func(), void _k_forwardStdout())
-    Q_PRIVATE_SLOT(d_func(), void _k_forwardStderr())
 };
 
 #endif
