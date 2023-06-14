@@ -1641,7 +1641,7 @@ KProcessRunner::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
         //
         // We'll try to find the executable relatively to current directory,
         // (or with a full path, if m_executable is absolute), and then in the PATH.
-        if (!QFile(m_executable).exists() && KStandardDirs::findExe(m_executable).isEmpty()) {
+        if (!QFile::exists(m_executable) && KStandardDirs::findExe(m_executable).isEmpty()) {
             KGlobal::ref();
             KMessageBox::sorry(0L, i18n("Could not find the program '%1'", m_executable));
             KGlobal::deref();
