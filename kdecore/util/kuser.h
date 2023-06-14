@@ -25,14 +25,13 @@
 #include <kdecore_export.h>
 #include <ksharedptr.h>
 
-#include <QtCore/QVariant>
-
-class KUserGroup;
 #include <QString>
 #include <QStringList>
 #include <QList>
 
 #include <sys/types.h>
+
+class KUserGroup;
 typedef uid_t K_UID;
 typedef gid_t K_GID;
 struct passwd;
@@ -195,17 +194,20 @@ public:
    */
   QStringList groupNames() const;
 
-  enum UserProperty { FullName, RoomNumber, WorkPhone, HomePhone };
+  enum UserProperty {
+    FullName = 0,
+    RoomNumber = 1,
+    WorkPhone = 2,
+    HomePhone = 3
+  };
 
   /**
    * Returns an extended property.
    *
-   * Under Windows, @p RoomNumber, @p WorkPhone and @p HomePhone are unsupported.
-   *
-   * @return a QVariant with the value of the property or an invalid QVariant,
+   * @return a QString with the value of the property or an empty QString,
    *         if the property is not set
    */
-  QVariant property(UserProperty which) const;
+  QString property(UserProperty which) const;
 
   /**
    * Destructor.

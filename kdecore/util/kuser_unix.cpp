@@ -21,8 +21,8 @@
 
 #include <kuser.h>
 
-#include <QtCore/qstringlist.h>
 #include <QtCore/QDir>
+#include <QtCore/QVector>
 
 #include <pwd.h>
 #include <unistd.h>
@@ -36,7 +36,7 @@ public:
     gid_t gid;
     QString loginName;
     QString homeDir, shell;
-    QMap<UserProperty, QVariant> properties;
+    QVector<QString> properties;
 
     Private() : uid(uid_t(-1)), gid(gid_t(-1)) {}
     Private(const char *name) : uid(uid_t(-1)), gid(gid_t(-1))
@@ -61,10 +61,11 @@ public:
             uid = p->pw_uid;
             gid = p->pw_gid;
             loginName = QString::fromLocal8Bit(p->pw_name);
-            properties[KUser::FullName] = QVariant(gecosList[0]);
-            properties[KUser::RoomNumber] = QVariant(gecosList[1]);
-            properties[KUser::WorkPhone] = QVariant(gecosList[2]);
-            properties[KUser::HomePhone] = QVariant(gecosList[3]);
+            properties.resize(4);
+            properties[static_cast<int>(KUser::FullName)] = gecosList[0];
+            properties[static_cast<int>(KUser::RoomNumber)] = gecosList[1];
+            properties[static_cast<int>(KUser::WorkPhone)] = gecosList[2];
+            properties[static_cast<int>(KUser::HomePhone)] = gecosList[3];
             homeDir = QString::fromLocal8Bit(p->pw_dir);
             shell = QString::fromLocal8Bit(p->pw_shell);
         }
@@ -203,9 +204,9 @@ QStringList KUser::groupNames() const
     return result;
 }
 
-QVariant KUser::property(UserProperty which) const
+QString KUser::property(UserProperty which) const
 {
-    return d->properties.value(which);
+    return d->properties[static_cast<int>(which)];
 }
 
 QList<KUser> KUser::allUsers()
@@ -314,15 +315,18 @@ bool KUserGroup::operator !=(const KUserGroup& user) const
     return (gid() != user.gid()) || (gid() == gid_t(-1));
 }
 
-bool KUserGroup::isValid() const {
+bool KUserGroup::isValid() const
+{
     return gid() != gid_t(-1);
 }
 
-K_GID KUserGroup::gid() const {
+K_GID KUserGroup::gid() const
+{
     return d->gid;
 }
 
-QString KUserGroup::name() const {
+QString KUserGroup::name() const
+{
     return d->name;
 }
 
