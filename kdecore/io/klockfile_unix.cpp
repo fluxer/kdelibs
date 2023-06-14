@@ -1,5 +1,4 @@
 /*  This file is part of the KDE libraries
-    Copyright (c) 2004 Waldo Bastian <bastian@kde.org>
     Copyright (C) 2022 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
@@ -21,11 +20,11 @@
 #include "kdebug.h"
 #include "kde_file.h"
 
-#include <QHostInfo>
 #include <QCoreApplication>
 #include <QThread>
 
 #include <sys/types.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
@@ -43,7 +42,6 @@ public:
     QByteArray m_lockfile;
     int m_lockfd;
     qint64 m_pid;
-    QByteArray m_hostname;
 };
 
 KLockFilePrivate::KLockFilePrivate()
@@ -51,7 +49,6 @@ KLockFilePrivate::KLockFilePrivate()
     m_pid(-1)
 {
     m_pid = static_cast<qint64>(::getpid());
-    m_hostname = QHostInfo::localHostName().toUtf8();
 }
 
 KLockFile::LockResult KLockFilePrivate::tryLock()
@@ -60,26 +57,35 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
         return KLockFile::LockOK;
     }
 
+    char lockbuffer[256];
+    ::memset(lockbuffer, 0, sizeof(lockbuffer) * sizeof(char));
     m_lockfd = KDE_open(m_lockfile.constData(), O_WRONLY | O_CREAT | O_EXCL, 0644);
     if (m_lockfd == -1) {
         const int savederrno = errno;
         if (savederrno == EEXIST) {
-            QFile infofile(QFile::decodeName(m_lockfile));
-            if (Q_UNLIKELY(!infofile.open(QFile::ReadOnly))) {
-                kWarning() << infofile.errorString();
+            const int infofile = KDE_open(m_lockfile.constData(), O_RDONLY);
+            if (Q_UNLIKELY(infofile == -1)) {
+                kWarning() << "Could not open lock file";
                 return KLockFile::LockFail;
             }
-            const QList<QByteArray> lockinfo = infofile.readAll().split('\t');
-            if (Q_UNLIKELY(lockinfo.size() != 2)) {
+            const int inforesult = QT_READ(infofile, lockbuffer, sizeof(lockbuffer));
+            QT_CLOSE(infofile);
+            if (Q_UNLIKELY(inforesult <= 0)) {
+                kWarning() << "Could not read lock file";
+                return KLockFile::LockFail;
+            }
+            qint64 lockpid = 0;
+            char lockpidbuffer[256];
+            ::memset(lockpidbuffer, 0, sizeof(lockpidbuffer) * sizeof(char));
+            ::sscanf(lockbuffer, "%lld", &lockpid);
+            if (Q_UNLIKELY(lockpid <= 0)) {
                 kWarning() << "Invalid lock information";
                 return KLockFile::LockFail;
             }
-            const qint64 lockpid = lockinfo.at(0).toLongLong();
-            const QByteArray lockhost = lockinfo.at(1);
-            kDebug() << "Lock" << m_lockfile << "held by" << lockpid << "on" << lockhost;
+            kDebug() << "Lock" << m_lockfile << "held by" << lockpid;
 
-            if (lockhost == m_hostname && ::kill(lockpid, 0) == -1 && errno == ESRCH) {
-                kWarning() << "Stale lock" << m_lockfile << "held by" << lockpid << "on" << lockhost;
+            if (::kill(lockpid, 0) == -1 && errno == ESRCH) {
+                kWarning() << "Stale lock" << m_lockfile << "held by" << lockpid;
                 return KLockFile::LockStale;
             }
 
@@ -90,10 +96,10 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
         return KLockFile::LockError;
     }
 
-    QByteArray infodata = QByteArray::number(m_pid);
-    infodata.append('\t');
-    infodata.append(m_hostname);
-    if (Q_UNLIKELY(QT_WRITE(m_lockfd, infodata.constData(), infodata.size()) != infodata.size())) {
+    ::memset(lockbuffer, 0, sizeof(lockbuffer) * sizeof(char));
+    ::snprintf(lockbuffer, sizeof(lockbuffer), "%lld", m_pid);
+    const int lockbufferlen = qstrlen(lockbuffer);
+    if (Q_UNLIKELY(QT_WRITE(m_lockfd, lockbuffer, lockbufferlen) != lockbufferlen)) {
         const int savederrno = errno;
         kWarning() << "Could not write lock information" << qt_error_string(savederrno);
         return KLockFile::LockError;
@@ -154,12 +160,11 @@ void KLockFile::unlock()
     }
 }
 
-bool KLockFile::getLockInfo(qint64 &pid, QString &hostname)
+bool KLockFile::getLockInfo(qint64 &pid)
 {
     if (d->m_lockfd == -1) {
         return false;
     }
     pid = d->m_pid;
-    hostname = QString::fromUtf8(d->m_hostname.constData(), d->m_hostname.size());
     return true;
 }

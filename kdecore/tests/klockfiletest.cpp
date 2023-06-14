@@ -23,7 +23,6 @@
 #include <unistd.h>
 
 #include <QProcess>
-#include <QHostInfo>
 
 // TODO test locking from two different threads
 
@@ -87,16 +86,12 @@ void Test_KLockFile::testLockInfo()
     QVERIFY(!lf.isLocked());
 
     qint64 pid = -1;
-    QString host;
-    QVERIFY(!lf.getLockInfo(pid, host));
+    QVERIFY(!lf.getLockInfo(pid));
     QCOMPARE(pid, qint64(-1));
-    QCOMPARE(host, QString());
 
     pid = -1;
-    host.clear();
-    QVERIFY(lockFile->getLockInfo(pid, host));
+    QVERIFY(lockFile->getLockInfo(pid));
     QCOMPARE(pid, static_cast<qint64>(::getpid()));
-    QCOMPARE(host, QHostInfo::localHostName());
 }
 
 void Test_KLockFile::testUnlock()
@@ -112,7 +107,7 @@ void Test_KLockFile::testStaleNoBlockFlag()
     QFile f(QString::fromLatin1(lockNameFull));
     f.open(QIODevice::WriteOnly);
     QTextStream stream(&f);
-    stream << (QString::number(111222) + QLatin1Char('\t') + QHostInfo::localHostName());
+    stream << QString::number(111222);
     stream.flush();
     f.close();
 

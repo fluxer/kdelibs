@@ -1,5 +1,4 @@
 /*  This file is part of the KDE libraries
-    Copyright (c) 2004 Waldo Bastian <bastian@kde.org>
     Copyright (C) 2022 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
@@ -32,7 +31,6 @@ class KLockFilePrivate;
  * The KLockFile class provides NFS safe lockfiles.
  *
  * @author Ivailo Monev <xakepa10@gmail.com>
- * @author Waldo Bastian <bastian@kde.org>
  */
 class KDECORE_EXPORT KLockFile
 {
@@ -90,10 +88,10 @@ public:
     void unlock();
 
     /*!
-        @brief Returns the pid and hostname of the process holding the lock.
-        @returns false if the pid and hostname could not be determined
+        @brief Returns the pid of the process holding the lock.
+        @returns false if the pid could not be determined
     */
-    bool getLockInfo(qint64 &pid, QString &hostname);
+    bool getLockInfo(qint64 &pid);
 
 private:
     Q_DISABLE_COPY(KLockFile);
