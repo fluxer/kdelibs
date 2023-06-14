@@ -31,7 +31,7 @@ static const QSettings::Format defaultformat = QSettings::IniFormat;
 
 static QString getSettingsPath(const QString &filename)
 {
-    QFileInfo info(filename);
+    const QFileInfo info(filename);
     if (info.isAbsolute()) {
         return filename;
     }
@@ -44,10 +44,6 @@ KSettings::KSettings(const QString& file, const OpenFlags mode)
     if ((mode & IncludeGlobals) != mode) {
         addSource(KStandardDirs::locateLocal("config", QLatin1String("kdeglobals")));
     }
-}
-
-KSettings::~KSettings()
-{
 }
 
 void KSettings::addSource(const QString &source)

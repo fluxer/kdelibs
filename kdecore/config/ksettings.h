@@ -67,8 +67,6 @@ public:
      */
     KSettings(const QString &file, const OpenFlags mode);
 
-    ~KSettings();
-
     /**
      * Adds configuration source to the merge stack.
      *
