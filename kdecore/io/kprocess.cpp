@@ -24,8 +24,6 @@
 #include <kstandarddirs.h>
 #include <kshell.h>
 
-#include <qfile.h>
-
 #include <unistd.h>
 #include <errno.h>
 
