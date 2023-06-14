@@ -26,8 +26,8 @@
 
 #include <qfile.h>
 
-# include <unistd.h>
-# include <errno.h>
+#include <unistd.h>
+#include <errno.h>
 
 void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
 {
@@ -46,7 +46,6 @@ void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
 void KProcessPrivate::forwardStd(KProcess::ProcessChannel good, int fd)
 {
     Q_Q(KProcess);
-
     QProcess::ProcessChannel oc = q->readChannel();
     q->setReadChannel(good);
     writeAll(q->readAll(), fd);
@@ -69,7 +68,7 @@ void KProcessPrivate::_k_forwardStderr()
 
 KProcess::KProcess(QObject *parent) :
     QProcess(parent),
-    d_ptr(new KProcessPrivate)
+    d_ptr(new KProcessPrivate())
 {
     d_ptr->q_ptr = this;
     setOutputChannelMode(ForwardedChannels);
@@ -91,20 +90,22 @@ KProcess::~KProcess()
 void KProcess::setOutputChannelMode(OutputChannelMode mode)
 {
     Q_D(KProcess);
-
     d->outputChannelMode = mode;
     disconnect(this, SIGNAL(readyReadStandardOutput()));
     disconnect(this, SIGNAL(readyReadStandardError()));
     switch (mode) {
-    case OnlyStdoutChannel:
-        connect(this, SIGNAL(readyReadStandardError()), SLOT(_k_forwardStderr()));
-        break;
-    case OnlyStderrChannel:
-        connect(this, SIGNAL(readyReadStandardOutput()), SLOT(_k_forwardStdout()));
-        break;
-    default:
-        QProcess::setProcessChannelMode((ProcessChannelMode)mode);
-        return;
+        case OnlyStdoutChannel: {
+            connect(this, SIGNAL(readyReadStandardError()), SLOT(_k_forwardStderr()));
+            break;
+        }
+        case OnlyStderrChannel: {
+            connect(this, SIGNAL(readyReadStandardOutput()), SLOT(_k_forwardStdout()));
+            break;
+        }
+        default: {
+            QProcess::setProcessChannelMode((ProcessChannelMode)mode);
+            return;
+        }
     }
     QProcess::setProcessChannelMode(QProcess::SeparateChannels);
 }
@@ -112,14 +113,12 @@ void KProcess::setOutputChannelMode(OutputChannelMode mode)
 KProcess::OutputChannelMode KProcess::outputChannelMode() const
 {
     Q_D(const KProcess);
-
     return d->outputChannelMode;
 }
 
 void KProcess::setNextOpenMode(QIODevice::OpenMode mode)
 {
     Q_D(KProcess);
-
     d->openMode = mode;
 }
 
@@ -139,7 +138,7 @@ void KProcess::setEnv(const QString &name, const QString &value, bool overwrite)
     }
     QString fname(name);
     fname.append(QLatin1Char('='));
-    for (QStringList::Iterator it = env.begin(); it != env.end(); ++it)
+    for (QStringList::Iterator it = env.begin(); it != env.end(); ++it) {
         if ((*it).startsWith(fname)) {
             if (overwrite) {
                 *it = fname.append(value);
@@ -147,6 +146,7 @@ void KProcess::setEnv(const QString &name, const QString &value, bool overwrite)
             }
             return;
         }
+    }
     env.append(fname.append(value));
     setEnvironment(env);
 }
@@ -160,20 +160,21 @@ void KProcess::unsetEnv(const QString &name)
     }
     QString fname(name);
     fname.append(QLatin1Char('='));
-    for (QStringList::Iterator it = env.begin(); it != env.end(); ++it)
+    for (QStringList::Iterator it = env.begin(); it != env.end(); ++it) {
         if ((*it).startsWith(fname)) {
             env.erase(it);
-            if (env.isEmpty())
+            if (env.isEmpty()) {
                 env.append(QString::fromLatin1(DUMMYENV));
+            }
             setEnvironment(env);
             return;
         }
+    }
 }
 
 void KProcess::setProgram(const QString &exe, const QStringList &args)
 {
     Q_D(KProcess);
-
     d->prog = exe;
     d->args = args;
 }
@@ -181,8 +182,7 @@ void KProcess::setProgram(const QString &exe, const QStringList &args)
 void KProcess::setProgram(const QStringList &argv)
 {
     Q_D(KProcess);
-
-    Q_ASSERT( !argv.isEmpty() );
+    Q_ASSERT(!argv.isEmpty());
     d->args = argv;
     d->prog = d->args.takeFirst();
 }
@@ -190,29 +190,28 @@ void KProcess::setProgram(const QStringList &argv)
 KProcess &KProcess::operator<<(const QString &arg)
 {
     Q_D(KProcess);
-
-    if (d->prog.isEmpty())
+    if (d->prog.isEmpty()) {
         d->prog = arg;
-    else
+    } else {
         d->args << arg;
+    }
     return *this;
 }
 
 KProcess &KProcess::operator<<(const QStringList &args)
 {
     Q_D(KProcess);
-
-    if (d->prog.isEmpty())
+    if (d->prog.isEmpty()) {
         setProgram(args);
-    else
+    } else {
         d->args << args;
+    }
     return *this;
 }
 
 void KProcess::clearProgram()
 {
     Q_D(KProcess);
-
     d->prog.clear();
     d->args.clear();
 }
@@ -221,9 +220,8 @@ void KProcess::setShellCommand(const QString &cmd)
 {
     Q_D(KProcess);
 
-    KShell::Errors err;
-    d->args = KShell::splitArgs(
-            cmd, KShell::AbortOnMeta | KShell::TildeExpand, &err);
+    KShell::Errors err = KShell::NoError;
+    d->args = KShell::splitArgs(cmd, KShell::AbortOnMeta | KShell::TildeExpand, &err);
     if (err == KShell::NoError && !d->args.isEmpty()) {
         d->prog = KStandardDirs::findExe(d->args[0]);
         if (!d->prog.isEmpty()) {
@@ -241,7 +239,6 @@ void KProcess::setShellCommand(const QString &cmd)
 QStringList KProcess::program() const
 {
     Q_D(const KProcess);
-
     QStringList argv = d->args;
     argv.prepend(d->prog);
     return argv;
@@ -250,7 +247,6 @@ QStringList KProcess::program() const
 void KProcess::start()
 {
     Q_D(KProcess);
-
     QProcess::start(d->prog, d->args, d->openMode);
 }
 
@@ -284,10 +280,10 @@ int KProcess::execute(const QStringList &argv, int msecs)
 qint64 KProcess::startDetached()
 {
     Q_D(KProcess);
-
     qint64 pid;
-    if (!QProcess::startDetached(d->prog, d->args, workingDirectory(), &pid))
+    if (!QProcess::startDetached(d->prog, d->args, workingDirectory(), &pid)) {
         return 0;
+    }
     return pid;
 }
 
@@ -295,8 +291,9 @@ qint64 KProcess::startDetached()
 qint64 KProcess::startDetached(const QString &exe, const QStringList &args)
 {
     qint64 pid;
-    if (!QProcess::startDetached(exe, args, QString(), &pid))
+    if (!QProcess::startDetached(exe, args, QString(), &pid)) {
         return 0;
+    }
     return pid;
 }
 
