@@ -38,11 +38,15 @@ public:
     QString homeDir, shell;
     QVector<QString> properties;
 
-    Private() : uid(uid_t(-1)), gid(gid_t(-1)) {}
+    Private() : uid(uid_t(-1)), gid(gid_t(-1))
+    {
+    }
+
     Private(const char *name) : uid(uid_t(-1)), gid(gid_t(-1))
     {
         fillPasswd(name ? ::getpwnam(name) : 0);
     }
+
     Private(const passwd *p) : uid(uid_t(-1)), gid(gid_t(-1))
     {
         fillPasswd(p);
@@ -57,7 +61,6 @@ public:
             while (gecosList.size() < 4) {
                 gecosList << QString();
             }
-
             uid = p->pw_uid;
             gid = p->pw_gid;
             loginName = QString::fromLocal8Bit(p->pw_name);
@@ -114,18 +117,18 @@ KUser::KUser(const KUser &user)
 {
 }
 
-KUser& KUser::operator =(const KUser &user)
+KUser& KUser::operator=(const KUser &user)
 {
     d = user.d;
     return *this;
 }
 
-bool KUser::operator ==(const KUser& user) const
+bool KUser::operator==(const KUser &user) const
 {
     return (uid() == user.uid()) && (uid() != uid_t(-1));
 }
 
-bool KUser::operator !=(const KUser& user) const
+bool KUser::operator!=(const KUser &user) const
 {
     return (uid() != user.uid()) || (uid() == uid_t(-1));
 }
@@ -163,11 +166,9 @@ QString KUser::homeDir() const
 QString KUser::faceIconPath() const
 {
     QString pathToFaceIcon(homeDir() + QDir::separator() + QLatin1String(".face.icon"));
-
     if (QFile::exists(pathToFaceIcon)) {
         return pathToFaceIcon;
     }
-
     return QString();
 }
 
@@ -212,28 +213,24 @@ QString KUser::property(UserProperty which) const
 QList<KUser> KUser::allUsers()
 {
     QList<KUser> result;
-
     struct passwd* p;
     ::setpwent();
     while ((p = ::getpwent())) {
         result.append(KUser(p));
     }
     ::endpwent();
-
     return result;
 }
 
 QStringList KUser::allUserNames()
 {
     QStringList result;
-
     struct passwd* p;
     ::setpwent();
     while ((p = ::getpwent()))  {
         result.append(QString::fromLocal8Bit(p->pw_name));
     }
     ::endpwent();
-
     return result;
 }
 
@@ -248,17 +245,22 @@ public:
     QString name;
     QList<KUser> users;
 
-    Private() : gid(gid_t(-1)) {}
+    Private() : gid(gid_t(-1))
+    {
+    }
+
     Private(const char *_name) : gid(gid_t(-1))
     {
         fillGroup(_name ? ::getgrnam(_name) : 0);
     }
+
     Private(const struct group *p) : gid(gid_t(-1))
     {
         fillGroup(p);
     }
 
-    void fillGroup(const struct group *p) {
+    void fillGroup(const struct group *p)
+    {
         if (p) {
             gid = p->gr_gid;
             name = QString::fromLocal8Bit(p->gr_name);
@@ -299,18 +301,18 @@ KUserGroup::KUserGroup(const KUserGroup &group)
 {
 }
 
-KUserGroup& KUserGroup::operator =(const KUserGroup &group)
+KUserGroup& KUserGroup::operator=(const KUserGroup &group)
 {
     d = group.d;
     return *this;
 }
 
-bool KUserGroup::operator ==(const KUserGroup& group) const
+bool KUserGroup::operator==(const KUserGroup &group) const
 {
     return (gid() == group.gid()) && (gid() != gid_t(-1));
 }
 
-bool KUserGroup::operator !=(const KUserGroup& user) const
+bool KUserGroup::operator!=(const KUserGroup &user) const
 {
     return (gid() != user.gid()) || (gid() == gid_t(-1));
 }
@@ -348,28 +350,24 @@ QStringList KUserGroup::userNames() const
 QList<KUserGroup> KUserGroup::allGroups()
 {
     QList<KUserGroup> result;
-
     struct group* g;
     ::setgrent();
     while ((g = ::getgrent())) {
         result.append(KUserGroup(g));
     }
     ::endgrent();
-
     return result;
 }
 
 QStringList KUserGroup::allGroupNames()
 {
     QStringList result;
-
     struct group* g;
     ::setgrent();
     while ((g = ::getgrent()))  {
         result.append(QString::fromLocal8Bit(g->gr_name));
     }
     ::endgrent();
-
     return result;
 }
 
