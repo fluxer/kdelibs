@@ -22,9 +22,10 @@
 #ifndef KPAGEWIDGETMODEL_H
 #define KPAGEWIDGETMODEL_H
 
-#include "kpagemodel.h"
+#include <kdeui_export.h>
 
 #include <QWidget>
+#include <QAbstractItemModel>
 
 class KIcon;
 
@@ -185,7 +186,7 @@ class KPageWidgetModelPrivate;
  * This page model is used by @see KPageWidget to provide
  * a hierarchical layout of pages.
  */
-class KDEUI_EXPORT KPageWidgetModel : public KPageModel
+class KDEUI_EXPORT KPageWidgetModel : public QAbstractItemModel
 {
   Q_OBJECT
     Q_DECLARE_PRIVATE(KPageWidgetModel)
@@ -297,6 +298,8 @@ class KDEUI_EXPORT KPageWidgetModel : public KPageModel
     void toggled( KPageWidgetItem *page, bool checked );
 
   private:
+        KPageWidgetModelPrivate *const d_ptr;
+
         Q_PRIVATE_SLOT(d_func(), void _k_itemChanged())
         Q_PRIVATE_SLOT(d_func(), void _k_itemToggled(bool))
 };

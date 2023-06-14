@@ -20,8 +20,7 @@
 #ifndef KPAGEWIDGETMODEL_P_H
 #define KPAGEWIDGETMODEL_P_H
 
-#include "kpagemodel_p.h"
-#include "kpagewidgetmodel.h"
+#include "kpageview.h"
 
 class PageItem
 {
@@ -52,7 +51,7 @@ class PageItem
         PageItem *mParentItem;
 };
 
-class KPageWidgetModelPrivate : public KPageModelPrivate
+class KPageWidgetModelPrivate
 {
     Q_DECLARE_PUBLIC(KPageWidgetModel)
     protected:
@@ -95,6 +94,9 @@ class KPageWidgetModelPrivate : public KPageModelPrivate
 
             emit q->toggled(item, checked);
         }
+
+    protected:
+        KPageWidgetModel *q_ptr;
 };
 
 #endif // KPAGEWIDGETMODEL_P_H

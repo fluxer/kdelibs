@@ -252,12 +252,15 @@ void PageItem::dump( int indent )
 }
 
 KPageWidgetModel::KPageWidgetModel( QObject *parent )
-    : KPageModel(*new KPageWidgetModelPrivate, parent)
+    : QAbstractItemModel(parent),
+    d_ptr(new KPageWidgetModelPrivate())
 {
+  d_ptr->q_ptr = this;
 }
 
 KPageWidgetModel::~KPageWidgetModel()
 {
+  delete d_ptr;
 }
 
 int KPageWidgetModel::columnCount( const QModelIndex& ) const
@@ -276,9 +279,9 @@ QVariant KPageWidgetModel::data( const QModelIndex &index, int role ) const
     return QVariant( item->pageWidgetItem()->name() );
   else if ( role == Qt::DecorationRole )
     return QVariant( item->pageWidgetItem()->icon() );
-  else if ( role == HeaderRole )
+  else if ( role == KPageView::HeaderRole )
     return QVariant( item->pageWidgetItem()->header() );
-  else if ( role == WidgetRole )
+  else if ( role == KPageView::WidgetRole )
     return QVariant::fromValue( item->pageWidgetItem()->widget() );
   else if ( role == Qt::CheckStateRole ) {
     if ( item->pageWidgetItem()->isCheckable() ) {

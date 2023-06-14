@@ -23,8 +23,6 @@
 #include "kpageview.h"
 #include "kpageview_p.h"
 
-#include "kpagemodel.h"
-
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <ktitlewidget.h>
@@ -141,7 +139,7 @@ QList<QWidget *> KPageViewPrivate::collectPages(const QModelIndex &parentIndex)
   int rows = model->rowCount( parentIndex );
   for ( int j = 0; j < rows; ++j ) {
     const QModelIndex index = model->index( j, 0, parentIndex );
-    retval.append( qvariant_cast<QWidget*>( model->data( index, KPageModel::WidgetRole ) ) );
+    retval.append( qvariant_cast<QWidget*>( model->data( index, KPageView::WidgetRole ) ) );
 
     if ( model->rowCount( index ) > 0 ) {
       retval += collectPages( index );
@@ -225,7 +223,7 @@ void KPageViewPrivate::_k_pageSelected(const QItemSelection &index, const QItemS
   }
 
   if (faceType != KPageView::Tabbed) {
-  QWidget *widget = qvariant_cast<QWidget*>( model->data( currentIndex, KPageModel::WidgetRole ) );
+  QWidget *widget = qvariant_cast<QWidget*>( model->data( currentIndex, KPageView::WidgetRole ) );
 
   if ( widget ) {
     if ( stack->indexOf( widget ) == -1 ) { // not included yet
@@ -248,7 +246,7 @@ void KPageViewPrivate::updateTitleWidget(const QModelIndex& index)
 {
     Q_Q(KPageView);
 
-    QString header = model->data( index, KPageModel::HeaderRole ).toString();
+    QString header = model->data( index, KPageView::HeaderRole ).toString();
     if ( header.isNull() ) { //TODO KDE5 remove that ugly logic, see also doxy-comments in KPageWidgetItem::setHeader()
         header = model->data( index, Qt::DisplayRole ).toString();
     }

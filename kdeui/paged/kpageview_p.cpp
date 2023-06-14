@@ -32,8 +32,6 @@
 #include <kiconloader.h>
 #include <kglobalsettings.h>
 
-#include "kpagemodel.h"
-
 using namespace KDEPrivate;
 
 /**
@@ -224,7 +222,7 @@ KPageTabbedView::~KPageTabbedView()
 {
   if (model()) {
     for ( int i = 0; i < mTabWidget->count(); ++i ) {
-        QWidget *page = qvariant_cast<QWidget*>( model()->data( model()->index( i, 0 ), KPageModel::WidgetRole ) );
+        QWidget *page = qvariant_cast<QWidget*>( model()->data( model()->index( i, 0 ), KPageView::WidgetRole ) );
 
         if (page) {
             page->setVisible(false);
@@ -326,7 +324,7 @@ void KPageTabbedView::layoutChanged()
   for ( int i = 0; i < model()->rowCount(); ++i ) {
     const QString title = model()->data( model()->index( i, 0 ) ).toString();
     const QIcon icon = model()->data( model()->index( i, 0 ), Qt::DecorationRole ).value<QIcon>();
-    QWidget *page = qvariant_cast<QWidget*>( model()->data( model()->index( i, 0 ), KPageModel::WidgetRole ) );
+    QWidget *page = qvariant_cast<QWidget*>( model()->data( model()->index( i, 0 ), KPageView::WidgetRole ) );
     if (page) {
         QWidget *widget = new QWidget(this);
         QVBoxLayout *layout = new QVBoxLayout(widget);

@@ -24,15 +24,13 @@
 
 #include <kdeui_export.h>
 
-#include <QtGui/QWidget>
-
-class KPageModel;
-
+#include <QWidget>
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
 #include <QModelIndex>
-class KPageViewPrivate;
 #include <QAbstractItemModel>
+
+class KPageViewPrivate;
 
 /**
  * @short A base class which can handle multiple pages.
@@ -41,13 +39,21 @@ class KPageViewPrivate;
  * pages and allows the user to switch between these pages in
  * different ways.
  *
+ * Additional to the standard Qt::ItemDataRoles it provides the two roles
+ *
+ *    @li HeaderRole
+ *    @li WidgetRole
+ *
+ *  which are used to return a header string for a page and a QWidget
+ *  pointer to the page itself.
+ *
  * Currently, @p Auto, @p Plain, @p List, @p Tree and @p Tabbed face
  * types are available. @see KPageWidget
  *
  * <b>Example:</b>\n
  *
  * \code
- *  KPageModel *model = new MyPageModel();
+ *  QAbstractItemModel *model = new MyPageModel();
  *
  *  KPageView *view = new KPageView( this );
  *  view->setModel( model );
@@ -59,12 +65,33 @@ class KPageViewPrivate;
  */
 class KDEUI_EXPORT KPageView : public QWidget
 {
-  Q_OBJECT
-  Q_ENUMS( FaceType )
-  Q_PROPERTY( FaceType faceType READ faceType WRITE setFaceType )
+    Q_OBJECT
+    Q_ENUMS( FaceType )
+    Q_PROPERTY( FaceType faceType READ faceType WRITE setFaceType )
     Q_DECLARE_PRIVATE(KPageView)
 
   public:
+    /**
+     * Additional roles that KPageView uses.
+     */
+    enum Role {
+        /**
+         * A string to be rendered as page header.
+         */
+        HeaderRole = Qt::UserRole + 1,
+        /**
+         * A pointer to the page widget. This is the widget that is shown when the item is
+         * selected.
+         *
+         * You can make QVariant take a QWidget using
+         * \code
+         * QWidget *myWidget = new QWidget;
+         * QVariant v = QVariant::fromValue(myWidget);
+         * \endcode
+         */
+        WidgetRole
+    };
+
     /**
      * This enum is used to decide which type of navigation view
      * shall be used in the page view.
@@ -104,7 +131,7 @@ class KDEUI_EXPORT KPageView : public QWidget
     /**
      * Sets the @p model of the page view.
      *
-     * The model has to provide data for the roles defined in KPageModel::Role.
+     * The model has to provide data for the roles defined in KPageView::Role.
      */
     void setModel(QAbstractItemModel *model);
 

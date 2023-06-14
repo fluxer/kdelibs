@@ -161,7 +161,6 @@ set(kdeui_LIB_SRCS
     notifications/kdbusmenuimporter.cpp
     notifications/kdbusmenu_p.cpp
     paged/kpagedialog.cpp
-    paged/kpagemodel.cpp
     paged/kpageview.cpp
     paged/kpageview_p.cpp
     paged/kpagewidget.cpp
@@ -498,7 +497,6 @@ install(
     notifications/kdbusmenuexporter.h
     notifications/kdbusmenuimporter.h
     paged/kpagedialog.h
-    paged/kpagemodel.h
     paged/kpageview.h
     paged/kpagewidget.h
     paged/kpagewidgetmodel.h

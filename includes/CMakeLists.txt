@@ -208,7 +208,6 @@ install(
     KNumInput
     KOpenWithDialog
     KPageDialog
-    KPageModel
     KPageView
     KPageWidget
     KPageWidgetItem
