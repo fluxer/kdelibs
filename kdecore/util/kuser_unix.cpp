@@ -341,6 +341,7 @@ QStringList KUserGroup::userNames() const
 {
     QStringList result;
     QList<KUser>::const_iterator it;
+    result.reserve(d->users.size());
     for (it = d->users.begin(); it != d->users.end(); ++it) {
         result.append((*it).loginName());
     }
