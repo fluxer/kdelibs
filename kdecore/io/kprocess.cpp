@@ -105,7 +105,7 @@ void KProcess::setOutputChannelMode(OutputChannelMode mode)
             return;
         }
     }
-    QProcess::setProcessChannelMode(QProcess::SeparateChannels);
+    Q_UNREACHABLE();
 }
 
 KProcess::OutputChannelMode KProcess::outputChannelMode() const
