@@ -21,7 +21,6 @@
 #include <krun.h>
 #include <kdirnotify.h>
 #include <kmessagebox.h>
-#include <kmountpoint.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -105,28 +104,13 @@ void KAutoMountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
         return;
     }
 
-    const KMountPoint::List mountPoints (KMountPoint::currentMountPoints());
-    KMountPoint::Ptr mp = mountPoints.findByDevice(m_strDevice);
-    // Mounting devices using "LABEL=" or "UUID=" will fail if we look for
-    // the device using only its real name since /etc/mtab will never contain
-    // the LABEL or UUID entries. Hence, we check using the mount point below
-    // when device name lookup fails. #247235
-    if (!mp) {
-        mp = mountPoints.findByPath(m_mountPoint);
+    const KUrl url(m_mountPoint);
+    // kDebug(7015) << "KAutoMount: m_strDevice=" << m_strDevice << " -> mountpoint=" << m_mountPoint;
+    if (m_bShowFilemanagerWindow) {
+        KRun::runUrl(url, "inode/directory", nullptr /*TODO - window*/);
     }
-
-    if (!mp) {
-        kWarning(7015) << m_strDevice << "was correctly mounted, but findByDevice() didn't find it."
-                        << "This looks like a bug, please report it on http://bugs.kde.org, together with your /etc/fstab and /etc/mtab lines for this device";
-    } else {
-        KUrl url(mp->mountPoint());
-        //kDebug(7015) << "KAutoMount: m_strDevice=" << m_strDevice << " -> mountpoint=" << mountpoint;
-        if ( m_bShowFilemanagerWindow ) {
-            KRun::runUrl(url, "inode/directory", nullptr /*TODO - window*/);
-        }
-        // Notify about the new stuff in that dir, in case of opened windows showing it
-        org::kde::KDirNotify::emitFilesAdded(url.url());
-    }
+    // Notify about the new stuff in that dir, in case of opened windows showing it
+    org::kde::KDirNotify::emitFilesAdded(url.url());
 
     // Update the desktop file which is used for mount/unmount (icon change)
     kDebug(7015) << " mount finished : updating " << m_desktopFile;
