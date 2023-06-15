@@ -2672,15 +2672,14 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     layout->setColumnStretch(1, 1);
 
     QLabel* label = new QLabel( d->m_frame );
-    label->setText( devices.count() == 0 ?
-                    i18n("Device (/dev/fd0):") : // old style
-                    i18n("Device:") ); // new style (combobox)
+    label->setText( i18n("Device:") );
     layout->addWidget(label, 0, 0, Qt::AlignRight);
 
     d->device = new KComboBox( d->m_frame );
     d->device->setObjectName( QLatin1String( "ComboBox_device" ) );
     d->device->setEditable( true );
     d->device->addItems( devices );
+    d->device->lineEdit()->setPlaceholderText( i18n("Enter device...") );
     layout->addWidget(d->device, 0, 1);
     connect( d->device, SIGNAL(activated(int)),
              this, SLOT(slotActivated(int)) );
@@ -2691,9 +2690,7 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     layout->addWidget(d->readonly, 1, 1);
 
     label = new QLabel( d->m_frame );
-    label->setText( devices.count()==0 ?
-                    i18n("Mount point (/mnt/floppy):") : // old style
-                    i18n("Mount point:")); // new style (combobox)
+    label->setText( i18n("Mount point:") );
     layout->addWidget(label, 2, 0, Qt::AlignRight);
 
     d->mountpoint = new QLabel( d->m_frame );
