@@ -24,6 +24,7 @@
 #include <solid/ifaces/device.h>
 
 #include <QtCore/QMap>
+#include <QtCore/QStringList>
 #include <QtCore/QSharedPointer>
 
 namespace Solid
@@ -69,7 +70,7 @@ public:
     virtual QObject *createDeviceInterface(const Solid::DeviceInterface::Type &type);
 
 Q_SIGNALS:
-    void propertyChanged(const QMap<QString,int> &changes);
+    void propertyChanged(const QStringList &changes);
     void conditionRaised(const QString &condition, const QString &reason);
 
 

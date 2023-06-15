@@ -26,7 +26,6 @@ set(solid_LIB_SRCS
     device.cpp
     devicemanager.cpp
     deviceinterface.cpp
-    genericinterface.cpp
     processor.cpp
     block.cpp
     storagedrive.cpp
@@ -59,7 +58,6 @@ set(solid_LIB_SRCS
     ifaces/device.cpp
     ifaces/deviceinterface.cpp
     ifaces/devicemanager.cpp
-    ifaces/genericinterface.cpp
     ifaces/networkinterface.cpp
     ifaces/opticaldisc.cpp
     ifaces/portablemediaplayer.cpp
@@ -90,7 +88,6 @@ if(ENABLE_TESTING)
         backends/fakehw/fakecdrom.cpp
         backends/fakehw/fakedevice.cpp
         backends/fakehw/fakedeviceinterface.cpp
-        backends/fakehw/fakegenericinterface.cpp
         backends/fakehw/fakemanager.cpp
         backends/fakehw/fakenetworkinterface.cpp
         backends/fakehw/fakeopticaldisc.cpp
@@ -233,7 +230,6 @@ install(
     device.h
     devicenotifier.h
     deviceinterface.h
-    genericinterface.h
     processor.h
     block.h
     storageaccess.h

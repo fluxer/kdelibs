@@ -67,8 +67,6 @@ QString Solid::DeviceInterface::typeDescription(Type type)
     {
     case Unknown:
         return QObject::tr("Unknown");
-    case GenericInterface:
-        return QObject::tr("Generic Interface");
     case Processor:
         return QObject::tr("Processor");
     case Block:

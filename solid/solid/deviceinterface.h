@@ -61,13 +61,26 @@ namespace Solid
          * - NetworkInterface: A network interface
          * - Graphic: A graphic interface
          */
-        enum Type { Unknown = 0, GenericInterface = 1, Processor = 2,
-                    Block = 3, StorageAccess = 4, StorageDrive = 5,
-                    OpticalDrive = 6, StorageVolume = 7, OpticalDisc = 8,
-                    Camera = 9, PortableMediaPlayer = 10,
-                    NetworkInterface = 11, AcAdapter = 12, Battery = 13,
-                    Button = 14, AudioInterface = 15, Video = 16,
-                    Graphic = 17, Last = 0xffff  };
+        enum Type {
+            Unknown = 0,
+            Processor = 1,
+            Block = 2,
+            StorageAccess = 3,
+            StorageDrive = 4,
+            OpticalDrive = 5,
+            StorageVolume = 6,
+            OpticalDisc = 7,
+            Camera = 8,
+            PortableMediaPlayer = 9,
+            NetworkInterface = 10,
+            AcAdapter = 11,
+            Battery = 12,
+            Button = 13,
+            AudioInterface = 14,
+            Video = 15,
+            Graphic = 16,
+            Last = 0xffff
+        };
 
         /**
          * Destroys a DeviceInterface object.

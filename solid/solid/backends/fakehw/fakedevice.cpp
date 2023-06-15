@@ -20,7 +20,6 @@
 #include "fakedevice.h"
 
 #include "fakedeviceinterface.h"
-#include "fakegenericinterface.h"
 #include "fakeprocessor.h"
 #include "fakeblock.h"
 #include "fakestorage.h"
@@ -41,8 +40,6 @@
 #include <QtCore/QStringList>
 #include <QtDBus/QDBusConnection>
 
-#include <solid/genericinterface.h>
-
 #include "fakedevice_p.h"
 
 using namespace Solid::Backends::Fake;
@@ -53,7 +50,6 @@ FakeDevice::FakeDevice(const QString &udi, const QMap<QString, QVariant> &proper
     d->udi = udi;
     d->propertyMap = propertyMap;
     d->interfaceList = d->propertyMap["interfaces"].toString().simplified().split(',');
-    d->interfaceList << "GenericInterface";
     d->locked = false;
     d->broken = false;
 
@@ -69,8 +65,8 @@ FakeDevice::FakeDevice(const QString &udi, const QMap<QString, QVariant> &proper
         createDeviceInterface(type);
     }
 
-    connect(d.data(), SIGNAL(propertyChanged(QMap<QString,int>)),
-            this, SIGNAL(propertyChanged(QMap<QString,int>)));
+    connect(d.data(), SIGNAL(propertyChanged(QStringList)),
+            this, SIGNAL(propertyChanged(QStringList)));
     connect(d.data(), SIGNAL(conditionRaised(QString,QString)),
             this, SIGNAL(conditionRaised(QString,QString)));
 }
@@ -78,8 +74,8 @@ FakeDevice::FakeDevice(const QString &udi, const QMap<QString, QVariant> &proper
 FakeDevice::FakeDevice(const FakeDevice& dev)
     : Solid::Ifaces::Device(), d(dev.d)
 {
-    connect(d.data(), SIGNAL(propertyChanged(QMap<QString,int>)),
-            this, SIGNAL(propertyChanged(QMap<QString,int>)));
+    connect(d.data(), SIGNAL(propertyChanged(QStringList)),
+            this, SIGNAL(propertyChanged(QStringList)));
     connect(d.data(), SIGNAL(conditionRaised(QString,QString)),
             this, SIGNAL(conditionRaised(QString,QString)));
 }
@@ -168,17 +164,10 @@ bool FakeDevice::setProperty(const QString &key, const QVariant &value)
 {
     if (d->broken) return false;
 
-    Solid::GenericInterface::PropertyChange change_type = Solid::GenericInterface::PropertyModified;
-
-    if (!d->propertyMap.contains(key))
-    {
-        change_type = Solid::GenericInterface::PropertyAdded;
-    }
-
     d->propertyMap[key] = value;
 
-    QMap<QString,int> change;
-    change[key] = change_type;
+    QStringList change;
+    change.append(key);
 
     emit d->propertyChanged(change);
 
@@ -191,8 +180,8 @@ bool FakeDevice::removeProperty(const QString &key)
 
     d->propertyMap.remove(key);
 
-    QMap<QString,int> change;
-    change[key] = Solid::GenericInterface::PropertyRemoved;
+    QStringList change;
+    change.append(key);
 
     emit d->propertyChanged(change);
 
@@ -259,9 +248,6 @@ QObject *FakeDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
 
     switch(type)
     {
-    case Solid::DeviceInterface::GenericInterface:
-        iface = new FakeGenericInterface(this);
-        break;
     case Solid::DeviceInterface::Processor:
         iface = new FakeProcessor(this);
         break;

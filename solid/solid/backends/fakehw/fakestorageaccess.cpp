@@ -25,8 +25,8 @@ using namespace Solid::Backends::Fake;
 FakeStorageAccess::FakeStorageAccess(FakeDevice *device)
     : FakeDeviceInterface(device)
 {
-    connect(device, SIGNAL(propertyChanged(QMap<QString,int>)),
-            this, SLOT(onPropertyChanged(QMap<QString,int>)));
+    connect(device, SIGNAL(propertyChanged(QStringList)),
+            this, SLOT(onPropertyChanged(QStringList)));
 }
 
 FakeStorageAccess::~FakeStorageAccess()
@@ -70,9 +70,9 @@ bool FakeStorageAccess::teardown()
     }
 }
 
-void Solid::Backends::Fake::FakeStorageAccess::onPropertyChanged(const QMap<QString,int> &changes)
+void Solid::Backends::Fake::FakeStorageAccess::onPropertyChanged(const QStringList &changes)
 {
-    foreach (const QString &property, changes.keys()) {
+    foreach (const QString &property, changes) {
         if (property=="isMounted") {
             emit accessibilityChanged(fakeDevice()->property("isMounted").toBool(), fakeDevice()->udi());
         }

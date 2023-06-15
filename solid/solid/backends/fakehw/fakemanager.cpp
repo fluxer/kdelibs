@@ -53,8 +53,7 @@ FakeManager::FakeManager(QObject *parent, const QString &xmlFile)
 
     parseMachineFile();
 
-    d->supportedInterfaces << Solid::DeviceInterface::GenericInterface
-                           << Solid::DeviceInterface::Processor
+    d->supportedInterfaces << Solid::DeviceInterface::Processor
                            << Solid::DeviceInterface::Block
                            << Solid::DeviceInterface::StorageAccess
                            << Solid::DeviceInterface::StorageDrive

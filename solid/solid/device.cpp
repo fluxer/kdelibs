@@ -28,8 +28,6 @@
 
 #include <solid/ifaces/device.h>
 
-#include <solid/genericinterface.h>
-#include <solid/ifaces/genericinterface.h>
 #include <solid/processor.h>
 #include <solid/ifaces/processor.h>
 #include <solid/block.h>
@@ -171,9 +169,6 @@ const Solid::DeviceInterface *Solid::Device::asDeviceInterface(const DeviceInter
         {
             switch (type)
             {
-            case DeviceInterface::GenericInterface:
-                iface = deviceinterface_cast(Ifaces::GenericInterface, GenericInterface, dev_iface);
-                break;
             case DeviceInterface::Processor:
                 iface = deviceinterface_cast(Ifaces::Processor, Processor, dev_iface);
                 break;

@@ -50,10 +50,10 @@ private slots:
     void testSetupTeardown();
     void testMisc();
 
-    void slotPropertyChanged(const QMap<QString,int> &changes);
+    void slotPropertyChanged(const QStringList &changes);
 private:
     Solid::Backends::Fake::FakeManager *fakeManager;
-    QList< QMap<QString,int> > m_changesList;
+    QList<QStringList> m_changesList;
 };
 
 #endif
