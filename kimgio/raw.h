@@ -26,7 +26,6 @@ class RAWHandler : public QImageIOHandler
 {
 public:
     RAWHandler();
-    ~RAWHandler();
 
     bool canRead() const final;
     bool read(QImage *image) final;
