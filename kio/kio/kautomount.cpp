@@ -17,13 +17,16 @@
 */
 
 #include "kautomount.h"
-#include "krun.h"
-#include "kdirwatch.h"
-#include "kio/job.h"
-#include "kio/jobuidelegate.h"
+
+#include <krun.h>
 #include <kdirnotify.h>
-#include <kdebug.h>
+#include <kmessagebox.h>
 #include <kmountpoint.h>
+#include <klocale.h>
+#include <kdebug.h>
+
+#include <QDBusInterface>
+#include <QDBusReply>
 
 /***********************************************************************
  *
@@ -34,11 +37,8 @@
 class KAutoMountPrivate
 {
 public:
-    KAutoMountPrivate(KAutoMount *qq, const QString &device, const QString& mountPoint,
-                      const QString &desktopFile, bool showFileManagerWindow)
-        : q(qq), m_strDevice(device), m_desktopFile(desktopFile), m_mountPoint(mountPoint),
-          m_bShowFilemanagerWindow(showFileManagerWindow)
-        { }
+    KAutoMountPrivate(KAutoMount *qq, const QString &device, const QString &mountPoint,
+                      const QString &desktopFile, bool showFileManagerWindow);
 
     KAutoMount *q;
     QString m_strDevice;
@@ -46,16 +46,32 @@ public:
     QString m_mountPoint;
     bool m_bShowFilemanagerWindow;
 
-    void slotResult( KJob * );
+    QDBusInterface m_solidInterface;
+    QDBusPendingCallWatcher* m_callWatcher;
+
+    void slotFinished(QDBusPendingCallWatcher *watcher);
 };
 
-KAutoMount::KAutoMount( bool _readonly, const QByteArray& _format, const QString& _device,
-                        const QString&  _mountpoint, const QString & _desktopFile,
-                        bool _show_filemanager_window )
-    : d(new KAutoMountPrivate(this, _device, _mountpoint, _desktopFile, _show_filemanager_window))
+KAutoMountPrivate::KAutoMountPrivate(KAutoMount *qq, const QString &device, const QString &mountPoint,
+                                     const QString &desktopFile, bool showFileManagerWindow)
+    : q(qq), m_strDevice(device), m_desktopFile(desktopFile), m_mountPoint(mountPoint),
+    m_bShowFilemanagerWindow(showFileManagerWindow),
+    m_solidInterface("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer"),
+    m_callWatcher(nullptr)
 {
-    KIO::Job* job = KIO::mount( _readonly, _format, _device, _mountpoint );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
+}
+
+KAutoMount::KAutoMount(bool readonly, const QString &device,
+                       const QString &mountpoint, const QString &desktopFile,
+                       bool show_filemanager_window)
+    : d(new KAutoMountPrivate(this, device, mountpoint, desktopFile, show_filemanager_window))
+{
+    QDBusPendingCall pendingcall = d->m_solidInterface.asyncCall("mountDevice", device, mountpoint, readonly);
+    d->m_callWatcher = new QDBusPendingCallWatcher(pendingcall, this);
+    connect(
+        d->m_callWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+        this, SLOT(slotFinished(QDBusPendingCallWatcher*))
+    );
 }
 
 KAutoMount::~KAutoMount()
@@ -63,92 +79,138 @@ KAutoMount::~KAutoMount()
     delete d;
 }
 
-void KAutoMountPrivate::slotResult( KJob * job )
+void KAutoMountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
 {
-    if ( job->error() ) {
+    if (watcher->isError()) {
         emit q->error();
-        job->uiDelegate()->showErrorMessage();
-    } else {
-        const KMountPoint::List mountPoints (KMountPoint::currentMountPoints());
-        KMountPoint::Ptr mp = mountPoints.findByDevice(m_strDevice);
-        // Mounting devices using "LABEL=" or "UUID=" will fail if we look for
-        // the device using only its real name since /etc/mtab will never contain
-        // the LABEL or UUID entries. Hence, we check using the mount point below
-        // when device name lookup fails. #247235
-        if (!mp) {
-            mp = mountPoints.findByPath(m_mountPoint);
-        }
-
-        if (!mp) {
-            kWarning(7015) << m_strDevice << "was correctly mounted, but findByDevice() didn't find it."
-                           << "This looks like a bug, please report it on http://bugs.kde.org, together with your /etc/fstab and /etc/mtab lines for this device";
-        } else {
-            KUrl url(mp->mountPoint());
-            //kDebug(7015) << "KAutoMount: m_strDevice=" << m_strDevice << " -> mountpoint=" << mountpoint;
-            if ( m_bShowFilemanagerWindow ) {
-                KRun::runUrl( url, "inode/directory", 0 /*TODO - window*/ );
-            }
-            // Notify about the new stuff in that dir, in case of opened windows showing it
-            org::kde::KDirNotify::emitFilesAdded( url.url() );
-        }
-
-        // Update the desktop file which is used for mount/unmount (icon change)
-        kDebug(7015) << " mount finished : updating " << m_desktopFile;
-        KUrl dfURL;
-        dfURL.setPath( m_desktopFile );
-        org::kde::KDirNotify::emitFilesChanged( QStringList() << dfURL.url() );
-        //KDirWatch::self()->setFileDirty( m_desktopFile );
-
-        emit q->finished();
+        KMessageBox::detailedError(
+            nullptr /*TODO - window*/,
+            i18n("Could not mount device."),
+            watcher->error().message()
+        );
+        q->deleteLater();
+        return;
     }
+
+    const QList<QVariant> replyarguments = watcher->reply().arguments();
+    const int replyvalue = replyarguments[0].toInt();
+    // TODO: this should be using Solid::errorString() or org.kde.SolidUiServer getter for the error string
+    if (replyvalue != 0) {
+        emit q->error();
+        KMessageBox::error(
+            nullptr /*TODO - window*/,
+            i18n("Could not mount device.")
+        );
+        q->deleteLater();
+        return;
+    }
+
+    const KMountPoint::List mountPoints (KMountPoint::currentMountPoints());
+    KMountPoint::Ptr mp = mountPoints.findByDevice(m_strDevice);
+    // Mounting devices using "LABEL=" or "UUID=" will fail if we look for
+    // the device using only its real name since /etc/mtab will never contain
+    // the LABEL or UUID entries. Hence, we check using the mount point below
+    // when device name lookup fails. #247235
+    if (!mp) {
+        mp = mountPoints.findByPath(m_mountPoint);
+    }
+
+    if (!mp) {
+        kWarning(7015) << m_strDevice << "was correctly mounted, but findByDevice() didn't find it."
+                        << "This looks like a bug, please report it on http://bugs.kde.org, together with your /etc/fstab and /etc/mtab lines for this device";
+    } else {
+        KUrl url(mp->mountPoint());
+        //kDebug(7015) << "KAutoMount: m_strDevice=" << m_strDevice << " -> mountpoint=" << mountpoint;
+        if ( m_bShowFilemanagerWindow ) {
+            KRun::runUrl(url, "inode/directory", nullptr /*TODO - window*/);
+        }
+        // Notify about the new stuff in that dir, in case of opened windows showing it
+        org::kde::KDirNotify::emitFilesAdded(url.url());
+    }
+
+    // Update the desktop file which is used for mount/unmount (icon change)
+    kDebug(7015) << " mount finished : updating " << m_desktopFile;
+    KUrl dfURL;
+    dfURL.setPath( m_desktopFile );
+    org::kde::KDirNotify::emitFilesChanged(QStringList() << dfURL.url());
+
+    emit q->finished();
     q->deleteLater();
 }
 
 class KAutoUnmountPrivate
 {
 public:
-    KAutoUnmountPrivate( KAutoUnmount *qq, const QString & _mountpoint, const QString & _desktopFile )
-        : q(qq), m_desktopFile( _desktopFile ), m_mountpoint( _mountpoint )
-    {}
+    KAutoUnmountPrivate(KAutoUnmount *qq, const QString &mountpoint, const QString &desktopFile);
+
     KAutoUnmount *q;
     QString m_desktopFile;
     QString m_mountpoint;
 
-    void slotResult( KJob * job );
+    QDBusInterface m_solidInterface;
+    QDBusPendingCallWatcher* m_callWatcher;
+
+    void slotFinished(QDBusPendingCallWatcher *watcher);
 };
 
-KAutoUnmount::KAutoUnmount( const QString & _mountpoint, const QString & _desktopFile )
-    : d( new KAutoUnmountPrivate(this, _mountpoint, _desktopFile) )
+KAutoUnmountPrivate::KAutoUnmountPrivate(KAutoUnmount *qq, const QString &mountpoint, const QString &desktopFile)
+    : q(qq), m_desktopFile(desktopFile), m_mountpoint(mountpoint),
+    m_solidInterface("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer"),
+    m_callWatcher(nullptr)
 {
-    KIO::Job * job = KIO::unmount( d->m_mountpoint );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
 }
 
-void KAutoUnmountPrivate::slotResult( KJob * job )
+KAutoUnmount::KAutoUnmount(const QString &mountpoint, const QString &desktopFile)
+    : d( new KAutoUnmountPrivate(this, mountpoint, desktopFile))
 {
-    if ( job->error() ) {
+    QDBusPendingCall pendingcall = d->m_solidInterface.asyncCall("unmountDevice", mountpoint);
+    d->m_callWatcher = new QDBusPendingCallWatcher(pendingcall, this);
+    connect(
+        d->m_callWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+        this, SLOT(slotFinished(QDBusPendingCallWatcher*))
+    );
+}
+
+void KAutoUnmountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
+{
+    if (watcher->isError()) {
         emit q->error();
-        job->uiDelegate()->showErrorMessage();
-    }
-    else
-    {
-        // Update the desktop file which is used for mount/unmount (icon change)
-        kDebug(7015) << "unmount finished : updating " << m_desktopFile;
-        KUrl dfURL;
-        dfURL.setPath( m_desktopFile );
-        org::kde::KDirNotify::emitFilesChanged( QStringList() << dfURL.url() );
-        //KDirWatch::self()->setFileDirty( m_desktopFile );
-
-        // Notify about the new stuff in that dir, in case of opened windows showing it
-        // You may think we removed files, but this may have also readded some
-        // (if the mountpoint wasn't empty). The only possible behavior on FilesAdded
-        // is to relist the directory anyway.
-        KUrl mp( m_mountpoint );
-        org::kde::KDirNotify::emitFilesAdded( mp.url() );
-
-        emit q->finished();
+        KMessageBox::detailedError(
+            nullptr /*TODO - window*/,
+            i18n("Could not unmount device."),
+            watcher->error().message()
+        );
+        q->deleteLater();
+        return;
     }
 
+    const QList<QVariant> replyarguments = watcher->reply().arguments();
+    const int replyvalue = replyarguments[0].toInt();
+    // TODO: this should be using Solid::errorString() or org.kde.SolidUiServer getter for the error string
+    if (replyvalue != 0) {
+        emit q->error();
+        KMessageBox::error(
+            nullptr /*TODO - window*/,
+            i18n("Could not unmount device.")
+        );
+        q->deleteLater();
+        return;
+    }
+
+    // Update the desktop file which is used for mount/unmount (icon change)
+    kDebug(7015) << "unmount finished : updating " << m_desktopFile;
+    KUrl dfURL;
+    dfURL.setPath(m_desktopFile);
+    org::kde::KDirNotify::emitFilesChanged(QStringList() << dfURL.url());
+
+    // Notify about the new stuff in that dir, in case of opened windows showing it
+    // You may think we removed files, but this may have also readded some
+    // (if the mountpoint wasn't empty). The only possible behavior on FilesAdded
+    // is to relist the directory anyway.
+    KUrl mp(m_mountpoint);
+    org::kde::KDirNotify::emitFilesAdded(mp.url());
+
+    emit q->finished();
     q->deleteLater();
 }
 

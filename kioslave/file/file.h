@@ -67,15 +67,6 @@ public:
   virtual void setModificationTime( const KUrl& url, const QDateTime& mtime );
   virtual void del( const KUrl& url, bool isfile);
 
-  /**
-   * Special commands supported by this slave:
-   * 1 - mount
-   * 2 - unmount
-   */
-  virtual void special( const QByteArray &data );
-  void unmount( const QString& point );
-  void mount( bool _ro, const char *_fstype, const QString& dev, const QString& point );
-
 #ifdef HAVE_POSIX_ACL
   static bool isExtendedACL(acl_t acl);
 #endif

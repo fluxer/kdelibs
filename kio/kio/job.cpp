@@ -657,29 +657,6 @@ SimpleJob *KIO::special(const KUrl& url, const QByteArray & data, JobFlags flags
     return SimpleJobPrivate::newJob(url, CMD_SPECIAL, data, flags);
 }
 
-SimpleJob *KIO::mount( bool ro, const QByteArray& fstype, const QString& dev, const QString& point, JobFlags flags )
-{
-    KIO_ARGS << int(1) << qint8( ro ? 1 : 0 )
-             << QString::fromLatin1(fstype) << dev << point;
-    SimpleJob *job = special( KUrl("file:/"), packedArgs, flags );
-    if (!(flags & HideProgressInfo)) {
-        KIO::JobPrivate::emitMounting(job, dev, point);
-    }
-    return job;
-}
-
-SimpleJob *KIO::unmount( const QString& point, JobFlags flags )
-{
-    KIO_ARGS << int(2) << point;
-    SimpleJob *job = special( KUrl("file:/"), packedArgs, flags );
-    if (!(flags & HideProgressInfo)) {
-        KIO::JobPrivate::emitUnmounting(job, point);
-    }
-    return job;
-}
-
-
-
 //////////
 
 class KIO::StatJobPrivate: public SimpleJobPrivate

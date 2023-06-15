@@ -94,11 +94,8 @@ static bool runFSDevice( const KUrl& _url, const KDesktopFile &cfg )
     } else {
         KConfigGroup cg = cfg.desktopGroup();
         bool ro = cg.readEntry("ReadOnly", false);
-        QString fstype = cg.readEntry( "FSType" );
-        if ( fstype == "Default" ) // KDE-1 thing
-            fstype.clear();
         QString point = cg.readEntry( "MountPoint" );
-        (void) new KAutoMount( ro, fstype.toLatin1(), dev, point, _url.toLocalFile() );
+        (void) new KAutoMount( ro, dev, point, _url.toLocalFile() );
         retval = false;
     }
 
@@ -270,11 +267,8 @@ void KDesktopFileActions::executeService( const KUrl::List& urls, const KService
 
                 const KConfigGroup group = cfg.desktopGroup();
                 bool ro = group.readEntry("ReadOnly", false);
-                QString fstype = group.readEntry( "FSType" );
-                if ( fstype == "Default" ) // KDE-1 thing
-                    fstype.clear();
                 QString point = group.readEntry( "MountPoint" );
-                (void)new KAutoMount( ro, fstype.toLatin1(), dev, point, path, false );
+                (void)new KAutoMount( ro, dev, point, path, false );
             } else if ( actionData == ST_UNMOUNT ) {
                 // Not mounted? Strange, but who knows ...
                 if ( !mp )

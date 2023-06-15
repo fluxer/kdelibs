@@ -112,8 +112,6 @@ namespace KIO {
     /**
      * Execute any command that is specific to one slave (protocol).
      *
-     * Examples are : mount and unmount (kio_file)
-     *
      * @param url The URL isn't passed to the slave, but is used to know
      *        which slave to send it to :-)
      * @param data Packed data.  The meaning is completely dependent on the
@@ -122,31 +120,6 @@ namespace KIO {
      * @return the job handling the operation.
      */
     KIO_EXPORT SimpleJob * special( const KUrl& url, const QByteArray & data, JobFlags flags = DefaultFlags );
-
-    /**
-     * Mount filesystem.
-     *
-     * Special job for @p kio_file.
-     *
-     * @param ro Mount read-only if @p true.
-     * @param fstype File system type (e.g. "ext2", can be empty).
-     * @param dev Device (e.g. /dev/sda0).
-     * @param point Mount point, can be @p null.
-     * @param flags Can be HideProgressInfo here
-     * @return the job handling the operation.
-     */
-    KIO_EXPORT SimpleJob *mount( bool ro, const QByteArray& fstype, const QString& dev, const QString& point, JobFlags flags = DefaultFlags );
-
-    /**
-     * Unmount filesystem.
-     *
-     * Special job for @p kio_file.
-     *
-     * @param point Point to unmount.
-     * @param flags Can be HideProgressInfo here
-     * @return the job handling the operation.
-     */
-    KIO_EXPORT SimpleJob *unmount( const QString & point, JobFlags flags = DefaultFlags );
 
     /**
      * Find all details for one file or directory.

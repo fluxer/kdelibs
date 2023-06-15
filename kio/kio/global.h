@@ -153,53 +153,51 @@ namespace KIO
     ERR_USER_CANCELED = KJob::KilledJobError,
     ERR_COULD_NOT_CONNECT = KJob::UserDefinedError + 17,
     ERR_CONNECTION_BROKEN = KJob::UserDefinedError + 18,
-    ERR_COULD_NOT_MOUNT = KJob::UserDefinedError + 19,
-    ERR_COULD_NOT_UNMOUNT = KJob::UserDefinedError + 20,
-    ERR_COULD_NOT_READ = KJob::UserDefinedError + 21,
-    ERR_COULD_NOT_WRITE = KJob::UserDefinedError + 22,
-    ERR_COULD_NOT_BIND = KJob::UserDefinedError + 23,
-    ERR_COULD_NOT_LISTEN = KJob::UserDefinedError + 24,
-    ERR_COULD_NOT_ACCEPT = KJob::UserDefinedError + 25,
-    ERR_COULD_NOT_LOGIN = KJob::UserDefinedError + 26,
-    ERR_COULD_NOT_STAT = KJob::UserDefinedError + 27,
-    ERR_COULD_NOT_CLOSEDIR = KJob::UserDefinedError + 28,
-    ERR_COULD_NOT_MKDIR = KJob::UserDefinedError + 29,
-    ERR_COULD_NOT_RMDIR = KJob::UserDefinedError + 30,
-    ERR_COULD_NOT_SEEK = KJob::UserDefinedError + 31,
-    ERR_CANNOT_RESUME = KJob::UserDefinedError + 32,
-    ERR_CANNOT_RENAME = KJob::UserDefinedError + 33,
-    ERR_CANNOT_CHMOD = KJob::UserDefinedError + 34,
-    ERR_CANNOT_DELETE = KJob::UserDefinedError + 35,
-    ERR_CANNOT_CHOWN = KJob::UserDefinedError + 36,
+    ERR_COULD_NOT_READ = KJob::UserDefinedError + 19,
+    ERR_COULD_NOT_WRITE = KJob::UserDefinedError + 20,
+    ERR_COULD_NOT_BIND = KJob::UserDefinedError + 21,
+    ERR_COULD_NOT_LISTEN = KJob::UserDefinedError + 22,
+    ERR_COULD_NOT_ACCEPT = KJob::UserDefinedError + 23,
+    ERR_COULD_NOT_LOGIN = KJob::UserDefinedError + 24,
+    ERR_COULD_NOT_STAT = KJob::UserDefinedError + 25,
+    ERR_COULD_NOT_CLOSEDIR = KJob::UserDefinedError + 26,
+    ERR_COULD_NOT_MKDIR = KJob::UserDefinedError + 27,
+    ERR_COULD_NOT_RMDIR = KJob::UserDefinedError + 28,
+    ERR_COULD_NOT_SEEK = KJob::UserDefinedError + 29,
+    ERR_CANNOT_RESUME = KJob::UserDefinedError + 30,
+    ERR_CANNOT_RENAME = KJob::UserDefinedError + 31,
+    ERR_CANNOT_CHMOD = KJob::UserDefinedError + 32,
+    ERR_CANNOT_DELETE = KJob::UserDefinedError + 33,
+    ERR_CANNOT_CHOWN = KJob::UserDefinedError + 34,
     // The text argument is the protocol that the dead slave supported.
     // This means for example: file, ftp, http, ...
-    ERR_SLAVE_DIED = KJob::UserDefinedError + 37,
-    ERR_OUT_OF_MEMORY = KJob::UserDefinedError + 38,
-    ERR_UNKNOWN_PROXY_HOST = KJob::UserDefinedError + 39,
-    ERR_COULD_NOT_AUTHENTICATE = KJob::UserDefinedError + 40,
-    ERR_INTERNAL_SERVER = KJob::UserDefinedError + 41,
-    ERR_SERVER_TIMEOUT = KJob::UserDefinedError + 42,
-    ERR_SERVICE_NOT_AVAILABLE = KJob::UserDefinedError + 43,
-    ERR_UNKNOWN = KJob::UserDefinedError + 44,
-    ERR_CANNOT_DELETE_ORIGINAL = KJob::UserDefinedError + 45,
-    ERR_CANNOT_DELETE_PARTIAL = KJob::UserDefinedError + 46,
-    ERR_CANNOT_RENAME_ORIGINAL = KJob::UserDefinedError + 47,
-    ERR_CANNOT_RENAME_PARTIAL = KJob::UserDefinedError + 48,
-    ERR_CANNOT_SYMLINK = KJob::UserDefinedError + 49,
+    ERR_SLAVE_DIED = KJob::UserDefinedError + 35,
+    ERR_OUT_OF_MEMORY = KJob::UserDefinedError + 36,
+    ERR_UNKNOWN_PROXY_HOST = KJob::UserDefinedError + 37,
+    ERR_COULD_NOT_AUTHENTICATE = KJob::UserDefinedError + 38,
+    ERR_INTERNAL_SERVER = KJob::UserDefinedError + 39,
+    ERR_SERVER_TIMEOUT = KJob::UserDefinedError + 40,
+    ERR_SERVICE_NOT_AVAILABLE = KJob::UserDefinedError + 41,
+    ERR_UNKNOWN = KJob::UserDefinedError + 42,
+    ERR_CANNOT_DELETE_ORIGINAL = KJob::UserDefinedError + 43,
+    ERR_CANNOT_DELETE_PARTIAL = KJob::UserDefinedError + 44,
+    ERR_CANNOT_RENAME_ORIGINAL = KJob::UserDefinedError + 45,
+    ERR_CANNOT_RENAME_PARTIAL = KJob::UserDefinedError + 46,
+    ERR_CANNOT_SYMLINK = KJob::UserDefinedError + 47,
     // Action succeeded but no content will follow.
-    ERR_NO_CONTENT = KJob::UserDefinedError + 50,
-    ERR_DISK_FULL = KJob::UserDefinedError + 51,
+    ERR_NO_CONTENT = KJob::UserDefinedError + 48,
+    ERR_DISK_FULL = KJob::UserDefinedError + 49,
     // src==dest when moving/copying
-    ERR_IDENTICAL_FILES = KJob::UserDefinedError + 52,
+    ERR_IDENTICAL_FILES = KJob::UserDefinedError + 50,
     // for slave specified errors that can be
     // rich text.  Email links will be handled
     // by the standard email app and all hrefs
     // will be handled by the standard browser.
     // <a href="exec:/khelpcenter ?" will be
     // forked.
-    ERR_SLAVE_DEFINED = KJob::UserDefinedError + 53,
+    ERR_SLAVE_DEFINED = KJob::UserDefinedError + 51,
     // Emitted by setModificationTime
-    ERR_CANNOT_SETTIME = KJob::UserDefinedError + 54
+    ERR_CANNOT_SETTIME = KJob::UserDefinedError + 52
   };
 
   /**

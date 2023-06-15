@@ -203,12 +203,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case KIO::ERR_CONNECTION_BROKEN:
       result = i18n( "Connection to host %1 is broken.", errorText );
       break;
-    case KIO::ERR_COULD_NOT_MOUNT:
-      result = i18n( "Could not mount device.\nThe reported error was:\n%1", errorText );
-      break;
-    case KIO::ERR_COULD_NOT_UNMOUNT:
-      result = i18n( "Could not unmount device.\nThe reported error was:\n%1", errorText );
-      break;
     case KIO::ERR_COULD_NOT_READ:
       result = i18n( "Could not read file %1.", errorText );
       break;
@@ -670,43 +664,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       causes << cNetwork << cNetpath << i18n( "A protocol error may have occurred, "
         "causing the server to close the connection as a response to the error." );
       solutions << sTryagain << sServeradmin << sSysadmin;
-      break;
-
-    case KIO::ERR_COULD_NOT_MOUNT:
-      errorName = i18n( "Unable to Initialize Input/Output Device" );
-      techName = i18n( "Could Not Mount Device" );
-      description = i18n( "The requested device could not be initialized "
-        "(\"mounted\"). The reported error was: <strong>%1</strong>" ,
-          errorText );
-      causes << i18n( "The device may not be ready, for example there may be "
-        "no media in a removable media device (i.e. no CD-ROM in a CD drive), "
-        "or in the case of a peripheral/portable device, the device may not "
-        "be correctly connected." )
-        << i18n( "You may not have permissions to initialize (\"mount\") the "
-        "device. On UNIX systems, often system administrator privileges are "
-        "required to initialize a device." )
-        << cHardware;
-      solutions << i18n( "Check that the device is ready; removable drives "
-        "must contain media, and portable devices must be connected and powered "
-        "on.; and try again." ) << sAccess << sSysadmin;
-      break;
-
-    case KIO::ERR_COULD_NOT_UNMOUNT:
-      errorName = i18n( "Unable to Uninitialize Input/Output Device" );
-      techName = i18n( "Could Not Unmount Device" );
-      description = i18n( "The requested device could not be uninitialized "
-        "(\"unmounted\"). The reported error was: <strong>%1</strong>" ,
-          errorText );
-      causes << i18n( "The device may be busy, that is, still in use by "
-        "another application or user. Even such things as having an open "
-        "browser window on a location on this device may cause the device to "
-        "remain in use." )
-        << i18n( "You may not have permissions to uninitialize (\"unmount\") "
-        "the device. On UNIX systems, system administrator privileges are "
-        "often required to uninitialize a device." )
-        << cHardware;
-      solutions << i18n( "Check that no applications are accessing the device, "
-        "and try again." ) << sAccess << sSysadmin;
       break;
 
     case KIO::ERR_COULD_NOT_READ:

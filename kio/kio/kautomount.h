@@ -20,22 +20,17 @@
 #define KAUTOMOUNT_H
 
 #include <QtCore/QObject>
+#include <QtDBus/QDBusPendingCallWatcher>
 
 #include <kio/kio_export.h>
 
-class KJob;
-namespace KIO {
-    class Job;
-}
-
 class KAutoMountPrivate;
 /**
- * This class implements synchronous mounting of devices,
- * as well as showing a file-manager window after mounting a device, optionally.
- * It is a wrapper around the asychronous KIO::special() call for mount,
- * used by KMimeType.
+ * This class implements mounting of devices, as well as showing a file-manager
+ * window after mounting a device, optionally. It is a wrapper around the Solid
+ * UI and is used by KDesktopFileActions.
  *
- * @short This class implements synchronous mounting of devices.
+ * @short This class implements mounting of devices.
  */
 class KIO_EXPORT KAutoMount : public QObject
 {
@@ -44,7 +39,6 @@ public:
     /**
      * Mounts a device.
      * @param readonly if true, the device is mounted read-only
-     * @param format the file system (e.g. vfat, ext2...) [optional, fstab is used otherwise]
      * @param device the path to the device (e.g. /dev/fd0)
      * @param mountpoint the directory where to mount the device [optional, fstab is used otherwise]
      * @param desktopFile the file the user clicked on - to notify KDirWatch of the fact that
@@ -52,8 +46,8 @@ public:
      * @param show_filemanager_window if true, a file-manager window for that mountpoint is shown after
      * the mount, if successful.
      */
-    KAutoMount( bool readonly, const QByteArray& format, const QString& device, const QString& mountpoint,
-                const QString & desktopFile, bool show_filemanager_window = true );
+    KAutoMount(bool readonly, const QString &device, const QString &mountpoint,
+               const QString &desktopFile, bool show_filemanager_window = true);
 
 Q_SIGNALS:
     /** Emitted when the directory has been mounted */
@@ -64,18 +58,17 @@ Q_SIGNALS:
 private:
     /** KAutoMount deletes itself. Don't delete it manually. */
     ~KAutoMount();
-    Q_PRIVATE_SLOT(d, void slotResult( KJob * ))
+    Q_PRIVATE_SLOT(d, void slotFinished(QDBusPendingCallWatcher *))
     friend class KAutoMountPrivate;
     KAutoMountPrivate* const d;
 };
 
 class KAutoUnmountPrivate;
 /**
- * This class implements synchronous unmounting of devices,
- * It is a wrapper around the asychronous KIO::special() call for unmount,
- * used by KMimeType.
+ * This class implements unmounting of devices. It is a wrapper around Solid UI
+ * and is used by KDesktopFileActions.
  *
- * @short This class implements synchronous unmounting of devices,
+ * @short This class implements unmounting of devices,
  */
 class KIO_EXPORT KAutoUnmount : public QObject
 {
@@ -87,7 +80,7 @@ public:
      * @param desktopFile the file the user clicked on - to notify KDirWatch of the fact that
      * it should emit fileDirty for it (to have the icon change)
      */
-    KAutoUnmount( const QString & mountpoint, const QString & desktopFile );
+    KAutoUnmount(const QString &mountpoint, const QString &desktopFile);
 
 Q_SIGNALS:
     /** Emitted when the directory has been unmounted */
@@ -98,7 +91,7 @@ Q_SIGNALS:
 private:
     /** KAutoUnmount deletes itself. Don't delete it manually. */
     ~KAutoUnmount();
-    Q_PRIVATE_SLOT(d, void slotResult( KJob * ))
+    Q_PRIVATE_SLOT(d, void slotFinished(QDBusPendingCallWatcher *))
     friend class KAutoUnmountPrivate;
     KAutoUnmountPrivate* const d;
 };

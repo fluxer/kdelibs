@@ -115,7 +115,7 @@ bool StorageAccess::setup()
     emit setupRequested(m_device->udi());
 
     QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
-    QDBusReply<int> reply = soliduiserver.call("mountDevice", m_device->udi());
+    QDBusReply<int> reply = soliduiserver.call("mountUdi", m_device->udi());
 
     const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
     if (replyvalue == Solid::NoError) {
@@ -136,7 +136,7 @@ bool StorageAccess::teardown()
     emit teardownRequested(m_device->udi());
 
     QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
-    QDBusReply<int> reply = soliduiserver.call("unmountDevice", m_device->udi());
+    QDBusReply<int> reply = soliduiserver.call("unmountUdi", m_device->udi());
 
     const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
     if (replyvalue == Solid::NoError) {

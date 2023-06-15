@@ -2671,8 +2671,7 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     layout->setMargin(0);
     layout->setColumnStretch(1, 1);
 
-    QLabel* label;
-    label = new QLabel( d->m_frame );
+    QLabel* label = new QLabel( d->m_frame );
     label->setText( devices.count() == 0 ?
                     i18n("Device (/dev/fd0):") : // old style
                     i18n("Device:") ); // new style (combobox)
@@ -2692,33 +2691,26 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     layout->addWidget(d->readonly, 1, 1);
 
     label = new QLabel( d->m_frame );
-    label->setText( i18n("File system:") );
-    layout->addWidget(label, 2, 0, Qt::AlignRight);
-
-    QLabel *fileSystem = new QLabel( d->m_frame );
-    layout->addWidget(fileSystem, 2, 1);
-
-    label = new QLabel( d->m_frame );
     label->setText( devices.count()==0 ?
                     i18n("Mount point (/mnt/floppy):") : // old style
                     i18n("Mount point:")); // new style (combobox)
-    layout->addWidget(label, 3, 0, Qt::AlignRight);
+    layout->addWidget(label, 2, 0, Qt::AlignRight);
 
     d->mountpoint = new QLabel( d->m_frame );
     d->mountpoint->setObjectName( QLatin1String( "LineEdit_mountpoint" ) );
 
-    layout->addWidget(d->mountpoint, 3, 1);
+    layout->addWidget(d->mountpoint, 2, 1);
 
     // show disk free
     d->m_freeSpaceText = new QLabel(i18n("Device usage:"), d->m_frame );
-    layout->addWidget(d->m_freeSpaceText, 4, 0, Qt::AlignRight);
+    layout->addWidget(d->m_freeSpaceText, 3, 0, Qt::AlignRight);
 
     d->m_freeSpaceLabel = new QLabel( d->m_frame );
-    layout->addWidget( d->m_freeSpaceLabel, 4, 1 );
+    layout->addWidget( d->m_freeSpaceLabel, 3, 1 );
 
     d->m_freeSpaceBar = new QProgressBar( d->m_frame );
     d->m_freeSpaceBar->setObjectName( "freeSpaceBar" );
-    layout->addWidget(d->m_freeSpaceBar, 5, 0, 1, 2);
+    layout->addWidget(d->m_freeSpaceBar, 4, 0, 1, 2);
 
     // we show it in the slot when we know the values
     d->m_freeSpaceText->hide();
@@ -2726,9 +2718,9 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     d->m_freeSpaceBar->hide();
 
     KSeparator* sep = new KSeparator( Qt::Horizontal, d->m_frame);
-    layout->addWidget(sep, 6, 0, 1, 2);
+    layout->addWidget(sep, 5, 0, 1, 2);
 
-    layout->setRowStretch(7, 1);
+    layout->setRowStretch(6, 1);
 
     KUrl url = KIO::NetAccess::mostLocalUrl( _props->kurl(), _props );
     if (!url.isLocalFile()) {
@@ -2746,8 +2738,6 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     QString deviceStr = config.readEntry( "Dev" );
     QString mountPointStr = config.readEntry( "MountPoint" );
     bool ro = config.readEntry( "ReadOnly", false );
-
-    fileSystem->setText(config.readEntry("FSType"));
 
     d->device->setEditText( deviceStr );
     if ( !deviceStr.isEmpty() ) {
