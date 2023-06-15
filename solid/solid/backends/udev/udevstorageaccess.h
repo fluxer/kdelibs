@@ -24,8 +24,7 @@
 #include <solid/ifaces/storageaccess.h>
 #include "udevdeviceinterface.h"
 
-#include <QFile>
-#include <QTimer>
+#include <QSocketNotifier>
 
 namespace Solid
 {
@@ -59,10 +58,9 @@ private Q_SLOTS:
     void slotEmitSignals();
 
 private:
-    QTimer m_mtabtimer;
-    QFile m_mtabfile;
-    QByteArray m_mtabdata;
+    int m_mtabfd;
     bool m_isaccessible;
+    QSocketNotifier* m_mtabnotifier;
 };
 }
 }

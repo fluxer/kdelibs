@@ -20,6 +20,7 @@
 
 #include "udevstorageaccess.h"
 #include "kmountpoint.h"
+#include "kde_file.h"
 
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -29,21 +30,29 @@ using namespace Solid::Backends::UDev;
 
 StorageAccess::StorageAccess(UDevDevice *device)
     : DeviceInterface(device),
-    m_isaccessible(false)
+    m_mtabfd(0),
+    m_isaccessible(false),
+    m_mtabnotifier(nullptr)
 {
     m_isaccessible = isAccessible();
 
-    // NOTE: stat() always returns the same result for it if actually in /proc/self/mounts
-    m_mtabfile.setFileName("/etc/mtab");
-    if (m_mtabfile.open(QFile::ReadOnly)) {
-        m_mtabtimer.setInterval(2000);
-        m_mtabtimer.start();
-        QObject::connect(&m_mtabtimer, SIGNAL(timeout()), this, SLOT(slotEmitSignals()));
+    m_mtabfd = KDE_open("/etc/mtab", O_RDONLY);
+    if (m_mtabfd <= 0) {
+        qWarning("StorageAccess: unable to open /etc/mtab");
+        return;
     }
+    m_mtabnotifier = new QSocketNotifier(m_mtabfd, QSocketNotifier::Exception);
+    QObject::connect(m_mtabnotifier, SIGNAL(activated(int)), this, SLOT(slotEmitSignals()));
 }
 
 StorageAccess::~StorageAccess()
 {
+    if (m_mtabnotifier) {
+        delete m_mtabnotifier;
+    }
+    if (m_mtabfd > 0) {
+        QT_CLOSE(m_mtabfd);
+    }
 }
 
 bool StorageAccess::isAccessible() const
@@ -140,15 +149,10 @@ bool StorageAccess::teardown()
 
 void StorageAccess::slotEmitSignals()
 {
-    const QByteArray previousmtabdata = m_mtabdata;
-    m_mtabfile.seek(0);
-    m_mtabdata = m_mtabfile.readAll();
-    // qDebug() << Q_FUNC_INFO << m_mtabdata;
-    if (previousmtabdata != m_mtabdata) {
-        const bool previousisaccessible = m_isaccessible;
-        m_isaccessible = isAccessible();
-        if (previousisaccessible != m_isaccessible) {
-            emit accessibilityChanged(m_isaccessible, m_device->udi());
-        }
+    const bool previousisaccessible = m_isaccessible;
+    m_isaccessible = isAccessible();
+    // qDebug() << Q_FUNC_INFO << m_mtabfd << previousisaccessible << m_isaccessible;
+    if (previousisaccessible != m_isaccessible) {
+        emit accessibilityChanged(m_isaccessible, m_device->udi());
     }
 }
