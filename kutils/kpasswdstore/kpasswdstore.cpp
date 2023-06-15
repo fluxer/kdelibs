@@ -117,6 +117,7 @@ void KPasswdStore::setCacheOnly(const bool cacheonly)
 
 bool KPasswdStore::cacheOnly() const
 {
+    d->ensureInterface();
     QDBusReply<bool> result = d->interface->call("cacheOnly", d->cookie, d->storeid);
     return result.value();
 }
@@ -131,7 +132,6 @@ QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
     if (!openStore(windowid)) {
         return QString();
     }
-    d->ensureInterface();
     QDBusReply<QString> result = d->interface->call("getPasswd", d->cookie, d->storeid, key, windowid);
     return result.value();
 }
