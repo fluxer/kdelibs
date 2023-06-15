@@ -75,8 +75,6 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
                 return KLockFile::LockFail;
             }
             qint64 lockpid = 0;
-            char lockpidbuffer[256];
-            ::memset(lockpidbuffer, 0, sizeof(lockpidbuffer) * sizeof(char));
             ::sscanf(lockbuffer, "%lld", &lockpid);
             if (Q_UNLIKELY(lockpid <= 0)) {
                 kWarning() << "Invalid lock information";
