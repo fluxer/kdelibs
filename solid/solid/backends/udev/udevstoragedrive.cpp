@@ -23,6 +23,9 @@
 
 #include <QtCore/QDebug>
 
+// for reference:
+// https://github.com/eudev-project/eudev/blob/master/src/ata_id/ata_id.c
+
 using namespace Solid::Backends::UDev;
 
 StorageDrive::StorageDrive(UDevDevice *device)
@@ -58,16 +61,16 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
     const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
     const int iddrivefloppy = m_device->deviceProperty("ID_DRIVE_FLOPPY").toInt();
 
-    if (idcdrom == 1) {
+    if (idtype == QLatin1String("cd") || idcdrom == 1) {
         return Solid::StorageDrive::CdromDrive;
     } else if (iddrivefloppy == 1) {
         return Solid::StorageDrive::Floppy;
+    } else if (idtype == QLatin1String("tape")) {
+        return Solid::StorageDrive::Tape;
     // TODO: other types and remove this generic check
-    } else if (idbus == "usb") {
+    } else if (idbus == QLatin1String("usb")) {
         return Solid::StorageDrive::CompactFlash;
 #if 0
-    } else if (idtype == "tape") {
-        return Solid::StorageDrive::Tape;
     } else if (idtype == "flash_cf") {
         return Solid::StorageDrive::CompactFlash;
     } else if (idtype == "flash_ms") {
