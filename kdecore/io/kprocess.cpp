@@ -213,7 +213,7 @@ int KProcess::execute(const QStringList &argv, int msecs)
 qint64 KProcess::startDetached()
 {
     Q_D(KProcess);
-    qint64 pid;
+    qint64 pid = 0;
     if (!QProcess::startDetached(d->prog, d->args, workingDirectory(), &pid)) {
         return 0;
     }
@@ -223,7 +223,7 @@ qint64 KProcess::startDetached()
 // static
 qint64 KProcess::startDetached(const QString &exe, const QStringList &args)
 {
-    qint64 pid;
+    qint64 pid = 0;
     if (!QProcess::startDetached(exe, args, QString(), &pid)) {
         return 0;
     }
