@@ -60,28 +60,25 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
     const QString idbus(m_device->deviceProperty("ID_BUS"));
     const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
     const int iddrivefloppy = m_device->deviceProperty("ID_DRIVE_FLOPPY").toInt();
-
+    const int iddriveflashcf = m_device->deviceProperty("ID_DRIVE_FLASH_CF").toInt();
+    const int iddriveflashms = m_device->deviceProperty("ID_DRIVE_FLASH_MS").toInt();
+    const int iddriveflashsm = m_device->deviceProperty("ID_DRIVE_FLASH_SM").toInt();
+    const int iddriveflashsd = m_device->deviceProperty("ID_DRIVE_FLASH_SD").toInt();
+    const int iddriveflashmmc = m_device->deviceProperty("ID_DRIVE_FLASH_MMC").toInt();
     if (idtype == QLatin1String("cd") || idcdrom == 1) {
         return Solid::StorageDrive::CdromDrive;
     } else if (iddrivefloppy == 1) {
         return Solid::StorageDrive::Floppy;
     } else if (idtype == QLatin1String("tape")) {
         return Solid::StorageDrive::Tape;
-    // TODO: other types and remove this generic check
-    } else if (idbus == QLatin1String("usb")) {
-        return Solid::StorageDrive::CompactFlash;
-#if 0
-    } else if (idtype == "flash_cf") {
-        return Solid::StorageDrive::CompactFlash;
-    } else if (idtype == "flash_ms") {
+    } else if (iddriveflashms == 1) {
         return Solid::StorageDrive::MemoryStick;
-    } else if (idtype == "flash_sm") {
+    } else if (iddriveflashsm == 1) {
         return Solid::StorageDrive::SmartMedia;
-    } else if (idtype == "flash_sd" || idtype == "flash_mmc") {
+    } else if (iddriveflashsd == 1 || iddriveflashmmc == 1) {
         return Solid::StorageDrive::SdMmc;
-    } else if (idtype == "flash_xd") {
-        return Solid::StorageDrive::Xd;
-#endif
+    } else if (iddriveflashcf == 1 || idbus == QLatin1String("usb")) {
+        return Solid::StorageDrive::CompactFlash;
     } else {
         return Solid::StorageDrive::HardDisk;
     }

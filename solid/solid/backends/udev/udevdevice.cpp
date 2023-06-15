@@ -239,8 +239,6 @@ QString UDevDevice::icon() const
             return QLatin1String("media-flash-smart-media");
         } else if (drivetype == Solid::StorageDrive::SdMmc) {
             return QLatin1String("media-flash-sd-mmc");
-        } else if (drivetype == Solid::StorageDrive::Xd) {
-            return QLatin1String("drive-removable-media");
         }
     } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
         return QLatin1String("drive-harddisk");
@@ -423,8 +421,6 @@ QString UDevDevice::description() const
             return QObject::tr("%1 Smart Media Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::SdMmc) {
             return QObject::tr("%1 SD/MMC Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::Xd) {
-            return QObject::tr("%1 Xd Drive").arg(storagesize);
         }
     } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
         const StorageVolume storageIface(const_cast<UDevDevice *>(this));
