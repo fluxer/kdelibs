@@ -128,9 +128,6 @@ namespace Ifaces
          * @returns a pointer to the device interface if supported by the device, 0 otherwise
          */
         virtual QObject *createDeviceInterface(const Solid::DeviceInterface::Type &type) = 0;
-
-    private:
-        QString deviceDBusPath() const;
     };
 }
 }
