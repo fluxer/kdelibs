@@ -112,6 +112,7 @@ bool KPasswdStore::openStore(const qlonglong windowid)
 
 void KPasswdStore::setCacheOnly(const bool cacheonly)
 {
+    d->ensureInterface();
     d->interface->call("setCacheOnly", d->cookie, d->storeid, cacheonly);
 }
 
