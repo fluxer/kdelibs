@@ -1773,18 +1773,18 @@ void KLineEdit::paintEvent( QPaintEvent *ev )
         int vscroll;
         switch (va & Qt::AlignVertical_Mask)
         {
-            case Qt::AlignBottom:
-            vscroll = cr.y() + cr.height() - fm.height() - verticalMargin;
-            break;
-
-            case Qt::AlignTop:
-            vscroll = cr.y() + verticalMargin;
-            break;
-
-            default:
-            vscroll = cr.y() + (cr.height() - fm.height() + 1) / 2;
-            break;
-
+            case Qt::AlignBottom: {
+                vscroll = cr.y() + cr.height() - fm.height() - verticalMargin;
+                break;
+            }
+            case Qt::AlignTop: {
+                vscroll = cr.y() + verticalMargin;
+                break;
+            }
+            default: {
+                vscroll = cr.y() + (cr.height() - fm.height() + 1) / 2;
+                break;
+            }
         }
 
         QRect lineRect(cr.x() + horizontalMargin, vscroll, cr.width() - 2*horizontalMargin, fm.height());
