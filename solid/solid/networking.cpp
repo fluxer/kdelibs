@@ -31,20 +31,18 @@ Q_GLOBAL_STATIC(Solid::NetworkingPrivate, globalNetworkManager)
 
 Solid::NetworkingPrivate::NetworkingPrivate()
     : netStatus(Solid::Networking::Unknown),
-      connectPolicy(Solid::Networking::Managed),
-      disconnectPolicy(Solid::Networking::Managed),
-      iface(0)
+      iface(nullptr)
 {
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher("org.kde.kded", QDBusConnection::sessionBus(),
-                                                           QDBusServiceWatcher::WatchForOwnerChange, this);
-    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(
+        "org.kde.kded", QDBusConnection::sessionBus(),
+        QDBusServiceWatcher::WatchForOwnerChange, this
+    );
+    connect(
+        watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+        this, SLOT(serviceOwnerChanged(QString,QString,QString))
+    );
 
     initialize();
-}
-
-Solid::NetworkingPrivate::~NetworkingPrivate()
-{
 }
 
 Solid::Networking::Notifier::Notifier()
@@ -54,17 +52,19 @@ Solid::Networking::Notifier::Notifier()
 void Solid::NetworkingPrivate::initialize()
 {
     delete iface;
-    iface  = new OrgKdeSolidNetworkingClientInterface( "org.kde.kded",
-            "/modules/networkstatus",
-            QDBusConnection::sessionBus(),
-            this);
+    iface  = new OrgKdeSolidNetworkingClientInterface(
+        "org.kde.kded",
+        "/modules/networkstatus",
+        QDBusConnection::sessionBus(),
+        this
+    );
 
-    //connect( iface, SIGNAL(statusChanged(uint)), globalNetworkManager(), SIGNAL(statusChanged(Networking::Status)) );
+    // connect(iface, SIGNAL(statusChanged(uint)), globalNetworkManager(), SIGNAL(statusChanged(Networking::Status)));
     connect(iface, SIGNAL(statusChanged(uint)), this, SLOT(serviceStatusChanged(uint)));
 
     QDBusReply<uint> reply = iface->status();
     if (reply.isValid()) {
-        netStatus = ( Solid::Networking::Status )reply.value();
+        netStatus = static_cast<Solid::Networking::Status>(reply.value());
     } else {
         netStatus = Solid::Networking::Unknown;
     }
@@ -79,7 +79,7 @@ uint Solid::NetworkingPrivate::status() const
 
 Solid::Networking::Status Solid::Networking::status()
 {
-    return static_cast<Solid::Networking::Status>( globalNetworkManager()->status() );
+    return static_cast<Solid::Networking::Status>(globalNetworkManager()->status());
 }
 
 Solid::Networking::Notifier *Solid::Networking::notifier()
@@ -87,72 +87,41 @@ Solid::Networking::Notifier *Solid::Networking::notifier()
     return globalNetworkManager();
 }
 
-void Solid::NetworkingPrivate::serviceStatusChanged( uint status )
+void Solid::NetworkingPrivate::serviceStatusChanged(uint status)
 {
-//    kDebug( 921 ) ;
-    netStatus = ( Solid::Networking::Status )status;
-    switch ( netStatus ) {
-      case Solid::Networking::Unknown:
-        break;
-      case Solid::Networking::Unconnected:
-      case Solid::Networking::Disconnecting:
-      case Solid::Networking::Connecting:
-        if ( disconnectPolicy == Solid::Networking::Managed ) {
-          emit globalNetworkManager()->shouldDisconnect();
-        } else if ( disconnectPolicy == Solid::Networking::OnNextStatusChange ) {
-          setDisconnectPolicy( Solid::Networking::Manual );
-          emit globalNetworkManager()->shouldDisconnect();
-        }
-        break;
-      case Solid::Networking::Connected:
-        if ( disconnectPolicy == Solid::Networking::Managed ) {
-          emit globalNetworkManager()->shouldConnect();
-        } else if ( disconnectPolicy == Solid::Networking::OnNextStatusChange ) {
-          setConnectPolicy( Solid::Networking::Manual );
-          emit globalNetworkManager()->shouldConnect();
-        }
-        break;
-//      default:
-//        kDebug( 921 ) <<  "Unrecognised status code!";
+    // kDebug(921) ;
+    netStatus = static_cast<Solid::Networking::Status>(status);
+    switch (netStatus) {
+        case Solid::Networking::Unknown:
+            break;
+        case Solid::Networking::Unconnected:
+        case Solid::Networking::Disconnecting:
+        case Solid::Networking::Connecting:
+            emit globalNetworkManager()->shouldDisconnect();
+            break;
+        case Solid::Networking::Connected:
+            emit globalNetworkManager()->shouldConnect();
+            break;
+        // default:
+            // kDebug(921) <<  "Unrecognised status code!";
     }
-    emit globalNetworkManager()->statusChanged( netStatus );
+    emit globalNetworkManager()->statusChanged(netStatus);
 }
 
-void Solid::NetworkingPrivate::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
+void Solid::NetworkingPrivate::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
     Q_UNUSED(name)
     Q_UNUSED(oldOwner)
-    if ( newOwner.isEmpty() ) {
+    if (newOwner.isEmpty()) {
         // kded quit on us
         netStatus = Solid::Networking::Unknown;
-        emit globalNetworkManager()->statusChanged( netStatus );
-
+        emit globalNetworkManager()->statusChanged(netStatus);
     } else {
         // kded was replaced or started
         initialize();
-        emit globalNetworkManager()->statusChanged( netStatus );
-        serviceStatusChanged( netStatus );
+        emit globalNetworkManager()->statusChanged(netStatus);
+        serviceStatusChanged(netStatus);
     }
-}
-
-Solid::Networking::ManagementPolicy Solid::Networking::connectPolicy()
-{
-    return globalNetworkManager()->connectPolicy;
-}
-
-void Solid::Networking::setConnectPolicy( Solid::Networking::ManagementPolicy policy )
-{
-    globalNetworkManager()->connectPolicy = policy;
-}
-
-Solid::Networking::ManagementPolicy Solid::Networking::disconnectPolicy()
-{
-    return globalNetworkManager()->disconnectPolicy;
-}
-
-void Solid::Networking::setDisconnectPolicy( Solid::Networking::ManagementPolicy policy )
-{
-    globalNetworkManager()->disconnectPolicy = policy;
 }
 
 #include "moc_networking_p.cpp"

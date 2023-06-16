@@ -30,35 +30,33 @@ class OrgKdeSolidNetworkingClientInterface;
 
 namespace Solid
 {
-    class ManagedSocketContainer;
-
     class NetworkingPrivate : public Networking::Notifier
     {
-    Q_OBJECT
-    Q_PROPERTY( uint Status  READ status )
-    Q_CLASSINFO( "D-Bus Interface", "org.kde.Solid.Networking.Client" )
+        Q_OBJECT
+        Q_PROPERTY(uint Status  READ status)
+        Q_CLASSINFO("D-Bus Interface", "org.kde.Solid.Networking.Client")
     public:
         NetworkingPrivate();
-        ~NetworkingPrivate();
+
         void shouldConnect() { Networking::Notifier::shouldConnect(); }
         void shouldDisconnect() { Networking::Notifier::shouldDisconnect(); }
+
         Networking::Status netStatus;
-        Networking::ManagementPolicy connectPolicy;
-        Networking::ManagementPolicy disconnectPolicy;
     public Q_SLOTS:
         uint status() const;
         /**
          * Called on DBus signal from the network status service
          */
-        void serviceStatusChanged( uint status );
+        void serviceStatusChanged(uint status);
         /**
          * Detects when kded restarts, and sets status to NoNetworks so that apps
          * may proceed
          */
-        void serviceOwnerChanged( const QString &, const QString &, const QString & );
+        void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
+
     private:
         void initialize();
-        OrgKdeSolidNetworkingClientInterface * iface;
+        OrgKdeSolidNetworkingClientInterface* iface;
     };
 } // namespace Solid
 #endif
