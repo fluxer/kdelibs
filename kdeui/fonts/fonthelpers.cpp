@@ -30,10 +30,10 @@
 
 // i18n: Generic non-fixed font presented in font choosers. When selected,
 // the system will choose a real font, mandated by distro settings.
-I18N_NOOP2("@item Font name", KDE_DEFAULT_FONT)
+I18N_NOOP2("@item Font name", "DejaVu Sans")
 // i18n: Generic fixed font presented in font choosers. When selected,
 // the system will choose a real font, mandated by distro settings.
-I18N_NOOP2("@item Font name", KDE_DEFAULT_FIXED_FONT)
+I18N_NOOP2("@item Font name", "DejaVu Sans Mono")
 
 #endif
 
