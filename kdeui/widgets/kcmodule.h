@@ -29,10 +29,6 @@
 #include <QStringList>
 #include <QWidget>
 
-#ifdef Q_WS_X11
-#include <fixx11h.h>
-#endif
-
 class KAboutData;
 class KConfigDialogManager;
 class KCoreConfigSkeleton;
