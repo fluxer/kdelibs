@@ -39,7 +39,7 @@ private Q_SLOTS:
 
 static char **gargv;
 
-static QString recurse(KProcess::OutputChannelMode how)
+static QString recurse(QProcess::ProcessChannelMode how)
 {
     QProcess p;
     p.setProcessChannelMode(QProcess::MergedChannels);
@@ -67,8 +67,6 @@ void KProcessTest::test_channels()
     QString e, a;
     TESTCHAN(SeparateChannels, "separate", "", EO, EE);
     TESTCHAN(ForwardedChannels, "forwarded", EO EE, "", "");
-    TESTCHAN(OnlyStderrChannel, "forwarded stdout", EO, "", EE);
-    TESTCHAN(OnlyStdoutChannel, "forwarded stderr", EE, EO, "");
     TESTCHAN(MergedChannels, "merged", "", EO EE, "");
 #else
     QSKIP("This test needs a UNIX system", SkipSingle);
