@@ -25,7 +25,9 @@
 
 #include <kurl.h>
 
-#include <QDBusArgument>
+#include <QDataStream>
+#include <QVariant>
+#include <QMap>
 
 namespace KIO {
 
@@ -42,11 +44,6 @@ class AuthInfoPrivate;
  * prompt for password you only need to optionally set the prompt,
  * username (if already supplied), comment and commentLabel fields.
  *
- * <em>SPECIAL NOTE:</em> If you extend this class to add additional
- * parameters do not forget to overload the stream insertion and
- * extraction operators ("<<" and ">>") so that the added data can
- * be correctly serialzed.
- *
  * @short A two way messaging class for passing authentication information.
  * @author Dawit Alemayehu <adawit@kde.org>
  */
@@ -54,9 +51,6 @@ class KIO_EXPORT AuthInfo
 {
     KIO_EXPORT friend QDataStream& operator<< (QDataStream& s, const AuthInfo& a);
     KIO_EXPORT friend QDataStream& operator>> (QDataStream& s, AuthInfo& a);
-
-    KIO_EXPORT friend QDBusArgument &operator<<(QDBusArgument &argument, const AuthInfo &a);
-    KIO_EXPORT friend const QDBusArgument &operator>>(const QDBusArgument &argument, AuthInfo &a);
 
 public:
     
@@ -197,13 +191,6 @@ public:
     */
    QVariant getExtraField(const QString &fieldName) const;
 
-   /**
-    * Register the meta-types for AuthInfo. This is called from
-    * AuthInfo's constructor.
-    * @since 4.3
-    */
-   static void registerMetaTypes();
-
 private:
     friend class ::KIO::AuthInfoPrivate;
     AuthInfoPrivate * const d;
@@ -211,9 +198,6 @@ private:
 
 KIO_EXPORT QDataStream& operator<< (QDataStream& s, const AuthInfo& a);
 KIO_EXPORT QDataStream& operator>> (QDataStream& s, AuthInfo& a);
-
-KIO_EXPORT QDBusArgument &operator<<(QDBusArgument &argument, const AuthInfo &a);
-KIO_EXPORT const QDBusArgument &operator>>(const QDBusArgument &argument, AuthInfo &a);
 
 /**
  * A Singleton class that provides access to passwords
@@ -301,6 +285,5 @@ private:
 };
 }
 Q_DECLARE_OPERATORS_FOR_FLAGS(KIO::NetRC::LookUpMode)
-Q_DECLARE_METATYPE(KIO::AuthInfo)
 
 #endif

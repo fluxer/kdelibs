@@ -30,9 +30,6 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtDBus/QDBusArgument>
-#include <QtDBus/QDBusMetaType>
 #include <kde_file.h>
 
 #include <kdebug.h>
@@ -57,13 +54,11 @@ AuthInfo::AuthInfo() : d(new AuthInfoPrivate())
 {
     readOnly = false;
     keepPassword = false;
-    AuthInfo::registerMetaTypes();
 }
 
 AuthInfo::AuthInfo( const AuthInfo& info ) : d(new AuthInfoPrivate())
 {
     (*this) = info;
-    AuthInfo::registerMetaTypes();
 }
 
 AuthInfo::~AuthInfo()
@@ -99,12 +94,6 @@ QVariant AuthInfo::getExtraField(const QString &fieldName) const
     return d->extraFields[fieldName];
 }
 
-void AuthInfo::registerMetaTypes()
-{
-    qRegisterMetaType<KIO::AuthInfo>();
-    qDBusRegisterMetaType<KIO::AuthInfo>();
-}
-
 /////
 
 QDataStream& KIO::operator<< (QDataStream& s, const AuthInfo& a)
@@ -121,30 +110,6 @@ QDataStream& KIO::operator>> (QDataStream& s, AuthInfo& a)
       >> a.comment >> a.commentLabel >> a.readOnly >> a.keepPassword
       >> a.d->extraFields;
     return s;
-}
-
-QDBusArgument &KIO::operator<<(QDBusArgument &argument, const AuthInfo &a)
-{
-    argument.beginStructure();
-    argument << a.url.url() << a.username << a.password << a.prompt << a.caption
-             << a.comment << a.commentLabel << a.readOnly << a.keepPassword
-             << a.d->extraFields;
-    argument.endStructure();
-    return argument;
-}
-
-const QDBusArgument &KIO::operator>>(const QDBusArgument &argument, AuthInfo &a)
-{
-    QString url;
-    
-    argument.beginStructure();
-    argument >> url >> a.username >> a.password >> a.prompt >> a.caption
-             >> a.comment >> a.commentLabel >> a.readOnly >> a.keepPassword
-             >> a.d->extraFields;
-    argument.endStructure();
-
-    a.url = url;
-    return argument;
 }
 
 typedef QList<NetRC::AutoLogin> LoginList;
