@@ -16,13 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifdef KeyRelease
-#undef KeyRelease
-#endif
-
 #include "kcursor.h"
 #include "kcursor_p.h"
-#include <kdebug.h>
 
 #include <QBitmap>
 #include <QCursor>
@@ -31,15 +26,13 @@
 #include <QTimer>
 #include <QWidget>
 #include <QFile>
-
+#include <QX11Info>
 #include <kglobal.h>
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
+#include <kdebug.h>
 
 #include <config.h>
-
-#ifdef Q_WS_X11
-#include <QtGui/qx11info_x11.h>
 
 #include <X11/Xlib.h>
 #include <X11/cursorfont.h>
@@ -162,12 +155,9 @@ namespace
 #endif
     }
 }
-#endif // Q_WS_X11
-
 
 QCursor KCursor::fromName( const QString& name, Qt::CursorShape fallback )
 {
-#ifdef Q_WS_X11
     Qt::HANDLE handle = x11LoadXcursor(name);
     if (!handle) {
         handle = x11LoadFontCursor(name);
@@ -179,9 +169,6 @@ QCursor KCursor::fromName( const QString& name, Qt::CursorShape fallback )
     }
 
     return QCursor(fallback);
-#else
-    Q_UNUSED( name )
-#endif
 }
 
 void KCursor::setAutoHideCursor( QWidget *w, bool enable,
