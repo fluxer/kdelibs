@@ -500,8 +500,6 @@ install(
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
 )
 
-# the path bellow will be the correct locations once FindKDE4Internal is no longer required:
-# ${KDE4_SHARE_INSTALL_PREFIX}/cmake/KDE4
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4Config.cmake

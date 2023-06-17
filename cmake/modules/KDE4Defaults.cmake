@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 
 # CMP0000: don't require cmake_minimum_version() directly in the top level
-# CMakeLists.txt, FindKDE4Internal.cmake is good enough
+# CMakeLists.txt, KDELibs4Config.cmake is good enough
 cmake_policy(SET CMP0000 OLD)
 # CMP0003: add the link paths to the link command as with cmake 2.4
 cmake_policy(SET CMP0003 OLD)

@@ -1,5 +1,3 @@
-# for documentation look at FindKDE4Internal.cmake
-
 # this file contains the following macros (or functions):
 # KDE4_INSTALL_ICONS
 # KDE4_ADD_KCFG_FILES
