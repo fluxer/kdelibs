@@ -403,7 +403,7 @@ set(KDE4_KDECORE_INCLUDES
     ${CMAKE_SOURCE_DIR}/kdecore/util
     ${CMAKE_BINARY_DIR}/kdecore
     ${QT_INCLUDES}
-    ${_KDE4_PLATFORM_INCLUDE_DIRS}
+    ${X11_INCLUDE_DIR}
 )
 
 # kdeui depends on kdecore

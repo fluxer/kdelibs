@@ -39,27 +39,6 @@
 #  KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
 #  KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
-# The following variables contain all of the depending libraries:
-#
-#  KDE4_KDECORE_LIBS          - the kdecore library and all depending libraries
-#  KDE4_KDEUI_LIBS            - the kdeui library and all depending libraries
-#  KDE4_KIO_LIBS              - the kio library and all depending libraries
-#  KDE4_KPARTS_LIBS           - the kparts library and all depending libraries
-#  KDE4_KIDLETIME_LIBS        - the kidletime library and all depending libraries
-#  KDE4_KCMUTILS_LIBS         - the kcmutils library and all depending libraries
-#  KDE4_KFILE_LIBS            - the kfile library and all depending libraries
-#  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
-#  KDE4_SOLID_LIBS            - the solid library and all depending libraries
-#  KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
-#  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
-#  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
-#  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
-#  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
-#  KDE4_KPASSWDSTORE_LIBS     - the kpasswdstore library and all depending libraries
-#  KDE4_KPOWERMANAGER_LIBS    - the kpowermanager library and all depending libraries
-#  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
-#  KDE4_KARCHIVE_LIBS         - the karchive library and all depending libraries
-#
 #  This module allows to depend on a particular minimum version of kdelibs.
 #  To acomplish that one should use the appropriate cmake syntax for
 #  find_package. For example to depend on kdelibs >= 4.23.0 one should use
@@ -163,43 +142,13 @@ if(NOT KDELIBS4_FOUND)
 
     set(KDE4_KCFGC_EXECUTABLE             ${KDE4_TARGET_PREFIX}kconfig_compiler)
     set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets)
-    set(_kde_libraries
-        kmediaplayer
-        kcmutils
-        kdeclarative
-        kdecore
-        kdeui
-        kexiv2
-        kpasswdstore
-        kpowermanager
-        kdnssd
-        karchive
-        kemail
-        kfile
-        kidletime
-        kio
-        knotifyconfig
-        kparts
-        kpty
-        ktexteditor
-        plasma
-        solid
-    )
-    foreach(_lib ${_kde_libraries})
-        string(TOUPPER ${_lib} _upperlib)
-        set(KDE4_${_upperlib}_LIBS ${KDE4_TARGET_PREFIX}${_lib})
-    endforeach()
 
     # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
     # the library target "kdeui" is exported as "KDE4::kdeui". The "KDE4::" is used as
     # "namespace" to separate the imported targets from "normal" targets, it is stored in
-    # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
+    # KDE4_TARGET_PREFIX.
     # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
     # Include it to "import" the libraries from kdelibs into the current projects as targets.
-    # This makes setting the _LIBS variables actually a bit superfluos, since e.g. the kdeui
-    # library could now also be used just as "KDE4::kdeui" and still have all their dependent
-    # libraries handled correctly. But to keep compatibility and not to change behaviour we
-    # set all these variables anyway as seen below. Alex
     include(${kdelibs4_config_dir}/KDELibs4LibraryTargets.cmake)
 
     # KDE4Macros.cmake contains all the KDE specific macros

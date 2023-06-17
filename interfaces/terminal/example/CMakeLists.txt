@@ -10,9 +10,9 @@ add_definitions(${QT_DEFINITIONS} ${KDE_DEFINITIONS})
 set(hello_SRCS main.cc )
 add_executable(tetest ${hello_SRCS})
 target_link_libraries(tetest
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KPARTS_LIBS}
+    KDE4::kdecore
+    KDE4::kdeui
+    KDE4::kparts
 )
 
 ########### install files ###############

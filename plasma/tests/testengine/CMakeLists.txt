@@ -11,8 +11,8 @@ include_directories(
 kde4_add_plugin(plasma_engine_testengine testengine.cpp)
 
 target_link_libraries(plasma_engine_testengine
-    ${KDE4_KIO_LIBS}
-    ${KDE4_PLASMA_LIBS}
+    KDE4::kio
+    KDE4::plasma
 )
 
 install(TARGETS plasma_engine_testengine DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})

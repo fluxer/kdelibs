@@ -69,7 +69,7 @@ class KFileItemListProperties;
  *
  * \code
  * kde4_add_plugin(myactionplugin myactionplugin.cpp)
- * target_link_libraries(myactionplugin ${KDE4_KIO_LIBS})
+ * target_link_libraries(myactionplugin KDE4::kio)
  * install(TARGETS myactionplugin DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
  * install(FILES myactionplugin.desktop DESTINATION ${KDE4_SERVICES_INSTALL_DIR})
  * \endcode
