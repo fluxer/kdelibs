@@ -26,7 +26,10 @@ set(kded_SRCS
 
 add_executable(kded4 ${kded_SRCS})
 
-target_link_libraries(kded4 ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
+target_link_libraries(kded4
+    ${X11_LIBRARIES}
+    kio
+)
 
 install(
     TARGETS kded4
@@ -56,9 +59,9 @@ set(kbuildsycoca_SRCS
 )
 
 if(KBUILDSYCOCA_NO_KCRASH)
-    set(KBUILDSYCOCA_MAIN_LIBS ${KDE4_KDECORE_LIBS})
+    set(KBUILDSYCOCA_MAIN_LIBS kdecore)
 else()
-    set(KBUILDSYCOCA_MAIN_LIBS ${KDE4_KDEUI_LIBS})
+    set(KBUILDSYCOCA_MAIN_LIBS kdeui)
 endif()
 
 add_executable(kbuildsycoca4 ${kbuildsycoca_SRCS})

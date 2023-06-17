@@ -11,8 +11,8 @@ set(kdnssd_LIB_SRCS
 add_library(kdnssd SHARED ${kdnssd_LIB_SRCS})
 
 target_link_libraries(kdnssd PUBLIC
-    ${KDE4_KDECORE_LIBS}
     ${QT_QTCORE_LIBRARY}
+    kdecore
 )
 
 if(AVAHI_FOUND)

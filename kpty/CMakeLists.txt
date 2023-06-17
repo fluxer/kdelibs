@@ -15,7 +15,7 @@ target_link_libraries(kpty PRIVATE
 )
 
 target_link_libraries(kpty PUBLIC
-    ${KDE4_KDECORE_LIBS}
+    kdecore
 )
 
 set_target_properties(kpty PROPERTIES

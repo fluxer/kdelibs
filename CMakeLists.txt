@@ -69,33 +69,6 @@ set(KDE4_DEFINITIONS
     -DQT_DEPRECATED_WARNINGS
 )
 
-set(_kde_libraries
-    kmediaplayer
-    kcmutils
-    kdeclarative
-    kdecore
-    kdeui
-    kexiv2
-    kpasswdstore
-    kpowermanager
-    kdnssd
-    karchive
-    kemail
-    kfile
-    kidletime
-    kio
-    knotifyconfig
-    kparts
-    kpty
-    ktexteditor
-    plasma
-    solid
-)
-foreach(_lib ${_kde_libraries})
-    string(TOUPPER ${_lib} _upperlib)
-    set(KDE4_${_upperlib}_LIBS ${_lib})
-endforeach()
-
 configure_file(
     "${CMAKE_SOURCE_DIR}/cmake/modules/kde4_exec.sh.in"
     "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"

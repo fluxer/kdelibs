@@ -44,10 +44,10 @@ set(kfile_LIB_SRCS
 add_library(kfile SHARED ${kfile_LIB_SRCS})
 
 target_link_libraries(kfile PUBLIC
-    ${KDE4_SOLID_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KDECORE_LIBS}
+    kdecore
+    kdeui
+    kio
+    solid
 )
 
 set_target_properties(kfile PROPERTIES
@@ -86,8 +86,8 @@ install(
 kde4_add_plugin(kfilemodule kfilemodule.cpp)
 
 target_link_libraries(kfilemodule
-    ${KDE4_KFILE_LIBS}
-    ${KDE4_KIO_LIBS}
+    kfile
+    kio
 )
 
 install(

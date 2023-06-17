@@ -13,8 +13,8 @@ set(kpowermanager_LIB_SRCS
 add_library(kpowermanager SHARED ${kpowermanager_LIB_SRCS})
 
 target_link_libraries(kpowermanager PUBLIC
-    ${KDE4_KDECORE_LIBS}
     ${QT_QTDBUS_LIBRARY}
+    kdecore
 )
 
 set_target_properties(kpowermanager PROPERTIES
@@ -54,7 +54,9 @@ set(kpowermanager_helper_srcs
 )
 
 add_executable(kpowermanager_helper ${kpowermanager_helper_srcs})
-target_link_libraries(kpowermanager_helper PUBLIC ${KDE4_KDECORE_LIBS})
+target_link_libraries(kpowermanager_helper PUBLIC
+    kdecore
+)
 
 install(
     TARGETS kpowermanager_helper

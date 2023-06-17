@@ -49,21 +49,19 @@ set_source_files_properties(
 add_library(kidletime SHARED ${kidletime_LIB_SRCS})
 
 target_link_libraries(kidletime PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
     ${QT_QTGUI_LIBRARY}
+    kdecore
+    kdeui
 )
 
-if (Q_WS_X11)
-    if(HAVE_XSCREENSAVER)
-        target_link_libraries(kidletime PRIVATE ${X11_Xscreensaver_LIB})
-    endif()
+if(HAVE_XSCREENSAVER)
+    target_link_libraries(kidletime PRIVATE ${X11_Xscreensaver_LIB})
+endif()
 
-    if(HAVE_XSYNC)
-        target_link_libraries(kidletime PRIVATE ${X11_Xext_LIB})
-    endif()
-    target_link_libraries(kidletime PRIVATE ${X11_X11_LIB})
-endif (Q_WS_X11)
+if(HAVE_XSYNC)
+    target_link_libraries(kidletime PRIVATE ${X11_Xext_LIB})
+endif()
+target_link_libraries(kidletime PRIVATE ${X11_X11_LIB})
 
 set_target_properties(kidletime PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
@@ -104,9 +102,9 @@ set(kcmutils_LIB_SRCS
 add_library(kcmutils SHARED ${kcmutils_LIB_SRCS})
 
 target_link_libraries(kcmutils PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
     ${QT_QTGUI_LIBRARY}
+    kdecore
+    kdeui
 )
 
 set_target_properties(kcmutils PROPERTIES

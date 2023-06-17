@@ -107,6 +107,11 @@ set(kdeui_LIB_SRCS
     dialogs/ksplashscreen.cpp
     dialogs/kswitchlanguagedialog_p.cpp
     dialogs/ktip.cpp
+    dialogs/kdeprintdialog.cpp
+    dialogs/kcupsoptionswidget_p.cpp
+    dialogs/kcupsoptionsjobwidget_p.cpp
+    dialogs/kcupsoptionspageswidget_p.cpp
+    dialogs/kcupsoptionssettingswidget_p.cpp
     findreplace/kfind.cpp
     findreplace/kreplace.cpp
     findreplace/kfinddialog.cpp
@@ -160,6 +165,9 @@ set(kdeui_LIB_SRCS
     notifications/kdbusmenuexporter.cpp
     notifications/kdbusmenuimporter.cpp
     notifications/kdbusmenu_p.cpp
+    notifications/ksystemtrayicon.cpp
+    notifications/kstatusnotifieritem.cpp
+    notifications/kstatusnotifieritemdbus_p.cpp
     paged/kpagedialog.cpp
     paged/kpageview.cpp
     paged/kpageview_p.cpp
@@ -196,6 +204,7 @@ set(kdeui_LIB_SRCS
     util/kpixmapsequenceoverlaypainter.cpp
     util/kpixmapsequencewidget.cpp
     util/kimageio.cpp
+    util/kkeyserver_x11.cpp
     widgets/kactionselector.cpp
     widgets/kdialogbuttonbox.cpp
     widgets/kbuttongroup.cpp
@@ -256,10 +265,9 @@ set(kdeui_LIB_SRCS
     xmlgui/kxmlguifactory.cpp
     xmlgui/kxmlguifactory_p.cpp
     xmlgui/kxmlguiversionhandler.cpp
-    dialogs/kdeprintdialog.cpp
-    notifications/ksystemtrayicon.cpp
-    notifications/kstatusnotifieritem.cpp
-    notifications/kstatusnotifieritemdbus_p.cpp
+    windowmanagement/kwindowsystem_x11.cpp
+    windowmanagement/kwindowinfo_x11.cpp
+    windowmanagement/netwm.cpp
 )
 
 qt4_add_dbus_interface(kdeui_LIB_SRCS
@@ -273,21 +281,7 @@ qt4_add_dbus_adaptor(kdeui_LIB_SRCS
     KStatusNotifierItemDBus
 )
 
-if(Q_WS_X11)
-    set(kdeui_LIB_SRCS
-        ${kdeui_LIB_SRCS}
-        util/kkeyserver_x11.cpp
-        dialogs/kcupsoptionswidget_p.cpp
-        dialogs/kcupsoptionsjobwidget_p.cpp
-        dialogs/kcupsoptionspageswidget_p.cpp
-        dialogs/kcupsoptionssettingswidget_p.cpp
-        windowmanagement/kwindowsystem_x11.cpp
-        windowmanagement/kwindowinfo_x11.cpp
-        windowmanagement/netwm.cpp
-    )
-endif()
-
-if (Q_WS_X11 AND X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
+if (X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}
         ${X11_Xlib_INCLUDE_PATH}
@@ -342,15 +336,15 @@ add_library(kdeui SHARED ${kdeui_LIB_SRCS})
 
 target_link_libraries(kdeui PRIVATE
     ${X11_LIBRARIES}
-    ${KDEUI_EXTRA_LIBS}
     ${ENCHANT_LIBRARIES}
+    ${KDEUI_EXTRA_LIBS}
 )
 
 target_link_libraries(kdeui PUBLIC
-    ${KDE4_KDECORE_LIBS}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
+    kdecore
 )
 
 if(X11_XTest_FOUND)

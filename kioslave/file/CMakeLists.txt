@@ -14,7 +14,7 @@ set(kio_file_PART_SRCS file.cpp file_unix.cpp)
 
 add_executable(kio_file ${kio_file_PART_SRCS})
 
-target_link_libraries(kio_file ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kio_file kdecore kio)
 
 if(ACL_FOUND)
     target_link_libraries(kio_file ${ACL_LIBS})

@@ -10,7 +10,7 @@ set(kpartstest_SRCS
 
 kde4_add_manual_test(kparts-kpartstest ${kpartstest_SRCS})
 
-target_link_libraries(kparts-kpartstest ${KDE4_KPARTS_LIBS})
+target_link_libraries(kparts-kpartstest kparts)
 
 ########### next target ###############
 
@@ -22,19 +22,19 @@ set(normalktmtest_SRCS
 
 kde4_add_manual_test(kparts-normalktmtest ${normalktmtest_SRCS})
 
-target_link_libraries(kparts-normalktmtest ${KDE4_KPARTS_LIBS})
+target_link_libraries(kparts-normalktmtest kparts)
 
 ########### next target ###############
 
 kde4_add_manual_test(kparts-partviewer partviewer.cpp)
 
-target_link_libraries(kparts-partviewer ${KDE4_KPARTS_LIBS})
+target_link_libraries(kparts-partviewer kparts)
 
 ########### next target ###############
 
 kde4_add_plugin(notepadpart notepad.cpp)
 
-target_link_libraries(notepadpart ${KDE4_KPARTS_LIBS})
+target_link_libraries(notepadpart kparts)
 
 target_compile_definitions(notepadpart PRIVATE -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 
@@ -45,13 +45,13 @@ install(TARGETS notepadpart DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 MACRO(KPARTS_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_test(kparts-${_testname} ${_testname}.cpp)
-        target_link_libraries(kparts-${_testname} ${KDE4_KPARTS_LIBS} ${QT_QTTEST_LIBRARY})
+        target_link_libraries(kparts-${_testname} ${QT_QTTEST_LIBRARY} kparts)
     ENDFOREACH(_testname)
 ENDMACRO(KPARTS_UNIT_TESTS)
 MACRO(KPARTS_EXECUTABLE_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_manual_test(kparts-${_testname} ${_testname}.cpp)
-        target_link_libraries(kparts-${_testname} ${KDE4_KPARTS_LIBS} ${QT_QTTEST_LIBRARY})
+        target_link_libraries(kparts-${_testname} ${QT_QTTEST_LIBRARY} kparts)
     ENDFOREACH(_testname)
 ENDMACRO(KPARTS_EXECUTABLE_TESTS)
 

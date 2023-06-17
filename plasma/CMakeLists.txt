@@ -18,18 +18,18 @@ include_directories(
 
 if(NOT PLASMA_NO_KIO)
    include_directories(${KDE4_KIO_INCLUDES})
-   set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KIO_LIBS})
+   set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} kio)
 endif()
 
 if(NOT PLASMA_NO_SOLID)
     include_directories(${CMAKE_BINARY_DIR}/solid/)
     include_directories(${CMAKE_SOURCE_DIR}/solid/)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_SOLID_LIBS})
+    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} solid)
 endif()
 
 if(NOT PLASMA_NO_KUTILS)
     include_directories(${CMAKE_SOURCE_DIR}/kutils)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KCMUTILS_LIBS})
+    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} kcmutils)
 endif()
 
 configure_file(
@@ -159,10 +159,10 @@ target_link_libraries(plasma PUBLIC
     ${QT_QTXML_LIBRARY}
     ${QT_QTSVG_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KDECLARATIVE_LIBS}
     ${PLASMA_EXTRA_LIBS}
+    kdecore
+    kdeui
+    kdeclarative
 )
 
 target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})

@@ -22,7 +22,7 @@ set(karchive_LIB_SRCS
 add_library(karchive SHARED ${karchive_LIB_SRCS})
 
 target_link_libraries(karchive PUBLIC
-    ${KDE4_KDECORE_LIBS}
+    kdecore
 )
 target_link_libraries(karchive PRIVATE
     ${LIBDEFLATE_LIBRARIES}

@@ -11,9 +11,9 @@ MACRO(KDEUI_UNIT_TESTS)
             kde4_add_test(kdeui-${_testname} ${_testname}.cpp)
         endif()
         target_link_libraries(kdeui-${_testname}
-            ${KDE4_KDEUI_LIBS}
             ${QT_QTTEST_LIBRARY}
             ${QT_QTXML_LIBRARY}
+            kdeui
         )
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_UNIT_TESTS)
@@ -25,9 +25,9 @@ MACRO(KDEUI_EXECUTABLE_TESTS)
             kde4_add_manual_test(kdeui-${_testname} ${_testname}.cpp)
         endif()
         target_link_libraries(kdeui-${_testname}
-            ${KDE4_KDEUI_LIBS}
             ${QT_QTTEST_LIBRARY}
             ${QT_QTXML_LIBRARY}
+            kdeui
         )
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_EXECUTABLE_TESTS)
@@ -154,4 +154,4 @@ set(kcolorUtilsDemoSources
     ../colors/kcolorspaces.cpp
 )
 kde4_add_manual_test(kcolorutilsdemo ${kcolorUtilsDemoSources})
-target_link_libraries(kcolorutilsdemo ${KDE4_KDEUI_LIBS})
+target_link_libraries(kcolorutilsdemo kdeui)

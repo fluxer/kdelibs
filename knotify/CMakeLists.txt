@@ -23,10 +23,10 @@ add_library(knotifyconfig SHARED ${knotifyconfig_LIB_SRCS})
 
 # Needs KIO for KUrlRequester
 target_link_libraries(knotifyconfig PUBLIC
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KDECORE_LIBS}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTDBUS_LIBRARY}
+    kdecore
+    kio
 )
 
 set_target_properties(knotifyconfig PROPERTIES

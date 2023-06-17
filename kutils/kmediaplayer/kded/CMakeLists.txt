@@ -8,7 +8,7 @@ set(kded_kaudioplayer_SRCS
 qt4_generate_dbus_interface(kaudioplayer.h org.kde.kaudioplayer.xml )
 
 kde4_add_plugin(kded_kaudioplayer ${kded_kaudioplayer_SRCS})
-target_link_libraries(kded_kaudioplayer ${KDE4_KMEDIAPLAYER_LIBS})
+target_link_libraries(kded_kaudioplayer kmediaplayer)
 
 install(
     TARGETS kded_kaudioplayer

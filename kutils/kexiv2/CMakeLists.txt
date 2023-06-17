@@ -12,8 +12,8 @@ set(kexiv2_LIB_SRCS
 add_library(kexiv2 SHARED ${kexiv2_LIB_SRCS})
 
 target_link_libraries(kexiv2 PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
+    kdecore
+    kdeui
 )
 
 if(EXIV2_FOUND)

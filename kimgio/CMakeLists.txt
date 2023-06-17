@@ -6,8 +6,8 @@ include_directories(${KDE4_KDEUI_INCLUDES})
 
 kde4_add_plugin(kimg_ico ico.cpp)
 target_link_libraries(kimg_ico
-    ${KDE4_KDECORE_LIBS}
     ${QT_QTGUI_LIBRARY}
+    kdecore
 )
 set_target_properties(kimg_ico PROPERTIES
     OUTPUT_NAME ico
@@ -24,9 +24,9 @@ if(WEBP_FOUND)
     include_directories(${WEBP_INCLUDES})
     kde4_add_plugin(kimg_webp webp.cpp)
     target_link_libraries(kimg_webp
-        ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${WEBP_LIBRARIES}
+        kdecore
     )
     set_target_properties(kimg_webp PROPERTIES
         OUTPUT_NAME webp
@@ -44,9 +44,9 @@ if(LIBRAW_FOUND)
     include_directories(${LIBRAW_INCLUDE_DIR})
     kde4_add_plugin(kimg_raw raw.cpp)
     target_link_libraries(kimg_raw
-        ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${LIBRAW_LIBRARIES}
+        kdecore
     )
     set_target_properties(kimg_raw PROPERTIES
         COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
@@ -65,9 +65,9 @@ if(LIBJPEG_FOUND)
     include_directories(${LIBJPEG_INCLUDE_DIR})
     kde4_add_plugin(kimg_jpg jpg.cpp)
     target_link_libraries(kimg_jpg
-        ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${LIBJPEG_LIBRARIES}
+        kdecore
     )
     set_target_properties(kimg_jpg PROPERTIES
         OUTPUT_NAME jpg
@@ -85,9 +85,9 @@ if(OPENJPEG_FOUND)
     include_directories(${OPENJPEG_INCLUDE_DIR})
     kde4_add_plugin(kimg_jp2 jp2.cpp)
     target_link_libraries(kimg_jp2
-        ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${OPENJPEG_LIBRARIES}
+        kdecore
     )
     set_target_properties(kimg_jp2 PROPERTIES
         OUTPUT_NAME jp2
@@ -105,9 +105,9 @@ if(TIFF_FOUND)
     include_directories(${TIFF_INCLUDE_DIRS})
     kde4_add_plugin(kimg_tiff tiff.cpp)
     target_link_libraries(kimg_tiff
-        ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${TIFF_LIBRARIES}
+        kdecore
     )
     set_target_properties(kimg_tiff PROPERTIES
         OUTPUT_NAME tiff

@@ -6,5 +6,5 @@ set(kmimeassociationstest_SRCS kmimeassociationstest.cpp ../kmimeassociations.cp
 
 kde4_add_test(kded-kmimeassociationstest ${kmimeassociationstest_SRCS})
 
-target_link_libraries(kded-kmimeassociationstest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(kded-kmimeassociationstest ${QT_QTTEST_LIBRARY} kdecore)
 

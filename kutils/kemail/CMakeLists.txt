@@ -15,9 +15,9 @@ set(kemail_LIB_SRCS
 add_library(kemail SHARED ${kemail_LIB_SRCS})
 
 target_link_libraries(kemail PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KPASSWDSTORE_LIBS}
+    kdecore
+    kdeui
+    kpasswdstore
 )
 target_link_libraries(kemail PRIVATE ${CURL_LIBRARIES})
 

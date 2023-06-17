@@ -32,8 +32,8 @@ qt4_generate_dbus_interface(klauncher_adaptor.h org.kde.KLauncher.xml)
 add_executable(klauncher4 ${klauncher_SRCS})
 
 target_link_libraries(klauncher4
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
+    kdeui
+    kio
 )
 
 kde4_add_dbus_service(org.kde.klauncher.service.in)

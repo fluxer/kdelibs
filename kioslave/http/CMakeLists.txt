@@ -10,9 +10,9 @@ include_directories(
 add_executable(kio_http http.cpp)
 
 target_link_libraries(kio_http
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
     ${CURL_LIBRARIES}
+    kdecore
+    kio
 )
 
 install(TARGETS kio_http DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})

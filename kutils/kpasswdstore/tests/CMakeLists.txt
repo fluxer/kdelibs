@@ -3,9 +3,9 @@ include_directories(
 )
 
 kde4_add_manual_test(kpasswdstore-manual kpasswdstoretest.cpp)
-target_link_libraries(kpasswdstore-manual ${KDE4_KDECORE_LIBS} ${KDE4_KPASSWDSTORE_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(kpasswdstore-manual ${QT_QTTEST_LIBRARY} kdecore kpasswdstore)
 
 kde4_add_manual_test(kpasswdroulettedialog-manual
     kpasswdroulettedialog-manual.cpp
 )
-target_link_libraries(kpasswdroulettedialog-manual ${KDE4_KPASSWDSTORE_LIBS})
+target_link_libraries(kpasswdroulettedialog-manual kpasswdstore)

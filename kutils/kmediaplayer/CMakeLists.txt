@@ -18,8 +18,8 @@ set(kmediaplayer_LIB_SRCS
 add_library(kmediaplayer SHARED ${kmediaplayer_LIB_SRCS})
 
 target_link_libraries(kmediaplayer PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
+    kdecore
+    kdeui
 )
 
 if(MPV_FOUND)

@@ -5,13 +5,13 @@ include_directories(${KDE4_KIO_INCLUDES})
 MACRO(KIO_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_test(kio-${_testname} ${_testname}.cpp)
-        target_link_libraries(kio-${_testname} ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY})
+        target_link_libraries(kio-${_testname} ${QT_QTTEST_LIBRARY} kio)
     ENDFOREACH(_testname)
 ENDMACRO(KIO_UNIT_TESTS)
 MACRO(KIO_EXECUTABLE_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_manual_test(kio-${_testname} ${_testname}.cpp)
-        target_link_libraries(kio-${_testname} ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY})
+        target_link_libraries(kio-${_testname} ${QT_QTTEST_LIBRARY} kio)
     ENDFOREACH(_testname)
 ENDMACRO(KIO_EXECUTABLE_TESTS)
 
@@ -59,9 +59,9 @@ KIO_EXECUTABLE_TESTS(
 
 set(kfstest_SRCS kfstest.cpp kfdtest.cpp)
 kde4_add_manual_test(kfstest ${kfstest_SRCS})
-target_link_libraries(kfstest ${KDE4_KIO_LIBS})
+target_link_libraries(kfstest kio)
 
 ########### kfilemetainfotest ###############
 
 kde4_add_test(kio-kfilemetainfotest kfilemetainfotest.cpp)
-target_link_libraries(kio-kfilemetainfotest ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(kio-kfilemetainfotest ${QT_QTTEST_LIBRARY} kio)

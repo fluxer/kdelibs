@@ -6,7 +6,7 @@ include_directories(${KDE4_KIO_INCLUDES})
 
 add_executable(kio_ftp ftp.cpp)
 
-target_link_libraries(kio_ftp ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kio_ftp kdecore kio)
 
 install(TARGETS kio_ftp DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 

@@ -2,8 +2,8 @@ set(kfilemetadata_exiv2_SRCS kfilemetadata_exiv2.cpp)
 
 kde4_add_plugin(kfilemetadata_exiv2 ${kfilemetadata_exiv2_SRCS})
 target_link_libraries(kfilemetadata_exiv2
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KEXIV2_LIBS}
+    kio
+    kexiv2
 )
 
 install(
@@ -23,8 +23,8 @@ if (FFMPEG_FOUND)
 
     kde4_add_plugin(kfilemetadata_ffmpeg ${kfilemetadata_ffmpeg_SRCS})
     target_link_libraries(kfilemetadata_ffmpeg
-        ${KDE4_KIO_LIBS}
         ${FFMPEG_LIBRARIES}
+        kio
     )
 
     install(
@@ -45,8 +45,8 @@ if (TAGLIB_FOUND)
 
     kde4_add_plugin(kfilemetadata_taglib ${kfilemetadata_taglib_SRCS})
     target_link_libraries(kfilemetadata_taglib
-        ${KDE4_KIO_LIBS}
         ${TAGLIB_LIBRARIES}
+        kio
     )
 
     install(
@@ -67,8 +67,8 @@ if (EPUB_FOUND)
 
     kde4_add_plugin(kfilemetadata_epub ${kfilemetadata_epub_SRCS})
     target_link_libraries(kfilemetadata_epub
-        ${KDE4_KIO_LIBS}
         ${EPUB_LIBRARIES}
+        kio
     )
 
     install(
@@ -89,8 +89,8 @@ if (POPPLER_FOUND)
 
     kde4_add_plugin(kfilemetadata_poppler ${kfilemetadata_poppler_SRCS})
     target_link_libraries(kfilemetadata_poppler
-        ${KDE4_KIO_LIBS}
         ${POPPLER_LIBRARIES}
+        kio
     )
 
     install(
@@ -111,8 +111,8 @@ if (LIBSPECTRE_FOUND)
 
     kde4_add_plugin(kfilemetadata_spectre ${kfilemetadata_spectre_SRCS})
     target_link_libraries(kfilemetadata_spectre
-        ${KDE4_KIO_LIBS}
         ${LIBSPECTRE_LIBRARY}
+        kio
     )
 
     install(
@@ -133,8 +133,8 @@ if (FREETYPE_FOUND)
 
     kde4_add_plugin(kfilemetadata_freetype ${kfilemetadata_freetype_SRCS})
     target_link_libraries(kfilemetadata_freetype
-        ${KDE4_KIO_LIBS}
         ${FREETYPE_LIBRARIES}
+        kio
     )
 
     install(
@@ -155,8 +155,8 @@ if (DJVULIBRE_FOUND)
 
     kde4_add_plugin(kfilemetadata_djvulibre ${kfilemetadata_djvulibre_SRCS})
     target_link_libraries(kfilemetadata_djvulibre
-        ${KDE4_KIO_LIBS}
         ${DJVULIBRE_LIBRARY}
+        kio
     )
 
     install(

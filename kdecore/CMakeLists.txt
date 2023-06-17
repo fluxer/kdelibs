@@ -197,7 +197,7 @@ configure_file(
 
 add_executable(kde4-config kde-config.cpp )
 
-target_link_libraries(kde4-config ${KDE4_KDECORE_LIBS})
+target_link_libraries(kde4-config kdecore)
 
 install(
     TARGETS kde4-config

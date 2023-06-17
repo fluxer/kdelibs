@@ -36,10 +36,10 @@ set(ktexteditor_LIB_SRCS
 add_library(ktexteditor SHARED ${ktexteditor_LIB_SRCS})
 
 target_link_libraries(ktexteditor
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KPARTS_LIBS}
-    ${KDE4_KEMAIL_LIBS}
     ${QT_QTDBUS_LIBRARY}
+    kdecore
+    kparts
+    kemail
 )
 
 set_target_properties(ktexteditor PROPERTIES

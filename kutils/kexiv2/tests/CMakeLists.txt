@@ -6,4 +6,4 @@ include_directories(
 kde4_add_test(kexiv2-kexiv2test
     kexiv2test.cpp
 )
-target_link_libraries(kexiv2-kexiv2test ${KDE4_KEXIV2_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(kexiv2-kexiv2test ${QT_QTTEST_LIBRARY} kexiv2)

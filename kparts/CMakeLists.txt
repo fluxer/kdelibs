@@ -25,9 +25,9 @@ set(kparts_LIB_SRCS
 add_library(kparts SHARED ${kparts_LIB_SRCS})
 
 target_link_libraries(kparts PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
+    kdecore
+    kdeui
+    kio
 )
 
 set_target_properties(kparts PROPERTIES

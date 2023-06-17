@@ -16,8 +16,7 @@ include_directories(
 ########### next target ###############
 
 add_executable(makekdewidgets makekdewidgets.cpp)
-
-target_link_libraries(makekdewidgets ${KDE4_KDECORE_LIBS})
+target_link_libraries(makekdewidgets kdecore)
 
 install(
     TARGETS makekdewidgets
@@ -32,7 +31,7 @@ if(QT_QTUITOOLS_FOUND)
 
     kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
 
-    target_link_libraries(kdewidgets ${KDE4_KIO_LIBS} ${KDE4_KMEDIAPLAYER_LIBS})
+    target_link_libraries(kdewidgets kio kmediaplayer)
 
     install(
         TARGETS kdewidgets

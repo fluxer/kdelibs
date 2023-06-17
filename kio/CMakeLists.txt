@@ -132,12 +132,12 @@ set(kio_LIB_SRCS
 add_library(kio SHARED ${kio_LIB_SRCS})
 
 target_link_libraries(kio PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KPASSWDSTORE_LIBS}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}
+    kdecore
+    kdeui
+    kpasswdstore
 )
 
 if(ACL_FOUND)

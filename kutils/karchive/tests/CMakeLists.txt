@@ -6,14 +6,14 @@ include_directories(
 kde4_add_test(karchive-karchivetest
     karchivetest.cpp
 )
-target_link_libraries(karchive-karchivetest ${KDE4_KARCHIVE_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(karchive-karchivetest ${QT_QTTEST_LIBRARY} karchive)
 
 kde4_add_test(karchive-kcompressortest
     kcompressortest.cpp
 )
-target_link_libraries(karchive-kcompressortest ${KDE4_KARCHIVE_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(karchive-kcompressortest ${QT_QTTEST_LIBRARY} karchive)
 
 kde4_add_test(karchive-kdecompressortest
     kdecompressortest.cpp
 )
-target_link_libraries(karchive-kdecompressortest ${KDE4_KARCHIVE_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(karchive-kdecompressortest ${QT_QTTEST_LIBRARY} karchive)

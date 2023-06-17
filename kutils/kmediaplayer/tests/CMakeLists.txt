@@ -6,5 +6,5 @@ foreach(mantest media)
     kde4_add_manual_test(kmediaplayer-${mantest}
         k${mantest}widgettest.cpp
     )
-    target_link_libraries(kmediaplayer-${mantest} ${KDE4_KMEDIAPLAYER_LIBS})
+    target_link_libraries(kmediaplayer-${mantest} kmediaplayer)
 endforeach()

@@ -38,10 +38,10 @@ set_target_properties(kdeclarative PROPERTIES
 )
 
 target_link_libraries(kdeclarative PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
     ${QT_QTSCRIPT_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
+    kdecore
+    kdeui
 )
 
 if(ENABLE_TESTING)

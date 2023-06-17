@@ -6,7 +6,7 @@ include_directories(BEFORE ${CMAKE_SOURCE_DIR}/kio)
 
 add_executable(kmailservice kmailservice.cpp)
 
-target_link_libraries(kmailservice ${KDE4_KDECORE_LIBS})
+target_link_libraries(kmailservice kdecore)
 
 install(
     TARGETS kmailservice
@@ -21,7 +21,7 @@ install(
 
 add_executable(ktelnetservice ktelnetservice.cpp)
 
-target_link_libraries(ktelnetservice ${KDE4_KDEUI_LIBS})
+target_link_libraries(ktelnetservice kdeui)
 
 install(
     TARGETS ktelnetservice
