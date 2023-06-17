@@ -165,17 +165,6 @@ if(NOT KDELIBS4_FOUND)
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ WORLD_READ
     )
 
-    if(NOT _kde4_uninstall_rule_created)
-        set(_kde4_uninstall_rule_created TRUE)
-        configure_file(
-            "${kde_cmake_module_dir}/kde4_cmake_uninstall.cmake.in"
-            "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" @ONLY
-        )
-        add_custom_target(uninstall
-            COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-        )
-    endif()
-
     if(NOT KDELIBS4_FIND_QUIETLY)
         message(STATUS "Found KDE version: ${KDE_VERSION}")
     endif()

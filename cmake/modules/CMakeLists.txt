@@ -59,7 +59,6 @@ set(cmakeFiles
     FindTaglib.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
-    kde4_cmake_uninstall.cmake.in
     kde4_exec.sh.in
 )
 
