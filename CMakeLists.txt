@@ -84,14 +84,27 @@ if(ENABLE_TESTING)
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
     find_package(Threads)
     set_package_properties(Threads PROPERTIES
-        PURPOSE "Required for asynchorouns functions and methods execution"
         DESCRIPTION "Platform dependent threads implementation"
-        URL ""
         TYPE REQUIRED
+        PURPOSE "Required for asynchorouns functions and methods execution"
     )
 endif()
 
-# required features
+# required packages
+find_package(Katie 4.13.0)
+set_package_properties(Katie PROPERTIES
+    DESCRIPTION "C++ toolkit derived from the Qt 4.8 framework"
+    URL "https://osdn.net/projects/kde/"
+    TYPE REQUIRED
+)
+
+find_package(X11)
+set_package_properties(X11 PROPERTIES
+    DESCRIPTION "Open source implementation of the X Window System"
+    URL "https://xorg.freedesktop.org/wiki/"
+    TYPE REQUIRED
+)
+
 find_package(LibDeflate)
 set_package_properties(LibDeflate PROPERTIES
     DESCRIPTION "Heavily optimized library for DEFLATE/zlib/gzip compression and decompression"
@@ -138,6 +151,7 @@ add_feature_info("X Fixes Extension (libXfixes)" HAVE_XFIXES "Support for damage
 add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
 add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime")
 
+# optional packages
 kde4_optional_find_package(MPV 0.23.0)
 set_package_properties(MPV PROPERTIES
     DESCRIPTION "A fork of mplayer2 and MPlayer"
@@ -147,8 +161,7 @@ set_package_properties(MPV PROPERTIES
 )
 
 kde4_optional_find_package(ACL)
-set_package_properties(ACL
-    PROPERTIES
+set_package_properties(ACL PROPERTIES
     DESCRIPTION "Support for manipulating access control lists"
     URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
     TYPE RECOMMENDED
@@ -160,21 +173,23 @@ set_package_properties(Avahi PROPERTIES
     DESCRIPTION "Facilities for service discovery on a local network (DNSSD)"
     URL "https://avahi.org/"
     TYPE OPTIONAL
-    PURPOSE "Avahi is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
+    PURPOSE "Multicast DNS/DNS-SD service discovery"
 )
 
 kde4_optional_find_package(BZip2)
 set_package_properties(BZip2 PROPERTIES
-    DESCRIPTION "Support for BZip2 compressed files and data streams"
+    DESCRIPTION "A high-quality data compression program"
     URL "http://www.bzip.org"
     TYPE RECOMMENDED
+    PURPOSE "Support for BZip2 compressed files"
 )
 
 kde4_optional_find_package(LibLZMA)
 set_package_properties(LibLZMA PROPERTIES
-    DESCRIPTION "Support for xz compressed files and data streams"
+    DESCRIPTION "Free general-purpose data compression software with a high compression ratio"
     URL "https://tukaani.org/xz/"
     TYPE OPTIONAL
+    PURPOSE "Support for XZ and LZMA compressed files"
 )
 
 kde4_optional_find_package(WebP)
