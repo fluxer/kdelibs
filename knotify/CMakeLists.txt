@@ -35,7 +35,7 @@ set_target_properties(knotifyconfig PROPERTIES
 )
 install(
     TARGETS knotifyconfig
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

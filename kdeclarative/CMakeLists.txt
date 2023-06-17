@@ -59,6 +59,6 @@ install(
 
 install(
     TARGETS kdeclarative
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )

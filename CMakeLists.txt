@@ -508,15 +508,9 @@ install(
 )
 
 install(
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
-    FILE KDELibs4LibraryTargets.cmake
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/KDELibs4
-)
-install(
-    EXPORT kdelibsToolsTargets
-    NAMESPACE ${KDE4_TARGET_PREFIX}
-    FILE KDELibs4ToolsTargets.cmake
+    FILE KDELibs4Targets.cmake
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/KDELibs4
 )
 

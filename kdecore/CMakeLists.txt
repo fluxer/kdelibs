@@ -183,7 +183,7 @@ set_target_properties(kdecore PROPERTIES
 
 install(
     TARGETS kdecore
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

@@ -48,7 +48,7 @@ set_target_properties(ktexteditor PROPERTIES
 )
 install(
     TARGETS ktexteditor
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

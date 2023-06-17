@@ -24,7 +24,7 @@ set_target_properties(kpty PROPERTIES
 )
 install(
     TARGETS kpty
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

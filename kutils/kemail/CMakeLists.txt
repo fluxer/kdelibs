@@ -39,6 +39,6 @@ install(
 
 install(
     TARGETS kemail
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )

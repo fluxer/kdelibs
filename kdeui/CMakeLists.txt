@@ -370,7 +370,7 @@ generate_export_header(kdeui)
 
 install(
     TARGETS kdeui
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

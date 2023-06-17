@@ -135,16 +135,12 @@ KDEUI_EXECUTABLE_TESTS(
     kcompletionuitest
     kmainwindowrestoretest
     kmainwindowtest
+    fixx11h_test
+    fixx11h_test2
+    kxerrorhandlertest
 )
 
-if (Q_WS_X11)
-    KDEUI_EXECUTABLE_TESTS(
-        fixx11h_test
-        fixx11h_test2
-        kxerrorhandlertest
-    )
-    target_link_libraries(kdeui-kxerrorhandlertest ${X11_X11_LIB})
-endif (Q_WS_X11)
+target_link_libraries(kdeui-kxerrorhandlertest ${X11_X11_LIB})
 
 ## kcolorutilsdemo
 

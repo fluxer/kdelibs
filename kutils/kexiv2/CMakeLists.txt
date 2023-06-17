@@ -40,7 +40,7 @@ install(
 
 install(
     TARGETS kexiv2
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

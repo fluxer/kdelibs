@@ -96,8 +96,8 @@ if(NOT KDELIBS4_FOUND)
     find_package(Katie QUIET REQUIRED 4.13.0)
     find_package(X11 QUIET REQUIRED)
 
-    # add the found Katie and KDE include directories to the current include path
-    # the ${KDE4_INCLUDE_INSTALL_DIR}/KDE directory is for forwarding includes, e.g.
+    # add the found KDE, Katie and X11 include directories to KDE4_INCLUDES, the
+    # ${KDE4_INCLUDE_INSTALL_DIR}/KDE directory is for forwarding includes, e.g.
     # #include <KMainWindow>
     set(KDE4_INCLUDES
         ${KDE4_INCLUDE_INSTALL_DIR}
@@ -135,21 +135,14 @@ if(NOT KDELIBS4_FOUND)
     # KDE4Defaults.cmake contains KDE defaults
     include(${kdelibs4_config_dir}/KDE4Defaults.cmake)
 
-    # Now include the file with the imported tools (executable targets).
-    # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
-    # Having the libs and tools in two separate files should help with cross compiling.
-    include(${kdelibs4_config_dir}/KDELibs4ToolsTargets.cmake)
+    # This file contains the exported library and tools targets from kdelibs, e.g. the library
+    # target "kdeui" is exported as "KDE4::kdeui". The "KDE4::" is used as "namespace" to separate
+    # the imported targets from "normal" targets, it is stored in KDE4_TARGET_PREFIX. This
+    # export-file is generated and installed by the toplevel
+    include(${kdelibs4_config_dir}/KDELibs4Targets.cmake)
 
     set(KDE4_KCFGC_EXECUTABLE             ${KDE4_TARGET_PREFIX}kconfig_compiler)
     set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets)
-
-    # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
-    # the library target "kdeui" is exported as "KDE4::kdeui". The "KDE4::" is used as
-    # "namespace" to separate the imported targets from "normal" targets, it is stored in
-    # KDE4_TARGET_PREFIX.
-    # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
-    # Include it to "import" the libraries from kdelibs into the current projects as targets.
-    include(${kdelibs4_config_dir}/KDELibs4LibraryTargets.cmake)
 
     # KDE4Macros.cmake contains all the KDE specific macros
     include(${kdelibs4_config_dir}/KDE4Macros.cmake)

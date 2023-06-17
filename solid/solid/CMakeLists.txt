@@ -209,7 +209,7 @@ set_target_properties(solid PROPERTIES
 )
 install(
     TARGETS solid
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

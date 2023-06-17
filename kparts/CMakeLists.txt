@@ -37,7 +37,7 @@ set_target_properties(kparts PROPERTIES
 
 install(
     TARGETS kparts
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

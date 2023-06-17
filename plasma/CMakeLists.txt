@@ -174,7 +174,7 @@ set_target_properties(plasma PROPERTIES
 
 install(
     TARGETS plasma
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 

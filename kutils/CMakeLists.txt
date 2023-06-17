@@ -79,7 +79,7 @@ install(
 
 install(
     TARGETS kidletime
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
@@ -136,6 +136,6 @@ install(
 
 install(
     TARGETS kcmutils
-    EXPORT kdelibsLibraryTargets
+    EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
