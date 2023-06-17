@@ -128,7 +128,6 @@ namespace Solid
             Modem
         };
 
-
     private:
         /**
          * Creates a new AudioInterface object.

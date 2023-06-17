@@ -24,12 +24,14 @@ set(kded_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kded.xml
 )
 
-
 add_executable(kded4 ${kded_SRCS})
 
 target_link_libraries(kded4 ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
 
-install(TARGETS kded4 ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kded4
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
+)
 
 qt4_generate_dbus_interface(kdedadaptor.h org.kde.kded.xml)
 install(
@@ -66,7 +68,10 @@ target_link_libraries(kbuildsycoca4
     ${QT_QTXML_LIBRARY}
 )
 
-install(TARGETS kbuildsycoca4 ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kbuildsycoca4
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
+)
 
 ########### install files ###############
 

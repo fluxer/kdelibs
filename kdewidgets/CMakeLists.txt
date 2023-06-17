@@ -22,7 +22,7 @@ target_link_libraries(makekdewidgets ${KDE4_KDECORE_LIBS})
 install(
     TARGETS makekdewidgets
     EXPORT kdelibsToolsTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
 )
 
 ########### next target ###############

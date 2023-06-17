@@ -25,7 +25,7 @@ set_target_properties(kpty PROPERTIES
 install(
     TARGETS kpty
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 generate_export_header(kpty)
@@ -37,7 +37,6 @@ install(
     kptydevice.h
     kptyprocess.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 ########### next target ###############

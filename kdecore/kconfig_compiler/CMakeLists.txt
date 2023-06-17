@@ -8,5 +8,5 @@ target_link_libraries(kconfig_compiler
 install(
     TARGETS kconfig_compiler
     EXPORT kdelibsToolsTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
 )

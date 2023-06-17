@@ -29,13 +29,12 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/kpowermanager_export.h
     kpowermanager.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
     TARGETS kpowermanager
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 add_subdirectory(kded)

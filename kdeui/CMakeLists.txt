@@ -377,7 +377,7 @@ generate_export_header(kdeui)
 install(
     TARGETS kdeui
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 install(
@@ -392,10 +392,8 @@ install(
 )
 
 install(
-    FILES
-    xmlgui/ui_standards.rc
-    DESTINATION
-    ${KDE4_CONFIG_INSTALL_DIR}/ui
+    FILES xmlgui/ui_standards.rc
+    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}/ui
 )
 
 install(
@@ -589,7 +587,6 @@ install(
     util/fixx11h.h
     util/kkeyserver_x11.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 # KDE 5 remove this
@@ -598,7 +595,6 @@ install(
     widgets/kratingpainter.h
     widgets/kratingwidget.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/nepomuk
-    COMPONENT Devel
 )
 
 install(

@@ -362,7 +362,6 @@ install(
     KSpellDictionaryComboBox
     KSpellConfigWidget
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE
-    COMPONENT Devel
 )
 
 install(
@@ -370,7 +369,6 @@ install(
     KAccelGen/Deref
     KAccelGen/Deref_Key
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KAccelGen
-    COMPONENT Devel
 )
 
 install(
@@ -404,7 +402,6 @@ install(
     KIO/Task
     KIO/TransferJob
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KIO
-    COMPONENT Devel
 )
 
 install(
@@ -424,7 +421,6 @@ install(
     KParts/ReadWritePart
     KParts/StatusBarExtension
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KParts
-    COMPONENT Devel
 )
 
 
@@ -434,7 +430,6 @@ install(
     KSettings/Dispatcher
     KSettings/PluginPage
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KSettings
-    COMPONENT Devel
 )
 
 install(
@@ -477,7 +472,6 @@ install(
     KTextEditor/VariableInterface
     KTextEditor/View
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KTextEditor
-    COMPONENT Devel
 )
 
 
@@ -506,7 +500,6 @@ install(
     Solid/StorageVolume
     Solid/Graphic
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Solid
-    COMPONENT Devel
 )
 
 install(
@@ -579,5 +572,4 @@ install(
     Plasma/Wallpaper
     Plasma/WindowEffects
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Plasma
-    COMPONENT Devel
 )

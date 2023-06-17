@@ -30,11 +30,10 @@ endif()
 # enter bootstrap mode
 set(_kdeBootStrapping TRUE)
 
-set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
+set(KDE4_TARGET_PREFIX KDE4::)
 set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX})
 set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX})
-set(KDE4_LIB_DIR ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR})
-set(KDE4_INSTALLED_VERSION_OK TRUE)
+set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
 
 set(KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 set(KDE4_EXEC_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH "KDE installation prefix")
@@ -47,7 +46,7 @@ set(KDE4_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_FULL_INCLUDEDIR}" CACHE PATH "KDE 
 set(KDE4_PLUGIN_INSTALL_DIR "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE PATH "KDE plugins installation directory")
 set(KDE4_IMPORTS_INSTALL_DIR "${KDE4_PLUGIN_INSTALL_DIR}/imports" CACHE PATH "KDE imports installation directory")
 set(KDE4_CONFIG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config" CACHE PATH "KDE config installation directory")
-set(KDE4_DATA_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/apps" CACHE PATH "KDE data installation directory")
+set(KDE4_DATA_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}" CACHE PATH "KDE data installation directory")
 set(KDE4_ICON_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/icons" CACHE PATH "KDE icon installation directory")
 set(KDE4_KCFG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config.kcfg" CACHE PATH "KDE kcfg installation directory")
 set(KDE4_LOCALE_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/translations/kde4" CACHE PATH "KDE locale installation directory")
@@ -65,20 +64,53 @@ set(KDE4_DBUS_INTERFACES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/interf
 set(KDE4_DBUS_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/services" CACHE PATH "KDE D-Bus services installation directory")
 set(KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/system-services" CACHE PATH "KDE D-Bus system services installation directory")
 
+set(KDE4_DEFINITIONS
+    -DQT_NO_CAST_TO_ASCII
+    -DQT_DEPRECATED_WARNINGS
+)
+
+set(_kde_libraries
+    kmediaplayer
+    kcmutils
+    kdeclarative
+    kdecore
+    kdeui
+    kexiv2
+    kpasswdstore
+    kpowermanager
+    kdnssd
+    karchive
+    kemail
+    kfile
+    kidletime
+    kio
+    knotifyconfig
+    kparts
+    kpty
+    ktexteditor
+    plasma
+    solid
+)
+foreach(_lib ${_kde_libraries})
+    string(TOUPPER ${_lib} _upperlib)
+    set(KDE4_${_upperlib}_LIBS ${_lib})
+endforeach()
+
+configure_file(
+    "${CMAKE_SOURCE_DIR}/cmake/modules/kde4_exec.sh.in"
+    "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"
+    @ONLY
+)
+file(
+    COPY "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"
+    DESTINATION "${CMAKE_BINARY_DIR}"
+    FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ WORLD_READ
+)
+
 ################# now find all used packages #################
 
-find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
-
-# X11 Session Management (SM) is required
-# X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
-if(NOT X11_SM_FOUND)
-    message(FATAL_ERROR "The X11 Session Management (SM) development package could not be found")
-endif(NOT X11_SM_FOUND)
-
-if(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
-    message(FATAL_ERROR "Neither the XSync (libXext) nor XScreensaver (libXss) development package was found")
-endif(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
+include(KDE4Macros)
 
 if(ENABLE_TESTING)
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
@@ -137,6 +169,16 @@ set_package_properties(CURL PROPERTIES
     TYPE REQUIRED
     PURPOSE "E-mail library and KIO HTTP(S) slave"
 )
+
+# X11 Session Management (SM) is required
+# X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
+if(NOT X11_SM_FOUND)
+    message(FATAL_ERROR "The X11 Session Management (SM) development package could not be found")
+endif()
+
+if(NOT X11_XSync_FOUND AND NOT X11_Xscreensaver_FOUND)
+    message(FATAL_ERROR "Neither the XSync (libXext) nor XScreensaver (libXss) development package was found")
+endif()
 
 # optional features
 kde4_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
@@ -467,8 +509,16 @@ add_subdirectory( solid )
 
 ################# write kdelibs package config files which will be installed #################
 
-configure_file(KDE4Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake @ONLY)
-configure_file(KDE4Version.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake @ONLY)
+configure_file(
+    KDELibs4Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4Config.cmake
+    @ONLY
+)
+configure_file(
+    KDELibs4ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4ConfigVersion.cmake
+    @ONLY
+)
 
 ################# install files #################
 
@@ -481,22 +531,22 @@ install(
 # ${KDE4_SHARE_INSTALL_PREFIX}/cmake/KDE4
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
+    ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4ConfigVersion.cmake
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/KDELibs4
 )
 
 install(
     EXPORT kdelibsLibraryTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4LibraryTargets.cmake
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/KDELibs4
 )
 install(
     EXPORT kdelibsToolsTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4ToolsTargets.cmake
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/KDELibs4
 )
 
 feature_summary(WHAT ALL

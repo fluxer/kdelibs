@@ -1800,8 +1800,6 @@ void KLineEdit::setClickMessage( const QString &msg )
     update();
 }
 
-
-
 void KLineEdit::setPasswordMode(bool b)
 {
     if(b)

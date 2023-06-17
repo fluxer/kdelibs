@@ -77,13 +77,12 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/kidletime_export.h
     kidletime/kidletime.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
     TARGETS kidletime
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 ########### kcmutils ###############
@@ -127,7 +126,6 @@ install(
     kpluginselector.h
     kcmodulecontainer.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
@@ -136,11 +134,10 @@ install(
     ksettings/dialog.h
     ksettings/pluginpage.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/ksettings
-    COMPONENT Devel
 )
 
 install(
     TARGETS kcmutils
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )

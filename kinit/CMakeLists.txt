@@ -38,7 +38,10 @@ target_link_libraries(klauncher4
 
 kde4_add_dbus_service(org.kde.klauncher.service.in)
 
-install(TARGETS klauncher4 DESTINATION ${KDE4_BIN_INSTALL_DIR})
+install(
+    TARGETS klauncher4
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
+)
 
 install(
     FILES

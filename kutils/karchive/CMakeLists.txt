@@ -54,13 +54,12 @@ install(
     kcompressor.h
     kdecompressor.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
     TARGETS karchive
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 if(ENABLE_TESTING)

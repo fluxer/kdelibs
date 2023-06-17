@@ -31,11 +31,10 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/kdnssd_export.h
     kdnssd.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
     TARGETS kdnssd
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )

@@ -155,7 +155,7 @@ set_target_properties(kio PROPERTIES
 install(
     TARGETS kio
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 install(
@@ -202,7 +202,6 @@ install(
     kio/skipdialog.h
     kio/udsentry.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kio
-    COMPONENT Devel
 )
 
 install(
@@ -253,7 +252,6 @@ install(
     bookmarks/kbookmarkmenu.h
     bookmarks/kbookmarkdialog.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(

@@ -1,7 +1,7 @@
 project(tetest)
  
-find_package(KDE4 REQUIRED)
-include(KDE4Defaults)
+find_package(KDELibs4 REQUIRED)
+
 include_directories(${QT_INCLUDES} ${KDE4_INCLUDES})
 add_definitions(${QT_DEFINITIONS} ${KDE_DEFINITIONS})
 

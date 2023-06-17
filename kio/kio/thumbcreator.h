@@ -54,8 +54,7 @@
  * \code
  * project(filetypethumbcreator)
  *
- * find_package(KDE4 REQUIRED)
- * include (KDE4Defaults)
+ * find_package(KDELibs4 REQUIRED)
  *
  * set(filetypethumbnail_SRCS filetypethumbnail.cpp)
  *

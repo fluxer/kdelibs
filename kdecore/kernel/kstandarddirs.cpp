@@ -310,7 +310,7 @@ static const struct ResourcesTblData {
     const char* const type;
     const char* const relativename;
 } ResourcesTbl[] = {
-    { "data\0", "share/apps\0" },
+    { "data\0", "share\0" },
     { "icon\0", "share/icons\0" },
     { "config\0", "share/config\0" },
     { "pixmap\0", "share/pixmaps\0" },

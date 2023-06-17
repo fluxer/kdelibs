@@ -38,7 +38,7 @@ set_target_properties(kparts PROPERTIES
 install(
     TARGETS kparts
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -64,5 +64,4 @@ install(
     factory.h
     statusbarextension.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts
-    COMPONENT Devel
 )

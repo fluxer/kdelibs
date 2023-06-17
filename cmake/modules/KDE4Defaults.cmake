@@ -1,3 +1,20 @@
+# this is required by cmake >=2.6
+cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
+
+# CMP0000: don't require cmake_minimum_version() directly in the top level
+# CMakeLists.txt, FindKDE4Internal.cmake is good enough
+cmake_policy(SET CMP0000 OLD)
+# CMP0003: add the link paths to the link command as with cmake 2.4
+cmake_policy(SET CMP0003 OLD)
+if(NOT CMAKE_VERSION VERSION_LESS "3.3.0")
+    # CMP0003: enable symbols visibility preset for all targets
+    cmake_policy(SET CMP0063 NEW)
+endif()
+if(NOT CMAKE_VERSION VERSION_LESS "3.10.0")
+    cmake_policy(SET CMP0071 OLD)
+endif()
+
+
 # let cmake handle mocking and UI compiling
 # since cmake 2.8.6
 set(CMAKE_AUTOMOC ON)
@@ -40,3 +57,7 @@ set(CMAKE_UNITY_BUILD_BATCH_SIZE 200)
 # libraries
 set(GENERIC_LIB_VERSION "4.23")
 set(GENERIC_LIB_SOVERSION "4")
+
+if(ENABLE_TESTING)
+    enable_testing()
+endif()

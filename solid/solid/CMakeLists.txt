@@ -210,7 +210,7 @@ set_target_properties(solid PROPERTIES
 install(
     TARGETS solid
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 install(
@@ -250,5 +250,4 @@ install(
     video.h
     graphic.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
-    COMPONENT Devel
 )

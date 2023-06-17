@@ -36,7 +36,7 @@ set_target_properties(knotifyconfig PROPERTIES
 install(
     TARGETS knotifyconfig
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -48,5 +48,4 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/knotifyconfig_export.h
     knotifyconfigwidget.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )

@@ -1,7 +1,5 @@
 ## install the cmake files
 
-set(module_install_dir ${KDE4_DATA_INSTALL_DIR}/cmake/modules)
-
 # This variable doesn't actually do anything, but it's probably a good idea
 # to have it around, so there is a place where the modules which are not installed
 # are listed explicitly:
@@ -18,6 +16,7 @@ set(cmakeFilesDontInstall
     FindLibJPEG.cmake
     FindOpenJPEG.cmake
     FindWebP.cmake
+    FindExiv2.cmake
 )
 
 # Explicitly list all files which will be installed.
@@ -29,15 +28,12 @@ set(cmakeFiles
     cmake-modules-styleguide.txt
     FindDjVuLibre.cmake
     FindEPub.cmake
-    FindExiv2.cmake
     FindFFmpegThumbnailer.cmake
     FindFontconfig.cmake
     FindGettextPO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
     FindGphoto2.cmake
-    FindKDE4Internal.cmake
-    FindKDE4Workspace.cmake
     FindKmod.cmake
     FindLibATASmart.cmake
     FindLibDeflate.cmake
@@ -65,8 +61,16 @@ set(cmakeFiles
     FindXCB.cmake
     kde4_cmake_uninstall.cmake.in
     kde4_exec.sh.in
-    KDE4Defaults.cmake
-    KDE4Macros.cmake
 )
 
-install(FILES ${cmakeFiles} DESTINATION ${module_install_dir})
+install(
+    FILES ${cmakeFiles}
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
+)
+
+install(
+    FILES
+    KDE4Defaults.cmake
+    KDE4Macros.cmake
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/KDELibs4
+)

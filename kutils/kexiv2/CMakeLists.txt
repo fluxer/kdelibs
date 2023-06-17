@@ -36,13 +36,12 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/kexiv2_export.h
     kexiv2.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
     TARGETS kexiv2
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 if(ENABLE_TESTING)

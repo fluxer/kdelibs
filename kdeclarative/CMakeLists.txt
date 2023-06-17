@@ -55,11 +55,10 @@ install(
     kdeclarative.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdeclarative_export.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
     TARGETS kdeclarative
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )

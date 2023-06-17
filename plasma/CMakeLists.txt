@@ -175,7 +175,7 @@ set_target_properties(plasma PROPERTIES
 install(
     TARGETS plasma
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -226,7 +226,6 @@ install(
     wallpaper.h
     ${CMAKE_CURRENT_BINARY_DIR}/plasma_export.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma
-    COMPONENT Devel
 )
 
 install(
@@ -258,7 +257,6 @@ install(
     widgets/treeview.h
     widgets/textedit.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/widgets
-    COMPONENT Devel
 )
 
 install(
@@ -266,14 +264,12 @@ install(
     scripting/appletscript.h
     scripting/scriptengine.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/scripting
-    COMPONENT Devel
 )
 
 install(
     FILES
     animations/animation.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/animations
-    COMPONENT Devel
 )
 
 

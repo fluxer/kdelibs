@@ -184,7 +184,7 @@ set_target_properties(kdecore PROPERTIES
 install(
     TARGETS kdecore
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 ########### next target ###############
@@ -199,7 +199,10 @@ add_executable(kde4-config kde-config.cpp )
 
 target_link_libraries(kde4-config ${KDE4_KDECORE_LIBS})
 
-install(TARGETS kde4-config ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kde4-config
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
+)
 
 ########### install files ###############
 
@@ -291,7 +294,6 @@ install(
     util/qtest_kde.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
 )
 
 install(
@@ -314,5 +316,4 @@ install(
     dbus_policy.stub
     dbus_service.stub
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kauth
-    COMPONENT Devel
 )

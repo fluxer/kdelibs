@@ -49,7 +49,7 @@ set_target_properties(ktexteditor PROPERTIES
 install(
     TARGETS ktexteditor
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -102,7 +102,6 @@ install(
     recoveryinterface.h
     messageinterface.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/ktexteditor
-    COMPONENT Devel
 )
 
 install(

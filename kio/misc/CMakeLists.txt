@@ -10,7 +10,7 @@ target_link_libraries(kmailservice ${KDE4_KDECORE_LIBS})
 
 install(
     TARGETS kmailservice
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
 )
 install(
     PROGRAMS kmailservice.desktop
@@ -25,7 +25,7 @@ target_link_libraries(ktelnetservice ${KDE4_KDEUI_LIBS})
 
 install(
     TARGETS ktelnetservice
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
 )
 install(
     PROGRAMS ktelnetservice.desktop
