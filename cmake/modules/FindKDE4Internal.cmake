@@ -83,9 +83,6 @@
 #  have such a dependency. This variable is deprecated with KDE 4.2.0, but
 #  will still work to make the module backwards-compatible.
 
-#  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
-#  _KDE4_PLATFORM_DEFINITIONS is used only internally
-
 # Copyright (c) 2006-2009, Alexander Neundorf <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
@@ -124,17 +121,7 @@ if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
 endif()
 
 find_package(Katie ${_REQ_STRING_KDE4} 4.13.0)
-
-# Check that we really found everything.
-# If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something
-# wasn't found already above in the other FIND_PACKAGE() calls. If KDE4 was
-# searched without REQUIRED and something in the FIND_PACKAGE() calls above
-# wasn't found,then we get here and must check that everything has actually
-# been found. If something is missing, we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
-if(NOT Katie_FOUND)
-    message(STATUS "KDE4 not found, because Katie was not found")
-    return()
-endif()
+find_package(X11 REQUIRED)
 
 # Used in configure_file() and install(EXPORT)
 set(KDE4_TARGET_PREFIX KDE4::)
@@ -291,17 +278,6 @@ if(WIN32 OR CYGWIN OR APPLE)
     message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
 endif()
 
-set(_KDE4_PLATFORM_INCLUDE_DIRS)
-set(_KDE4_PLATFORM_DEFINITIONS)
-
-find_package(X11 REQUIRED)
-# UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
-set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
-
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -DNDEBUG")
-endif()
-
 ############################################################
 # compiler specific settings
 ############################################################
@@ -371,14 +347,17 @@ set(KDE4_INCLUDES
    ${KDE4_INCLUDE_DIR}
    ${KDE4_INCLUDE_DIR}/KDE
    ${QT_INCLUDES}
-   ${_KDE4_PLATFORM_INCLUDE_DIRS}
+   ${X11_INCLUDE_DIR}
 )
 
 set(KDE4_DEFINITIONS
-    ${_KDE4_PLATFORM_DEFINITIONS}
     -DQT_NO_CAST_TO_ASCII
     -DQT_DEPRECATED_WARNINGS
 )
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(KDE4_DEFINITIONS "${KDE4_DEFINITIONS} -DNDEBUG")
+endif()
 
 if(NOT _kde4_uninstall_rule_created)
     set(_kde4_uninstall_rule_created TRUE)

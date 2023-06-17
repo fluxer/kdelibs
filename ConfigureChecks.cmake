@@ -11,9 +11,9 @@ include(CheckStructHasMember)
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
-# The FindKDE4.cmake module sets _KDE4_PLATFORM_DEFINITIONS with
-# definitions like _GNU_SOURCE that are needed on each platform.
-set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
+# KatieConfig.cmake sets QT_DEFINITIONS with definitions like _GNU_SOURCE that
+# are needed on each platform.
+set(CMAKE_REQUIRED_DEFINITIONS ${QT_DEFINITIONS})
 
 kde4_bool_to_01(LibArchive_FOUND HAVE_LIBARCHIVE)       # karchive
 kde4_bool_to_01(BZIP2_FOUND HAVE_BZIP2)                 # karchive
