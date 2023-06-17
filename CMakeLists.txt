@@ -143,8 +143,7 @@ set_package_properties(CURL PROPERTIES
     PURPOSE "E-mail library and KIO HTTP(S) slave"
 )
 
-# X11 Session Management (SM) is required
-# X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
+# X11 Session Management (SM) is required, X11_SM_FOUND is set in FindX11
 if(NOT X11_SM_FOUND)
     message(FATAL_ERROR "The X11 Session Management (SM) development package could not be found")
 endif()
