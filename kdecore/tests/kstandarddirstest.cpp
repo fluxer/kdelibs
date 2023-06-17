@@ -51,7 +51,7 @@ void KStandarddirsTest::testLocateLocal()
 void KStandarddirsTest::testSaveLocation()
 {
     const QString saveLoc = KGlobal::dirs()->saveLocation( "appdata" );
-    QCOMPARE_PATHS( saveLoc, m_kdehome + "/share/apps/qttest/" );
+    QCOMPARE_PATHS( saveLoc, m_kdehome + "/share/qttest/" );
 }
 
 void KStandarddirsTest::testAppData()
@@ -59,7 +59,7 @@ void KStandarddirsTest::testAppData()
     // In addition to testSaveLocation(), we want to also check other KComponentDatas
     KComponentData cData("foo");
     const QString fooAppData = cData.dirs()->saveLocation( "appdata" );
-    QCOMPARE_PATHS( fooAppData, m_kdehome + "/share/apps/foo/" );
+    QCOMPARE_PATHS( fooAppData, m_kdehome + "/share/foo/" );
 }
 
 void KStandarddirsTest::testChangeSaveLocation()
@@ -75,7 +75,7 @@ void KStandarddirsTest::testChangeSaveLocation()
 
 static bool isKdelibsInstalled()
 {
-    // If there's only one dir, it's the local one (~/.kde-unit-test/share/apps/),
+    // If there's only one dir, it's the local one (~/.kde-unit-test/share/),
     // meaning that kdelibs wasn't installed (or we don't find where, the environment isn't right).
     return KGlobal::dirs()->resourceDirs( "data" ).count() > 1;
 }
@@ -92,9 +92,9 @@ void KStandarddirsTest::testFindResource()
     QVERIFY( bin.endsWith( KIOSLAVE ) );
     QVERIFY( !QDir::isRelativePath(bin) );
 
-    const QString data = KGlobal::dirs()->findResource( "data", "cmake/modules/KDE4Macros.cmake" );
+    const QString data = KGlobal::dirs()->findResource( "data", "cmake/modules/FindMtp.cmake" );
     QVERIFY( !data.isEmpty() );
-    QVERIFY( data.endsWith( QLatin1String("share/apps/cmake/modules/KDE4Macros.cmake") ) );
+    QVERIFY( data.endsWith( QLatin1String("share/cmake/modules/FindMtp.cmake") ) );
     QVERIFY( !QDir::isRelativePath(data) );
 }
 
@@ -114,7 +114,7 @@ void KStandarddirsTest::testFindAllResources()
 
     const QStringList cmakeModulesFiles = KGlobal::dirs()->findAllResources( "data", "cmake/modules/" );
     QVERIFY( !cmakeModulesFiles.isEmpty() );
-    QVERIFY( cmakeModulesFiles.count() > 40 ); // I have 79 here, installed by kdelibs.
+    QVERIFY( cmakeModulesFiles.count() > 20 ); // I have 35 here, installed by kdelibs.
 
     // Create a local config file, the file will be used as expected result
     const QString localConfigFile = m_kdehome + "/share/config/foorc";
@@ -164,7 +164,7 @@ void KStandarddirsTest::testFindAllResourcesNewDir()
     const QStringList origFiles = KGlobal::dirs()->findAllResources("data", "cmake/modules/");
     const int origCount = origFiles.count();
 
-    const QString dir = m_kdehome + "/share/apps/cmake/modules";
+    const QString dir = m_kdehome + "/share/cmake/modules";
     QDir().mkpath(dir);
     QFile file(dir+"/unittest.testfile");
     QVERIFY(file.open(QIODevice::WriteOnly|QIODevice::Text));

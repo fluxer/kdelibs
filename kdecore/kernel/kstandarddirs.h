@@ -40,7 +40,7 @@
  * KStandardDirs::findResource("apps", "Home.desktop")
  * to return the desired path <tt>/opt/kde/share/applnk/Home.desktop</tt>
  * or ::locate("data", "kgame/background.jpg") to return
- * <tt>/opt/kde/share/apps/kgame/background.jpg</tt>
+ * <tt>/opt/kde/share/kgame/background.jpg</tt>
  *
  * There are several toplevel prefixes under which files can be located.
  * One of them is the kdelibs install location, one is the application
@@ -569,7 +569,7 @@ public:
      * resource types. Below is a list of them so you get an idea
      * of what this is all about.
      *
-     * @li @c data - @c share/apps
+     * @li @c data - @c share
      * @li @c icon - @c share/icon
      * @li @c config - @c share/config
      * @li @c pixmap - @c share/pixmaps

@@ -41,7 +41,7 @@ class KPluginInfo;
   * plugins like a playlist, skin or visualization
   *
   * The location of these desktop files is the
-  * share/apps/&lt;instancename&gt;/&lt;plugindir&gt; directory. But if you need
+  * share/&lt;instancename&gt;/&lt;plugindir&gt; directory. But if you need
   * you may use a different directory
   *
   * You can add plugins from different KConfig[group], by just calling all times
@@ -78,7 +78,7 @@ public:
       * Add a list of KParts plugins
       *
       * The information about the plugins will be loaded from the
-      * share/apps/&lt;instancename&gt;/kpartplugins directory
+      * share/&lt;instancename&gt;/kpartplugins directory
       *
       * @param componentName The name of the KComponentData of the plugin's parent.
       * @param categoryName  The translated name of the category. This is the

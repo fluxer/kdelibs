@@ -67,7 +67,7 @@ private:
      * called.
      *
      * @param bookmarksFile full path to the bookmarks file,
-     * Use ~/.kde/share/apps/konqueror/bookmarks.xml for the konqueror bookmarks
+     * Use ~/.katana/share/konqueror/bookmarks.xml for the konqueror bookmarks
      *
      * @param dbusObjectName a unique name that represents this bookmark collection,
      * usually your kinstance (e.g. kapplication) name. This is "konqueror" for the
@@ -211,7 +211,7 @@ public:
      * instantiate it before this method is ever called.
      *
      * @param bookmarksFile full path to the bookmarks file,
-     * Use ~/.kde/share/apps/konqueror/bookmarks.xml for the konqueror bookmarks
+     * Use ~/.katana/share/konqueror/bookmarks.xml for the konqueror bookmarks
      *
      * @param dbusObjectName a unique name that represents this bookmark collection,
      * usually your kinstance (e.g. kapplication) name. This is "konqueror" for the

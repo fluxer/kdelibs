@@ -22,9 +22,9 @@
 #include <kxmlguiclient.h>
 #include <kdialog.h>
 #include <QListWidget>
+#include <QCheckBox>
 
 class KLineEdit;
-#include <QCheckBox>
 
 namespace KDEPrivate {
 
@@ -162,7 +162,7 @@ public:
      * Loads the toolbar configuration into the widget. Should be called before being shown.
      *
      * @param resourceFile the name (absolute or relative) of your application's UI
-     * resource file.  If it is left blank, then the resource file: share/apps/appname/appnameui.rc
+     * resource file.  If it is left blank, then the resource file: share/appname/appnameui.rc
      * is used.  This is the same resource file that is used by the
      * default createGUI function in KMainWindow so you're usually
      * pretty safe in leaving it blank.
@@ -208,7 +208,7 @@ public:
 
     /**
      * Save any changes the user made.  The file will be in the user's
-     * local directory (usually $HOME/.kde/share/apps/\<appname\>).  The
+     * local directory (usually $HOME/.katana/share/\<appname\>).  The
      * filename will be the one specified in the constructor.. or the
      * made up one if the filename was NULL.
      *

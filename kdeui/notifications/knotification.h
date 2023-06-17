@@ -67,7 +67,7 @@
  *
  * \section file The global config file
  * Your application should install a file called:
- *  <em>$KDEDIR/share/apps/appname/appname.notifyrc</em>
+ *  <em>$KDEDIR/share/appname/appname.notifyrc</em>
  *
  * You can do this with the following CMake command:
  * install( FILES appname.notifyrc  DESTINATION ${KDE4_DATA_INSTALL_DIR}/appname))

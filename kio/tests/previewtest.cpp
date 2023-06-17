@@ -17,7 +17,7 @@ PreviewTest::PreviewTest()
 {
     QGridLayout *layout = new QGridLayout(this);
     m_url = new KLineEdit(this);
-    m_url->setText(KDEDIR "/share/apps/kdeui/pics/aboutkde.png");
+    m_url->setText(KDEDIR "/share/kdeui/pics/aboutkde.png");
     layout->addWidget(m_url, 0, 0);
     QPushButton *btn = new QPushButton("Generate", this);
     connect(btn, SIGNAL(clicked()), SLOT(slotGenerate()));

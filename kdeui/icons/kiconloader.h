@@ -62,7 +62,7 @@ class KIconTheme;
  * directory. The icon theme directories contain multiple sizes and/or
  * depths for the same icon. The iconloader will load the correct one based
  * on the icon group and the current theme. Icon themes are stored globally
- * in share/icons, or, application specific in share/apps/$appdir/icons.
+ * in share/icons, or, application specific in share/$appdir/icons.
  *
  * The standalone directories contain just one version of an icon. The
  * directories that are searched are: $appdir/pics and $appdir/toolbar.
