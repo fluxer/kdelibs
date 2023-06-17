@@ -91,15 +91,23 @@ void KAutoMountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
         return;
     }
 
-    const QList<QVariant> replyarguments = watcher->reply().arguments();
-    const int replyvalue = replyarguments[0].toInt();
-    // TODO: this should be using Solid::errorString() or org.kde.SolidUiServer getter for the error string
+    const QList<QVariant> watcherarguments = watcher->reply().arguments();
+    const int replyvalue = watcherarguments[0].toInt();
     if (replyvalue != 0) {
         emit q->error();
-        KMessageBox::error(
-            nullptr /*TODO - window*/,
-            i18n("Could not mount device.")
-        );
+        const QDBusReply<QString> errorreply = m_solidInterface.call("errorString", replyvalue);
+        if (errorreply.isValid()) {
+            KMessageBox::detailedError(
+                nullptr /*TODO - window*/,
+                i18n("Could not mount device."),
+                errorreply.value()
+            );
+        } else {
+            KMessageBox::error(
+                nullptr /*TODO - window*/,
+                i18n("Could not mount device.")
+            );
+        }
         q->deleteLater();
         return;
     }
@@ -168,15 +176,23 @@ void KAutoUnmountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
         return;
     }
 
-    const QList<QVariant> replyarguments = watcher->reply().arguments();
-    const int replyvalue = replyarguments[0].toInt();
-    // TODO: this should be using Solid::errorString() or org.kde.SolidUiServer getter for the error string
+    const QList<QVariant> watcherarguments = watcher->reply().arguments();
+    const int replyvalue = watcherarguments[0].toInt();
     if (replyvalue != 0) {
         emit q->error();
-        KMessageBox::error(
-            nullptr /*TODO - window*/,
-            i18n("Could not unmount device.")
-        );
+        const QDBusReply<QString> errorreply = m_solidInterface.call("errorString", replyvalue);
+        if (errorreply.isValid()) {
+            KMessageBox::detailedError(
+                nullptr /*TODO - window*/,
+                i18n("Could not unmount device."),
+                errorreply.value()
+            );
+        } else {
+            KMessageBox::error(
+                nullptr /*TODO - window*/,
+                i18n("Could not unmount device.")
+            );
+        }
         q->deleteLater();
         return;
     }
