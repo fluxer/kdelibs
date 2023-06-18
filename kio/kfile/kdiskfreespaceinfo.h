@@ -55,7 +55,7 @@ public:
     /**
      * Copy constructor
      */
-    KDiskFreeSpaceInfo( const KDiskFreeSpaceInfo& );
+    KDiskFreeSpaceInfo(const KDiskFreeSpaceInfo &other);
 
     /**
      * Destructor
@@ -65,7 +65,7 @@ public:
     /**
      * Assignment operator
      */
-    KDiskFreeSpaceInfo& operator=( const KDiskFreeSpaceInfo& );
+    KDiskFreeSpaceInfo& operator=(const KDiskFreeSpaceInfo &other);
 
     /**
      * \return \p true if the available disk space was successfully
@@ -118,7 +118,7 @@ public:
      * use mountPoint(), size(), available(), and used() to access
      * the requested values.
      */
-    static KDiskFreeSpaceInfo freeSpaceInfo( const QString& path );
+    static KDiskFreeSpaceInfo freeSpaceInfo(const QString &path);
 
 private:
     KDiskFreeSpaceInfo();

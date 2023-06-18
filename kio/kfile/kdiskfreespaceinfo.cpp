@@ -24,8 +24,8 @@
 
 #include "kdiskfreespaceinfo.h"
 
-#include <QtCore/QSharedData>
-#include <QtCore/QFile>
+#include <QSharedData>
+#include <QFile>
 
 #include <kmountpoint.h>
 #include <kdebug.h>
@@ -38,8 +38,9 @@ class KDiskFreeSpaceInfo::Private : public QSharedData
 public:
     Private()
         : valid(false),
-          size(0),
-          available(0) {
+        size(0),
+        available(0)
+    {
     }
 
     bool valid;
@@ -54,30 +55,25 @@ KDiskFreeSpaceInfo::KDiskFreeSpaceInfo()
 {
 }
 
-
-KDiskFreeSpaceInfo::KDiskFreeSpaceInfo( const KDiskFreeSpaceInfo& other )
+KDiskFreeSpaceInfo::KDiskFreeSpaceInfo(const KDiskFreeSpaceInfo &other)
 {
     d = other.d;
 }
-
 
 KDiskFreeSpaceInfo::~KDiskFreeSpaceInfo()
 {
 }
 
-
-KDiskFreeSpaceInfo& KDiskFreeSpaceInfo::operator=( const KDiskFreeSpaceInfo& other )
+KDiskFreeSpaceInfo& KDiskFreeSpaceInfo::operator=(const KDiskFreeSpaceInfo &other)
 {
     d = other.d;
     return *this;
 }
 
-
 bool KDiskFreeSpaceInfo::isValid() const
 {
     return d->valid;
 }
-
 
 QString KDiskFreeSpaceInfo::mountPoint() const
 {
@@ -90,37 +86,34 @@ KIO::filesize_t KDiskFreeSpaceInfo::size() const
     return d->size;
 }
 
-
 KIO::filesize_t KDiskFreeSpaceInfo::available() const
 {
     return d->available;
 }
 
-
 KIO::filesize_t KDiskFreeSpaceInfo::used() const
 {
-    return d->size - d->available;
+    return (d->size - d->available);
 }
 
-
-KDiskFreeSpaceInfo KDiskFreeSpaceInfo::freeSpaceInfo( const QString& path )
+KDiskFreeSpaceInfo KDiskFreeSpaceInfo::freeSpaceInfo(const QString &path)
 {
     KDiskFreeSpaceInfo info;
 
     // determine the mount point
-    KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath( path );
-    if (mp)
+    KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath(path);
+    if (mp) {
         info.d->mountPoint = mp->mountPoint();
+    }
 
     struct statvfs statvfs_buf;
-
     // Prefer mountPoint if available, so that it even works with non-existing files.
-    const QString pathArg = info.d->mountPoint.isEmpty() ? path : info.d->mountPoint;
+    const QString pathArg = (info.d->mountPoint.isEmpty() ? path : info.d->mountPoint);
     const QByteArray pathArgBytes = QFile::encodeName(pathArg);
     if (::statvfs(pathArgBytes.constData(), &statvfs_buf) == 0) {
         const quint64 blksize = quint64(statvfs_buf.f_frsize); // cast to avoid overflow
-        info.d->available = statvfs_buf.f_bavail * blksize;
-        info.d->size = statvfs_buf.f_blocks * blksize;
+        info.d->available = (statvfs_buf.f_bavail * blksize);
+        info.d->size = (statvfs_buf.f_blocks * blksize);
         info.d->valid = true;
     } else {
         const int savederrno = errno;
