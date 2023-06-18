@@ -149,10 +149,6 @@ set(kdecore_LIB_SRCS
     util/kmacroexpander_unix.cpp
 )
 
-if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
-    add_definitions(-DNO_DISPLAY)
-endif()
-
 add_library(kdecore SHARED ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore PRIVATE
