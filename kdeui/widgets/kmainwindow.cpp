@@ -506,10 +506,10 @@ const QString KMainWindow::classNameOfToplevel( int number )
     s.prepend( QLatin1String("WindowProperties") );
 
     KConfigGroup group( config, s );
-    if ( !group.hasKey( "ClassName" ) )
+    if ( !group.hasKey( "ClassName" ) ) {
         return QString();
-    else
-        return group.readEntry( "ClassName" );
+    }
+    return group.readEntry( "ClassName" );
 }
 
 bool KMainWindow::restore( int number, bool show )

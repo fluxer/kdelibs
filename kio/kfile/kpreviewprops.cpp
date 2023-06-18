@@ -33,13 +33,13 @@ public:
     ~KPreviewPropsPluginPrivate() {}
 };
 
-KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog* props)
-  : KPropertiesDialogPlugin(props),d(new KPreviewPropsPluginPrivate)
+KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog *props)
+    : KPropertiesDialogPlugin(props),
+    d(new KPreviewPropsPluginPrivate)
 {
-
-    if (properties->items().count()>1)
+    if (properties->items().count() > 1) {
         return;
-
+    }
     createLayout();
 }
 
@@ -55,8 +55,11 @@ void KPreviewPropsPlugin::createLayout()
 
     preview = new KImageFilePreview(topframe);
 
-    tmp->addWidget(preview) ;
-    connect( properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)), SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)) );
+    tmp->addWidget(preview);
+    connect(
+        properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
+        this, SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*))
+    );
 }
 
 KPreviewPropsPlugin::~KPreviewPropsPlugin()
@@ -64,14 +67,16 @@ KPreviewPropsPlugin::~KPreviewPropsPlugin()
     delete d;
 }
 
-bool KPreviewPropsPlugin::supports( const KFileItemList &_items )
+bool KPreviewPropsPlugin::supports(const KFileItemList &items)
 {
-    if ( _items.count() != 1 )
+    if (items.count() != 1) {
         return false;
-    bool metaDataEnabled = KGlobalSettings::showFilePreview(_items.first().url());
-    if (!metaDataEnabled)
+    }
+    const bool metaDataEnabled = KGlobalSettings::showFilePreview(items.first().url());
+    if (!metaDataEnabled) {
         return false;
-    const KMimeType::Ptr itemMime = _items.first().mimeTypePtr();
+    }
+    const KMimeType::Ptr itemMime = items.first().mimeTypePtr();
     foreach(const QString &it, KIO::PreviewJob::supportedMimeTypes()) {
         if (itemMime->is(it)) {
             return true;
@@ -91,12 +96,16 @@ bool KPreviewPropsPlugin::supports( const KFileItemList &_items )
     return false;
 }
 
-void KPreviewPropsPlugin::currentPageChanged( KPageWidgetItem *current, KPageWidgetItem * )
+void KPreviewPropsPlugin::currentPageChanged(KPageWidgetItem *current, KPageWidgetItem *)
 {
-    if ( current->widget() != preview->parent() )
+    if (current->widget() != preview->parent()) {
         return;
+    }
 
-    disconnect( properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)), this, SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)) );
+    disconnect(
+        properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
+        this, SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*))
+    );
     preview->showPreview(properties->item().url());
 }
 
