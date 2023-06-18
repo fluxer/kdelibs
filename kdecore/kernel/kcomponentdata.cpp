@@ -168,7 +168,6 @@ KStandardDirs *KComponentData::dirs() const
 {
     Q_ASSERT(d);
     d->lazyInit(*this);
-
     return d->dirs;
 }
 
@@ -176,7 +175,6 @@ const KSharedConfig::Ptr &KComponentData::config() const
 {
     Q_ASSERT(d);
     d->lazyInit(*this);
-
     return d->sharedConfig;
 }
 

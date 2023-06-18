@@ -292,7 +292,7 @@ QString KApplicationPrivate::sessionConfigName() const
     QString sessKey = q->sessionKey();
     if ( sessKey.isEmpty() && !sessionKey.isEmpty() )
         sessKey = sessionKey;
-    return QString::fromLatin1("session/%1_%2_%3").arg(q->applicationName()).arg(q->sessionId()).arg(sessKey);
+    return QString::fromLatin1("session/%1_%2_%3").arg(QCoreApplication::applicationName()).arg(q->sessionId()).arg(sessKey);
 }
 
 #ifdef Q_WS_X11
@@ -440,7 +440,7 @@ void KApplicationPrivate::init()
               reversedDomain.prepend(s);
           }
       const QString pidSuffix = QString::number( getpid() ).prepend( QLatin1String("-") );
-      const QString serviceName = reversedDomain + q->applicationName() + pidSuffix;
+      const QString serviceName = reversedDomain + QCoreApplication::applicationName() + pidSuffix;
       if ( bus->registerService(serviceName) == QDBusConnectionInterface::ServiceNotRegistered ) {
           kError() << "Couldn't register name '" << serviceName << "' with DBUS - another process owns it already!";
           ::exit(126);
@@ -456,7 +456,7 @@ void KApplicationPrivate::init()
 
   KSharedConfig::Ptr config = componentData.config();
   QByteArray readOnly = qgetenv("KDE_HOME_READONLY");
-  if (readOnly.isEmpty() && q->applicationName() != QLatin1String("kdialog"))
+  if (readOnly.isEmpty() && QCoreApplication::applicationName() != QLatin1String("kdialog"))
   {
     config->isConfigWritable(true);
   }
@@ -477,7 +477,7 @@ void KApplicationPrivate::init()
 
     // HACK: KLauncher creates KApplication instance and KToolInvocation creates KLauncher instance
     // (i.e recursion)
-    if (q->applicationName() != QLatin1String("klauncher")) {
+    if (QCoreApplication::applicationName() != QLatin1String("klauncher")) {
         q->connect(
             KToolInvocation::self(), SIGNAL(kapplication_hook(QStringList&,QByteArray&)),
             q, SLOT(_k_KToolInvocation_hook(QStringList&,QByteArray&))

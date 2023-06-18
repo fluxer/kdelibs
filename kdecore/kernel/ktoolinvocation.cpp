@@ -215,7 +215,7 @@ void KToolInvocation::invokeHelp(const QString &anchor,
     QString appname;
     QString docPath;
     if (_appname.isEmpty()) {
-        appname = QCoreApplication::instance()->applicationName();
+        appname = QCoreApplication::applicationName();
     } else {
         appname = _appname;
     }

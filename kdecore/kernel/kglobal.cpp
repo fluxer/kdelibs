@@ -53,8 +53,8 @@ class KGlobalPrivate
 {
     public:
         inline KGlobalPrivate()
-            : locale(0),
-            charsets(0),
+            : locale(nullptr),
+            charsets(nullptr),
             localeIsFromFakeComponent(false)
         {
             // the umask is read here before any threads are created to avoid race conditions
@@ -66,9 +66,9 @@ class KGlobalPrivate
         inline ~KGlobalPrivate()
         {
             delete locale;
-            locale = 0;
+            locale = nullptr;
             delete charsets;
-            charsets = 0;
+            charsets = nullptr;
         }
 
         KComponentData activeComponent;
@@ -275,10 +275,9 @@ QString KGlobal::caption()
     } else if (d->mainComponent.isValid() && d->mainComponent.aboutData()) {
         // We have some about data ?
         return d->mainComponent.aboutData()->programName();
-    } else {
-        // Last resort : application name
-        return QCoreApplication::instance()->applicationName();
     }
+    // Last resort : application name
+    return QCoreApplication::applicationName();
 }
 
 /**

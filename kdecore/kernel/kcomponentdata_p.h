@@ -31,7 +31,7 @@ class KComponentDataPrivate
 {
 public:
     KComponentDataPrivate(const KAboutData &aboutData_)
-        : dirs(0),
+        : dirs(nullptr),
         aboutData(aboutData_),
         refCount(1)
     {
@@ -40,7 +40,7 @@ public:
             shouldRemoveCatalog = true;
         } else {
             shouldRemoveCatalog = false;
-	}
+        }
     }
 
     ~KComponentDataPrivate()
