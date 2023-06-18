@@ -26,16 +26,8 @@
 #include <kglobalsettings.h>
 #include <klocale.h>
 
-class KPreviewPropsPlugin::KPreviewPropsPluginPrivate
-{
-public:
-    KPreviewPropsPluginPrivate()  {}
-    ~KPreviewPropsPluginPrivate() {}
-};
-
 KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog *props)
-    : KPropertiesDialogPlugin(props),
-    d(new KPreviewPropsPluginPrivate)
+    : KPropertiesDialogPlugin(props)
 {
     if (properties->items().count() > 1) {
         return;
@@ -60,11 +52,6 @@ void KPreviewPropsPlugin::createLayout()
         properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
         this, SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*))
     );
-}
-
-KPreviewPropsPlugin::~KPreviewPropsPlugin()
-{
-    delete d;
 }
 
 bool KPreviewPropsPlugin::supports(const KFileItemList &items)

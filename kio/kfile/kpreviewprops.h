@@ -32,8 +32,7 @@ class KIO_EXPORT KPreviewPropsPlugin : public KPropertiesDialogPlugin
 {
     Q_OBJECT
 public:
-    KPreviewPropsPlugin( KPropertiesDialog *props);
-    virtual ~KPreviewPropsPlugin();
+    KPreviewPropsPlugin(KPropertiesDialog *props);
 
     /**
      * Tests whether a preview for the first item should be shown
@@ -46,9 +45,6 @@ private Q_SLOTS:
 private:
     KImageFilePreview* preview;
     void createLayout();
-
-    class KPreviewPropsPluginPrivate;
-    KPreviewPropsPluginPrivate* const d;
 };
 
 #endif // KPREVIEWPROPS_H
