@@ -88,7 +88,6 @@ void KPreviewPropsPlugin::currentPageChanged(KPageWidgetItem *current, KPageWidg
     if (current->widget() != preview->parent()) {
         return;
     }
-
     disconnect(
         properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
         this, SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*))

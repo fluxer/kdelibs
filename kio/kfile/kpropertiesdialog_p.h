@@ -34,8 +34,6 @@
 
 #include <QComboBox>
 
-class KComboBox;
-
 namespace KDEPrivate
 {
 
