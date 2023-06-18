@@ -27,13 +27,6 @@ include_directories(
     ${QT_INCLUDES}
 )
 
-# kdecore_OPTIONAL_SRCS is used to collect source files
-# which are not always compiled into kdecore
-# if it's used, *always* append to it
-set(kdecore_OPTIONAL_SRCS)
-# same for optional libs
-set(kdecore_OPTIONAL_LIBS)
-
 add_definitions(
     -DQT_NO_CAST_FROM_ASCII
     -DKDE_DEFAULT_DEBUG_AREA=180
@@ -154,8 +147,6 @@ set(kdecore_LIB_SRCS
     util/kshell_unix.cpp
     util/kuser_unix.cpp
     util/kmacroexpander_unix.cpp
-
-    ${kdecore_OPTIONAL_SRCS}
 )
 
 if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
@@ -166,7 +157,6 @@ add_library(kdecore SHARED ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}
-    ${kdecore_OPTIONAL_LIBS}
 )
 
 target_link_libraries(kdecore PUBLIC
