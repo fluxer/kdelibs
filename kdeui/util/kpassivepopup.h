@@ -24,10 +24,10 @@
 
 #include <kdeui_export.h>
 
-#include <QtGui/QFrame>
+#include <QFrame>
+#include <QSystemTrayIcon>
 
 class KVBox;
-#include <QSystemTrayIcon>
 
 /**
  * @short A dialog-like popup that displays messages without interrupting the user.
@@ -91,7 +91,7 @@ public:
     {
         Boxed,             ///< Information will appear in a framed box (default)
         Balloon,           ///< Information will appear in a comic-alike balloon
-	CustomStyle=128    ///< Ids greater than this are reserved for use by subclasses
+        CustomStyle = 128  ///< Ids greater than this are reserved for use by subclasses
     };
 
     /**
@@ -411,8 +411,3 @@ private:
 };
 
 #endif // KPASSIVEPOPUP_H
-
-// Local Variables:
-// c-basic-offset: 4
-// End:
-

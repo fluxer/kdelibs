@@ -18,26 +18,21 @@
 */
 #include "kpassivepopupmessagehandler.h"
 
-#include <QtCore/qstring.h>
-#include <QtGui/QPixmap>
+#include <QString>
+#include <QPixmap>
 
 #include <kpassivepopup.h>
 #include <kicon.h>
 
 KPassivePopupMessageHandler::KPassivePopupMessageHandler(QWidget *parent)
- : QObject(parent), KMessageHandler()
-{}
+    : QObject(parent),
+    KMessageHandler()
+{
+}
 
 void KPassivePopupMessageHandler::message(KMessage::MessageType messageType, const QString &text, const QString &caption)
 {
-    showPassivePopup(messageType, text, caption);
-}
-
-void KPassivePopupMessageHandler::showPassivePopup(KMessage::MessageType messageType, const QString &text, const QString &caption)
-{
-    QPixmap resultIcon;
     QString iconName;
-
     switch(messageType)
     {
         case KMessage::Information:
@@ -53,16 +48,7 @@ void KPassivePopupMessageHandler::showPassivePopup(KMessage::MessageType message
             iconName = QLatin1String("dialog-error");
             break;
     }
-
-    resultIcon = KIcon(iconName).pixmap(32);
-
-    KPassivePopup::message(caption, text, resultIcon, parentWidget());
-}
-
-QWidget *KPassivePopupMessageHandler::parentWidget()
-{
-    return qobject_cast<QWidget*>( parent() );
+    KPassivePopup::message(caption, text, KIcon(iconName).pixmap(32), qobject_cast<QWidget*>(parent()));
 }
 
 #include "moc_kpassivepopupmessagehandler.cpp"
-// kate: space-indent on; indent-width 4; encoding utf-8; replace-tabs on;

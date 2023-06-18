@@ -16,15 +16,15 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KDEUI_KPASSIVEPOPUPMESSAGEHANDLER_H
-#define KDEUI_KPASSIVEPOPUPMESSAGEHANDLER_H
+#ifndef KPASSIVEPOPUPMESSAGEHANDLER_H
+#define KPASSIVEPOPUPMESSAGEHANDLER_H
 
 #include <kdeui_export.h>
 #include <kmessage.h>
 
-#include <QtCore/QObject>
-
+#include <QObject>
 #include <QWidget>
+
 /**
  * @brief This is a convenience KMessageHandler that uses KPassivePopup.
  *
@@ -44,21 +44,6 @@ public:
      * @copydoc KMessageHandler::message
      */
     virtual void message(KMessage::MessageType messageType, const QString &text, const QString &caption);
-
-private:
-    /**
-     * @internal Actual call of KPassivePopup.
-     * @param messageType Message type.
-     * @param text the text to display.
-     * @param caption the caption of the passive popup.
-     */
-    void showPassivePopup(KMessage::MessageType messageType, const QString &text, const QString &caption);
-    /**
-     * @internal Get the parent widget to be used by the KPassivePopup.
-     * @return the parent widget.
-     */
-    QWidget *parentWidget();
 };
 
-#endif
-// kate: space-indent on; indent-width 4; encoding utf-8; replace-tabs on;
+#endif // KPASSIVEPOPUPMESSAGEHANDLER_H
