@@ -54,12 +54,28 @@ static QScriptValue imageIsNull(QScriptContext *ctx, QScriptEngine *eng)
     return self->isNull();
 }
 
+static QScriptValue imageWidth(QScriptContext *ctx, QScriptEngine *eng)
+{
+    Q_UNUSED(eng)
+    DECLARE_SELF(QImage, null);
+    return self->width();
+}
+
+static QScriptValue imageHeight(QScriptContext *ctx, QScriptEngine *eng)
+{
+    Q_UNUSED(eng)
+    DECLARE_SELF(QImage, null);
+    return self->height();
+}
+
 QScriptValue constructImageClass(QScriptEngine *eng)
 {
     QScriptValue proto = qScriptValueFromValue(eng, QImage());
     QScriptValue::PropertyFlags getter = QScriptValue::PropertyGetter;
     // QScriptValue::PropertyFlags setter = QScriptValue::PropertySetter;
     proto.setProperty("null", eng->newFunction(imageIsNull), getter);
+    proto.setProperty("width", eng->newFunction(imageWidth), getter);
+    proto.setProperty("height", eng->newFunction(imageHeight), getter);
 
     QScriptValue ctorFun = eng->newFunction(imageCtor, proto);
 
