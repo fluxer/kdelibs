@@ -20,7 +20,6 @@
 
 #include "kguiitem.h"
 
-#include <kiconloader.h> // TODO remove
 #include <kdebug.h>
 #include <kicon.h>
 #include <kcomponentdata.h>
@@ -152,7 +151,7 @@ KIcon KGuiItem::icon( ) const
 {
     if (d->m_hasIcon) {
         if (!d->m_iconName.isEmpty()) {
-            return KIcon(d->m_iconName, KGlobal::mainComponent().isValid() ? KIconLoader::global() : 0);
+            return KIcon(d->m_iconName);
         } else {
             return d->m_icon;
         }
