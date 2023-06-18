@@ -581,9 +581,7 @@ class KPropertiesDialogPlugin::KPropertiesDialogPluginPrivate
 {
 public:
     KPropertiesDialogPluginPrivate()
-    {
-    }
-    ~KPropertiesDialogPluginPrivate()
+        : m_bDirty(false)
     {
     }
 
@@ -592,11 +590,11 @@ public:
 };
 
 KPropertiesDialogPlugin::KPropertiesDialogPlugin( KPropertiesDialog *_props )
-    : QObject( _props ),d(new KPropertiesDialogPluginPrivate)
+    : QObject( _props ),
+    d(new KPropertiesDialogPluginPrivate())
 {
     properties = _props;
     d->fontHeight = 2*properties->fontMetrics().height();
-    d->m_bDirty = false;
 }
 
 KPropertiesDialogPlugin::~KPropertiesDialogPlugin()
