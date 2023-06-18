@@ -44,57 +44,58 @@ namespace KDEPrivate
  */
 class KFilePropsPlugin : public KPropertiesDialogPlugin
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KFilePropsPlugin( KPropertiesDialog *_props );
-  virtual ~KFilePropsPlugin();
+     /**
+     * Constructor
+     */
+    KFilePropsPlugin(KPropertiesDialog *props);
+    virtual ~KFilePropsPlugin();
 
-  /**
-   * Applies all changes made.  This plugin must be always the first
-   * plugin in the dialog, since this function may rename the file which
-   * may confuse other applyChanges functions.
-   */
-  virtual void applyChanges();
+    /**
+     * Applies all changes made.  This plugin must be always the first
+     * plugin in the dialog, since this function may rename the file which
+     * may confuse other applyChanges functions.
+     */
+    virtual void applyChanges();
 
-  /**
-   * Tests whether the files specified by _items need a 'General' plugin.
-   */
-  static bool supports( const KFileItemList& _items );
+     /**
+     * Tests whether the files specified by _items need a 'General' plugin.
+     */
+    static bool supports(const KFileItemList &items);
 
-  /**
-   * Called after all plugins applied their changes
-   */
-  void postApplyChanges();
+    /**
+     * Called after all plugins applied their changes
+     */
+    void postApplyChanges();
 
-  void setFileNameReadOnly( bool ro );
+    void setFileNameReadOnly(bool ro);
 
 protected Q_SLOTS:
-  void slotEditFileType();
-  void slotCopyFinished( KJob * );
-  void slotFileRenamed( KIO::Job *, const KUrl &, const KUrl & );
-  void slotDirSizeUpdate();
-  void slotDirSizeFinished( KJob * );
-  void slotFoundMountPoint( const QString& mp, quint64 kibSize,
-                            quint64 kibUsed, quint64 kibAvail );
-  void slotSizeStop();
-  void slotSizeDetermine();
+    void slotEditFileType();
+    void slotCopyFinished(KJob *);
+    void slotFileRenamed(KIO::Job *, const KUrl &, const KUrl &);
+    void slotDirSizeUpdate();
+    void slotDirSizeFinished(KJob *);
+    void slotFoundMountPoint(const QString &mp, quint64 kibSize,
+                             quint64 kibUsed, quint64 kibAvail);
+    void slotSizeStop();
+    void slotSizeDetermine();
 
 Q_SIGNALS:
-  void leaveModality();
+    void leaveModality();
+
 private Q_SLOTS:
-  void nameFileChanged(const QString &text );
-  void slotIconChanged();
+    void nameFileChanged(const QString &text);
+    void slotIconChanged();
 
 private:
-  bool enableIconButton() const;
-  void determineRelativePath( const QString & path );
-  void applyIconChanges();
+    bool enableIconButton() const;
+    void determineRelativePath(const QString &path);
+    void applyIconChanges();
 
-  class KFilePropsPluginPrivate;
-  KFilePropsPluginPrivate* const d;
+    class KFilePropsPluginPrivate;
+    KFilePropsPluginPrivate* const d;
 };
 
 /**
@@ -105,61 +106,60 @@ private:
  */
 class KFilePermissionsPropsPlugin : public KPropertiesDialogPlugin
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum PermissionsMode {
-    PermissionsOnlyFiles = 0,
-    PermissionsOnlyDirs = 1,
-    PermissionsOnlyLinks = 2,
-    PermissionsMixed = 3
-  };
+    enum PermissionsMode {
+        PermissionsOnlyFiles = 0,
+        PermissionsOnlyDirs = 1,
+        PermissionsOnlyLinks = 2,
+        PermissionsMixed = 3
+    };
 
-  enum PermissionsTarget {
-    PermissionsOwner  = 0,
-    PermissionsGroup  = 1,
-    PermissionsOthers = 2
-  };
+    enum PermissionsTarget {
+        PermissionsOwner  = 0,
+        PermissionsGroup  = 1,
+        PermissionsOthers = 2
+    };
 
-  /**
-   * Constructor
-   */
-  KFilePermissionsPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KFilePermissionsPropsPlugin();
+    /**
+     * Constructor
+     */
+    KFilePermissionsPropsPlugin(KPropertiesDialog *props);
+    virtual ~KFilePermissionsPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  /**
-   * Tests whether the file specified by _items needs a 'Permissions' plugin.
-   */
-  static bool supports( const KFileItemList& _items );
+    /**
+     * Tests whether the file specified by _items needs a 'Permissions' plugin.
+     */
+    static bool supports(const KFileItemList &items);
 
 private Q_SLOTS:
-
-  void slotChmodResult( KJob * );
-  void slotShowAdvancedPermissions();
+    void slotChmodResult(KJob *);
+    void slotShowAdvancedPermissions();
 
 Q_SIGNALS:
-  void leaveModality();
+    void leaveModality();
 
 private:
-  void setComboContent(QComboBox *combo, PermissionsTarget target,
-		       mode_t permissions, mode_t partial);
-  bool isIrregular(mode_t permissions, bool isDir, bool isLink);
-  void enableAccessControls(bool enable);
-  void updateAccessControls();
-  void getPermissionMasks(mode_t &andFilePermissions,
-			  mode_t &andDirPermissions,
-			  mode_t &orFilePermissions,
-			  mode_t &orDirPermissions);
+    void setComboContent(QComboBox *combo, PermissionsTarget target,
+                         mode_t permissions, mode_t partial);
+    bool isIrregular(mode_t permissions, bool isDir, bool isLink);
+    void enableAccessControls(bool enable);
+    void updateAccessControls();
+    void getPermissionMasks(mode_t &andFilePermissions,
+                            mode_t &andDirPermissions,
+                            mode_t &orFilePermissions,
+                            mode_t &orDirPermissions);
 
-  static const mode_t permissionsMasks[3];
-  static const mode_t standardPermissions[4];
-  static const char *permissionsTexts[4][4];
+    static const mode_t permissionsMasks[3];
+    static const mode_t standardPermissions[4];
+    static const char *permissionsTexts[4][4];
 
-  static mode_t fperm[3][4];
+    static mode_t fperm[3][4];
 
-  class KFilePermissionsPropsPluginPrivate;
-  KFilePermissionsPropsPluginPrivate* const d;
+    class KFilePermissionsPropsPluginPrivate;
+    KFilePermissionsPropsPluginPrivate* const d;
 };
 
 
@@ -173,21 +173,21 @@ private:
  */
 class KUrlPropsPlugin : public KPropertiesDialogPlugin
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KUrlPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KUrlPropsPlugin();
+    /**
+     * Constructor
+     */
+    KUrlPropsPlugin(KPropertiesDialog *props);
+    virtual ~KUrlPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( const KFileItemList& _items );
+    static bool supports(const KFileItemList &items);
 
 private:
-  class KUrlPropsPluginPrivate;
-  KUrlPropsPluginPrivate* const d;
+    class KUrlPropsPluginPrivate;
+    KUrlPropsPluginPrivate* const d;
 };
 
 
@@ -197,27 +197,27 @@ private:
  */
 class KDevicePropsPlugin : public KPropertiesDialogPlugin
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KDevicePropsPlugin( KPropertiesDialog *_props );
-  virtual ~KDevicePropsPlugin();
+    KDevicePropsPlugin(KPropertiesDialog *props);
+    virtual ~KDevicePropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( const KFileItemList& _items );
+    static bool supports(const KFileItemList &items);
 
 private Q_SLOTS:
-  void slotActivated( int );
-  void slotDeviceChanged();
-  void slotFoundMountPoint( const QString& mp, quint64 kibSize,
-                            quint64 kibUsed, quint64 kibAvail );
+    void slotActivated(int);
+    void slotDeviceChanged();
+    void slotFoundMountPoint(const QString &mp, quint64 kibSize,
+                             quint64 kibUsed, quint64 kibAvail);
 
 private:
-  void updateInfo();
+    void updateInfo();
 
 private:
-  class KDevicePropsPluginPrivate;
-  KDevicePropsPluginPrivate* const d;
+    class KDevicePropsPluginPrivate;
+    KDevicePropsPluginPrivate* const d;
 };
 
 /**
@@ -230,30 +230,30 @@ private:
  */
 class KDesktopPropsPlugin : public KPropertiesDialogPlugin
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KDesktopPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KDesktopPropsPlugin();
+    /**
+     * Constructor
+     */
+    KDesktopPropsPlugin( KPropertiesDialog *props);
+    virtual ~KDesktopPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( const KFileItemList& _items );
+    static bool supports(const KFileItemList &items);
 
 public Q_SLOTS:
-  void slotAddFiletype();
-  void slotDelFiletype();
-  void slotBrowseExec();
-  void slotAdvanced();
+    void slotAddFiletype();
+    void slotDelFiletype();
+    void slotBrowseExec();
+    void slotAdvanced();
 
 private:
-  void checkCommandChanged();
+    void checkCommandChanged();
 
 private:
-  class KDesktopPropsPluginPrivate;
-  KDesktopPropsPluginPrivate * const d;
+    class KDesktopPropsPluginPrivate;
+    KDesktopPropsPluginPrivate * const d;
 };
 
 }
