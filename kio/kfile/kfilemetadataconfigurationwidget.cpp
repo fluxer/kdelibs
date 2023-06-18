@@ -33,7 +33,6 @@ class KFileMetaDataConfigurationWidget::Private
 {
 public:
     Private(KFileMetaDataConfigurationWidget* parent);
-    ~Private();
 
     void init();
     void loadMetaData();
@@ -70,10 +69,6 @@ KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWid
     m_provider = new KFileMetaDataProvider(q);
     connect(m_provider, SIGNAL(loadingFinished()),
             q, SLOT(slotLoadingFinished()));
-}
-
-KFileMetaDataConfigurationWidget::Private::~Private()
-{
 }
 
 void KFileMetaDataConfigurationWidget::Private::loadMetaData()
