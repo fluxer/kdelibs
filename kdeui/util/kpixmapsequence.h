@@ -18,16 +18,15 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef _K_PIXMAPSEQUENCE_H_
-#define _K_PIXMAPSEQUENCE_H_
+#ifndef KPIXMAPSEQUENCE_H
+#define KPIXMAPSEQUENCE_H
 
-#include <QtCore/qshareddata.h>
-#include <QtCore/qsize.h>
+#include <QSharedDataPointer>
+#include <QSize>
+#include <QPixmap>
 
 #include "kdeui_export.h"
 #include <kiconloader.h>
-
-#include <QPixmap>
 
 /**
  * \class KPixmapSequence kpixmapsequence.h KPixmapSequence
@@ -119,4 +118,4 @@ private:
     QSharedDataPointer<Private> d;
 };
 
-#endif
+#endif // KPIXMAPSEQUENCE_H

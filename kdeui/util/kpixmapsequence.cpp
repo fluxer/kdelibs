@@ -20,36 +20,34 @@
 
 #include "kpixmapsequence.h"
 
-#include <QtGui/QPixmap>
-#include <QtGui/QPainter>
-#include <QtCore/QVector>
+#include <QPainter>
+#include <QVector>
 
 #include <kiconloader.h>
 #include <kdebug.h>
-
 
 class KPixmapSequence::Private : public QSharedData
 {
 public:
     QVector<QPixmap> mFrames;
 
-    void loadSequence(const QPixmap& bigPixmap, const QSize &frameSize);
+    void loadSequence(const QPixmap &bigPixmap, const QSize &frameSize);
 };
 
 
-void KPixmapSequence::Private::loadSequence(const QPixmap& bigPixmap, const QSize &frameSize)
+void KPixmapSequence::Private::loadSequence(const QPixmap &bigPixmap, const QSize &frameSize)
 {
-    if(bigPixmap.isNull()) {
+    if (bigPixmap.isNull()) {
         kWarning() << "Invalid pixmap specified.";
         return;
     }
 
     QSize size(frameSize);
-    if(!size.isValid()) {
+    if (!size.isValid()) {
         size = QSize(bigPixmap.width(), bigPixmap.width());
     }
-    if(bigPixmap.width() % size.width() ||
-       bigPixmap.height() % size.height()) {
+    if (bigPixmap.width() % size.width() ||
+        bigPixmap.height() % size.height()) {
         kWarning() << "Invalid framesize.";
         return;
     }
@@ -61,15 +59,14 @@ void KPixmapSequence::Private::loadSequence(const QPixmap& bigPixmap, const QSiz
     int pos = 0;
     for (int row = 0; row < rowCount; ++row) {
         for (int col = 0; col < colCount; ++col) {
-            QPixmap pix = bigPixmap.copy(col * size.width(), row * size.height(), size.width(), size.height());
-            mFrames[pos++] = pix;
+            mFrames[pos++] = bigPixmap.copy(col * size.width(), row * size.height(), size.width(), size.height());;
         }
     }
 }
 
 
 KPixmapSequence::KPixmapSequence()
-        : d(new Private)
+    : d(new Private())
 {
 }
 
@@ -81,14 +78,14 @@ KPixmapSequence::KPixmapSequence(const KPixmapSequence &other)
 
 
 KPixmapSequence::KPixmapSequence(const QPixmap &bigPixmap, const QSize &frameSize)
-        : d(new Private)
+    : d(new Private())
 {
     d->loadSequence(bigPixmap, frameSize);
 }
 
 
 KPixmapSequence::KPixmapSequence(const QString &xdgIconName, int size)
-        : d(new Private)
+    : d(new Private())
 {
     d->loadSequence(QPixmap(KIconLoader::global()->iconPath(xdgIconName, -size)), QSize(size, size));
 }
@@ -98,8 +95,7 @@ KPixmapSequence::~KPixmapSequence()
 {
 }
 
-
-KPixmapSequence &KPixmapSequence::operator=(const KPixmapSequence & other)
+KPixmapSequence& KPixmapSequence::operator=(const KPixmapSequence &other)
 {
     d = other.d;
     return *this;
@@ -111,12 +107,10 @@ bool KPixmapSequence::isValid() const
     return !isEmpty();
 }
 
-
 bool KPixmapSequence::isEmpty() const
 {
     return d->mFrames.isEmpty();
 }
-
 
 QSize KPixmapSequence::frameSize() const
 {
@@ -132,7 +126,6 @@ int KPixmapSequence::frameCount() const
 {
     return d->mFrames.size();
 }
-
 
 QPixmap KPixmapSequence::frameAt(int index) const
 {
