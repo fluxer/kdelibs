@@ -153,7 +153,7 @@ KAutoUnmountPrivate::KAutoUnmountPrivate(KAutoUnmount *qq, const QString &mountp
 }
 
 KAutoUnmount::KAutoUnmount(const QString &mountpoint, const QString &desktopFile)
-    : d( new KAutoUnmountPrivate(this, mountpoint, desktopFile))
+    : d(new KAutoUnmountPrivate(this, mountpoint, desktopFile))
 {
     QDBusPendingCall pendingcall = d->m_solidInterface.asyncCall("unmountDevice", mountpoint);
     d->m_callWatcher = new QDBusPendingCallWatcher(pendingcall, this);

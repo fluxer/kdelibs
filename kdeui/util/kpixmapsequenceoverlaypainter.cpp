@@ -192,7 +192,7 @@ void KPixmapSequenceOverlayPainter::setRect(const QRect &rect)
 
 void KPixmapSequenceOverlayPainter::setAlignment(Qt::Alignment align)
 {
-    bool restart = d->m_started;
+    const bool restart = d->m_started;
     stop();
     d->m_alignment = align;
     if (restart) {
@@ -203,7 +203,7 @@ void KPixmapSequenceOverlayPainter::setAlignment(Qt::Alignment align)
 
 void KPixmapSequenceOverlayPainter::setOffset(const QPoint &offset)
 {
-    bool restart = d->m_started;
+    const bool restart = d->m_started;
     stop();
     d->m_offset = offset;
     if (restart) {

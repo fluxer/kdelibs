@@ -25,24 +25,21 @@
 #include <QBitmap>
 #include <QLabel>
 #include <QLayout>
-#include <QtGui/qevent.h>
+#include <QPaintEvent>
 #include <QPainter>
 #include <QPainterPath>
-#include <QtGui/qpolygon.h>
+#include <QPolygon>
 #include <QTimer>
 #include <QToolTip>
 #include <QSystemTrayIcon>
+#include <QX11Info>
 
 #include <kvbox.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kglobalsettings.h>
 #include <kconfig.h>
-
-#ifdef Q_WS_X11
-#include <qx11info_x11.h>
 #include <netwm.h>
-#endif
 
 #include <config.h>
 
@@ -301,7 +298,6 @@ void KPassivePopup::hideEvent( QHideEvent * )
 
 QRect KPassivePopup::defaultArea() const
 {
-#ifdef Q_WS_X11
     NETRootInfo info( QX11Info::display(),
                       NET::NumberOfDesktops |
                       NET::CurrentDesktop |
@@ -309,26 +305,15 @@ QRect KPassivePopup::defaultArea() const
                       -1, false );
     info.activate();
     NETRect workArea = info.workArea( info.currentDesktop() );
-    QRect r;
-    r.setRect( workArea.pos.x, workArea.pos.y, 0, 0 ); // top left
-#else
-    // FIX IT
-    QRect r;
-    r.setRect( 100, 100, 200, 200 ); // top left
-#endif
-    return r;
+    return QRect( workArea.pos.x, workArea.pos.y, 0, 0 ); // top left
 }
 
 void KPassivePopup::positionSelf()
 {
     QRect target;
-
-#ifdef Q_WS_X11
     if ( !d->window ) {
         target = defaultArea();
-    }
-
-    else {
+    } else {
         NETWinInfo ni( QX11Info::display(), d->window, QX11Info::appRootWindow(),
                        NET::WMIconGeometry );
 
@@ -336,8 +321,7 @@ void KPassivePopup::positionSelf()
         // windows that skip the taskbar cleanly
         if ( ni.state() & NET::SkipTaskbar ) {
             target = defaultArea();
-        }
-        else {
+        } else {
             NETRect r = ni.iconGeometry();
             target.setRect( r.pos.x, r.pos.y, r.size.width, r.size.height );
                 if ( target.isNull() ) { // bogus value, use the exact position
@@ -348,9 +332,6 @@ void KPassivePopup::positionSelf()
                 }
         }
     }
-#else
-        target = defaultArea();
-#endif
     moveNear( target );
 }
 
