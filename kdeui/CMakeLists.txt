@@ -43,7 +43,7 @@ add_definitions(
 )
 
 if(ENABLE_TESTING)
-    add_subdirectory( tests )
+    add_subdirectory(tests)
 endif()
 
 ########### next target ###############
@@ -614,12 +614,3 @@ install(
     notifications/org.kde.StatusNotifierWatcher.xml
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
-
-if(NOT Q_WS_X11)
-    # install our copy of the rgb.txt named colors list on systems without X11
-    install(
-        FILES
-        colors/rgb.txt
-        DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui
-    )
-endif()
