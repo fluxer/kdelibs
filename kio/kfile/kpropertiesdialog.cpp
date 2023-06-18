@@ -1432,15 +1432,15 @@ void KFilePropsPlugin::applyIconChanges()
                                            true )->iconName();
         // Is it another one than the default ?
         QString sIcon;
-        if ( str != iconButton->icon() )
+        if (str != iconButton->icon()) {
             sIcon = iconButton->icon();
+        }
         // (otherwise write empty value)
 
         kDebug(250) << "**" << path << "**";
 
         // If default icon and no .directory file -> don't create one
-        if ( !sIcon.isEmpty() || QFile::exists(path) )
-        {
+        if (!sIcon.isEmpty() || QFile::exists(path)) {
             KDesktopFile cfg(path);
             kDebug(250) << "sIcon = " << (sIcon);
             kDebug(250) << "str = " << (str);
@@ -1448,19 +1448,19 @@ void KFilePropsPlugin::applyIconChanges()
             cfg.sync();
 
             cfg.reparseConfiguration();
-            if ( cfg.desktopGroup().readEntry("Icon") != sIcon ) {
-                KMessageBox::sorry( 0, i18n("<qt>Could not save properties. You do not "
-                                            "have sufficient access to write to <b>%1</b>.</qt>", path));
+            if (cfg.desktopGroup().readEntry("Icon") != sIcon) {
+                KMessageBox::sorry(0, i18n("<qt>Could not save properties. You do not "
+                                           "have sufficient access to write to <b>%1</b>.</qt>", path));
             }
         }
     }
 }
 
-void KFilePropsPlugin::slotFileRenamed( KIO::Job *, const KUrl &, const KUrl & newUrl )
+void KFilePropsPlugin::slotFileRenamed(KIO::Job *, const KUrl &, const KUrl &newUrl)
 {
     // This is called in case of an existing local file during the copy/move operation,
     // if the user chooses Rename.
-    properties->updateUrl( newUrl );
+    properties->updateUrl(newUrl);
 }
 
 void KFilePropsPlugin::postApplyChanges()
@@ -1470,16 +1470,13 @@ void KFilePropsPlugin::postApplyChanges()
 
     const KFileItemList items = properties->items();
     const KUrl::List lst = items.urlList();
-    org::kde::KDirNotify::emitFilesChanged( lst.toStringList() );
+    org::kde::KDirNotify::emitFilesChanged(lst.toStringList());
 }
 
 class KFilePermissionsPropsPlugin::KFilePermissionsPropsPluginPrivate
 {
 public:
     KFilePermissionsPropsPluginPrivate()
-    {
-    }
-    ~KFilePermissionsPropsPluginPrivate()
     {
     }
 
