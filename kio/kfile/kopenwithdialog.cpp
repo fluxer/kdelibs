@@ -53,6 +53,18 @@
 #include <assert.h>
 #include <stdlib.h>
 
+static QString simplifiedExecLineFromService(const QString& fullExec)
+{
+    QString exec = fullExec;
+    exec.remove("%u", Qt::CaseInsensitive);
+    exec.remove("%f", Qt::CaseInsensitive);
+    exec.remove("-caption %c");
+    exec.remove("-caption \"%c\"");
+    exec.remove("%i");
+    exec.remove("%m");
+    return exec.simplified();
+}
+
 namespace KDEPrivate {
 
 class AppNode
@@ -117,60 +129,54 @@ public:
 
 void KApplicationModelPrivate::fillNode(const QString &_entryPath, KDEPrivate::AppNode *node)
 {
-   KServiceGroup::Ptr root = KServiceGroup::group(_entryPath);
-   if (!root || !root->isValid()) return;
+    KServiceGroup::Ptr root = KServiceGroup::group(_entryPath);
+    if (!root || !root->isValid()) {
+        return;
+    }
 
-   const KServiceGroup::List list = root->entries();
+    const KServiceGroup::List list = root->entries();
+    for( KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); ++it) {
+        QString icon;
+        QString text;
+        QString entryPath;
+        QString exec;
+        bool isDir = false;
+        const KSycocaEntry::Ptr p = (*it);
+        if (p->isType(KST_KService)) {
+            const KService::Ptr service = KService::Ptr::staticCast(p);
+            if (service->noDisplay()) {
+                continue;
+            }
 
-   for( KServiceGroup::List::ConstIterator it = list.begin();
-       it != list.end(); ++it)
-   {
-      QString icon;
-      QString text;
-      QString entryPath;
-      QString exec;
-      bool isDir = false;
-      const KSycocaEntry::Ptr p = (*it);
-      if (p->isType(KST_KService))
-      {
-         const KService::Ptr service = KService::Ptr::staticCast(p);
+            icon = service->icon();
+            text = service->name();
+            exec = service->exec();
+            entryPath = service->entryPath();
+        } else if (p->isType(KST_KServiceGroup)) {
+            const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
+            if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0) {
+                continue;
+            }
 
-         if (service->noDisplay())
+            icon = serviceGroup->icon();
+            text = serviceGroup->caption();
+            entryPath = serviceGroup->entryPath();
+            isDir = true;
+        } else {
+            kWarning(250) << "KServiceGroup: Unexpected object in list!";
             continue;
+        }
 
-         icon = service->icon();
-         text = service->name();
-         exec = service->exec();
-         entryPath = service->entryPath();
-      }
-      else if (p->isType(KST_KServiceGroup))
-      {
-         const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
-
-         if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0)
-            continue;
-
-         icon = serviceGroup->icon();
-         text = serviceGroup->caption();
-         entryPath = serviceGroup->entryPath();
-         isDir = true;
-      }
-      else
-      {
-         kWarning(250) << "KServiceGroup: Unexpected object in list!";
-         continue;
-      }
-
-      KDEPrivate::AppNode *newnode = new KDEPrivate::AppNode();
-      newnode->icon = icon;
-      newnode->text = text;
-      newnode->entryPath = entryPath;
-      newnode->exec = exec;
-      newnode->isDir = isDir;
-      newnode->parent = node;
-      node->children.append(newnode);
-   }
-   qStableSort(node->children.begin(), node->children.end(), KDEPrivate::AppNodeLessThan);
+        KDEPrivate::AppNode *newnode = new KDEPrivate::AppNode();
+        newnode->icon = icon;
+        newnode->text = text;
+        newnode->entryPath = entryPath;
+        newnode->exec = exec;
+        newnode->isDir = isDir;
+        newnode->parent = node;
+        node->children.append(newnode);
+    }
+    qStableSort(node->children.begin(), node->children.end(), KDEPrivate::AppNodeLessThan);
 }
 
 
@@ -660,14 +666,12 @@ void KOpenWithDialogPrivate::init(const QString &_text, const QString &_value)
     q->slotTextChanged();
 }
 
-
 // ----------------------------------------------------------------------
 
 KOpenWithDialog::~KOpenWithDialog()
 {
     delete d;
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -734,18 +738,6 @@ void KOpenWithDialog::setSaveNewApplications(bool b)
   d->saveNewApps = b;
 }
 
-static QString simplifiedExecLineFromService(const QString& fullExec)
-{
-    QString exec = fullExec;
-    exec.remove("%u", Qt::CaseInsensitive);
-    exec.remove("%f", Qt::CaseInsensitive);
-    exec.remove("-caption %c");
-    exec.remove("-caption \"%c\"");
-    exec.remove("%i");
-    exec.remove("%m");
-    return exec.simplified();
-}
-
 void KOpenWithDialogPrivate::addToMimeAppsList(const QString& serviceId /*menu id or storage id*/)
 {
     KSharedConfig::Ptr profile = KSharedConfig::openConfig("mimeapps.list", KConfig::NoGlobals, "xdgdata-apps");
@@ -767,16 +759,16 @@ void KOpenWithDialogPrivate::addToMimeAppsList(const QString& serviceId /*menu i
     KBuildSycocaProgressDialog::rebuildKSycoca(q);
 
     m_pService = KService::serviceByStorageId(serviceId);
-    Q_ASSERT( m_pService );
+    Q_ASSERT(m_pService);
 }
 
 bool KOpenWithDialogPrivate::checkAccept()
 {
     const QString typedExec(edit->text());
-    if (typedExec.isEmpty())
+    if (typedExec.isEmpty()) {
         return false;
+    }
     QString fullExec(typedExec);
-
     QString serviceName;
     QString initialServiceName;
     QString preferredTerminal;
@@ -829,7 +821,7 @@ bool KOpenWithDialogPrivate::checkAccept()
             }
         } while (!ok);
     }
-    if ( m_pService ) {
+    if (m_pService) {
         // Existing service selected
         serviceName = m_pService->name();
         initialServiceName = serviceName;
@@ -849,15 +841,16 @@ bool KOpenWithDialogPrivate::checkAccept()
         preferredTerminal = confGroup.readPathEntry("TerminalApplication", QString::fromLatin1("konsole"));
         m_command = preferredTerminal;
         // only add --noclose when we are sure it is konsole we're using
-        if (preferredTerminal == "konsole" && nocloseonexit->isChecked())
+        if (preferredTerminal == "konsole" && nocloseonexit->isChecked()) {
             m_command += QString::fromLatin1(" --noclose");
+        }
         m_command += QString::fromLatin1(" -e ");
         m_command += edit->text();
         kDebug(250) << "Setting m_command to" << m_command;
     }
-    if ( m_pService && terminal->isChecked() != m_pService->terminal() )
+    if (m_pService && terminal->isChecked() != m_pService->terminal()) {
         m_pService = 0; // It's not exactly this service we're running
-
+    }
 
     const bool bRemember = remember && remember->isChecked();
     kDebug(250) << "bRemember=" << bRemember << "service found=" << m_pService;
@@ -871,18 +864,18 @@ bool KOpenWithDialogPrivate::checkAccept()
         const bool createDesktopFile = bRemember || saveNewApps;
         if (!createDesktopFile) {
             // Create temp service
-            if (configPath.isEmpty())
+            if (configPath.isEmpty()) {
                 m_pService = new KService(initialServiceName, fullExec, QString());
-            else {
+            } else {
                 if (!typedExec.contains(QLatin1String("%u"), Qt::CaseInsensitive) &&
                     !typedExec.contains(QLatin1String("%f"), Qt::CaseInsensitive)) {
                     int index = serviceExec.indexOf(QLatin1String("%u"), 0, Qt::CaseInsensitive);
                     if (index == -1) {
-                      index = serviceExec.indexOf(QLatin1String("%f"), 0, Qt::CaseInsensitive);
+                        index = serviceExec.indexOf(QLatin1String("%f"), 0, Qt::CaseInsensitive);
                     }
                     if (index > -1) {
-                      fullExec += QLatin1Char(' ');
-                      fullExec += serviceExec.mid(index, 2);
+                        fullExec += QLatin1Char(' ');
+                        fullExec += serviceExec.mid(index, 2);
                     }
                 }
                 kDebug(250) << "Creating service with Exec=" << fullExec;
@@ -892,8 +885,9 @@ bool KOpenWithDialogPrivate::checkAccept()
             if (terminal->isChecked()) {
                 m_pService->setTerminal(true);
                 // only add --noclose when we are sure it is konsole we're using
-                if (preferredTerminal == "konsole" && nocloseonexit->isChecked())
+                if (preferredTerminal == "konsole" && nocloseonexit->isChecked()) {
                     m_pService->setTerminalOptions("--noclose");
+                }
             }
         } else {
             // If we got here, we can't seem to find a service for what they wanted. Create one.
@@ -911,8 +905,9 @@ bool KOpenWithDialogPrivate::checkAccept()
             if (terminal->isChecked()) {
                 cg.writeEntry("Terminal", true);
                 // only add --noclose when we are sure it is konsole we're using
-                if (preferredTerminal == "konsole" && nocloseonexit->isChecked())
+                if (preferredTerminal == "konsole" && nocloseonexit->isChecked()) {
                     cg.writeEntry("TerminalOptions", "--noclose");
+                }
             }
             cg.writeXdgListEntry("MimeType", QStringList() << qMimeType);
             cg.sync();
@@ -927,16 +922,17 @@ bool KOpenWithDialogPrivate::checkAccept()
 
 void KOpenWithDialog::accept()
 {
-    if (d->checkAccept())
+    if (d->checkAccept()) {
         KDialog::accept();
+    }
 }
 
 QString KOpenWithDialog::text() const
 {
-    if (!d->m_command.isEmpty())
+    if (!d->m_command.isEmpty()) {
         return d->m_command;
-    else
-        return d->edit->text();
+    }
+    return d->edit->text();
 }
 
 void KOpenWithDialog::hideNoCloseOnExit()
