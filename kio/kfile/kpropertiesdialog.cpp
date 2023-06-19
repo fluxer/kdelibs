@@ -154,9 +154,6 @@ public:
         m_aborted = false;
         fileSharePage = 0;
     }
-    ~KPropertiesDialogPrivate()
-    {
-    }
 
     /**
      * Common initialization for all constructors
@@ -168,7 +165,7 @@ public:
     void insertPages();
 
     KPropertiesDialog *q;
-    bool m_aborted:1;
+    bool m_aborted;
     QWidget* fileSharePage;
     /**
      * The URL of the props dialog (when shown for only one file)
@@ -1521,24 +1518,31 @@ const mode_t KFilePermissionsPropsPlugin::standardPermissions[4] = { 0, UniRead,
 
 // synced with PermissionsMode and standardPermissions
 const char *KFilePermissionsPropsPlugin::permissionsTexts[4][4] = {
-    { I18N_NOOP("Forbidden"),
-      I18N_NOOP("Can Read"),
-      I18N_NOOP("Can Read & Write"),
-      0 },
-{ I18N_NOOP("Forbidden"),
-  I18N_NOOP("Can View Content"),
-  I18N_NOOP("Can View & Modify Content"),
-  0 },
-{ 0, 0, 0, 0}, // no texts for links
-{ I18N_NOOP("Forbidden"),
-  I18N_NOOP("Can View Content & Read"),
-  I18N_NOOP("Can View/Read & Modify/Write"),
-  0 }
+    {
+        I18N_NOOP("Forbidden"),
+        I18N_NOOP("Can Read"),
+        I18N_NOOP("Can Read & Write"),
+        0
+    },
+    {
+        I18N_NOOP("Forbidden"),
+        I18N_NOOP("Can View Content"),
+        I18N_NOOP("Can View & Modify Content"),
+        0
+    },
+    { 0, 0, 0, 0 }, // no texts for links
+    {
+        I18N_NOOP("Forbidden"),
+        I18N_NOOP("Can View Content & Read"),
+        I18N_NOOP("Can View/Read & Modify/Write"),
+        0
+    }
 };
 
 
-KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_props )
-    : KPropertiesDialogPlugin( _props ),d(new KFilePermissionsPropsPluginPrivate)
+KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin(KPropertiesDialog *props)
+    : KPropertiesDialogPlugin(props),
+    d(new KFilePermissionsPropsPluginPrivate())
 {
     d->cbRecursive = 0L;
     d->grpCombo = 0L; d->grpEdit = 0;
@@ -1546,7 +1550,7 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     QString path = properties->kurl().path(KUrl::RemoveTrailingSlash);
     QString fname = properties->kurl().fileName();
     bool isLocal = properties->kurl().isLocalFile();
-    bool isTrash = ( properties->kurl().protocol().toLower() == "trash" );
+    bool isTrash = (properties->kurl().protocol().toLower() == "trash");
     bool IamRoot = (::geteuid() == 0);
 
     const KFileItem item = properties->item();
@@ -1558,63 +1562,67 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     d->isIrregular = isIrregular(d->permissions, isDir, isLink);
     d->strOwner = item.user();
     d->strGroup = item.group();
-    d->hasExtendedACL = item.ACL().isExtended() || item.defaultACL().isValid();
+    d->hasExtendedACL = (item.ACL().isExtended() || item.defaultACL().isValid());
     d->extendedACL = item.ACL();
     d->defaultACL = item.defaultACL();
     d->fileSystemSupportsACLs = false;
 
-    if ( properties->items().count() > 1 )
-    {
+    if (properties->items().count() > 1) {
         // Multiple items: see what they have in common
         const KFileItemList items = properties->items();
         KFileItemList::const_iterator it = items.begin();
         const KFileItemList::const_iterator kend = items.end();
-        for ( ++it /*no need to check the first one again*/ ; it != kend; ++it )
-        {
+        for (++it /*no need to check the first one again*/ ; it != kend; ++it) {
             const KUrl url = (*it).url();
-            if (!d->isIrregular)
+            if (!d->isIrregular) {
                 d->isIrregular |= isIrregular((*it).permissions(),
                                               (*it).isDir() == isDir,
                                               (*it).isLink() == isLink);
+            }
             d->hasExtendedACL = d->hasExtendedACL || (*it).hasExtendedACL();
-            if ( (*it).isLink() != isLink )
+            if ((*it).isLink() != isLink) {
                 isLink = false;
-            if ( (*it).isDir() != isDir )
+            }
+            if ((*it).isDir() != isDir) {
                 isDir = false;
+            }
             hasDir |= (*it).isDir();
-            if ( (*it).permissions() != d->permissions )
-            {
+            if ((*it).permissions() != d->permissions) {
                 d->permissions &= (*it).permissions();
                 d->partialPermissions |= (*it).permissions();
             }
-            if ( (*it).user() != d->strOwner )
+            if ((*it).user() != d->strOwner) {
                 d->strOwner.clear();
-            if ( (*it).group() != d->strGroup )
+            }
+            if ((*it).group() != d->strGroup) {
                 d->strGroup.clear();
+            }
         }
     }
 
-    if (isLink)
+    if (isLink) {
         d->pmode = PermissionsOnlyLinks;
-    else if (isDir)
+    } else if (isDir) {
         d->pmode = PermissionsOnlyDirs;
-    else if (hasDir)
+    } else if (hasDir) {
         d->pmode = PermissionsMixed;
-    else
+    } else {
         d->pmode = PermissionsOnlyFiles;
+    }
 
     // keep only what's not in the common permissions
-    d->partialPermissions = d->partialPermissions & ~d->permissions;
+    d->partialPermissions = (d->partialPermissions & ~d->permissions);
 
     bool isMyFile = false;
 
-    if (isLocal && !d->strOwner.isEmpty()) { // local files, and all owned by the same person
+    if (isLocal && !d->strOwner.isEmpty()) {
+        // local files, and all owned by the same person
         const KUser kuser(KUser::UseEffectiveUID);
-        if ( kuser.isValid() )
-        {
+        if (kuser.isValid()) {
             isMyFile = (d->strOwner == kuser.loginName());
-        } else
+        } else {
             kWarning() << "I don't exist ?! geteuid=" << ::geteuid();
+        }
     } else {
         //We don't know, for remote files, if they are ours or not.
         //So we let the user change permissions, and
@@ -1624,38 +1632,37 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
 
     d->canChangePermissions = (isMyFile || IamRoot) && (!isLink);
 
-
     // create GUI
-
     d->m_frame = new QFrame();
-    properties->addPage( d->m_frame, i18n("&Permissions") );
+    properties->addPage(d->m_frame, i18n("&Permissions"));
 
-    QBoxLayout *box = new QVBoxLayout( d->m_frame );
-    box->setMargin( 0 );
+    QBoxLayout *box = new QVBoxLayout(d->m_frame);
+    box->setMargin(0);
 
-    QWidget *l;
-    QLabel *lbl;
-    QGroupBox *gb;
-    QGridLayout *gl;
+    QWidget *l = nullptr;
+    QLabel *lbl = nullptr;
+    QGroupBox *gb = nullptr;
+    QGridLayout *gl = nullptr;
     QPushButton* pbAdvancedPerm = 0;
 
     /* Group: Access Permissions */
-    gb = new QGroupBox ( i18n("Access Permissions"), d->m_frame );
+    gb = new QGroupBox (i18n("Access Permissions"), d->m_frame);
     box->addWidget (gb);
 
-    gl = new QGridLayout (gb);
+    gl = new QGridLayout(gb);
     gl->setColumnStretch(1, 1);
 
-    l = d->explanationLabel = new QLabel( "", gb );
-    if (isLink)
+    l = d->explanationLabel = new QLabel("", gb);
+    if (isLink) {
         d->explanationLabel->setText(i18np("This file is a link and does not have permissions.",
                                            "All files are links and do not have permissions.",
                                            properties->items().count()));
-    else if (!d->canChangePermissions)
+    } else if (!d->canChangePermissions) {
         d->explanationLabel->setText(i18n("Only the owner can change permissions."));
+    }
     gl->addWidget(l, 0, 0, 1, 2);
 
-    lbl = new QLabel( i18n("O&wner:"), gb);
+    lbl = new QLabel(i18n("O&wner:"), gb);
     gl->addWidget(lbl, 1, 0, Qt::AlignRight);
     l = d->ownerPermCombo = new KComboBox(gb);
     lbl->setBuddy(l);
@@ -1663,7 +1670,7 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     connect(l, SIGNAL(activated(int)), this, SIGNAL(changed()));
     l->setWhatsThis(i18n("Specifies the actions that the owner is allowed to do."));
 
-    lbl = new QLabel( i18n("Gro&up:"), gb);
+    lbl = new QLabel(i18n("Gro&up:"), gb);
     gl->addWidget(lbl, 2, 0, Qt::AlignRight);
     l = d->groupPermCombo = new KComboBox(gb);
     lbl->setBuddy(l);
@@ -1671,7 +1678,7 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     connect(l, SIGNAL(activated(int)), this, SIGNAL(changed()));
     l->setWhatsThis(i18n("Specifies the actions that the members of the group are allowed to do."));
 
-    lbl = new QLabel( i18n("O&thers:"), gb);
+    lbl = new QLabel(i18n("O&thers:"), gb);
     gl->addWidget(lbl, 3, 0, Qt::AlignRight);
     l = d->othersPermCombo = new KComboBox(gb);
     lbl->setBuddy(l);
@@ -1684,8 +1691,8 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
         l = d->extraCheckbox = new QCheckBox(hasDir ?
                                              i18n("Only own&er can rename and delete folder content") :
                                              i18n("Is &executable"),
-                                             gb );
-        connect( d->extraCheckbox, SIGNAL(clicked()), this, SIGNAL(changed()) );
+                                             gb);
+        connect(d->extraCheckbox, SIGNAL(clicked()), this, SIGNAL(changed()));
         gl->addWidget(l, 4, 1);
         l->setWhatsThis(hasDir ? i18n("Enable this option to allow only the folder's owner to "
                                       "delete or rename the contained files and folders. Other "
@@ -1701,40 +1708,40 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
         pbAdvancedPerm = new QPushButton(i18n("A&dvanced Permissions"), gb);
         gl->addWidget(pbAdvancedPerm, 6, 0, 1, 2, Qt::AlignRight);
         connect(pbAdvancedPerm, SIGNAL(clicked()), this, SLOT(slotShowAdvancedPermissions()));
-    }
-    else
+    } else {
         d->extraCheckbox = 0;
-
+    }
 
     /**** Group: Ownership ****/
-    gb = new QGroupBox ( i18n("Ownership"), d->m_frame );
-    box->addWidget (gb);
+    gb = new QGroupBox(i18n("Ownership"), d->m_frame);
+    box->addWidget(gb);
 
-    gl = new QGridLayout (gb);
+    gl = new QGridLayout(gb);
     gl->addItem(new QSpacerItem(0, 10), 0, 0);
 
     /*** Set Owner ***/
-    l = new QLabel( i18n("User:"), gb );
-    gl->addWidget (l, 1, 0, Qt::AlignRight);
+    l = new QLabel(i18n("User:"), gb);
+    gl->addWidget(l, 1, 0, Qt::AlignRight);
 
     /* GJ: Don't autocomplete more than 1000 users. This is a kind of random
    * value. Huge sites having 10.000+ user have a fair chance of using NIS,
    * (possibly) making this unacceptably slow.
    * OTOH, it is nice to offer this functionality for the standard user.
    */
-    int i, maxEntries = 1000;
+    int maxEntries = 1000;
 
     /* File owner: For root, offer a KLineEdit with autocompletion.
    * For a user, who can never chown() a file, offer a QLabel.
    */
-    if (IamRoot && isLocal)
-    {
-        d->usrEdit = new KLineEdit( gb );
+    if (IamRoot && isLocal) {
+        d->usrEdit = new KLineEdit(gb);
         KCompletion *kcom = d->usrEdit->completionObject();
         kcom->setOrder(KCompletion::Sorted);
         const QStringList usernames = KUser::allUserNames();
-        for (i = 0; i < usernames.size() && i < maxEntries; ++i)
+        int i = 0;
+        for (; i < usernames.size() && i < maxEntries; ++i) {
             kcom->addItem(usernames.at(i));
+        }
         d->usrEdit->setCompletionMode((i < maxEntries) ? KGlobalSettings::CompletionAuto :
                                       KGlobalSettings::CompletionNone);
         d->usrEdit->setText(d->strOwner);
@@ -2499,9 +2506,6 @@ public:
     KUrlPropsPluginPrivate()
     {
     }
-    ~KUrlPropsPluginPrivate()
-    {
-    }
 
     QFrame *m_frame;
     KUrlRequester *URLEdit;
@@ -2623,9 +2627,6 @@ class KDevicePropsPlugin::KDevicePropsPluginPrivate
 {
 public:
     KDevicePropsPluginPrivate()
-    {
-    }
-    ~KDevicePropsPluginPrivate()
     {
     }
 
@@ -2909,6 +2910,7 @@ public:
     {
         delete w;
     }
+
     Ui_KPropertiesDesktopBase* w;
     QWidget *m_frame;
 
