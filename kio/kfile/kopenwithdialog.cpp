@@ -53,13 +53,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-inline void writeEntry(KConfigGroup& group, const char* key,
-                       const KGlobalSettings::Completion& aValue,
-                       KConfigBase::WriteConfigFlags flags = KConfigBase::Normal)
-{
-    group.writeEntry(key, int(aValue), flags);
-}
-
 namespace KDEPrivate {
 
 class AppNode
@@ -970,9 +963,9 @@ void KOpenWithDialogPrivate::saveComboboxHistory()
     if (combo) {
         combo->addToHistory(edit->text());
 
-        KConfigGroup cg( KGlobal::config(), QString::fromLatin1("Open-with settings") );
-        cg.writeEntry( "History", combo->historyItems() );
-        writeEntry( cg, "CompletionMode", combo->completionMode() );
+        KConfigGroup cg(KGlobal::config(), QString::fromLatin1("Open-with settings"));
+        cg.writeEntry("History", combo->historyItems());
+        cg.writeEntry("CompletionMode", int(combo->completionMode()));
         // don't store the completion-list, as it contains all of KUrlCompletion's
         // executables
         cg.sync();
