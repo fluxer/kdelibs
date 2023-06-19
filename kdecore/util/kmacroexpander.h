@@ -23,11 +23,12 @@
 #define KMACROEXPANDER_H
 
 #include <kdecore_export.h>
-#include <QtCore/QChar>
 
+#include <QChar>
 #include <QString>
 #include <QStringList>
 #include <QHash>
+
 class KMacroExpanderBasePrivate;
 
 /**
@@ -38,14 +39,14 @@ class KMacroExpanderBasePrivate;
  *
  * @author Oswald Buddenhagen <ossi@kde.org>
  */
-class KDECORE_EXPORT KMacroExpanderBase {
-
+class KDECORE_EXPORT KMacroExpanderBase
+{
 public:
     /**
      * Constructor.
      * @param c escape char indicating start of macros, or null QChar for none
      */
-    explicit KMacroExpanderBase( QChar c = QLatin1Char('%') );
+    explicit KMacroExpanderBase(QChar c = QLatin1Char('%'));
 
     /**
      * Destructor.
@@ -57,7 +58,7 @@ public:
      *
      * @param str the string in which macros are expanded in-place
      */
-    void expandMacros( QString &str );
+    void expandMacros(QString &str);
 
     // TODO: This documentation is relevant for end-users. Where to put it?
     /**
@@ -97,19 +98,19 @@ public:
      *  or brace outside any shell construct is @em not an error (unlike in
      *  the function below), but still prematurely terminates processing.
      */
-    bool expandMacrosShellQuote( QString &str, int &pos );
+    bool expandMacrosShellQuote(QString &str, int &pos);
 
     /**
      * Same as above, but always starts at position 0, and unmatched closing
      * parens and braces are treated as errors.
      */
-    bool expandMacrosShellQuote( QString &str );
+    bool expandMacrosShellQuote(QString &str);
 
     /**
      * Set the macro escape character.
      * @param c escape char indicating start of macros, or null QChar if none
      */
-    void setEscapeChar( QChar c );
+    void setEscapeChar(QChar c);
 
     /**
      * Obtain the macro escape character.
@@ -131,7 +132,7 @@ protected:
      *  than zero, subtract this value from @p pos (to skip a macro, i.e.,
      *  substitute it with itself). If zero, no macro starts at @p pos.
      */
-    virtual int expandPlainMacro( const QString &str, int pos, QStringList &ret );
+    virtual int expandPlainMacro(const QString &str, int pos, QStringList &ret);
 
     /**
      * This function is called every time the escape char is found if it is
@@ -148,7 +149,7 @@ protected:
      *  substitute it with itself). If zero, scanning continues as if no
      *  escape char was encountered at all.
      */
-    virtual int expandEscapedMacro( const QString &str, int pos, QStringList &ret );
+    virtual int expandEscapedMacro(const QString &str, int pos, QStringList &ret);
 
 private:
     KMacroExpanderBasePrivate * const d;
@@ -204,20 +205,20 @@ private:
  *
  * @author Oswald Buddenhagen <ossi@kde.org>
  */
-class KDECORE_EXPORT KWordMacroExpander : public KMacroExpanderBase {
-
+class KDECORE_EXPORT KWordMacroExpander : public KMacroExpanderBase
+{
 public:
     /**
      * Constructor.
      * @param c escape char indicating start of macros, or null QChar for none
      */
-    explicit KWordMacroExpander( QChar c = QLatin1Char('%') ) : KMacroExpanderBase( c ) {}
+    explicit KWordMacroExpander(QChar c = QLatin1Char('%')) : KMacroExpanderBase(c) {}
 
 protected:
     /** \internal Not to be called or reimplemented. */
-    int expandPlainMacro( const QString &str, int pos, QStringList &ret ) final;
+    int expandPlainMacro(const QString &str, int pos, QStringList &ret) final;
     /** \internal Not to be called or reimplemented. */
-    int expandEscapedMacro( const QString &str, int pos, QStringList &ret ) final;
+    int expandEscapedMacro(const QString &str, int pos, QStringList &ret) final;
 
     /**
      * Return substitution list @p ret for string macro @p str.
@@ -226,7 +227,7 @@ protected:
      *  when expandMacro is entered.
      * @return @c true iff @p chr was a recognized macro name
      */
-    virtual bool expandMacro( const QString &str, QStringList &ret ) = 0;
+    virtual bool expandMacro(const QString &str, QStringList &ret) = 0;
 };
 
 /**
@@ -240,20 +241,20 @@ protected:
  *
  * @author Oswald Buddenhagen <ossi@kde.org>
  */
-class KDECORE_EXPORT KCharMacroExpander : public KMacroExpanderBase {
-
+class KDECORE_EXPORT KCharMacroExpander : public KMacroExpanderBase
+{
 public:
     /**
      * Constructor.
      * @param c escape char indicating start of macros, or null QChar for none
      */
-    explicit KCharMacroExpander( QChar c = QLatin1Char('%') ) : KMacroExpanderBase( c ) {}
+    explicit KCharMacroExpander(QChar c = QLatin1Char('%')) : KMacroExpanderBase(c) {}
 
 protected:
     /** \internal Not to be called or reimplemented. */
-    int expandPlainMacro( const QString &str, int pos, QStringList &ret ) final;
+    int expandPlainMacro(const QString &str, int pos, QStringList &ret) final;
     /** \internal Not to be called or reimplemented. */
-    int expandEscapedMacro( const QString &str, int pos, QStringList &ret ) final;
+    int expandEscapedMacro(const QString &str, int pos, QStringList &ret) final;
 
     /**
      * Return substitution list @p ret for single-character macro @p chr.
@@ -262,7 +263,7 @@ protected:
      *  when expandMacro is entered.
      * @return @c true iff @p chr was a recognized macro name
      */
-    virtual bool expandMacro( QChar chr, QStringList &ret ) = 0;
+    virtual bool expandMacro(QChar chr, QStringList &ret) = 0;
 };
 
 /**
@@ -290,7 +291,7 @@ namespace KMacroExpander {
      * // s is now "% Title: /tmp/myfile.txt:My File";
      * \endcode
      */
-    KDECORE_EXPORT QString expandMacros( const QString &str, const QHash<QChar,QString> &map, QChar c = QLatin1Char('%') );
+    KDECORE_EXPORT QString expandMacros(const QString &str, const QHash<QChar,QString> &map, QChar c = QLatin1Char('%'));
 
     /**
      * Perform safe macro expansion (substitution) on a string for use
@@ -315,8 +316,8 @@ namespace KMacroExpander {
      * system(QFile::encodeName(s));
      * \endcode
      */
-    KDECORE_EXPORT QString expandMacrosShellQuote( const QString &str, const QHash<QChar,QString> &map,
-                                                   QChar c = QLatin1Char('%') );
+    KDECORE_EXPORT QString expandMacrosShellQuote(const QString &str, const QHash<QChar,QString> &map,
+                                                  QChar c = QLatin1Char('%') );
 
     /**
      * Perform safe macro expansion (substitution) on a string.
@@ -341,8 +342,8 @@ namespace KMacroExpander {
      * // s is now "Title: /tmp/myfile.txt-My File";
      * \endcode
      */
-    KDECORE_EXPORT QString expandMacros( const QString &str, const QHash<QString,QString> &map,
-                                         QChar c = QLatin1Char('%') );
+    KDECORE_EXPORT QString expandMacros(const QString &str, const QHash<QString,QString> &map,
+                                        QChar c = QLatin1Char('%'));
 
     /**
      * Perform safe macro expansion (substitution) on a string for use
@@ -371,17 +372,17 @@ namespace KMacroExpander {
      * system(QFile::encodeName(s));
      * \endcode
      */
-    KDECORE_EXPORT QString expandMacrosShellQuote( const QString &str, const QHash<QString,QString> &map,
-                                                   QChar c = QLatin1Char('%') );
+    KDECORE_EXPORT QString expandMacrosShellQuote(const QString &str, const QHash<QString,QString> &map,
+                                                  QChar c = QLatin1Char('%'));
 
     /**
      * Same as above, except that the macros expand to string lists that
      * are simply join(" ")ed together.
      */
-    KDECORE_EXPORT QString expandMacros( const QString &str, const QHash<QChar,QStringList> &map,
-                                         QChar c = QLatin1Char('%') );
-    KDECORE_EXPORT QString expandMacros( const QString &str, const QHash<QString,QStringList> &map,
-                                         QChar c = QLatin1Char('%') );
+    KDECORE_EXPORT QString expandMacros(const QString &str, const QHash<QChar,QStringList> &map,
+                                        QChar c = QLatin1Char('%'));
+    KDECORE_EXPORT QString expandMacros(const QString &str, const QHash<QString,QStringList> &map,
+                                        QChar c = QLatin1Char('%'));
 
     /**
      * Same as above, except that the macros expand to string lists.
@@ -389,10 +390,10 @@ namespace KMacroExpander {
      * join(" ")ed together; otherwise every element expands to a separate
      * quoted string.
      */
-    KDECORE_EXPORT QString expandMacrosShellQuote( const QString &str, const QHash<QChar,QStringList> &map,
-                                                   QChar c = QLatin1Char('%') );
-    KDECORE_EXPORT QString expandMacrosShellQuote( const QString &str, const QHash<QString,QStringList> &map, 
-                                                   QChar c = QLatin1Char('%') );
+    KDECORE_EXPORT QString expandMacrosShellQuote(const QString &str, const QHash<QChar,QStringList> &map,
+                                                  QChar c = QLatin1Char('%'));
+    KDECORE_EXPORT QString expandMacrosShellQuote(const QString &str, const QHash<QString,QStringList> &map, 
+                                                  QChar c = QLatin1Char('%'));
 }
 
 #endif /* KMACROEXPANDER_H */

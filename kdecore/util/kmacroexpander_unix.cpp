@@ -136,7 +136,7 @@ bool KMacroExpanderBase::expandMacrosShellQuote(QString &str, int &pos)
             }
             // always swallow the char -> prevent anomalies due to expansion
         } else if (cc == '`') {
-            str.replace(pos, 1, QLatin1String("$( " )); // add space -> avoid creating $((
+            str.replace(pos, 1, QLatin1String("$( ")); // add space -> avoid creating $((
             pos2 = pos += 3;
             for (;;) {
                 if (pos2 >= str.length()) {
