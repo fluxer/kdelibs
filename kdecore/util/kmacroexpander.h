@@ -317,7 +317,7 @@ namespace KMacroExpander {
      * \endcode
      */
     KDECORE_EXPORT QString expandMacrosShellQuote(const QString &str, const QHash<QChar,QString> &map,
-                                                  QChar c = QLatin1Char('%') );
+                                                  QChar c = QLatin1Char('%'));
 
     /**
      * Perform safe macro expansion (substitution) on a string.
