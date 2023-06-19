@@ -107,6 +107,11 @@ public:
     */
     static QByteArray makeKey(const QString &string);
 
+    /*!
+        @brief Returns all current password stores
+    */
+    static QStringList stores();
+
 private:
     Q_DISABLE_COPY(KPasswdStore);
     KPasswdStorePrivate *d;

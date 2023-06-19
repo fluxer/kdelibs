@@ -22,6 +22,7 @@
 #include "kglobal.h"
 #include "kstandarddirs.h"
 #include "klockfile.h"
+#include "ksettings.h"
 
 #include <QApplication>
 #include <QDBusInterface>
@@ -144,6 +145,13 @@ bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, con
     }
     QDBusReply<bool> result = d->interface->call("storePasswd", d->cookie, d->storeid, key, passwd, windowid);
     return result.value();
+}
+
+QStringList KPasswdStore::stores()
+{
+    KSettings passwdstore(KStandardDirs::locateLocal("data", "kpasswdstore.ini"), KSettings::SimpleConfig);
+    passwdstore.beginGroup("KPasswdStore");
+    return passwdstore.groupKeys();
 }
 
 QByteArray KPasswdStore::makeKey(const QString &string)
