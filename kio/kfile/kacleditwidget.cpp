@@ -772,45 +772,6 @@ KACL KACLListView::getDefaultACL()
     return itemsToACL( true );
 }
 
-void KACLListView::contentsMousePressEvent( QMouseEvent * /*e*/ )
-{
-    /*
-    QTreeWidgetItem *clickedItem = itemAt( e->pos() );
-    if ( !clickedItem ) return;
-    // if the click is on an as yet unselected item, select it first
-    if ( !clickedItem->isSelected() )
-        QAbstractItemView::contentsMousePressEvent( e );
-
-    if ( !currentItem() ) return;
-    int column = header()->sectionAt( e->x() );
-    acl_perm_t perm;
-    switch ( column )
-    {
-        case 2:
-            perm = ACL_READ;
-            break;
-        case 3:
-            perm = ACL_WRITE;
-            break;
-        case 4:
-            perm = ACL_EXECUTE;
-            break;
-        default:
-            return QTreeWidget::contentsMousePressEvent( e );
-    }
-    KACLListViewItem* referenceItem = static_cast<KACLListViewItem*>( clickedItem );
-    unsigned short referenceHadItSet = referenceItem->value & perm;
-    QTreeWidgetItemIterator it( this );
-    while ( KACLListViewItem* item = static_cast<KACLListViewItem*>( *it ) ) {
-        ++it;
-        if ( !item->isSelected() ) continue;
-        // toggle those with the same value as the clicked item, leave the others
-        if ( referenceHadItSet == ( item->value & perm ) )
-            item->togglePerm( perm );
-    }
-     */
-}
-
 void KACLListView::slotItemClicked( QTreeWidgetItem* pItem,  int col )
 {
     if ( !pItem ) return;

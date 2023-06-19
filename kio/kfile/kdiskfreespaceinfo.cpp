@@ -80,7 +80,6 @@ QString KDiskFreeSpaceInfo::mountPoint() const
     return d->mountPoint;
 }
 
-
 KIO::filesize_t KDiskFreeSpaceInfo::size() const
 {
     return d->size;

@@ -86,11 +86,6 @@ void KMultiTabBarInternal::setStyle(enum KMultiTabBar::KMultiTabBarStyle style)
 	updateGeometry();
 }
 
-void KMultiTabBarInternal::contentsMousePressEvent(QMouseEvent *ev)
-{
-	ev->ignore();
-}
-
 void KMultiTabBarInternal::mousePressEvent(QMouseEvent *ev)
 {
 	ev->ignore();
