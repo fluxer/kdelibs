@@ -630,6 +630,7 @@ public:
         : dirSizeJob(nullptr),
         dirSizeUpdateTimer(nullptr),
         m_frame(nullptr),
+        bIconChanged(false),
         m_capacityBar(nullptr),
         m_lined(nullptr),
         m_linkTargetLineEdit(nullptr)
@@ -676,7 +677,6 @@ KFilePropsPlugin::KFilePropsPlugin(KPropertiesDialog *props)
     d(new KFilePropsPluginPrivate())
 {
     d->bMultiple = (properties->items().count() > 1);
-    d->bIconChanged = false;
     d->bDesktopFile = KDesktopPropsPlugin::supports(properties->items());
     kDebug(250) << "KFilePropsPlugin::KFilePropsPlugin bMultiple=" << d->bMultiple;
 
@@ -882,7 +882,7 @@ KFilePropsPlugin::KFilePropsPlugin(KPropertiesDialog *props)
         d->m_lined->setFocus();
 
         //if we don't have permissions to rename, we need to make "m_lined" read only.
-        KFileItemListProperties itemList(KFileItemList()<< item);
+        KFileItemListProperties itemList(KFileItemList() << item);
         setFileNameReadOnly(!itemList.supportsMoving());
 
         // Enhanced rename: Don't highlight the file extension.
@@ -1159,10 +1159,11 @@ void KFilePropsPlugin::slotDirSizeUpdate()
     KIO::filesize_t totalSubdirs = d->dirSizeJob->totalSubdirs();
     d->m_sizeLabel->setText(
         i18n("Calculating... %1 (%2)\n%3, %4",
-              KIO::convertSize(totalSize),
-              totalSize,
-              i18np("1 file", "%1 files", totalFiles),
-              i18np("1 sub-folder", "%1 sub-folders", totalSubdirs))
+             KIO::convertSize(totalSize),
+             totalSize,
+             i18np("1 file", "%1 files", totalFiles),
+             i18np("1 sub-folder", "%1 sub-folders", totalSubdirs)
+        )
     );
 }
 
@@ -2597,7 +2598,6 @@ public:
 
     QFrame *m_frame;
     KUrlRequester *URLEdit;
-    QString URLStr;
 };
 
 KUrlPropsPlugin::KUrlPropsPlugin(KPropertiesDialog *props)
@@ -2630,10 +2630,9 @@ KUrlPropsPlugin::KUrlPropsPlugin(KPropertiesDialog *props)
 
         KDesktopFile config(path);
         const KConfigGroup dg = config.desktopGroup();
-        d->URLStr = dg.readPathEntry("URL", QString());
-
-        if (!d->URLStr.isEmpty()) {
-            d->URLEdit->setUrl(KUrl(d->URLStr));
+        QString URLStr = dg.readPathEntry("URL", QString());
+        if (!URLStr.isEmpty()) {
+            d->URLEdit->setUrl(KUrl(URLStr));
         }
     }
 
