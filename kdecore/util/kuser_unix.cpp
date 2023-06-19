@@ -225,12 +225,10 @@ QString KUser::shell() const
 QList<KUserGroup> KUser::groups() const
 {
     QList<KUserGroup> result;
-    const QList<KUserGroup> allGroups = KUserGroup::allGroups();
-    QList<KUserGroup>::const_iterator it;
-    for (it = allGroups.begin(); it != allGroups.end(); ++it) {
-        const QList<KUser> users = (*it).users();
+    foreach (const KUserGroup &group, KUserGroup::allGroups()) {
+        const QList<KUser> users = group.users();
         if (users.contains(*this)) {
-            result.append(*it);
+            result.append(group);
         }
     }
     return result;
@@ -239,12 +237,10 @@ QList<KUserGroup> KUser::groups() const
 QStringList KUser::groupNames() const
 {
     QStringList result;
-    const QList<KUserGroup> allGroups = KUserGroup::allGroups();
-    QList<KUserGroup>::const_iterator it;
-    for (it = allGroups.begin(); it != allGroups.end(); ++it) {
-        const QList<KUser> users = (*it).users();
+    foreach (const KUserGroup &group, KUserGroup::allGroups()) {
+        const QList<KUser> users = group.users();
         if (users.contains(*this)) {
-            result.append((*it).name());
+            result.append(group.name());
         }
     }
     return result;
@@ -290,7 +286,8 @@ public:
     QString name;
     QList<KUser> users;
 
-    Private() : gid(gid_t(-1))
+    Private()
+        : gid(gid_t(-1))
     {
     }
 
@@ -408,10 +405,9 @@ QList<KUser> KUserGroup::users() const
 QStringList KUserGroup::userNames() const
 {
     QStringList result;
-    QList<KUser>::const_iterator it;
     result.reserve(d->users.size());
-    for (it = d->users.begin(); it != d->users.end(); ++it) {
-        result.append((*it).loginName());
+    foreach (const KUser &user, d->users) {
+        result.append(user.loginName());
     }
     return result;
 }
