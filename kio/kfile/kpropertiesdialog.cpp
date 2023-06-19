@@ -534,9 +534,7 @@ void KPropertiesDialog::updateUrl(const KUrl &_newUrl)
     // If we have an Desktop page, set it dirty, so that a full file is saved locally
     // Same for a URL page (because of the Name= hack)
     foreach (KPropertiesDialogPlugin *it, d->m_pageList) {
-        if ( qobject_cast<KUrlPropsPlugin*>(it) ||
-             qobject_cast<KDesktopPropsPlugin*>(it) )
-        {
+        if (qobject_cast<KUrlPropsPlugin*>(it) || qobject_cast<KDesktopPropsPlugin*>(it) ) {
             //kDebug(250) << "Setting page dirty";
             it->setDirty();
             break;
@@ -1178,8 +1176,8 @@ void KFilePropsPlugin::slotDirSizeFinished(KJob *job)
         d->m_sizeLabel->setText(QString::fromLatin1("%1 (%2)\n%3, %4")
                                 .arg(KIO::convertSize(totalSize))
                                 .arg(KGlobal::locale()->formatNumber(totalSize, 0))
-                                .arg(i18np("1 file","%1 files",totalFiles))
-                                .arg(i18np("1 sub-folder","%1 sub-folders", totalSubdirs)));
+                                .arg(i18np("1 file","%1 files", totalFiles))
+                                .arg(i18np("1 sub-folder", "%1 sub-folders", totalSubdirs)));
     }
     d->m_sizeStopButton->setEnabled(false);
     // just in case you change something and try again :)
@@ -1218,7 +1216,7 @@ void KFilePropsPlugin::slotSizeDetermine()
         if (isLocal) {
             KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath(url.toLocalFile());
             if (mp) {
-                KDiskFreeSpaceInfo info = KDiskFreeSpaceInfo::freeSpaceInfo( mp->mountPoint() );
+                KDiskFreeSpaceInfo info = KDiskFreeSpaceInfo::freeSpaceInfo(mp->mountPoint());
                 slotFoundMountPoint(info.mountPoint(), info.size() / 1024, info.used() / 1024, info.available() / 1024);
             }
         }
