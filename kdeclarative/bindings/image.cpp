@@ -57,14 +57,14 @@ static QScriptValue imageIsNull(QScriptContext *ctx, QScriptEngine *eng)
 static QScriptValue imageWidth(QScriptContext *ctx, QScriptEngine *eng)
 {
     Q_UNUSED(eng)
-    DECLARE_SELF(QImage, null);
+    DECLARE_SELF(QImage, width);
     return self->width();
 }
 
 static QScriptValue imageHeight(QScriptContext *ctx, QScriptEngine *eng)
 {
     Q_UNUSED(eng)
-    DECLARE_SELF(QImage, null);
+    DECLARE_SELF(QImage, height);
     return self->height();
 }
 
