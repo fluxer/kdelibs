@@ -622,27 +622,13 @@ QString KProtocolManager::acceptLanguagesHeader()
   if (!languageList.contains(english))
     languageList += english;
 
-  // Some languages may have web codes different from locale codes,
-  // read them from the config and insert in proper order.
-  KConfig acclangConf("accept-languages.codes", KConfig::NoGlobals);
-  KConfigGroup replacementCodes(&acclangConf, "ReplacementCodes");
-  QStringList languageListFinal;
-  Q_FOREACH (const QString &lang, languageList)
-  {
-    const QStringList langs = replacementCodes.readEntry(lang, QStringList());
-    if (langs.isEmpty())
-      languageListFinal += lang;
-    else
-      languageListFinal += langs;
-  }
-
   // The header is composed of comma separated languages, with an optional
   // associated priority estimate (q=1..0) defaulting to 1.
   // As our language tags are already sorted by priority, we'll just decrease
   // the value evenly
   int prio = 10;
   QString header;
-  Q_FOREACH (const QString &lang,languageListFinal) {
+  Q_FOREACH (const QString &lang,languageList) {
       header += lang;
       if (prio < 10) {
           header += QL1S(";q=0.");

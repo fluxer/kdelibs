@@ -261,13 +261,6 @@ install(
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
-
-install(
-    FILES
-    kio/accept-languages.codes
-    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}
-)
-
 install(
     FILES
     kfile/images/yes.png
