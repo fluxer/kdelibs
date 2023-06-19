@@ -53,9 +53,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
-inline void writeEntry( KConfigGroup& group, const char* key,
-                        const KGlobalSettings::Completion& aValue,
-                        KConfigBase::WriteConfigFlags flags = KConfigBase::Normal )
+inline void writeEntry(KConfigGroup& group, const char* key,
+                       const KGlobalSettings::Completion& aValue,
+                       KConfigBase::WriteConfigFlags flags = KConfigBase::Normal)
 {
     group.writeEntry(key, int(aValue), flags);
 }
@@ -66,7 +66,7 @@ class AppNode
 {
 public:
     AppNode()
-        : isDir(false), parent(0), fetched(false)
+        : isDir(false), parent(nullptr), fetched(false)
     {
     }
     ~AppNode()
@@ -90,18 +90,14 @@ bool AppNodeLessThan(KDEPrivate::AppNode *n1, KDEPrivate::AppNode *n2)
 {
     if (n1->isDir) {
         if (n2->isDir) {
-            return n1->text.compare(n2->text, Qt::CaseInsensitive) < 0;
-        } else {
-            return true;
+            return (n1->text.compare(n2->text, Qt::CaseInsensitive) < 0);
         }
-    } else {
-        if (n2->isDir) {
-            return false;
-        } else {
-            return n1->text.compare(n2->text, Qt::CaseInsensitive) < 0;
-        }
+        return true;
     }
-    return true;
+    if (n2->isDir) {
+        return false;
+    }
+    return (n1->text.compare(n2->text, Qt::CaseInsensitive) < 0);
 }
 
 }

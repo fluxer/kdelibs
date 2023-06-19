@@ -23,11 +23,12 @@
 #define KABSTRACTFILEITEMACTION_PLUGIN_H
 
 #include <kio/kio_export.h>
-#include <QtCore/QObject>
 
+#include <QObject>
 #include <QAction>
 #include <QMenu>
 #include <QWidget>
+
 class KFileItemListProperties;
 
 /**

@@ -40,7 +40,7 @@ public:
     static bool supports(const KFileItemList &items);
 
 private Q_SLOTS:
-  void currentPageChanged(KPageWidgetItem *, KPageWidgetItem *);
+    void currentPageChanged(KPageWidgetItem *, KPageWidgetItem *);
 
 private:
     KImageFilePreview* preview;

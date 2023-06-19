@@ -3389,13 +3389,13 @@ void KDesktopPropsPlugin::slotAdvanced()
     }
 }
 
-bool KDesktopPropsPlugin::supports( const KFileItemList& _items )
+bool KDesktopPropsPlugin::supports(const KFileItemList &items)
 {
-    if ( _items.count() != 1 ) {
+    if (items.count() != 1) {
         return false;
     }
 
-    const KFileItem item = _items.first();
+    const KFileItem item = items.first();
 
     // check if desktop file
     if (!item.isDesktopFile()) {
@@ -3403,8 +3403,8 @@ bool KDesktopPropsPlugin::supports( const KFileItemList& _items )
     }
 
     // open file and check type
-    bool isLocal;
-    KUrl url = item.mostLocalUrl( isLocal );
+    bool isLocal = false;
+    KUrl url = item.mostLocalUrl(isLocal);
     if (!isLocal) {
         return false;
     }
@@ -3415,4 +3415,3 @@ bool KDesktopPropsPlugin::supports( const KFileItemList& _items )
 
 #include "moc_kpropertiesdialog.cpp"
 #include "moc_kpropertiesdialog_p.cpp"
-
