@@ -145,7 +145,7 @@ mode_t KFilePermissionsPropsPlugin::fperm[3][4] = {
     { S_IROTH, S_IWOTH, S_IXOTH, S_ISVTX }
 };
 
-class KPropertiesDialog::KPropertiesDialogPrivate
+class KPropertiesDialogPrivate
 {
 public:
     KPropertiesDialogPrivate(KPropertiesDialog *qq)
@@ -185,6 +185,93 @@ public:
      */
     QList<KPropertiesDialogPlugin*> m_pageList;
 };
+
+void KPropertiesDialogPrivate::init()
+{
+    q->setFaceType(KPageDialog::Tabbed);
+    q->setButtons(KDialog::Ok | KDialog::Cancel);
+    q->setDefaultButton(KDialog::Ok);
+
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(slotOk()));
+    q->connect(q, SIGNAL(cancelClicked()), q, SLOT(slotCancel()));
+
+    insertPages();
+
+    KConfigGroup group(KGlobal::config(), "KPropertiesDialog");
+    q->restoreDialogSize(group);
+}
+
+void KPropertiesDialogPrivate::insertPages()
+{
+    if (m_items.isEmpty()) {
+        return;
+    }
+
+    if (KFilePropsPlugin::supports(m_items)) {
+        KPropertiesDialogPlugin *p = new KFilePropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if ( KFilePermissionsPropsPlugin::supports(m_items)) {
+        KPropertiesDialogPlugin *p = new KFilePermissionsPropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if (KDesktopPropsPlugin::supports(m_items)) {
+        KPropertiesDialogPlugin *p = new KDesktopPropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if (KUrlPropsPlugin::supports(m_items)) {
+        KPropertiesDialogPlugin *p = new KUrlPropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if ( KDevicePropsPlugin::supports(m_items)) {
+        KPropertiesDialogPlugin *p = new KDevicePropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if (KPreviewPropsPlugin::supports(m_items)) {
+        KPropertiesDialogPlugin *p = new KPreviewPropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if ( KFileMetaPropsPlugin::supports(m_items)) {
+        KFileMetaPropsPlugin *p = new KFileMetaPropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    //plugins
+
+    if (m_items.count() != 1) {
+        return;
+    }
+
+    const KFileItem item = m_items.first();
+    const QString mimetype = item.mimetype();
+
+    if (mimetype.isEmpty()) {
+        return;
+    }
+
+    QString query = QString::fromLatin1(
+            "((not exist [X-KDE-Protocol]) or "
+            " ([X-KDE-Protocol] == '%1'  )   )"
+            ).arg(item.url().protocol());
+
+    kDebug( 250 ) << "trader query: " << query;
+    const KService::List offers = KMimeTypeTrader::self()->query(mimetype, "KPropertiesDialog/Plugin", query);
+    foreach (const KService::Ptr &ptr, offers) {
+        KPropertiesDialogPlugin *plugin = ptr->createInstance<KPropertiesDialogPlugin>(q);
+        if (!plugin) {
+            continue;
+        }
+        plugin->setObjectName(ptr->name());
+
+        q->insertPlugin(plugin);
+    }
+}
 
 KPropertiesDialog::KPropertiesDialog(const KFileItem &item, QWidget *parent)
     : KPageDialog(parent),
@@ -302,21 +389,6 @@ bool KPropertiesDialog::showDialog(const KFileItemList &items, QWidget *parent, 
         dlg->show();
     }
     return true;
-}
-
-void KPropertiesDialog::KPropertiesDialogPrivate::init()
-{
-    q->setFaceType(KPageDialog::Tabbed);
-    q->setButtons(KDialog::Ok | KDialog::Cancel);
-    q->setDefaultButton(KDialog::Ok);
-
-    connect(q, SIGNAL(okClicked()), q, SLOT(slotOk()));
-    connect(q, SIGNAL(cancelClicked()), q, SLOT(slotCancel()));
-
-    insertPages();
-
-    KConfigGroup group(KGlobal::config(), "KPropertiesDialog");
-    q->restoreDialogSize(group);
 }
 
 void KPropertiesDialog::showFileSharingPage()
@@ -448,78 +520,6 @@ void KPropertiesDialog::slotCancel()
     done(QDialog::Rejected);
 }
 
-void KPropertiesDialog::KPropertiesDialogPrivate::insertPages()
-{
-    if (m_items.isEmpty()) {
-        return;
-    }
-
-    if (KFilePropsPlugin::supports(m_items)) {
-        KPropertiesDialogPlugin *p = new KFilePropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    if ( KFilePermissionsPropsPlugin::supports(m_items)) {
-        KPropertiesDialogPlugin *p = new KFilePermissionsPropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    if (KDesktopPropsPlugin::supports(m_items)) {
-        KPropertiesDialogPlugin *p = new KDesktopPropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    if (KUrlPropsPlugin::supports(m_items)) {
-        KPropertiesDialogPlugin *p = new KUrlPropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    if ( KDevicePropsPlugin::supports(m_items)) {
-        KPropertiesDialogPlugin *p = new KDevicePropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    if (KPreviewPropsPlugin::supports(m_items)) {
-        KPropertiesDialogPlugin *p = new KPreviewPropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    if ( KFileMetaPropsPlugin::supports(m_items)) {
-        KFileMetaPropsPlugin *p = new KFileMetaPropsPlugin(q);
-        q->insertPlugin(p);
-    }
-
-    //plugins
-
-    if (m_items.count() != 1) {
-        return;
-    }
-
-    const KFileItem item = m_items.first();
-    const QString mimetype = item.mimetype();
-
-    if (mimetype.isEmpty()) {
-        return;
-    }
-
-    QString query = QString::fromLatin1(
-            "((not exist [X-KDE-Protocol]) or "
-            " ([X-KDE-Protocol] == '%1'  )   )"
-            ).arg(item.url().protocol());
-
-    kDebug( 250 ) << "trader query: " << query;
-    const KService::List offers = KMimeTypeTrader::self()->query(mimetype, "KPropertiesDialog/Plugin", query);
-    foreach (const KService::Ptr &ptr, offers) {
-        KPropertiesDialogPlugin *plugin = ptr->createInstance<KPropertiesDialogPlugin>(q);
-        if (!plugin) {
-            continue;
-        }
-        plugin->setObjectName(ptr->name());
-
-        q->insertPlugin(plugin);
-    }
-}
-
 void KPropertiesDialog::updateUrl(const KUrl &_newUrl)
 {
     Q_ASSERT(d->m_items.count() == 1);
@@ -571,7 +571,7 @@ void KPropertiesDialog::abortApplying()
     d->m_aborted = true;
 }
 
-class KPropertiesDialogPlugin::KPropertiesDialogPluginPrivate
+class KPropertiesDialogPluginPrivate
 {
 public:
     KPropertiesDialogPluginPrivate()

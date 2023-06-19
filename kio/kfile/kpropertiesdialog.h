@@ -31,6 +31,8 @@
 #include <kpagedialog.h>
 
 class KPropertiesDialogPlugin;
+class KPropertiesDialogPluginPrivate;
+class KPropertiesDialogPrivate;
 
 class KJob;
 namespace KIO { class Job; }
@@ -310,7 +312,6 @@ Q_SIGNALS:
     void leaveModality();
 
 private:
-    class KPropertiesDialogPrivate;
     KPropertiesDialogPrivate* const d;
 
     Q_DISABLE_COPY(KPropertiesDialog)
@@ -375,7 +376,6 @@ protected:
     int fontHeight() const;
 
 private:
-    class KPropertiesDialogPluginPrivate;
     KPropertiesDialogPluginPrivate* const d;
 };
 

@@ -17,10 +17,12 @@
 
  */
 
-#ifndef __KMETAPROPS_H__
-#define __KMETAPROPS_H__
+#ifndef KMETAPROPS_H
+#define KMETAPROPS_H
 
 #include <kpropertiesdialog.h>
+
+class KFileMetaPropsPluginPrivate;
 
 /*!
  * 'MetaProps plugin
@@ -30,21 +32,20 @@ class KIO_EXPORT KFileMetaPropsPlugin : public KPropertiesDialogPlugin
 {
   Q_OBJECT
 public:
-  KFileMetaPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KFileMetaPropsPlugin();
+    KFileMetaPropsPlugin(KPropertiesDialog *props);
+    virtual ~KFileMetaPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  /**
-   * Tests whether the file specified by _items has a 'MetaInfo' plugin.
-   */
-  static bool supports( const KFileItemList& _items );
+    /**
+     * Tests whether the file specified by _items has a 'MetaInfo' plugin.
+     */
+    static bool supports(const KFileItemList &items);
 
 private:
-  class KFileMetaPropsPluginPrivate;
-  KFileMetaPropsPluginPrivate* const d;
+    KFileMetaPropsPluginPrivate* const d;
 
-  Q_PRIVATE_SLOT(d, void configureShownMetaData())
+    Q_PRIVATE_SLOT(d, void configureShownMetaData())
 };
 
-#endif
+#endif // KMETAPROPS_H

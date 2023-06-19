@@ -32,26 +32,22 @@
 
 using namespace KDEPrivate;
 
-class KFileMetaPropsPlugin::KFileMetaPropsPluginPrivate
+class KFileMetaPropsPluginPrivate
 {
 public:
     KFileMetaPropsPluginPrivate();
-    ~KFileMetaPropsPluginPrivate();
+
     void configureShownMetaData();
 
     KFileMetaDataWidget* m_fileMetaDataWidget;
 };
 
-KFileMetaPropsPlugin::KFileMetaPropsPluginPrivate::KFileMetaPropsPluginPrivate() :
-    m_fileMetaDataWidget(0)
+KFileMetaPropsPluginPrivate::KFileMetaPropsPluginPrivate()
+    : m_fileMetaDataWidget(nullptr)
 {
 }
 
-KFileMetaPropsPlugin::KFileMetaPropsPluginPrivate::~KFileMetaPropsPluginPrivate()
-{
-}
-
-void KFileMetaPropsPlugin::KFileMetaPropsPluginPrivate::configureShownMetaData()
+void KFileMetaPropsPluginPrivate::configureShownMetaData()
 {
     QPointer<KDialog> dialog = new KDialog();
     dialog->setCaption(i18nc("@title:window", "Configure Shown Data"));
@@ -94,7 +90,8 @@ void KFileMetaPropsPlugin::KFileMetaPropsPluginPrivate::configureShownMetaData()
 }
 
 KFileMetaPropsPlugin::KFileMetaPropsPlugin(KPropertiesDialog* props)
-  : KPropertiesDialogPlugin(props),d(new KFileMetaPropsPluginPrivate)
+    : KPropertiesDialogPlugin(props),
+    d(new KFileMetaPropsPluginPrivate)
 {
     d->m_fileMetaDataWidget = new KFileMetaDataWidget();
     d->m_fileMetaDataWidget->setItems(properties->items());
@@ -119,8 +116,10 @@ KFileMetaPropsPlugin::KFileMetaPropsPlugin(KPropertiesDialog* props)
     QLabel* configureLabel = new QLabel("<a href=\"configure\">" +
                                         i18nc("@action:button", "Configure...") +
                                         "</a>");
-    connect(configureLabel, SIGNAL(linkActivated(QString)),
-            this, SLOT(configureShownMetaData()));
+    connect(
+        configureLabel, SIGNAL(linkActivated(QString)),
+        this, SLOT(configureShownMetaData())
+    );
 
     QWidget* mainWidget = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout(mainWidget);
@@ -135,9 +134,9 @@ KFileMetaPropsPlugin::~KFileMetaPropsPlugin()
     delete d;
 }
 
-bool KFileMetaPropsPlugin::supports( const KFileItemList& _items )
+bool KFileMetaPropsPlugin::supports(const KFileItemList &items)
 {
-    Q_UNUSED(_items);
+    Q_UNUSED(items);
     return true;
 }
 
