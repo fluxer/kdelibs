@@ -91,7 +91,7 @@ void KFileMetaPropsPluginPrivate::configureShownMetaData()
 
 KFileMetaPropsPlugin::KFileMetaPropsPlugin(KPropertiesDialog* props)
     : KPropertiesDialogPlugin(props),
-    d(new KFileMetaPropsPluginPrivate)
+    d(new KFileMetaPropsPluginPrivate())
 {
     d->m_fileMetaDataWidget = new KFileMetaDataWidget();
     d->m_fileMetaDataWidget->setItems(properties->items());
