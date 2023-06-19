@@ -682,9 +682,9 @@ KFilePropsPlugin::KFilePropsPlugin(KPropertiesDialog *props)
 
     // We set this data from the first item, and we'll
     // check that the other items match against it, resetting when not.
-    bool isLocal;
+    bool isLocal = false;
     const KFileItem item = properties->item();
-    KUrl url = item.mostLocalUrl( isLocal );
+    KUrl url = item.mostLocalUrl(isLocal);
     bool isReallyLocal = item.url().isLocalFile();
     bool bDesktopFile = item.isDesktopFile();
     mode_t mode = item.mode();
@@ -1211,7 +1211,7 @@ void KFilePropsPlugin::slotSizeDetermine()
 
     // also update the "Free disk space" display
     if (d->m_capacityBar) {
-        bool isLocal;
+        bool isLocal = false;
         const KFileItem item = properties->item();
         KUrl url = item.mostLocalUrl(isLocal);
         if (isLocal) {
@@ -1411,7 +1411,7 @@ void KFilePropsPlugin::applyIconChanges()
     // handle icon changes - only local files (or pseudo-local) for now
     // TODO: Use KTempFile and KIO::file_copy with overwrite = true
     KUrl url = properties->kurl();
-    url = KIO::NetAccess::mostLocalUrl( url, properties);
+    url = KIO::NetAccess::mostLocalUrl(url, properties);
     if (url.isLocalFile()) {
         QString path;
 
@@ -2386,13 +2386,15 @@ void KFilePermissionsPropsPlugin::updateAccessControls()
 void KFilePermissionsPropsPlugin::getPermissionMasks(mode_t &andFilePermissions,
                                                      mode_t &andDirPermissions,
                                                      mode_t &orFilePermissions,
-                                                     mode_t &orDirPermissions) {
+                                                     mode_t &orDirPermissions)
+{
     andFilePermissions = mode_t(~UniSpecial);
     andDirPermissions = mode_t(~(S_ISUID|S_ISGID));
     orFilePermissions = 0;
     orDirPermissions = 0;
-    if (d->isIrregular)
+    if (d->isIrregular) {
         return;
+    }
 
     mode_t m = standardPermissions[d->ownerPermCombo->currentIndex()];
     if (m != (mode_t) -1) {
@@ -2400,16 +2402,19 @@ void KFilePermissionsPropsPlugin::getPermissionMasks(mode_t &andFilePermissions,
         if ((m & UniOwner) &&
             ((d->pmode == PermissionsMixed) ||
              ((d->pmode == PermissionsOnlyFiles) && (d->extraCheckbox->checkState() == Qt::PartiallyChecked))))
+        {
             andFilePermissions &= ~(S_IRUSR | S_IWUSR);
-        else {
+        } else {
             andFilePermissions &= ~(S_IRUSR | S_IWUSR | S_IXUSR);
-            if ((m & S_IRUSR) && (d->extraCheckbox->checkState() == Qt::Checked))
+            if ((m & S_IRUSR) && (d->extraCheckbox->checkState() == Qt::Checked)) {
                 orFilePermissions |= S_IXUSR;
+            }
         }
 
         orDirPermissions |= m & UniOwner;
-        if (m & S_IRUSR)
+        if (m & S_IRUSR) {
             orDirPermissions |= S_IXUSR;
+        }
         andDirPermissions &= ~(S_IRUSR | S_IWUSR | S_IXUSR);
     }
 
@@ -2419,16 +2424,19 @@ void KFilePermissionsPropsPlugin::getPermissionMasks(mode_t &andFilePermissions,
         if ((m & UniGroup) &&
             ((d->pmode == PermissionsMixed) ||
              ((d->pmode == PermissionsOnlyFiles) && (d->extraCheckbox->checkState() == Qt::PartiallyChecked))))
+        {
             andFilePermissions &= ~(S_IRGRP | S_IWGRP);
-        else {
+        } else {
             andFilePermissions &= ~(S_IRGRP | S_IWGRP | S_IXGRP);
-            if ((m & S_IRGRP) && (d->extraCheckbox->checkState() == Qt::Checked))
+            if ((m & S_IRGRP) && (d->extraCheckbox->checkState() == Qt::Checked)) {
                 orFilePermissions |= S_IXGRP;
+            }
         }
 
         orDirPermissions |= m & UniGroup;
-        if (m & S_IRGRP)
+        if (m & S_IRGRP) {
             orDirPermissions |= S_IXGRP;
+        }
         andDirPermissions &= ~(S_IRGRP | S_IWGRP | S_IXGRP);
     }
 
@@ -2438,24 +2446,28 @@ void KFilePermissionsPropsPlugin::getPermissionMasks(mode_t &andFilePermissions,
         if ((m & UniOthers) &&
             ((d->pmode == PermissionsMixed) ||
              ((d->pmode == PermissionsOnlyFiles) && (d->extraCheckbox->checkState() == Qt::PartiallyChecked))))
+        {
             andFilePermissions &= ~(S_IROTH | S_IWOTH);
-        else {
+        } else {
             andFilePermissions &= ~(S_IROTH | S_IWOTH | S_IXOTH);
-            if ((m & S_IROTH) && (d->extraCheckbox->checkState() == Qt::Checked))
+            if ((m & S_IROTH) && (d->extraCheckbox->checkState() == Qt::Checked)) {
                 orFilePermissions |= S_IXOTH;
+            }
         }
 
         orDirPermissions |= m & UniOthers;
-        if (m & S_IROTH)
+        if (m & S_IROTH) {
             orDirPermissions |= S_IXOTH;
+        }
         andDirPermissions &= ~(S_IROTH | S_IWOTH | S_IXOTH);
     }
 
     if (((d->pmode == PermissionsMixed) || (d->pmode == PermissionsOnlyDirs)) &&
         (d->extraCheckbox->checkState() != Qt::PartiallyChecked)) {
         andDirPermissions &= ~S_ISVTX;
-        if (d->extraCheckbox->checkState() == Qt::Checked)
+        if (d->extraCheckbox->checkState() == Qt::Checked) {
             orDirPermissions |= S_ISVTX;
+        }
     }
 }
 
@@ -2466,15 +2478,18 @@ void KFilePermissionsPropsPlugin::applyChanges()
     mode_t andFilePermissions;
     mode_t andDirPermissions;
 
-    if (!d->canChangePermissions)
+    if (!d->canChangePermissions) {
         return;
+    }
 
-    if (!d->isIrregular)
-        getPermissionMasks(andFilePermissions,
-                           andDirPermissions,
-                           orFilePermissions,
-                           orDirPermissions);
-    else {
+    if (!d->isIrregular) {
+        getPermissionMasks(
+            andFilePermissions,
+            andDirPermissions,
+            orFilePermissions,
+            orDirPermissions
+        );
+    } else {
         orFilePermissions = d->permissions;
         andFilePermissions = d->partialPermissions;
         orDirPermissions = d->permissions;
@@ -2482,18 +2497,23 @@ void KFilePermissionsPropsPlugin::applyChanges()
     }
 
     QString owner, group;
-    if (d->usrEdit)
+    if (d->usrEdit) {
         owner = d->usrEdit->text();
-    if (d->grpEdit)
+    }
+    if (d->grpEdit) {
         group = d->grpEdit->text();
-    else if (d->grpCombo)
+    } else if (d->grpCombo) {
         group = d->grpCombo->currentText();
+    }
 
-    if (owner == d->strOwner)
-        owner.clear(); // no change
+    if (owner == d->strOwner) {
+         // no change
+        owner.clear();
+    }
 
-    if (group == d->strGroup)
+    if (group == d->strGroup) {
         group.clear();
+    }
 
     bool recursive = d->cbRecursive && d->cbRecursive->isChecked();
     bool permissionChange = false;
@@ -2505,60 +2525,67 @@ void KFilePermissionsPropsPlugin::applyChanges()
     for ( ; it != kend; ++it ) {
         if ((*it).isDir()) {
             dirs.append(*it);
-            if ((*it).permissions() != (((*it).permissions() & andDirPermissions) | orDirPermissions))
+            if ((*it).permissions() != (((*it).permissions() & andDirPermissions) | orDirPermissions)) {
                 permissionChange = true;
-        }
-        else if ((*it).isFile()) {
+            }
+        } else if ((*it).isFile()) {
             files.append(*it);
-            if ((*it).permissions() != (((*it).permissions() & andFilePermissions) | orFilePermissions))
+            if ((*it).permissions() != (((*it).permissions() & andFilePermissions) | orFilePermissions)) {
                 permissionChange = true;
+            }
         }
     }
 
-    const bool ACLChange = ( d->extendedACL !=  properties->item().ACL() );
-    const bool defaultACLChange = ( d->defaultACL != properties->item().defaultACL() );
+    const bool ACLChange = (d->extendedACL != properties->item().ACL());
+    const bool defaultACLChange = (d->defaultACL != properties->item().defaultACL());
 
     if (owner.isEmpty() && group.isEmpty() && !recursive
-        && !permissionChange && !ACLChange && !defaultACLChange)
+        && !permissionChange && !ACLChange && !defaultACLChange) {
         return;
+    }
 
-    KIO::Job * job;
+    KIO::Job *job = nullptr;
     if (files.count() > 0) {
-        job = KIO::chmod( files, orFilePermissions, ~andFilePermissions,
-                          owner, group, false );
-        if ( ACLChange && d->fileSystemSupportsACLs )
-            job->addMetaData( "ACL_STRING", d->extendedACL.isValid()?d->extendedACL.asString():"ACL_DELETE" );
-        if ( defaultACLChange && d->fileSystemSupportsACLs )
-            job->addMetaData( "DEFAULT_ACL_STRING", d->defaultACL.isValid()?d->defaultACL.asString():"ACL_DELETE" );
+        job = KIO::chmod(
+            files, orFilePermissions, ~andFilePermissions,
+            owner, group, false
+        );
+        if (ACLChange && d->fileSystemSupportsACLs) {
+            job->addMetaData("ACL_STRING", d->extendedACL.isValid() ? d->extendedACL.asString() : "ACL_DELETE");
+        }
+        if (defaultACLChange && d->fileSystemSupportsACLs) {
+            job->addMetaData("DEFAULT_ACL_STRING", d->defaultACL.isValid() ? d->defaultACL.asString() : "ACL_DELETE");
+        }
 
-        connect( job, SIGNAL(result(KJob*)),
-                 SLOT(slotChmodResult(KJob*)) );
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotChmodResult(KJob*)));
         job->exec();
     }
     if (dirs.count() > 0) {
-        job = KIO::chmod( dirs, orDirPermissions, ~andDirPermissions,
-                          owner, group, recursive );
-        if ( ACLChange && d->fileSystemSupportsACLs )
-            job->addMetaData( "ACL_STRING", d->extendedACL.isValid()?d->extendedACL.asString():"ACL_DELETE" );
-        if ( defaultACLChange && d->fileSystemSupportsACLs )
-            job->addMetaData( "DEFAULT_ACL_STRING", d->defaultACL.isValid()?d->defaultACL.asString():"ACL_DELETE" );
+        job = KIO::chmod(
+            dirs, orDirPermissions, ~andDirPermissions,
+            owner, group, recursive
+        );
+        if (ACLChange && d->fileSystemSupportsACLs) {
+            job->addMetaData("ACL_STRING", d->extendedACL.isValid() ? d->extendedACL.asString() : "ACL_DELETE");
+        }
+        if (defaultACLChange && d->fileSystemSupportsACLs) {
+            job->addMetaData("DEFAULT_ACL_STRING", d->defaultACL.isValid() ? d->defaultACL.asString() : "ACL_DELETE");
+        }
 
-        connect( job, SIGNAL(result(KJob*)),
-                 SLOT(slotChmodResult(KJob*)) );
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotChmodResult(KJob*)));
         job->exec();
     }
 }
 
-void KFilePermissionsPropsPlugin::slotChmodResult( KJob * job )
+void KFilePermissionsPropsPlugin::slotChmodResult(KJob *job)
 {
     kDebug(250) << "KFilePermissionsPropsPlugin::slotChmodResult";
-    if (job->error())
+    if (job->error()) {
         job->uiDelegate()->showErrorMessage();
+    }
     // allow apply() to return
     emit leaveModality();
 }
-
-
 
 
 class KUrlPropsPlugin::KUrlPropsPluginPrivate
@@ -2573,8 +2600,9 @@ public:
     QString URLStr;
 };
 
-KUrlPropsPlugin::KUrlPropsPlugin( KPropertiesDialog *_props )
-    : KPropertiesDialogPlugin( _props ),d(new KUrlPropsPluginPrivate)
+KUrlPropsPlugin::KUrlPropsPlugin(KPropertiesDialog *props)
+    : KPropertiesDialogPlugin(props),
+    d(new KUrlPropsPluginPrivate)
 {
     d->m_frame = new QFrame();
     properties->addPage(d->m_frame, i18n("U&RL"));
@@ -2582,37 +2610,39 @@ KUrlPropsPlugin::KUrlPropsPlugin( KPropertiesDialog *_props )
     layout->setMargin(0);
 
     QLabel *l;
-    l = new QLabel( d->m_frame );
-    l->setObjectName( QLatin1String( "Label_1" ) );
-    l->setText( i18n("URL:") );
+    l = new QLabel(d->m_frame);
+    l->setObjectName(QLatin1String("Label_1"));
+    l->setText(i18n("URL:") );
     layout->addWidget(l, Qt::AlignRight);
 
-    d->URLEdit = new KUrlRequester( d->m_frame );
+    d->URLEdit = new KUrlRequester(d->m_frame);
     layout->addWidget(d->URLEdit);
 
-    KUrl url = KIO::NetAccess::mostLocalUrl( properties->kurl(), properties );
+    KUrl url = KIO::NetAccess::mostLocalUrl(properties->kurl(), properties);
     if (url.isLocalFile()) {
         QString path = url.toLocalFile();
 
-        QFile f( path );
-        if ( !f.open( QIODevice::ReadOnly ) ) {
+        QFile f(path);
+        if (!f.open( QIODevice::ReadOnly)) {
             return;
         }
         f.close();
 
-        KDesktopFile config( path );
+        KDesktopFile config(path);
         const KConfigGroup dg = config.desktopGroup();
-        d->URLStr = dg.readPathEntry( "URL", QString() );
+        d->URLStr = dg.readPathEntry("URL", QString());
 
         if (!d->URLStr.isEmpty()) {
-            d->URLEdit->setUrl( KUrl(d->URLStr) );
+            d->URLEdit->setUrl(KUrl(d->URLStr));
         }
     }
 
-    connect( d->URLEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(changed()) );
+    connect(
+        d->URLEdit, SIGNAL(textChanged(QString)),
+        this, SIGNAL(changed())
+    );
 
-    layout->addStretch (1);
+    layout->addStretch(1);
 }
 
 KUrlPropsPlugin::~KUrlPropsPlugin()
@@ -2625,17 +2655,19 @@ KUrlPropsPlugin::~KUrlPropsPlugin()
 //   return i18n ("U&RL");
 // }
 
-bool KUrlPropsPlugin::supports( const KFileItemList& _items )
+bool KUrlPropsPlugin::supports(const KFileItemList &items)
 {
-    if ( _items.count() != 1 )
+    if (items.count() != 1) {
         return false;
-    const KFileItem item = _items.first();
+    }
+    const KFileItem item = items.first();
     // check if desktop file
-    if (!item.isDesktopFile())
+    if (!item.isDesktopFile()) {
         return false;
+    }
 
     // open file and check type
-    bool isLocal;
+    bool isLocal = false;
     KUrl url = item.mostLocalUrl(isLocal);
     if (!isLocal) {
         return false;
@@ -2647,33 +2679,31 @@ bool KUrlPropsPlugin::supports( const KFileItemList& _items )
 
 void KUrlPropsPlugin::applyChanges()
 {
-    KUrl url = KIO::NetAccess::mostLocalUrl( properties->kurl(), properties );
+    KUrl url = KIO::NetAccess::mostLocalUrl(properties->kurl(), properties);
     if (!url.isLocalFile()) {
-        //FIXME: 4.2 add this: KMessageBox::sorry(0, i18n("Could not save properties. Only entries on local file systems are supported."));
+        // FIXME: 4.2 add this: KMessageBox::sorry(0, i18n("Could not save properties. Only entries on local file systems are supported."));
         return;
     }
 
     QString path = url.toLocalFile();
-    QFile f( path );
-    if ( !f.open( QIODevice::ReadWrite ) ) {
-        KMessageBox::sorry( 0, i18n("<qt>Could not save properties. You do not have "
-                                    "sufficient access to write to <b>%1</b>.</qt>", path));
+    QFile f(path);
+    if (!f.open(QIODevice::ReadWrite)) {
+        KMessageBox::sorry(0, i18n("<qt>Could not save properties. You do not have "
+                                   "sufficient access to write to <b>%1</b>.</qt>", path));
         return;
     }
     f.close();
 
-    KDesktopFile config( path );
+    KDesktopFile config(path);
     KConfigGroup dg = config.desktopGroup();
-    dg.writeEntry( "Type", QString::fromLatin1("Link"));
-    dg.writePathEntry( "URL", d->URLEdit->url().url() );
+    dg.writeEntry("Type", QString::fromLatin1("Link"));
+    dg.writePathEntry("URL", d->URLEdit->url().url());
     // Users can't create a Link .desktop file with a Name field,
     // but distributions can. Update the Name field in that case.
-    if ( dg.hasKey("Name") )
-    {
+    if (dg.hasKey("Name")) {
         QString nameStr = nameFromFileName(properties->kurl().fileName());
-        dg.writeEntry( "Name", nameStr );
-        dg.writeEntry( "Name", nameStr, KConfigBase::Persistent|KConfigBase::Localized );
-
+        dg.writeEntry("Name", nameStr);
+        dg.writeEntry("Name", nameStr, KConfigBase::Persistent | KConfigBase::Localized);
     }
 }
 
@@ -2683,7 +2713,6 @@ void KUrlPropsPlugin::applyChanges()
  * KDevicePropsPlugin
  *
  * -------------------------------------------------- */
-
 class KDevicePropsPlugin::KDevicePropsPluginPrivate
 {
 public:
@@ -2709,7 +2738,9 @@ public:
     QStringList m_devicelist;
 };
 
-KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertiesDialogPlugin( _props ),d(new KDevicePropsPluginPrivate)
+KDevicePropsPlugin::KDevicePropsPlugin(KPropertiesDialog *props)
+    : KPropertiesDialogPlugin(props),
+    d(new KDevicePropsPluginPrivate())
 {
     d->m_frame = new QFrame();
     properties->addPage(d->m_frame, i18n("De&vice"));
@@ -2717,65 +2748,61 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
     QStringList devices;
     const KMountPoint::List mountPoints = KMountPoint::possibleMountPoints();
 
-    for(KMountPoint::List::ConstIterator it = mountPoints.begin();
-    it != mountPoints.end(); ++it)
-    {
+    for(KMountPoint::List::ConstIterator it = mountPoints.begin(); it != mountPoints.end(); ++it) {
         const KMountPoint::Ptr mp = (*it);
         QString mountPoint = mp->mountPoint();
         QString device = mp->mountedFrom();
-        kDebug()<<"mountPoint :"<<mountPoint<<" device :"<<device<<" mp->mountType() :"<<mp->mountType();
+        kDebug() << "mountPoint :" << mountPoint << " device :" << device << " mp->mountType() :" << mp->mountType();
 
         if ((mountPoint != "-") && (mountPoint != "none") && !mountPoint.isEmpty()
             && device != "none")
-            {
-            devices.append( device + QString::fromLatin1(" (")
-                            + mountPoint + QString::fromLatin1(")") );
+        {
+            devices.append(device + QString::fromLatin1(" (") + mountPoint + QString::fromLatin1(")"));
             d->m_devicelist.append(device);
             d->mountpointlist.append(mountPoint);
         }
     }
 
-    QGridLayout *layout = new QGridLayout( d->m_frame );
+    QGridLayout *layout = new QGridLayout(d->m_frame);
 
     layout->setMargin(0);
     layout->setColumnStretch(1, 1);
 
-    QLabel* label = new QLabel( d->m_frame );
-    label->setText( i18n("Device:") );
+    QLabel* label = new QLabel(d->m_frame);
+    label->setText(i18n("Device:"));
     layout->addWidget(label, 0, 0, Qt::AlignRight);
 
-    d->device = new KComboBox( d->m_frame );
-    d->device->setObjectName( QLatin1String( "ComboBox_device" ) );
-    d->device->setEditable( true );
-    d->device->addItems( devices );
-    d->device->lineEdit()->setPlaceholderText( i18n("Enter device...") );
+    d->device = new KComboBox(d->m_frame);
+    d->device->setObjectName(QLatin1String("ComboBox_device"));
+    d->device->setEditable(true);
+    d->device->addItems(devices);
+    d->device->lineEdit()->setPlaceholderText(i18n("Enter device..."));
     layout->addWidget(d->device, 0, 1);
-    connect( d->device, SIGNAL(activated(int)),
-             this, SLOT(slotActivated(int)) );
+    connect(d->device, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
 
     d->readonly = new QCheckBox( d->m_frame );
-    d->readonly->setObjectName( QLatin1String( "CheckBox_readonly" ) );
-    d->readonly->setText(  i18n("Read only") );
+    d->readonly->setObjectName( QLatin1String("CheckBox_readonly"));
+    d->readonly->setText(i18n("Read only"));
     layout->addWidget(d->readonly, 1, 1);
 
-    label = new QLabel( d->m_frame );
-    label->setText( i18n("Mount point:") );
+    label = new QLabel(d->m_frame);
+    label->setText(i18n("Mount point:"));
     layout->addWidget(label, 2, 0, Qt::AlignRight);
 
-    d->mountpoint = new QLabel( d->m_frame );
-    d->mountpoint->setObjectName( QLatin1String( "LineEdit_mountpoint" ) );
+    d->mountpoint = new QLabel(d->m_frame);
+    d->mountpoint->setObjectName(QLatin1String("LineEdit_mountpoint"));
 
     layout->addWidget(d->mountpoint, 2, 1);
 
     // show disk free
-    d->m_freeSpaceText = new QLabel(i18n("Device usage:"), d->m_frame );
+    d->m_freeSpaceText = new QLabel(i18n("Device usage:"), d->m_frame);
     layout->addWidget(d->m_freeSpaceText, 3, 0, Qt::AlignRight);
 
-    d->m_freeSpaceLabel = new QLabel( d->m_frame );
+    d->m_freeSpaceLabel = new QLabel(d->m_frame);
     layout->addWidget( d->m_freeSpaceLabel, 3, 1 );
 
-    d->m_freeSpaceBar = new QProgressBar( d->m_frame );
-    d->m_freeSpaceBar->setObjectName( "freeSpaceBar" );
+    d->m_freeSpaceBar = new QProgressBar(d->m_frame);
+    d->m_freeSpaceBar->setObjectName("freeSpaceBar");
     layout->addWidget(d->m_freeSpaceBar, 4, 0, 1, 2);
 
     // we show it in the slot when we know the values
@@ -2788,51 +2815,46 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
 
     layout->setRowStretch(6, 1);
 
-    KUrl url = KIO::NetAccess::mostLocalUrl( _props->kurl(), _props );
+    KUrl url = KIO::NetAccess::mostLocalUrl(props->kurl(), props);
     if (!url.isLocalFile()) {
         return;
     }
     QString path = url.toLocalFile();
 
-    QFile f( path );
-    if ( !f.open( QIODevice::ReadOnly ) )
+    QFile f(path);
+    if (!f.open(QIODevice::ReadOnly)) {
         return;
+    }
     f.close();
 
-    const KDesktopFile _config( path );
+    const KDesktopFile _config(path);
     const KConfigGroup config = _config.desktopGroup();
-    QString deviceStr = config.readEntry( "Dev" );
-    QString mountPointStr = config.readEntry( "MountPoint" );
-    bool ro = config.readEntry( "ReadOnly", false );
+    QString deviceStr = config.readEntry("Dev");
+    QString mountPointStr = config.readEntry("MountPoint");
+    bool ro = config.readEntry("ReadOnly", false );
 
-    d->device->setEditText( deviceStr );
-    if ( !deviceStr.isEmpty() ) {
+    d->device->setEditText(deviceStr);
+    if (!deviceStr.isEmpty()) {
         // Set default options for this device (first matching entry)
         int index = d->m_devicelist.indexOf(deviceStr);
-        if (index != -1)
-        {
+        if (index != -1) {
             //kDebug(250) << "found it" << index;
-            slotActivated( index );
+            slotActivated(index);
         }
     }
 
-    if ( !mountPointStr.isEmpty() )
-    {
-        d->mountpoint->setText( mountPointStr );
+    if (!mountPointStr.isEmpty()) {
+        d->mountpoint->setText(mountPointStr);
         updateInfo();
     }
 
-    d->readonly->setChecked( ro );
+    d->readonly->setChecked(ro);
 
-    connect( d->device, SIGNAL(activated(int)),
-             this, SIGNAL(changed()) );
-    connect( d->device, SIGNAL(editTextChanged(QString)),
-             this, SIGNAL(changed()) );
-    connect( d->readonly, SIGNAL(toggled(bool)),
-             this, SIGNAL(changed()) );
+    connect(d->device, SIGNAL(activated(int)), this, SIGNAL(changed()));
+    connect(d->device, SIGNAL(editTextChanged(QString)), this, SIGNAL(changed()));
+    connect(d->readonly, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 
-    connect( d->device, SIGNAL(editTextChanged(QString)),
-             this, SLOT(slotDeviceChanged()) );
+    connect(d->device, SIGNAL(editTextChanged(QString)), this, SLOT(slotDeviceChanged()));
 }
 
 KDevicePropsPlugin::~KDevicePropsPlugin()
@@ -2853,12 +2875,12 @@ void KDevicePropsPlugin::updateInfo()
     d->m_freeSpaceBar->hide();
 
     if (!d->mountpoint->text().isEmpty() && d->isMounted()) {
-        KDiskFreeSpaceInfo info = KDiskFreeSpaceInfo::freeSpaceInfo( d->mountpoint->text() );
-        slotFoundMountPoint( info.mountPoint(), info.size()/1024, info.used()/1024, info.available()/1024);
+        KDiskFreeSpaceInfo info = KDiskFreeSpaceInfo::freeSpaceInfo(d->mountpoint->text());
+        slotFoundMountPoint(info.mountPoint(), info.size() / 1024, info.used() / 1024, info.available() / 1024);
     }
 }
 
-void KDevicePropsPlugin::slotActivated( int index )
+void KDevicePropsPlugin::slotActivated(int index)
 {
     // index can be more than the number of known devices, when the user types
     // a "custom" device.
@@ -2874,47 +2896,51 @@ void KDevicePropsPlugin::slotActivated( int index )
 void KDevicePropsPlugin::slotDeviceChanged()
 {
     // Update mountpoint so that it matches the typed device
-    int index = d->m_devicelist.indexOf( d->device->currentText() );
-    if ( index != -1 )
-        d->mountpoint->setText( d->mountpointlist[index] );
-    else
-        d->mountpoint->setText( QString() );
+    int index = d->m_devicelist.indexOf(d->device->currentText());
+    if (index != -1) {
+        d->mountpoint->setText(d->mountpointlist[index]);
+    } else {
+        d->mountpoint->setText(QString());
+    }
 
     updateInfo();
 }
 
-void KDevicePropsPlugin::slotFoundMountPoint( const QString&,
-                                              quint64 kibSize,
-                                              quint64 /*kibUsed*/,
-                                              quint64 kibAvail )
+void KDevicePropsPlugin::slotFoundMountPoint(const QString &,
+                                             quint64 kibSize,
+                                             quint64 /*kibUsed*/,
+                                             quint64 kibAvail)
 {
     d->m_freeSpaceText->show();
     d->m_freeSpaceLabel->show();
 
-    const int percUsed = kibSize != 0 ? (100 - (int)(100.0 * kibAvail / kibSize)) : 100;
+    const int percUsed = (kibSize != 0 ? (100 - (int)(100.0 * kibAvail / kibSize)) : 100);
 
     d->m_freeSpaceLabel->setText(
-            i18nc("Available space out of total partition size (percent used)", "%1 free of %2 (%3% used)",
-                  KIO::convertSizeFromKiB(kibAvail),
-                  KIO::convertSizeFromKiB(kibSize),
-                  percUsed ));
+        i18nc("Available space out of total partition size (percent used)", "%1 free of %2 (%3% used)",
+              KIO::convertSizeFromKiB(kibAvail),
+              KIO::convertSizeFromKiB(kibSize),
+              percUsed)
+    );
 
     d->m_freeSpaceBar->setRange(0, 100);
     d->m_freeSpaceBar->setValue(percUsed);
     d->m_freeSpaceBar->show();
 }
 
-bool KDevicePropsPlugin::supports( const KFileItemList& _items )
+bool KDevicePropsPlugin::supports(const KFileItemList &items)
 {
-    if ( _items.count() != 1 )
+    if (items.count() != 1) {
         return false;
-    const KFileItem item = _items.first();
+    }
+    const KFileItem item = items.first();
     // check if desktop file
-    if (!item.isDesktopFile())
+    if (!item.isDesktopFile()) {
         return false;
+    }
 
     // open file and check type
-    bool isLocal;
+    bool isLocal = false;
     KUrl url = item.mostLocalUrl(isLocal);
     if (!isLocal) {
         return false;
@@ -2926,28 +2952,28 @@ bool KDevicePropsPlugin::supports( const KFileItemList& _items )
 
 void KDevicePropsPlugin::applyChanges()
 {
-    KUrl url = KIO::NetAccess::mostLocalUrl( properties->kurl(), properties );
-    if ( !url.isLocalFile() )
+    KUrl url = KIO::NetAccess::mostLocalUrl(properties->kurl(), properties);
+    if (!url.isLocalFile()) {
         return;
+    }
     QString path = url.toLocalFile();
 
-    QFile f( path );
-    if ( !f.open( QIODevice::ReadWrite ) )
-    {
-        KMessageBox::sorry( 0, i18n("<qt>Could not save properties. You do not have sufficient "
-                                    "access to write to <b>%1</b>.</qt>", path));
+    QFile f(path);
+    if (!f.open(QIODevice::ReadWrite)) {
+        KMessageBox::sorry(0, i18n("<qt>Could not save properties. You do not have sufficient "
+                                   "access to write to <b>%1</b>.</qt>", path));
         return;
     }
     f.close();
 
-    KDesktopFile _config( path );
+    KDesktopFile _config(path);
     KConfigGroup config = _config.desktopGroup();
-    config.writeEntry( "Type", QString::fromLatin1("FSDevice") );
+    config.writeEntry("Type", QString::fromLatin1("FSDevice"));
 
-    config.writeEntry( "Dev", d->device->currentText() );
-    config.writeEntry( "MountPoint", d->mountpoint->text() );
+    config.writeEntry("Dev", d->device->currentText());
+    config.writeEntry("MountPoint", d->mountpoint->text());
 
-    config.writeEntry( "ReadOnly", d->readonly->isChecked() );
+    config.writeEntry("ReadOnly", d->readonly->isChecked());
 
     config.sync();
 }
@@ -2963,8 +2989,8 @@ class KDesktopPropsPlugin::KDesktopPropsPluginPrivate
 {
 public:
     KDesktopPropsPluginPrivate()
-        : w( new Ui_KPropertiesDesktopBase )
-        , m_frame( new QFrame() )
+        : w(new Ui_KPropertiesDesktopBase())
+        , m_frame(new QFrame())
     {
     }
     ~KDesktopPropsPluginPrivate()
@@ -2987,18 +3013,20 @@ public:
     bool m_systrayBool;
 };
 
-KDesktopPropsPlugin::KDesktopPropsPlugin( KPropertiesDialog *_props )
-    : KPropertiesDialogPlugin( _props ), d( new KDesktopPropsPluginPrivate )
+KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
+    : KPropertiesDialogPlugin(props),
+    d(new KDesktopPropsPluginPrivate())
 {
     d->w->setupUi(d->m_frame);
 
     properties->addPage(d->m_frame, i18n("&Application"));
 
-    bool bKDesktopMode = properties->kurl().protocol() == QLatin1String("desktop") ||
-                    properties->currentDir().protocol() == QLatin1String("desktop");
+    bool bKDesktopMode = (
+        properties->kurl().protocol() == QLatin1String("desktop") ||
+        properties->currentDir().protocol() == QLatin1String("desktop")
+    );
 
-    if (bKDesktopMode)
-    {
+    if (bKDesktopMode) {
         // Hide Name entry
         d->w->nameEdit->hide();
         d->w->nameLabel->hide();
@@ -3007,98 +3035,94 @@ KDesktopPropsPlugin::KDesktopPropsPlugin( KPropertiesDialog *_props )
     d->w->pathEdit->setMode(KFile::Directory | KFile::LocalOnly);
     d->w->pathEdit->lineEdit()->setAcceptDrops(false);
 
-    connect( d->w->nameEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
-    connect( d->w->genNameEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
-    connect( d->w->commentEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
-    connect( d->w->commandEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
-    connect( d->w->pathEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
+    connect(d->w->nameEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(d->w->genNameEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(d->w->commentEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(d->w->commandEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(d->w->pathEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 
-    connect( d->w->browseButton, SIGNAL(clicked()), this, SLOT(slotBrowseExec()) );
-    connect( d->w->addFiletypeButton, SIGNAL(clicked()), this, SLOT(slotAddFiletype()) );
-    connect( d->w->delFiletypeButton, SIGNAL(clicked()), this, SLOT(slotDelFiletype()) );
-    connect( d->w->advancedButton, SIGNAL(clicked()), this, SLOT(slotAdvanced()) );
+    connect(d->w->browseButton, SIGNAL(clicked()), this, SLOT(slotBrowseExec()));
+    connect(d->w->addFiletypeButton, SIGNAL(clicked()), this, SLOT(slotAddFiletype()));
+    connect(d->w->delFiletypeButton, SIGNAL(clicked()), this, SLOT(slotDelFiletype()));
+    connect(d->w->advancedButton, SIGNAL(clicked()), this, SLOT(slotAdvanced()));
 
     // now populate the page
-
-    KUrl url = KIO::NetAccess::mostLocalUrl( _props->kurl(), _props );
+    KUrl url = KIO::NetAccess::mostLocalUrl(props->kurl(), props);
     if (!url.isLocalFile()) {
         return;
     }
 
     d->m_origDesktopFile = url.toLocalFile();
 
-    QFile f( d->m_origDesktopFile );
-    if ( !f.open( QIODevice::ReadOnly ) )
+    QFile f(d->m_origDesktopFile);
+    if (!f.open(QIODevice::ReadOnly)) {
         return;
+    }
     f.close();
 
-    KDesktopFile  _config( d->m_origDesktopFile );
+    KDesktopFile _config(d->m_origDesktopFile);
     KConfigGroup config = _config.desktopGroup();
     QString nameStr = _config.readName();
     QString genNameStr = _config.readGenericName();
     QString commentStr = _config.readComment();
-    QString commandStr = config.readEntry( "Exec", QString() );
-    if (commandStr.startsWith(QLatin1String("ksystraycmd ")))
-    {
+    QString commandStr = config.readEntry("Exec", QString());
+    if (commandStr.startsWith(QLatin1String("ksystraycmd "))) {
         commandStr.remove(0, 12);
         d->m_systrayBool = true;
-    }
-    else
+    } else {
         d->m_systrayBool = false;
+    }
 
     d->m_origCommandStr = commandStr;
-    QString pathStr = config.readEntry( "Path", QString() ); // not readPathEntry, see kservice.cpp
-    d->m_terminalBool = config.readEntry( "Terminal", false );
-    d->m_terminalOptionStr = config.readEntry( "TerminalOptions" );
-    d->m_suidBool = config.readEntry( "X-KDE-SubstituteUID", false );
-    d->m_suidUserStr = config.readEntry( "X-KDE-Username" );
-    if( config.hasKey( "StartupNotify" ))
-        d->m_startupBool = config.readEntry( "StartupNotify", true );
-    else
-        d->m_startupBool = config.readEntry( "X-KDE-StartupNotify", true );
+    QString pathStr = config.readEntry("Path", QString()); // not readPathEntry, see kservice.cpp
+    d->m_terminalBool = config.readEntry("Terminal", false);
+    d->m_terminalOptionStr = config.readEntry( "TerminalOptions");
+    d->m_suidBool = config.readEntry("X-KDE-SubstituteUID", false);
+    d->m_suidUserStr = config.readEntry("X-KDE-Username");
+    if (config.hasKey("StartupNotify")) {
+        d->m_startupBool = config.readEntry("StartupNotify", true);
+    } else {
+        d->m_startupBool = config.readEntry("X-KDE-StartupNotify", true);
+    }
     d->m_dbusStartupType = config.readEntry("X-DBUS-StartupType").toLower();
     // ### should there be a GUI for this setting?
     // At least we're copying it over to the local file, to avoid side effects (#157853)
     d->m_dbusServiceName = config.readEntry("X-DBUS-ServiceName");
 
-    const QStringList mimeTypes = config.readXdgListEntry( "MimeType" );
+    const QStringList mimeTypes = config.readXdgListEntry("MimeType");
 
-    if ( nameStr.isEmpty() || bKDesktopMode ) {
+    if (nameStr.isEmpty() || bKDesktopMode) {
         // We'll use the file name if no name is specified
         // because we _need_ a Name for a valid file.
         // But let's do it in apply, not here, so that we pick up the right name.
         setDirty();
     }
-    if ( !bKDesktopMode )
+    if (!bKDesktopMode) {
         d->w->nameEdit->setText(nameStr);
+    }
 
-    d->w->genNameEdit->setText( genNameStr );
-    d->w->commentEdit->setText( commentStr );
-    d->w->commandEdit->setText( commandStr );
-    d->w->pathEdit->lineEdit()->setText( pathStr );
+    d->w->genNameEdit->setText(genNameStr);
+    d->w->commentEdit->setText(commentStr);
+    d->w->commandEdit->setText(commandStr);
+    d->w->pathEdit->lineEdit()->setText(pathStr);
 
     // was: d->w->filetypeList->setFullWidth(true);
     //  d->w->filetypeList->header()->setStretchEnabled(true, d->w->filetypeList->columns()-1);
 
     KMimeType::Ptr defaultMimetype = KMimeType::defaultMimeTypePtr();
-    for(QStringList::ConstIterator it = mimeTypes.begin();
-    it != mimeTypes.end(); )
-    {
+    for(QStringList::ConstIterator it = mimeTypes.begin(); it != mimeTypes.end(); ) {
         KMimeType::Ptr p = KMimeType::mimeType(*it, KMimeType::ResolveAliases);
         ++it;
         QString preference;
-        if (it != mimeTypes.end())
-        {
-            bool numeric;
+        if (it != mimeTypes.end()) {
+            bool numeric = false;
             (*it).toInt(&numeric);
-            if (numeric)
-            {
+            if (numeric) {
                 preference = *it;
                 ++it;
             }
         }
-        if (p)
-        {
+        if (p) {
             QTreeWidgetItem *item = new QTreeWidgetItem();
             item->setText(0, p->name());
             item->setText(1, p->comment());
@@ -3117,21 +3141,20 @@ KDesktopPropsPlugin::~KDesktopPropsPlugin()
 
 void KDesktopPropsPlugin::slotAddFiletype()
 {
-    KMimeTypeChooserDialog dlg( i18n("Add File Type for %1", properties->kurl().fileName()),
-                                i18n("Select one or more file types to add:"),
-                                QStringList(), // no preselected mimetypes
-                                QString(),
-                                QStringList(),
-                                KMimeTypeChooser::Comments|KMimeTypeChooser::Patterns,
-                                d->m_frame );
+    KMimeTypeChooserDialog dlg(i18n("Add File Type for %1", properties->kurl().fileName()),
+                               i18n("Select one or more file types to add:"),
+                               QStringList(), // no preselected mimetypes
+                               QString(),
+                               QStringList(),
+                               KMimeTypeChooser::Comments|KMimeTypeChooser::Patterns,
+                               d->m_frame);
 
-    if (dlg.exec() == KDialog::Accepted)
-    {
-        foreach(const QString &mimetype, dlg.chooser()->mimeTypes())
-        {
+    if (dlg.exec() == KDialog::Accepted) {
+        foreach(const QString &mimetype, dlg.chooser()->mimeTypes()) {
             KMimeType::Ptr p = KMimeType::mimeType(mimetype);
-            if (!p)
+            if (!p) {
                 continue;
+            }
 
             bool found = false;
             int count = d->w->filetypeList->topLevelItemCount();
@@ -3163,9 +3186,7 @@ void KDesktopPropsPlugin::slotDelFiletype()
 
 void KDesktopPropsPlugin::checkCommandChanged()
 {
-    if (KRun::binaryName(d->w->commandEdit->text(), true) !=
-        KRun::binaryName(d->m_origCommandStr, true))
-    {
+    if (KRun::binaryName(d->w->commandEdit->text(), true) != KRun::binaryName(d->m_origCommandStr, true)) {
         d->m_origCommandStr = d->w->commandEdit->text();
         d->m_dbusStartupType.clear(); // Reset
         d->m_dbusServiceName.clear();
@@ -3182,12 +3203,12 @@ void KDesktopPropsPlugin::applyChanges()
         return;
     }
 
-    const QString path (url.toLocalFile());
+    const QString path(url.toLocalFile());
 
-    QFile f( path );
-    if ( !f.open( QIODevice::ReadWrite ) ) {
-        KMessageBox::sorry( 0, i18n("<qt>Could not save properties. You do not have "
-                                    "sufficient access to write to <b>%1</b>.</qt>", path));
+    QFile f(path);
+    if (!f.open(QIODevice::ReadWrite)) {
+        KMessageBox::sorry(0, i18n("<qt>Could not save properties. You do not have "
+                                   "sufficient access to write to <b>%1</b>.</qt>", path));
         return;
     }
     f.close();
@@ -3196,20 +3217,21 @@ void KDesktopPropsPlugin::applyChanges()
     // coupled to the command.
     checkCommandChanged();
 
-    KDesktopFile origConfig (d->m_origDesktopFile);
-    QScopedPointer<KDesktopFile> _config (origConfig.copyTo(path));
+    KDesktopFile origConfig(d->m_origDesktopFile);
+    QScopedPointer<KDesktopFile> _config(origConfig.copyTo(path));
     KConfigGroup config = _config->desktopGroup();
-    config.writeEntry( "Type", QString::fromLatin1("Application"));
-    config.writeEntry( "Comment", d->w->commentEdit->text() );
-    config.writeEntry( "Comment", d->w->commentEdit->text(), KConfigGroup::Persistent|KConfigGroup::Localized ); // for compat
-    config.writeEntry( "GenericName", d->w->genNameEdit->text() );
-    config.writeEntry( "GenericName", d->w->genNameEdit->text(), KConfigGroup::Persistent|KConfigGroup::Localized ); // for compat
+    config.writeEntry("Type", QString::fromLatin1("Application"));
+    config.writeEntry("Comment", d->w->commentEdit->text());
+    config.writeEntry("Comment", d->w->commentEdit->text(), KConfigGroup::Persistent | KConfigGroup::Localized); // for compat
+    config.writeEntry("GenericName", d->w->genNameEdit->text() );
+    config.writeEntry("GenericName", d->w->genNameEdit->text(), KConfigGroup::Persistent | KConfigGroup::Localized ); // for compat
 
-    if (d->m_systrayBool)
-        config.writeEntry( "Exec", d->w->commandEdit->text().prepend("ksystraycmd ") );
-    else
-        config.writeEntry( "Exec", d->w->commandEdit->text() );
-    config.writeEntry( "Path", d->w->pathEdit->lineEdit()->text() ); // not writePathEntry, see kservice.cpp
+    if (d->m_systrayBool) {
+        config.writeEntry("Exec", d->w->commandEdit->text().prepend("ksystraycmd "));
+    } else {
+        config.writeEntry("Exec", d->w->commandEdit->text());
+    }
+    config.writeEntry("Path", d->w->pathEdit->lineEdit()->text()); // not writePathEntry, see kservice.cpp
 
     // Write mimeTypes
     QStringList mimeTypes;
@@ -3218,17 +3240,18 @@ void KDesktopPropsPlugin::applyChanges()
         QTreeWidgetItem *item = d->w->filetypeList->topLevelItem(i);
         QString preference = item->text(2);
         mimeTypes.append(item->text(0));
-        if (!preference.isEmpty())
+        if (!preference.isEmpty()) {
             mimeTypes.append(preference);
+        }
     }
 
     kDebug() << mimeTypes;
     config.writeXdgListEntry( "MimeType", mimeTypes );
 
-    if ( !d->w->nameEdit->isHidden() ) {
+    if (!d->w->nameEdit->isHidden()) {
         QString nameStr = d->w->nameEdit->text();
-        config.writeEntry( "Name", nameStr );
-        config.writeEntry( "Name", nameStr, KConfigGroup::Persistent|KConfigGroup::Localized );
+        config.writeEntry("Name", nameStr);
+        config.writeEntry("Name", nameStr, KConfigGroup::Persistent | KConfigGroup::Localized);
     }
 
     config.writeEntry("Terminal", d->m_terminalBool);
@@ -3242,36 +3265,36 @@ void KDesktopPropsPlugin::applyChanges()
 
     // KSycoca update needed?
     const QString sycocaPath = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
-    if(!sycocaPath.startsWith('/'))
+    if (!sycocaPath.startsWith('/')) {
         KBuildSycocaProgressDialog::rebuildKSycoca(d->m_frame);
+    }
 }
 
 
 void KDesktopPropsPlugin::slotBrowseExec()
 {
-    KUrl f = KFileDialog::getOpenUrl( KUrl(),
-                                      QString(), d->m_frame );
-    if ( f.isEmpty() )
+    KUrl f = KFileDialog::getOpenUrl(KUrl(), QString(), d->m_frame);
+    if (f.isEmpty())
         return;
 
-    if ( !f.isLocalFile()) {
+    if (!f.isLocalFile()) {
         KMessageBox::sorry(d->m_frame, i18n("Only executables on local file systems are supported."));
         return;
     }
 
     QString path = f.toLocalFile();
-    path = KShell::quoteArg( path );
-    d->w->commandEdit->setText( path );
+    path = KShell::quoteArg(path);
+    d->w->commandEdit->setText(path);
 }
 
 void KDesktopPropsPlugin::slotAdvanced()
 {
     KDialog dlg( d->m_frame );
-    dlg.setObjectName( "KPropertiesDesktopAdv" );
-    dlg.setModal( true );
-    dlg.setCaption( i18n("Advanced Options for %1", properties->kurl().fileName()) );
-    dlg.setButtons( KDialog::Ok | KDialog::Cancel );
-    dlg.setDefaultButton( KDialog::Ok );
+    dlg.setObjectName("KPropertiesDesktopAdv");
+    dlg.setModal(true);
+    dlg.setCaption(i18n("Advanced Options for %1", properties->kurl().fileName()));
+    dlg.setButtons(KDialog::Ok | KDialog::Cancel);
+    dlg.setDefaultButton(KDialog::Ok);
     Ui_KPropertiesDesktopAdvBase w;
     w.setupUi(dlg.mainWidget());
 
@@ -3281,20 +3304,17 @@ void KDesktopPropsPlugin::slotAdvanced()
 
     // check to see if we use konsole if not do not add the nocloseonexit
     // because we don't know how to do this on other terminal applications
-    KConfigGroup confGroup( KGlobal::config(), QString::fromLatin1("General") );
+    KConfigGroup confGroup(KGlobal::config(), QString::fromLatin1("General"));
     QString preferredTerminal = confGroup.readPathEntry("TerminalApplication",
                                                         QString::fromLatin1("konsole"));
 
     bool terminalCloseBool = false;
 
-    if (preferredTerminal == "konsole")
-    {
-        terminalCloseBool = d->m_terminalOptionStr.contains( "--noclose" );
+    if (preferredTerminal == QLatin1String("konsole")) {
+        terminalCloseBool = d->m_terminalOptionStr.contains("--noclose");
         w.terminalCloseCheck->setChecked(terminalCloseBool);
-        d->m_terminalOptionStr.remove( "--noclose");
-    }
-    else
-    {
+        d->m_terminalOptionStr.remove("--noclose");
+    } else {
         w.terminalCloseCheck->hide();
     }
 
@@ -3312,52 +3332,43 @@ void KDesktopPropsPlugin::slotAdvanced()
     w.startupInfoCheck->setChecked(d->m_startupBool);
     w.systrayCheck->setChecked(d->m_systrayBool);
 
-    if (d->m_dbusStartupType == "unique")
+    if (d->m_dbusStartupType == QLatin1String("unique")) {
         w.dbusCombo->setCurrentIndex(2);
-    else if (d->m_dbusStartupType == "multi")
+    } else if (d->m_dbusStartupType == QLatin1String("multi")) {
         w.dbusCombo->setCurrentIndex(1);
-    else if (d->m_dbusStartupType == "wait")
+    } else if (d->m_dbusStartupType == QLatin1String("wait")) {
         w.dbusCombo->setCurrentIndex(3);
-    else
+    } else {
         w.dbusCombo->setCurrentIndex(0);
+    }
 
     // Provide username completion up to 1000 users.
     KCompletion *kcom = new KCompletion;
     kcom->setOrder(KCompletion::Sorted);
-    int i, maxEntries = 1000;
+    int i = 0;
+    int maxEntries = 1000;
     const QStringList usernames = KUser::allUserNames();
-    for (i = 0; i < usernames.size() && i < maxEntries; i++)
+    for (; i < usernames.size() && i < maxEntries; i++) {
         kcom->addItem(usernames.at(i));
-    if (i < maxEntries)
-    {
+    }
+    if (i < maxEntries) {
         w.suidEdit->setCompletionObject(kcom, true);
         w.suidEdit->setAutoDeleteCompletionObject( true );
         w.suidEdit->setCompletionMode(KGlobalSettings::CompletionAuto);
-    }
-    else
-    {
+    } else {
         delete kcom;
     }
 
-    connect( w.terminalEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(changed()) );
-    connect( w.terminalCloseCheck, SIGNAL(toggled(bool)),
-             this, SIGNAL(changed()) );
-    connect( w.terminalCheck, SIGNAL(toggled(bool)),
-             this, SIGNAL(changed()) );
-    connect( w.suidCheck, SIGNAL(toggled(bool)),
-             this, SIGNAL(changed()) );
-    connect( w.suidEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(changed()) );
-    connect( w.startupInfoCheck, SIGNAL(toggled(bool)),
-             this, SIGNAL(changed()) );
-    connect( w.systrayCheck, SIGNAL(toggled(bool)),
-             this, SIGNAL(changed()) );
-    connect( w.dbusCombo, SIGNAL(activated(int)),
-             this, SIGNAL(changed()) );
+    connect(w.terminalEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(w.terminalCloseCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(w.terminalCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(w.suidCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(w.suidEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
+    connect(w.startupInfoCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()) );
+    connect(w.systrayCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()) );
+    connect(w.dbusCombo, SIGNAL(activated(int)), this, SIGNAL(changed()) );
 
-    if ( dlg.exec() == QDialog::Accepted )
-    {
+    if (dlg.exec() == QDialog::Accepted) {
         d->m_terminalOptionStr = w.terminalEdit->text().trimmed();
         d->m_terminalBool = w.terminalCheck->isChecked();
         d->m_suidBool = w.suidCheck->isChecked();
@@ -3365,17 +3376,15 @@ void KDesktopPropsPlugin::slotAdvanced()
         d->m_startupBool = w.startupInfoCheck->isChecked();
         d->m_systrayBool = w.systrayCheck->isChecked();
 
-        if (w.terminalCloseCheck->isChecked())
-        {
+        if (w.terminalCloseCheck->isChecked()) {
             d->m_terminalOptionStr.append(" --noclose");
         }
 
-        switch(w.dbusCombo->currentIndex())
-        {
-        case 1:  d->m_dbusStartupType = "multi"; break;
-        case 2:  d->m_dbusStartupType = "unique"; break;
-        case 3:  d->m_dbusStartupType = "wait"; break;
-        default: d->m_dbusStartupType = "none"; break;
+        switch(w.dbusCombo->currentIndex()) {
+            case 1:  d->m_dbusStartupType = "multi"; break;
+            case 2:  d->m_dbusStartupType = "unique"; break;
+            case 3:  d->m_dbusStartupType = "wait"; break;
+            default: d->m_dbusStartupType = "none"; break;
         }
     }
 }
