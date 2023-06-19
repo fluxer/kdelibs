@@ -29,30 +29,73 @@
 #include <stdlib.h>
 #include <grp.h>
 
+static long getPwSize()
+{
+    static long getpwmax = sysconf(_SC_GETPW_R_SIZE_MAX);
+    if (getpwmax <= 0) {
+        getpwmax = 1024;
+    }
+    return getpwmax;
+}
+
+static long getGrSize()
+{
+    static long getgrmax = sysconf(_SC_GETGR_R_SIZE_MAX);
+    if (getgrmax <= 0) {
+        getgrmax = 1024;
+    }
+    return getgrmax;
+}
+
 class KUser::Private : public QSharedData
 {
 public:
     uid_t uid;
     gid_t gid;
     QString loginName;
-    QString homeDir, shell;
+    QString homeDir;
+    QString shell;
     QVector<QString> properties;
 
-    Private() : uid(uid_t(-1)), gid(gid_t(-1))
+    Private()
+        : uid(uid_t(-1)), gid(gid_t(-1))
     {
     }
 
-    Private(const char *name) : uid(uid_t(-1)), gid(gid_t(-1))
+    Private(const char *name)
+        : uid(uid_t(-1)), gid(gid_t(-1))
     {
-        fillPasswd(name ? ::getpwnam(name) : 0);
+        if (!name) {
+            return;
+        }
+        long getpwsize = getPwSize();
+        char getpwbuffer[getpwsize];
+        ::memset(getpwbuffer, 0, sizeof(getpwbuffer) * sizeof(char));
+        passwd pw;
+        passwd *pwresult = NULL;
+        ::getpwnam_r(name, &pw, getpwbuffer, getpwsize, &pwresult);
+        fillPasswd(pwresult);
     }
 
-    Private(const passwd *p) : uid(uid_t(-1)), gid(gid_t(-1))
+    Private(const uid_t _uid)
+        : uid(uid_t(-1)), gid(gid_t(-1))
+    {
+        long getpwsize = getPwSize();
+        char getpwbuffer[getpwsize];
+        ::memset(getpwbuffer, 0, sizeof(getpwbuffer) * sizeof(char));
+        passwd pw;
+        passwd *pwresult = NULL;
+        ::getpwuid_r(_uid, &pw, getpwbuffer, getpwsize, &pwresult);
+        fillPasswd(pwresult);
+    }
+
+    Private(const struct passwd *p)
+        : uid(uid_t(-1)), gid(gid_t(-1))
     {
         fillPasswd(p);
     }
 
-    void fillPasswd(const passwd *p)
+    void fillPasswd(const struct passwd *p)
     {
         if (p) {
             QString gecos = QString::fromLocal8Bit(p->pw_gecos);
@@ -80,24 +123,26 @@ KUser::KUser(UIDMode mode)
 {
     uid_t _uid = ::getuid(), _euid;
     if (mode == UseEffectiveUID && (_euid = ::geteuid()) != _uid) {
-        d = new Private(::getpwuid(_euid));
+        d = new Private(_euid);
     } else {
-        d = new Private(qgetenv("LOGNAME"));
+        QByteArray tmp = qgetenv("LOGNAME");
+        d = new Private(tmp.constData());
         if (uid() != _uid) {
-            d = new Private(qgetenv("USER"));
+            tmp = qgetenv("USER");
+            d = new Private(tmp.constData());
             if (uid() != _uid) {
-                d = new Private(::getpwuid(_uid));
+                d = new Private(_uid);
             }
         }
     }
 }
 
 KUser::KUser(K_UID _uid)
-    : d(new Private(::getpwuid(_uid)))
+    : d(new Private(_uid))
 {
 }
 
-KUser::KUser(const QString& name)
+KUser::KUser(const QString &name)
     : d(new Private(name.toLocal8Bit().data()))
 {
 }
@@ -249,12 +294,35 @@ public:
     {
     }
 
-    Private(const char *_name) : gid(gid_t(-1))
+    Private(const char *name)
+        : gid(gid_t(-1))
     {
-        fillGroup(_name ? ::getgrnam(_name) : 0);
+        if (!name) {
+            return;
+        }
+        long getgrsize = getGrSize();
+        char getgrbuffer[getgrsize];
+        ::memset(getgrbuffer, 0, sizeof(getgrbuffer) * sizeof(char));
+        struct group gr;
+        struct group *grresult = NULL;
+        ::getgrnam_r(name, &gr, getgrbuffer, getgrsize, &grresult);
+        fillGroup(grresult);
     }
 
-    Private(const struct group *p) : gid(gid_t(-1))
+    Private(const gid_t _gid)
+        : gid(gid_t(-1))
+    {
+        long getgrsize = getGrSize();
+        char getgrbuffer[getgrsize];
+        ::memset(getgrbuffer, 0, sizeof(getgrbuffer) * sizeof(char));
+        struct group gr;
+        struct group *grresult = NULL;
+        ::getgrgid_r(_gid, &gr, getgrbuffer, getgrsize, &grresult);
+        fillGroup(grresult);
+    }
+
+    Private(const struct group *p)
+        : gid(gid_t(-1))
     {
         fillGroup(p);
     }
@@ -272,12 +340,12 @@ public:
 };
 
 KUserGroup::KUserGroup(KUser::UIDMode mode)
-    : d(new Private(::getgrgid(KUser(mode).gid())))
+    : d(new Private(KUser(mode).gid()))
 {
 }
 
 KUserGroup::KUserGroup(K_GID _gid)
-    : d(new Private(::getgrgid(_gid)))
+    : d(new Private(_gid))
 {
 }
 
