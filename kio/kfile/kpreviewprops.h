@@ -44,7 +44,6 @@ private Q_SLOTS:
 
 private:
     KImageFilePreview* preview;
-    void createLayout();
 };
 
 #endif // KPREVIEWPROPS_H

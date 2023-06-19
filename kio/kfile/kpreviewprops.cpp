@@ -32,11 +32,7 @@ KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog *props)
     if (properties->items().count() > 1) {
         return;
     }
-    createLayout();
-}
 
-void KPreviewPropsPlugin::createLayout()
-{
     // let the dialog create the page frame
     QFrame* topframe = new QFrame();
     properties->addPage(topframe, i18n("P&review"));
