@@ -73,6 +73,12 @@ public:
     bool stop();
 
     /*!
+        @brief Returns the address of the server as URL suitable for use in widgets.
+        @note If the server has not been started yet or it failed empty string is returned.
+    */
+    QString address() const;
+
+    /*!
         @brief Returns human-readable description of the error that occured, if @p start() returns
         @p false for example it may be used along with @p KMessageBox to notify the user about the
         error.

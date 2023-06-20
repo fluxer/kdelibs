@@ -24,6 +24,7 @@
 #include <QThreadPool>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QNetworkInterface>
 #include <QDateTime>
 #include <QCoreApplication>
 #include <QThread>
@@ -665,6 +666,38 @@ bool KHTTP::stop()
 {
     d->stop();
     return true;
+}
+
+QString KHTTP::address() const
+{
+    if (!d->tcpserver->isListening()) {
+        return QString();
+    }
+    QHostAddress serveraddress = d->tcpserver->serverAddress();
+    if (serveraddress == QHostAddress(QHostAddress::Any)) {
+        bool foundit = false;
+        // the first interface that can broadcast is likely it
+        foreach (const QNetworkInterface &netiface, QNetworkInterface::allInterfaces()) {
+            if (!(netiface.flags() & QNetworkInterface::CanBroadcast)) {
+                continue;
+            }
+            foreach (const QNetworkAddressEntry &addressentry, netiface.addressEntries()) {
+                const QHostAddress addressip = addressentry.ip();
+                if (!addressip.isNull() && addressip.protocol() == QAbstractSocket::IPv4Protocol) {
+                    serveraddress = addressip;
+                    foundit = true;
+                    break;
+                }
+            }
+        }
+        if (!foundit) {
+            kWarning() << "Could not find the broadcasting interface";
+        }
+    }
+    return QString::fromLatin1("http://%1:%2").arg(
+        serveraddress.toString(),
+        QString::number(d->tcpserver->serverPort())
+    );
 }
 
 QString KHTTP::errorString() const
