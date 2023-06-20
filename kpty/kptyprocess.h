@@ -27,7 +27,6 @@
 #include "kpty_export.h"
 
 class KPtyDevice;
-
 class KPtyProcessPrivate;
 
 /**
@@ -65,7 +64,7 @@ public:
     /**
      * Constructor
      */
-    explicit KPtyProcess(QObject *parent = 0);
+    explicit KPtyProcess(QObject *parent = nullptr);
 
     /**
      * Construct a process using an open pty master.
@@ -74,7 +73,7 @@ public:
      *   The process does not take ownership of the descriptor;
      *   it will not be automatically closed at any point.
      */
-    KPtyProcess(int ptyMasterFd, QObject *parent = 0);
+    KPtyProcess(int ptyMasterFd, QObject *parent = nullptr);
 
     /**
      * Destructor
@@ -136,4 +135,4 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KPtyProcess::PtyChannels)
 
-#endif
+#endif // KPTYPROCESS_H

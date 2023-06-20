@@ -125,12 +125,10 @@ KPty::~KPty()
 
 bool KPty::open()
 {
-  Q_D(KPty);
-
+    Q_D(KPty);
     if (d->masterFd >= 0) {
         return true;
     }
-
     d->ownMaster = true;
 
     // Find a master pty that we can open ////////////////////////////////
@@ -222,30 +220,27 @@ bool KPty::open(int fd)
         kWarning(175) << "Attempting to open an already open pty";
         return false;
     }
-
     d->ownMaster = false;
 
-# ifdef HAVE_PTSNAME_R
+#ifdef HAVE_PTSNAME_R
     char ptsn[32];
     ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
     if (ptsname_r(fd, ptsn, sizeof(ptsn)) == 0) {
         d->ttyName = ptsn;
-# else
+#else
     char *ptsn = ptsname(fd);
     if (ptsn) {
         d->ttyName = ptsn;
-# endif
+#endif
     } else {
         kWarning(175) << "Failed to determine pty slave device for fd" << fd;
         return false;
     }
-
     d->masterFd = fd;
     if (!openSlave()) {
         d->masterFd = -1;
         return false;
     }
-
     return true;
 }
 

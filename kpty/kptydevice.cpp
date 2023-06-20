@@ -133,7 +133,6 @@ public:
     char *reserve(int bytes)
     {
         totalSize += bytes;
-
         char *ptr;
         if (tail + bytes <= buffers.last().size()) {
             ptr = buffers.last().data() + tail;
@@ -169,17 +168,19 @@ public:
         int start = head;
         QList<QByteArray>::ConstIterator it = buffers.begin();
         forever {
-            if (!maxLength)
+            if (!maxLength) {
                 return index;
-            if (index == size())
+            }
+            if (index == size()) {
                 return -1;
+            }
             const QByteArray &buf = *it;
             ++it;
-            int len = qMin((it == buffers.end() ? tail : buf.size()) - start,
-                           maxLength);
+            int len = qMin((it == buffers.end() ? tail : buf.size()) - start, maxLength);
             const char *ptr = buf.data() + start;
-            if (const char *rptr = (const char *)memchr(ptr, c, len))
+            if (const char *rptr = (const char *)memchr(ptr, c, len)) {
                 return index + (rptr - ptr) + 1;
+            }
             index += len;
             maxLength -= len;
             start = 0;
@@ -240,7 +241,8 @@ static void qt_ignore_sigpipe()
 
 #define NO_INTR(ret,func) do { ret = func; } while (ret < 0 && errno == EINTR)
 
-class KPtyDevicePrivate : public KPtyPrivate {
+class KPtyDevicePrivate : public KPtyPrivate
+{
     Q_DECLARE_PUBLIC(KPtyDevice)
 
 public:
@@ -307,7 +309,7 @@ bool KPtyDevicePrivate::_k_canRead()
 #endif
         // Useless block braces except in Solaris
         {
-          NO_INTR(readBytes, read(q->masterFd(), ptr, available));
+            NO_INTR(readBytes, read(q->masterFd(), ptr, available));
         }
         if (readBytes < 0) {
             readBuffer.unreserve(available);
@@ -321,43 +323,38 @@ bool KPtyDevicePrivate::_k_canRead()
         readNotifier->setEnabled(false);
         emit q->readEof();
         return false;
-    } else {
-        if (!emittedReadyRead) {
-            emittedReadyRead = true;
-            emit q->readyRead();
-            emittedReadyRead = false;
-        }
-        return true;
     }
+    if (!emittedReadyRead) {
+        emittedReadyRead = true;
+        emit q->readyRead();
+        emittedReadyRead = false;
+    }
+    return true;
 }
 
 bool KPtyDevicePrivate::_k_canWrite()
 {
     Q_Q(KPtyDevice);
-
     writeNotifier->setEnabled(false);
-    if (writeBuffer.isEmpty())
+    if (writeBuffer.isEmpty()) {
         return false;
-
+    }
     qt_ignore_sigpipe();
     int wroteBytes;
-    NO_INTR(wroteBytes,
-            write(q->masterFd(),
-                  writeBuffer.readPointer(), writeBuffer.readSize()));
+    NO_INTR(wroteBytes, write(q->masterFd(), writeBuffer.readPointer(), writeBuffer.readSize()));
     if (wroteBytes < 0) {
         q->setErrorString(i18n("Error writing to PTY"));
         return false;
     }
     writeBuffer.free(wroteBytes);
-
     if (!emittedBytesWritten) {
         emittedBytesWritten = true;
         emit q->bytesWritten(wroteBytes);
         emittedBytesWritten = false;
     }
-
-    if (!writeBuffer.isEmpty())
+    if (!writeBuffer.isEmpty()) {
         writeNotifier->setEnabled(true);
+    }
     return true;
 }
 
@@ -410,10 +407,12 @@ bool KPtyDevicePrivate::doWait(int msecs, bool reading)
         FD_ZERO(&rfds);
         FD_ZERO(&wfds);
 
-        if (readNotifier->isEnabled())
+        if (readNotifier->isEnabled()) {
             FD_SET(q->masterFd(), &rfds);
-        if (!writeBuffer.isEmpty())
+        }
+        if (!writeBuffer.isEmpty()) {
             FD_SET(q->masterFd(), &wfds);
+        }
 
 #ifndef Q_OS_LINUX
         if (tvp) {
@@ -425,25 +424,30 @@ bool KPtyDevicePrivate::doWait(int msecs, bool reading)
 #endif
 
         switch (select(q->masterFd() + 1, &rfds, &wfds, 0, tvp)) {
-        case -1:
-            if (errno == EINTR)
+            case -1: {
+                if (errno == EINTR)
+                    break;
+                return false;
+            }
+            case 0: {
+                q->setErrorString(i18n("PTY operation timed out"));
+                return false;
+            }
+            default: {
+                if (FD_ISSET(q->masterFd(), &rfds)) {
+                    bool canRead = _k_canRead();
+                    if (reading && canRead) {
+                        return true;
+                    }
+                }
+                if (FD_ISSET(q->masterFd(), &wfds)) {
+                    bool canWrite = _k_canWrite();
+                    if (!reading) {
+                        return canWrite;
+                    }
+                }
                 break;
-            return false;
-        case 0:
-            q->setErrorString(i18n("PTY operation timed out"));
-            return false;
-        default:
-            if (FD_ISSET(q->masterFd(), &rfds)) {
-                bool canRead = _k_canRead();
-                if (reading && canRead)
-                    return true;
             }
-            if (FD_ISSET(q->masterFd(), &wfds)) {
-                bool canWrite = _k_canWrite();
-                if (!reading)
-                    return canWrite;
-            }
-            break;
         }
     }
     return false;
@@ -452,7 +456,6 @@ bool KPtyDevicePrivate::doWait(int msecs, bool reading)
 void KPtyDevicePrivate::finishOpen(QIODevice::OpenMode mode)
 {
     Q_Q(KPtyDevice);
-
     q->QIODevice::open(mode);
     fcntl(q->masterFd(), F_SETFL, O_NONBLOCK);
     readBuffer.clear();
@@ -467,8 +470,8 @@ void KPtyDevicePrivate::finishOpen(QIODevice::OpenMode mode)
 // public member functions //
 /////////////////////////////
 
-KPtyDevice::KPtyDevice(QObject *parent) :
-    QIODevice(parent),
+KPtyDevice::KPtyDevice(QObject *parent)
+    : QIODevice(parent),
     KPty(new KPtyDevicePrivate(this))
 {
 }
@@ -481,46 +484,37 @@ KPtyDevice::~KPtyDevice()
 bool KPtyDevice::open(OpenMode mode)
 {
     Q_D(KPtyDevice);
-
-    if (masterFd() >= 0)
+    if (masterFd() >= 0) {
         return true;
-
+    }
     if (!KPty::open()) {
         setErrorString(i18n("Error opening PTY"));
         return false;
     }
-
     d->finishOpen(mode);
-
     return true;
 }
 
 bool KPtyDevice::open(int fd, OpenMode mode)
 {
     Q_D(KPtyDevice);
-
     if (!KPty::open(fd)) {
         setErrorString(i18n("Error opening PTY"));
         return false;
     }
-
     d->finishOpen(mode);
-
     return true;
 }
 
 void KPtyDevice::close()
 {
     Q_D(KPtyDevice);
-
-    if (masterFd() < 0)
+    if (masterFd() < 0) {
         return;
-
+    }
     delete d->readNotifier;
     delete d->writeNotifier;
-
     QIODevice::close();
-
     KPty::close();
 }
 
@@ -532,19 +526,19 @@ bool KPtyDevice::isSequential() const
 bool KPtyDevice::canReadLine() const
 {
     Q_D(const KPtyDevice);
-    return QIODevice::canReadLine() || d->readBuffer.canReadLine();
+    return (QIODevice::canReadLine() || d->readBuffer.canReadLine());
 }
 
 bool KPtyDevice::atEnd() const
 {
     Q_D(const KPtyDevice);
-    return QIODevice::atEnd() && d->readBuffer.isEmpty();
+    return (QIODevice::atEnd() && d->readBuffer.isEmpty());
 }
 
 qint64 KPtyDevice::bytesAvailable() const
 {
     Q_D(const KPtyDevice);
-    return QIODevice::bytesAvailable() + d->readBuffer.size();
+    return (QIODevice::bytesAvailable() + d->readBuffer.size());
 }
 
 qint64 KPtyDevice::bytesToWrite() const
@@ -596,7 +590,6 @@ qint64 KPtyDevice::writeData(const char *data, qint64 len)
 {
     Q_D(KPtyDevice);
     Q_ASSERT(len <= KMAXINT);
-
     d->writeBuffer.write(data, len);
     d->writeNotifier->setEnabled(true);
     return len;
