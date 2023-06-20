@@ -1,7 +1,5 @@
 #cmakedefine HAVE_LIBUTIL_H 1
-#cmakedefine HAVE_OPENPTY 1
 #cmakedefine HAVE_PTSNAME_R 1
-#cmakedefine HAVE_REVOKE 1
 
 #cmakedefine HAVE_PTY_H 1
 #cmakedefine HAVE_TERMIO_H 1

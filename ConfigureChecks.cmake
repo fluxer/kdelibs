@@ -100,13 +100,6 @@ if (NOT openpty_in_libc)
         set(UTIL_LIBRARY util)
     endif()
 endif()
-if (openpty_in_libc OR openpty_in_libutil)
-    set(HAVE_OPENPTY 1)
-else()
-    set(HAVE_OPENPTY 0)
-
-    check_function_exists(revoke     HAVE_REVOKE)
-endif()
 
 check_function_exists(ptsname_r  HAVE_PTSNAME_R)         # kpty
 check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore

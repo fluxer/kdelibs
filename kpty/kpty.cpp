@@ -130,15 +130,7 @@ bool KPty::open()
         return true;
     }
     d->ownMaster = true;
-
-    // Find a master pty that we can open ////////////////////////////////
-
-    // Because not all the pty animals are created equal, they want to
-    // be opened by several different methods.
-
-    // We try, as we know them, one by one.
-
-#ifdef HAVE_OPENPTY
+    // Find a master pty that we can open
     char ptsn[PATH_MAX];
     ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
     if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0)) {
@@ -148,68 +140,8 @@ bool KPty::open()
         return false;
     }
     d->ttyName = ptsn;
-#else // HAVE_OPENPTY
-    d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
-    if (d->masterFd >= 0) {
-#ifdef HAVE_PTSNAME_R
-        char ptsn[32];
-        ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
-        if (::ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
-            d->ttyName = ptsn;
-        }
-#else // HAVE_PTSNAME_R
-        char *ptsn = ::ptsname(d->masterFd);
-        if (ptsn) {
-            d->ttyName = ptsn;
-        }
-#endif // HAVE_PTSNAME_R
-        if (::grantpt(d->masterFd) == 0) {
-           goto grantedpt;
-        }
-    }
-    ::close(d->masterFd);
-    d->masterFd = -1;
-  }
-
-  kWarning(175) << "Can't open a pseudo teletype";
-  return false;
-
-grantedpt:
-#ifdef HAVE_REVOKE
-    revoke(d->ttyName.data());
-#endif
-
-    unlockpt(d->masterFd);
-
-    d->slaveFd = KDE_open(d->ttyName.data(), O_RDWR | O_NOCTTY);
-    if (d->slaveFd < 0) {
-        kWarning(175) << "Can't open slave pseudo teletype";
-        ::close(d->masterFd);
-        d->masterFd = -1;
-        return false;
-    }
-
-#if defined(Q_OS_SOLARIS)
-    // Solaris uses STREAMS for terminal handling. It is possible
-    // for the pty handling modules to be left off the stream; in that
-    // case push them on. ioctl(fd, I_FIND, ...) is documented to return
-    // 1 if the module is on the stream already.
-    {
-        static const char *pt = "ptem";
-        static const char *ld = "ldterm";
-        if (ioctl(d->slaveFd, I_FIND, pt) == 0) {
-            ioctl(d->slaveFd, I_PUSH, pt);
-        }
-        if (ioctl(d->slaveFd, I_FIND, ld) == 0) {
-            ioctl(d->slaveFd, I_PUSH, ld);
-        }
-    }
-#endif // Q_OS_SOLARIS
-#endif // HAVE_OPENPTY
-
     fcntl(d->masterFd, F_SETFD, FD_CLOEXEC);
     fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);
-
     return true;
 }
 
@@ -281,20 +213,6 @@ void KPty::close()
     }
     closeSlave();
     if (d->ownMaster) {
-#ifndef HAVE_OPENPTY
-        // don't bother resetting unix98 pty, it will go away after closing master anyway.
-        if (memcmp(d->ttyName.data(), "/dev/pts/", 9)) {
-            if (geteuid() == 0) {
-                KDE_struct_stat st;
-                if (KDE_stat(d->ttyName.data(), &st) == 0) {
-                    chown(d->ttyName.data(), 0, st.st_gid == getgid() ? 0 : -1);
-                    chmod(d->ttyName.data(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-                }
-            } else {
-                fcntl(d->masterFd, F_SETFD, 0);
-            }
-        }
-#endif
         ::close(d->masterFd);
     }
     d->masterFd = -1;
