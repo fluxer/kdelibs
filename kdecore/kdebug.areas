@@ -131,6 +131,7 @@
 5001        kget
 5002        kemu
 5003        gwenview
+5004        ark
 5010        krdc
 5011        krdc (VNC backend)
 5012        krdc (RDP backend)
