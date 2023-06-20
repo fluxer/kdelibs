@@ -446,7 +446,7 @@ bool KPty::setEcho(bool echo)
 const char *KPty::ttyName() const
 {
     Q_D(const KPty);
-    return d->ttyName.data();
+    return d->ttyName.constData();
 }
 
 int KPty::masterFd() const

@@ -35,7 +35,8 @@ class KPtyDevicePrivate;
 /**
  * Encapsulates KPty into a QIODevice, so it can be used with Q*Stream, etc.
  */
-class KPTY_EXPORT KPtyDevice : public QIODevice, public KPty { //krazy:exclude=dpointer (via macro)
+class KPTY_EXPORT KPtyDevice : public QIODevice, public KPty
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE_MI(KPtyDevice, KPty)
 

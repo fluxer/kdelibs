@@ -37,7 +37,8 @@ class KPtyProcessPrivate : public KProcessPrivate
 {
 public:
     KPtyProcessPrivate()
-        : ptyChannels(KPtyProcess::NoChannels),
+        : pty(nullptr),
+        ptyChannels(KPtyProcess::NoChannels),
         addUtmp(false)
     {
     }

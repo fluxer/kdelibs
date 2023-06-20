@@ -93,7 +93,7 @@ void KPtyProcessTest::test_shared_pty()
         }
     }
     // This test (or KPtyProcess) is fragile, sometimes the \r\n is missing. Disabled.
-    //QCOMPARE(p.pty()->readAll(), QByteArray("hello from process 2\r\n"));
+    // QCOMPARE(p.pty()->readAll(), QByteArray("hello from process 2\r\n"));
 
     // write to the first process' pty
     p.pty()->write("hi from process 1\n");
@@ -138,8 +138,9 @@ void KPtyProcessTest::slotReadyRead()
 
 void KPtyProcessTest::slotDoRead()
 {
-    while (sp.pty()->canReadLine())
+    while (sp.pty()->canReadLine()) {
         log.append('>').append(sp.pty()->readLine()).append("$\n");
+    }
     log.append("!\n");
 }
 
@@ -196,7 +197,6 @@ void KPtyProcessTest::test_pty_signals()
     QCOMPARE(QLatin1String(log), QLatin1String(want));
 }
 
-
 void KPtyProcessTest::test_ctty()
 {
     KPtyProcess p;
@@ -207,6 +207,6 @@ void KPtyProcessTest::test_ctty()
     QCOMPARE(output, QLatin1String("this is a test\r\n"));
 }
 
-QTEST_KDEMAIN_CORE( KPtyProcessTest )
+QTEST_KDEMAIN_CORE(KPtyProcessTest)
 
 #include "moc_kptyprocesstest.cpp"
