@@ -52,7 +52,7 @@
 # include <acl/libacl.h>
 #endif
 
-//sendfile has different semantics in different platforms
+// sendfile has different semantics in different platforms
 #if defined HAVE_SENDFILE && defined Q_OS_LINUX
 # define USE_SENDFILE 1
 #endif
@@ -191,7 +191,8 @@ void FileProtocol::copy(const KUrl &srcUrl, const KUrl &destUrl,
             off_t sf = processed_size;
             n = ::sendfile(dest_fd, src_fd, &sf, MAX_IPC_SIZE);
             processed_size = sf;
-            if (n == -1 && ( errno == EINVAL || errno == ENOSYS)) { //not all filesystems support sendfile()
+            if (n == -1 && (errno == EINVAL || errno == ENOSYS)) {
+                // not all filesystems support sendfile()
                 kDebug(7101) << "sendfile() not supported, falling back ";
                 use_sendfile = false;
             }
@@ -481,7 +482,7 @@ void FileProtocol::symlink(const QString &target, const KUrl &destUrl, KIO::JobF
 {
     const QString dest = destUrl.toLocalFile();
     // Assume dest is local too (wouldn't be here otherwise)
-    if (::symlink( QFile::encodeName(target), QFile::encodeName(dest)) == -1) {
+    if (::symlink(QFile::encodeName(target), QFile::encodeName(dest)) == -1) {
         // Does the destination already exist ?
         if (errno == EEXIST) {
             if (flags & KIO::Overwrite) {
@@ -514,11 +515,9 @@ void FileProtocol::del(const KUrl &url, bool isfile)
 {
     const QString path = url.toLocalFile();
     const QByteArray _path(QFile::encodeName(path));
-    /*****
-     * Delete files
-     *****/
 
     if (isfile) {
+        // Delete files
         kDebug(7101) << "Deleting file "<< url;
 
         if (unlink(_path.data()) == -1) {
