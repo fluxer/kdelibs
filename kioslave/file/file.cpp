@@ -83,7 +83,7 @@ using namespace KIO;
 #define MAX_IPC_SIZE (1024*32)
 
 #ifdef HAVE_POSIX_ACL
-static void appendACLAtoms(const QByteArray & path, UDSEntry& entry, mode_t type, bool withACL);
+static void appendACLAtoms(const QByteArray & path, UDSEntry& entry, mode_t type);
 #endif
 
 int main(int argc, char **argv)
@@ -601,11 +601,8 @@ QString FileProtocol::getGroupName(gid_t gid) const
 }
 
 bool FileProtocol::createUDSEntry(const QString &filename, const QByteArray &path, UDSEntry &entry,
-                                  short int details, bool withACL)
+                                  short int details)
 {
-#ifndef HAVE_POSIX_ACL
-    Q_UNUSED(withACL);
-#endif
     assert(entry.count() == 0); // by contract :-)
     // entry.reserve( 8 ); // speed up QHash insertion
 
@@ -655,10 +652,9 @@ bool FileProtocol::createUDSEntry(const QString &filename, const QByteArray &pat
 
 #ifdef HAVE_POSIX_ACL
     if (details > 0) {
-        /* Append an atom indicating whether the file has extended acl information
-         * and if withACL is specified also one with the acl itself. If it's a directory
-         * and it has a default ACL, also append that. */
-        appendACLAtoms(path, entry, type, withACL);
+        /* Append an atom indicating whether the file has extended acl information. If it's a
+         * directory and it has a default ACL, also append that. */
+        appendACLAtoms(path, entry, type);
     }
 #endif
 
@@ -683,7 +679,7 @@ bool FileProtocol::createUDSEntry(const QString &filename, const QByteArray &pat
  *
  *************************************/
 #ifdef HAVE_POSIX_ACL
-static void appendACLAtoms(const QByteArray &path, UDSEntry &entry, mode_t type, bool withACL)
+static void appendACLAtoms(const QByteArray &path, UDSEntry &entry, mode_t type)
 {
     // first check for a noop
     if (acl_extended_file(path.data()) == 0) {
@@ -710,17 +706,15 @@ static void appendACLAtoms(const QByteArray &path, UDSEntry &entry, mode_t type,
         kDebug(7101) << path.constData() << "has extended ACL entries";
         entry.insert(KIO::UDSEntry::UDS_EXTENDED_ACL, 1);
     }
-    if (withACL) {
-        if (acl) {
-            const QString str = aclToText(acl);
-            entry.insert(KIO::UDSEntry::UDS_ACL_STRING, str);
-            kDebug(7101) << path.constData() << "ACL:" << str;
-        }
-        if (defaultAcl ) {
-            const QString str = aclToText(defaultAcl);
-            entry.insert(KIO::UDSEntry::UDS_DEFAULT_ACL_STRING, str);
-            kDebug(7101) << path.constData() << "DEFAULT ACL:" << str;
-        }
+    if (acl) {
+        const QString str = aclToText(acl);
+        entry.insert(KIO::UDSEntry::UDS_ACL_STRING, str);
+        kDebug(7101) << path.constData() << "ACL:" << str;
+    }
+    if (defaultAcl ) {
+        const QString str = aclToText(defaultAcl);
+        entry.insert(KIO::UDSEntry::UDS_DEFAULT_ACL_STRING, str);
+        kDebug(7101) << path.constData() << "DEFAULT ACL:" << str;
     }
     if (acl) {
         acl_free(acl);

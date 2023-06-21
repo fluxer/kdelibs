@@ -89,41 +89,38 @@ void FileProtocol::copy(const KUrl &srcUrl, const KUrl &destUrl,
     acl_t acl;
 #endif
 
-    if ( KDE_stat( _src.data(), &buff_src ) == -1 ) {
-        if ( errno == EACCES )
-           error(KIO::ERR_ACCESS_DENIED, src);
-        else
-           error(KIO::ERR_DOES_NOT_EXIST, src);
+    if (KDE_stat(_src.data(), &buff_src) == -1) {
+        if (errno == EACCES) {
+            error(KIO::ERR_ACCESS_DENIED, src);
+        } else {
+            error(KIO::ERR_DOES_NOT_EXIST, src);
+        }
         return;
     }
 
-    if ( S_ISDIR( buff_src.st_mode ) ) {
+    if (S_ISDIR(buff_src.st_mode)) {
         error(KIO::ERR_IS_DIRECTORY, src);
         return;
     }
-    if ( S_ISFIFO( buff_src.st_mode ) || S_ISSOCK ( buff_src.st_mode ) ) {
+    if (S_ISFIFO(buff_src.st_mode) || S_ISSOCK(buff_src.st_mode)) {
         error(KIO::ERR_CANNOT_OPEN_FOR_READING, src);
         return;
     }
 
     KDE_struct_stat buff_dest;
-    bool dest_exists = ( KDE_lstat( _dest.data(), &buff_dest ) != -1 );
-    if ( dest_exists )
-    {
-        if ( same_inode( buff_dest, buff_src) )
-        {
+    bool dest_exists = (KDE_lstat(_dest.data(), &buff_dest) != -1);
+    if (dest_exists) {
+        if (same_inode(buff_dest, buff_src)) {
             error(KIO::ERR_IDENTICAL_FILES, dest);
             return;
         }
 
-        if (S_ISDIR(buff_dest.st_mode))
-        {
-           error(KIO::ERR_DIR_ALREADY_EXIST, dest);
-           return;
+        if (S_ISDIR(buff_dest.st_mode)) {
+            error(KIO::ERR_DIR_ALREADY_EXIST, dest);
+            return;
         }
 
-        if (!(_flags & KIO::Overwrite))
-        {
+        if (!(_flags & KIO::Overwrite)) {
            error(KIO::ERR_FILE_ALREADY_EXIST, dest);
            return;
         }
@@ -131,15 +128,14 @@ void FileProtocol::copy(const KUrl &srcUrl, const KUrl &destUrl,
         // If the destination is a symlink and overwrite is TRUE,
         // remove the symlink first to prevent the scenario where
         // the symlink actually points to current source!
-        if ((_flags & KIO::Overwrite) && S_ISLNK(buff_dest.st_mode))
-        {
+        if ((_flags & KIO::Overwrite) && S_ISLNK(buff_dest.st_mode)) {
             //kDebug(7101) << "copy(): LINK DESTINATION";
-            remove( _dest.data() );
+            remove(_dest.data());
         }
     }
 
-    int src_fd = KDE_open( _src.data(), O_RDONLY);
-    if ( src_fd < 0 ) {
+    int src_fd = KDE_open(_src.data(), O_RDONLY);
+    if (src_fd < 0) {
         error(KIO::ERR_CANNOT_OPEN_FOR_READING, src);
         return;
     }
@@ -147,18 +143,20 @@ void FileProtocol::copy(const KUrl &srcUrl, const KUrl &destUrl,
 #if HAVE_FADVISE
     posix_fadvise(src_fd,0,0,POSIX_FADV_SEQUENTIAL);
 #endif
+
     // WABA: Make sure that we keep writing permissions ourselves,
     // otherwise we can be in for a surprise on NFS.
     mode_t initialMode;
-    if (_mode != -1)
-       initialMode = _mode | S_IWUSR;
-    else
-       initialMode = 0666;
+    if (_mode != -1) {
+        initialMode = _mode | S_IWUSR;
+    } else {
+        initialMode = 0666;
+    }
 
     int dest_fd = KDE_open(_dest.data(), O_CREAT | O_TRUNC | O_WRONLY, initialMode);
-    if ( dest_fd < 0 ) {
+    if (dest_fd < 0) {
         kDebug(7101) << "###### COULD NOT WRITE " << dest;
-        if ( errno == EACCES ) {
+        if (errno == EACCES) {
             error(KIO::ERR_WRITE_ACCESS_DENIED, dest);
         } else {
             error(KIO::ERR_CANNOT_OPEN_FOR_WRITING, dest);
@@ -168,145 +166,149 @@ void FileProtocol::copy(const KUrl &srcUrl, const KUrl &destUrl,
     }
 
 #if HAVE_FADVISE
-    posix_fadvise(dest_fd,0,0,POSIX_FADV_SEQUENTIAL);
+    posix_fadvise(dest_fd, 0, 0, POSIX_FADV_SEQUENTIAL);
 #endif
 
 #ifdef HAVE_POSIX_ACL
     acl = acl_get_fd(src_fd);
     if (acl && acl_equiv_mode(acl, 0) == 0) {
         kDebug(7101) << _dest.data() << " doesn't have extended ACL";
-        acl_free( acl );
+        acl_free(acl);
         acl = NULL;
     }
 #endif
-    totalSize( buff_src.st_size );
+    totalSize(buff_src.st_size);
 
     KIO::filesize_t processed_size = 0;
-    char buffer[ MAX_IPC_SIZE ];
-    int n;
+    char buffer[MAX_IPC_SIZE];
+    int n = 0;
 #ifdef USE_SENDFILE
-    bool use_sendfile=buff_src.st_size < 0x7FFFFFFF;
+    bool use_sendfile = buff_src.st_size < 0x7FFFFFFF;
 #endif
-    while( 1 )
-    {
+    while (true) {
 #ifdef USE_SENDFILE
        if (use_sendfile) {
             off_t sf = processed_size;
-            n = ::sendfile( dest_fd, src_fd, &sf, MAX_IPC_SIZE );
+            n = ::sendfile(dest_fd, src_fd, &sf, MAX_IPC_SIZE);
             processed_size = sf;
-            if ( n == -1 && ( errno == EINVAL || errno == ENOSYS ) ) { //not all filesystems support sendfile()
+            if (n == -1 && ( errno == EINVAL || errno == ENOSYS)) { //not all filesystems support sendfile()
                 kDebug(7101) << "sendfile() not supported, falling back ";
                 use_sendfile = false;
             }
        }
        if (!use_sendfile)
 #endif
-        n = ::read( src_fd, buffer, MAX_IPC_SIZE );
+            n = ::read(src_fd, buffer, MAX_IPC_SIZE);
 
-       if (n == -1)
-       {
-          if (errno == EINTR)
-              continue;
+       if (n == -1) {
+            if (errno == EINTR) {
+                continue;
+            }
 #ifdef USE_SENDFILE
-          if ( use_sendfile ) {
-            kDebug(7101) << "sendfile() error:" << strerror(errno);
-            if ( errno == ENOSPC ) // disk full
+            if (use_sendfile) {
+                kDebug(7101) << "sendfile() error:" << strerror(errno);
+                if (errno == ENOSPC) {
+                    // disk full
+                    error(KIO::ERR_DISK_FULL, dest);
+                    remove(_dest.data());
+                } else {
+                    error(KIO::ERR_SLAVE_DEFINED,
+                          i18n("Cannot copy file from %1 to %2. (Errno: %3)",
+                          src, dest, errno));
+                }
+            } else
+#endif
             {
-                error(KIO::ERR_DISK_FULL, dest);
-                remove( _dest.data() );
+                error(KIO::ERR_COULD_NOT_READ, src);
+                ::close(src_fd);
+                ::close(dest_fd);
             }
-            else {
-                error(KIO::ERR_SLAVE_DEFINED,
-                      i18n("Cannot copy file from %1 to %2. (Errno: %3)",
-                      src, dest, errno));
-            }
-          } else
-#endif
-          error(KIO::ERR_COULD_NOT_READ, src);
-          ::close(src_fd);
-          ::close(dest_fd);
 #ifdef HAVE_POSIX_ACL
-          if (acl) acl_free(acl);
+            if (acl) {
+                acl_free(acl);
+            }
 #endif
-          return;
-       }
-       if (n == 0)
-          break; // Finished
+            return;
+        }
+        if (n == 0) {
+            break; // Finished
+        }
 #ifdef USE_SENDFILE
-       if ( !use_sendfile ) {
+        if (!use_sendfile) {
 #endif
-         if (write_all( dest_fd, buffer, n))
-         {
-           ::close(src_fd);
-           ::close(dest_fd);
+            if (write_all(dest_fd, buffer, n)) {
+                ::close(src_fd);
+                ::close(dest_fd);
 
-           if ( errno == ENOSPC ) // disk full
-           {
-              error(KIO::ERR_DISK_FULL, dest);
-              remove( _dest.data() );
-           }
-           else
-           {
-              kWarning(7101) << "Couldn't write[2]. Error:" << strerror(errno);
-              error(KIO::ERR_COULD_NOT_WRITE, dest);
-           }
+                if (errno == ENOSPC) {
+                    // disk full
+                    error(KIO::ERR_DISK_FULL, dest);
+                    remove(_dest.data());
+                } else {
+                    kWarning(7101) << "Couldn't write[2]. Error:" << strerror(errno);
+                    error(KIO::ERR_COULD_NOT_WRITE, dest);
+                }
 #ifdef HAVE_POSIX_ACL
-           if (acl) acl_free(acl);
+                if (acl) {
+                    acl_free(acl);
+                }
 #endif
-           return;
-         }
-         processed_size += n;
+                return;
+            }
+            processed_size += n;
 #ifdef USE_SENDFILE
-       }
+        }
 #endif
-       processedSize( processed_size );
+        processedSize(processed_size);
     }
 
-    ::close( src_fd );
+    ::close(src_fd);
 
-    if (::close( dest_fd))
-    {
+    if (::close(dest_fd)) {
         kWarning(7101) << "Error when closing file descriptor[2]:" << strerror(errno);
         error(KIO::ERR_COULD_NOT_WRITE, dest);
 #ifdef HAVE_POSIX_ACL
-        if (acl) acl_free(acl);
+        if (acl) {
+            acl_free(acl);
+        };
 #endif
         return;
     }
 
     // set final permissions
-    if ( _mode != -1 )
-    {
-        if ( (::chmod(_dest.data(), _mode) != 0)
+    if (_mode != -1) {
+        if ((::chmod(_dest.data(), _mode) != 0)
 #ifdef HAVE_POSIX_ACL
-          || (acl && acl_set_file(_dest.data(), ACL_TYPE_ACCESS, acl) != 0)
+            || (acl && acl_set_file(_dest.data(), ACL_TYPE_ACCESS, acl) != 0)
 #endif
-        )
-       {
-           KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath(dest);
-           // Eat the error if the filesystem apparently doesn't support chmod.
-           if ( mp && mp->testFileSystemFlag( KMountPoint::SupportsChmod ) )
-               warning(i18n("Could not change permissions for\n%1", dest));
+            )
+        {
+            KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath(dest);
+            // Eat the error if the filesystem apparently doesn't support chmod.
+            if (mp && mp->testFileSystemFlag(KMountPoint::SupportsChmod)) {
+                warning(i18n("Could not change permissions for\n%1", dest));
+            }
        }
     }
 #ifdef HAVE_POSIX_ACL
-    if (acl) acl_free(acl);
+    if (acl) {
+        acl_free(acl);
+    }
 #endif
 
     // copy access and modification time
     struct utimbuf ut;
     ut.actime = buff_src.st_atime;
     ut.modtime = buff_src.st_mtime;
-    if ( ::utime( _dest.data(), &ut ) != 0 )
-    {
+    if (::utime(_dest.data(), &ut) != 0) {
         kWarning() << QString::fromLatin1("Couldn't preserve access and modification time for\n%1").arg(dest);
     }
 
-    processedSize( buff_src.st_size );
+    processedSize(buff_src.st_size);
     finished();
 }
 
-void FileProtocol::listDir( const KUrl& url)
+void FileProtocol::listDir(const KUrl &url)
 {
     if (!url.isLocalFile()) {
         KUrl redir(url);
@@ -316,36 +318,43 @@ void FileProtocol::listDir( const KUrl& url)
         finished();
         return;
     }
+
     const QString path(url.toLocalFile());
     const QByteArray _path(QFile::encodeName(path));
     DIR* dp = opendir(_path.data());
     if (dp == 0) {
         switch (errno) {
-        case ENOENT:
-            error(KIO::ERR_DOES_NOT_EXIST, path);
-            return;
-        case ENOTDIR:
-            error(KIO::ERR_IS_FILE, path);
-            break;
+            case ENOENT: {
+                error(KIO::ERR_DOES_NOT_EXIST, path);
+                return;
+            }
+            case ENOTDIR: {
+                error(KIO::ERR_IS_FILE, path);
+                break;
+            }
 #ifdef ENOMEDIUM
-        case ENOMEDIUM:
-            error(ERR_SLAVE_DEFINED, i18n("No media in device for %1", path));
-            break;
+            case ENOMEDIUM: {
+                error(ERR_SLAVE_DEFINED, i18n("No media in device for %1", path));
+                break;
+            }
 #endif
-        default:
-            error(KIO::ERR_CANNOT_ENTER_DIRECTORY, path);
-            break;
+            default: {
+                error(KIO::ERR_CANNOT_ENTER_DIRECTORY, path);
+                break;
+            }
         }
         return;
     }
 
-    /* set the current dir to the path to speed up
-       in not having to pass an absolute path.
-       We restore the path later to get out of the
-       path - the kernel wouldn't unmount or delete
-       directories we keep as active directory. And
-       as the slave runs in the background, it's hard
-       to see for the user what the problem would be */
+    /*
+        set the current dir to the path to speed up
+        in not having to pass an absolute path.
+        We restore the path later to get out of the
+        path - the kernel wouldn't unmount or delete
+        directories we keep as active directory. And
+        as the slave runs in the background, it's hard
+        to see for the user what the problem would be
+    */
     const QString pathBuffer(QDir::currentPath());
     if (!QDir::setCurrent(path)) {
         closedir(dp);
@@ -354,7 +363,7 @@ void FileProtocol::listDir( const KUrl& url)
     }
 
     const QString sDetails = metaData(QLatin1String("details"));
-    const int details = sDetails.isEmpty() ? 2 : sDetails.toInt();
+    const int details = (sDetails.isEmpty() ? 2 : sDetails.toInt());
     //kDebug(7101) << "========= LIST " << url << "details=" << details << " =========";
     UDSEntry entry;
 
@@ -380,8 +389,7 @@ void FileProtocol::listDir( const KUrl& url)
         if (details == 0) {
             entry.insert(KIO::UDSEntry::UDS_NAME, filename);
 #ifdef HAVE_DIRENT_D_TYPE
-            entry.insert(KIO::UDSEntry::UDS_FILE_TYPE,
-                         (ep->d_type == DT_DIR) ? S_IFDIR : S_IFREG );
+            entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, (ep->d_type == DT_DIR) ? S_IFDIR : S_IFREG);
             const bool isSymLink = (ep->d_type == DT_LNK);
 #else
             // oops, no fast way, we need to stat (e.g. on Solaris)
@@ -400,7 +408,7 @@ void FileProtocol::listDir( const KUrl& url)
             listEntry(entry, false);
 
         } else {
-            if (createUDSEntry(filename, QByteArray(ep->d_name), entry, details, true)) {
+            if (createUDSEntry(filename, QByteArray(ep->d_name), entry, details)) {
                 listEntry(entry, false);
             }
         }
@@ -415,59 +423,52 @@ void FileProtocol::listDir( const KUrl& url)
     finished();
 }
 
-void FileProtocol::rename( const KUrl &srcUrl, const KUrl &destUrl,
-                           KIO::JobFlags _flags )
+void FileProtocol::rename(const KUrl &srcUrl, const KUrl &destUrl, KIO::JobFlags _flags)
 {
     const QString src = srcUrl.toLocalFile();
     const QString dest = destUrl.toLocalFile();
     const QByteArray _src(QFile::encodeName(src));
     const QByteArray _dest(QFile::encodeName(dest));
     KDE_struct_stat buff_src;
-    if ( KDE_lstat( _src.data(), &buff_src ) == -1 ) {
-        if ( errno == EACCES )
-           error(KIO::ERR_ACCESS_DENIED, src);
-        else
-           error(KIO::ERR_DOES_NOT_EXIST, src);
+    if (KDE_lstat(_src.data(), &buff_src) == -1) {
+        if (errno == EACCES) {
+            error(KIO::ERR_ACCESS_DENIED, src);
+        } else {
+            error(KIO::ERR_DOES_NOT_EXIST, src);
+        }
         return;
     }
 
     KDE_struct_stat buff_dest;
     // stat symlinks here (lstat, not stat), to avoid ERR_IDENTICAL_FILES when replacing symlink
     // with its target (#169547)
-    bool dest_exists = ( KDE_lstat( _dest.data(), &buff_dest ) != -1 );
-    if ( dest_exists )
-    {
-        if ( same_inode( buff_dest, buff_src) )
-        {
+    bool dest_exists = (KDE_lstat(_dest.data(), &buff_dest) != -1);
+    if (dest_exists) {
+        if (same_inode(buff_dest, buff_src)) {
             error(KIO::ERR_IDENTICAL_FILES, dest);
             return;
         }
 
-        if (S_ISDIR(buff_dest.st_mode))
-        {
+        if (S_ISDIR(buff_dest.st_mode)) {
            error(KIO::ERR_DIR_ALREADY_EXIST, dest);
            return;
         }
 
-        if (!(_flags & KIO::Overwrite))
-        {
+        if (!(_flags & KIO::Overwrite)) {
            error(KIO::ERR_FILE_ALREADY_EXIST, dest);
            return;
         }
     }
 
-    if ( KDE_rename( _src.data(), _dest.data()) == -1)
-    {
-        if (( errno == EACCES ) || (errno == EPERM)) {
+    if (KDE_rename(_src.data(), _dest.data()) == -1) {
+        if (errno == EACCES || errno == EPERM) {
             error(KIO::ERR_ACCESS_DENIED, dest);
-        }
-        else if (errno == EXDEV) {
+        } else if (errno == EXDEV) {
            error(KIO::ERR_UNSUPPORTED_ACTION, QLatin1String("rename"));
-        }
-        else if (errno == EROFS) { // The file is on a read-only filesystem
+        } else if (errno == EROFS) {
+            // The file is on a read-only filesystem
            error(KIO::ERR_CANNOT_DELETE, src);
-        }
-        else {
+        } else {
            error(KIO::ERR_CANNOT_RENAME, src);
         }
         return;
@@ -476,38 +477,31 @@ void FileProtocol::rename( const KUrl &srcUrl, const KUrl &destUrl,
     finished();
 }
 
-void FileProtocol::symlink( const QString &target, const KUrl &destUrl, KIO::JobFlags flags )
+void FileProtocol::symlink(const QString &target, const KUrl &destUrl, KIO::JobFlags flags)
 {
     const QString dest = destUrl.toLocalFile();
     // Assume dest is local too (wouldn't be here otherwise)
-    if ( ::symlink( QFile::encodeName(target), QFile::encodeName(dest) ) == -1 )
-    {
+    if (::symlink( QFile::encodeName(target), QFile::encodeName(dest)) == -1) {
         // Does the destination already exist ?
-        if ( errno == EEXIST )
-        {
-            if ( (flags & KIO::Overwrite) )
-            {
+        if (errno == EEXIST) {
+            if (flags & KIO::Overwrite) {
                 // Try to delete the destination
-                if ( unlink( QFile::encodeName(dest) ) != 0 )
-                {
+                if (unlink(QFile::encodeName(dest)) != 0) {
                     error(KIO::ERR_CANNOT_DELETE, dest);
                     return;
                 }
                 // Try again - this won't loop forever since unlink succeeded
-                symlink( target, destUrl, flags );
-            }
-            else
-            {
+                symlink(target, destUrl, flags);
+            } else {
                 KDE_struct_stat buff_dest;
-                if (KDE_lstat(QFile::encodeName(dest), &buff_dest) == 0 && S_ISDIR(buff_dest.st_mode))
+                if (KDE_lstat(QFile::encodeName(dest), &buff_dest) == 0 && S_ISDIR(buff_dest.st_mode)) {
                     error(KIO::ERR_DIR_ALREADY_EXIST, dest);
-                else
+                } else {
                     error(KIO::ERR_FILE_ALREADY_EXIST, dest);
+                }
                 return;
             }
-        }
-        else
-        {
+        } else {
             // Some error occurred while we tried to symlink
             error(KIO::ERR_CANNOT_SYMLINK, dest);
             return;
@@ -516,10 +510,10 @@ void FileProtocol::symlink( const QString &target, const KUrl &destUrl, KIO::Job
     finished();
 }
 
-void FileProtocol::del(const KUrl& url, bool isfile)
+void FileProtocol::del(const KUrl &url, bool isfile)
 {
     const QString path = url.toLocalFile();
-    const QByteArray _path( QFile::encodeName(path));
+    const QByteArray _path(QFile::encodeName(path));
     /*****
      * Delete files
      *****/
@@ -527,28 +521,26 @@ void FileProtocol::del(const KUrl& url, bool isfile)
     if (isfile) {
         kDebug(7101) << "Deleting file "<< url;
 
-        if ( unlink( _path.data() ) == -1 ) {
-            if ((errno == EACCES) || (errno == EPERM))
-               error(KIO::ERR_ACCESS_DENIED, path);
-            else if (errno == EISDIR)
-               error(KIO::ERR_IS_DIRECTORY, path);
-            else
-               error(KIO::ERR_CANNOT_DELETE, path);
+        if (unlink(_path.data()) == -1) {
+            if (errno == EACCES || errno == EPERM) {
+                error(KIO::ERR_ACCESS_DENIED, path);
+            } else if (errno == EISDIR) {
+                error(KIO::ERR_IS_DIRECTORY, path);
+            } else {
+                error(KIO::ERR_CANNOT_DELETE, path);
+            }
             return;
         }
     } else {
-
-      /*****
-       * Delete empty directory
-       *****/
-
+        // Delete empty directory
         kDebug( 7101 ) << "Deleting directory " << url.url();
         if (metaData(QLatin1String("recurse")) == QLatin1String("true")) {
-            if (!deleteRecursive(path))
+            if (!deleteRecursive(path)) {
                 return;
+            }
         }
-        if ( ::rmdir( _path.data() ) == -1 ) {
-            if ((errno == EACCES) || (errno == EPERM)) {
+        if (::rmdir(_path.data()) == -1) {
+            if (errno == EACCES || errno == EPERM) {
                 error(KIO::ERR_ACCESS_DENIED, path);
             } else {
                 kDebug( 7101 ) << "could not rmdir " << ::strerror(errno);
@@ -561,56 +553,55 @@ void FileProtocol::del(const KUrl& url, bool isfile)
     finished();
 }
 
-void FileProtocol::chown( const KUrl& url, const QString& owner, const QString& group )
+void FileProtocol::chown(const KUrl &url, const QString &owner, const QString &group)
 {
     const QString path = url.toLocalFile();
-    const QByteArray _path( QFile::encodeName(path) );
+    const QByteArray _path(QFile::encodeName(path));
     uid_t uid;
     gid_t gid;
 
     // get uid from given owner
     {
         const KUser kuser(owner);
-
-        if ( ! kuser.isValid() ) {
-            error( KIO::ERR_SLAVE_DEFINED,
-                   i18n( "Could not get user id for given user name %1", owner ) );
+        if (!kuser.isValid()) {
+            error(KIO::ERR_SLAVE_DEFINED, i18n("Could not get user id for given user name %1", owner));
             return;
         }
-
         uid = kuser.uid();
     }
 
     // get gid from given group
     {
         const KUserGroup kusergroup(group);
-
-        if ( ! kusergroup.isValid() ) {
-            error( KIO::ERR_SLAVE_DEFINED,
-                   i18n( "Could not get group id for given group name %1", group ) );
+        if (!kusergroup.isValid()) {
+            error(KIO::ERR_SLAVE_DEFINED, i18n( "Could not get group id for given group name %1", group));
             return;
         }
-
         gid = kusergroup.gid();
     }
 
-    if ( ::chown(_path, uid, gid) == -1 ) {
-        switch ( errno ) {
+    if (::chown(_path, uid, gid) == -1) {
+        switch (errno) {
             case EPERM:
-            case EACCES:
+            case EACCES: {
                 error(KIO::ERR_ACCESS_DENIED, path);
                 break;
-            case ENOSPC:
+            }
+            case ENOSPC: {
                 error(KIO::ERR_DISK_FULL, path);
                 break;
-            default:
+            }
+            default: {
                 error(KIO::ERR_CANNOT_CHOWN, path);
+                break;
+            }
         }
-    } else
+    } else {
         finished();
+    }
 }
 
-void FileProtocol::stat( const KUrl & url )
+void FileProtocol::stat(const KUrl &url)
 {
     if (!url.isLocalFile()) {
         KUrl redir(url);
@@ -629,25 +620,24 @@ void FileProtocol::stat( const KUrl & url )
      * This is the reason for the -1
      */
     const QString path(url.path(KUrl::RemoveTrailingSlash));
-    const QByteArray _path( QFile::encodeName(path));
+    const QByteArray _path(QFile::encodeName(path));
     const QString sDetails = metaData(QLatin1String("details"));
-    const int details = sDetails.isEmpty() ? 2 : sDetails.toInt();
+    const int details = (sDetails.isEmpty() ? 2 : sDetails.toInt());
 
     UDSEntry entry;
-    if ( !createUDSEntry( url.fileName(), _path, entry, details, true /*with acls*/ ) )
-    {
+    if (!createUDSEntry(url.fileName(), _path, entry, details)) {
         error(KIO::ERR_DOES_NOT_EXIST, path);
         return;
     }
 #if 0
 ///////// debug code
     MetaData::iterator it1 = mOutgoingMetaData.begin();
-    for ( ; it1 != mOutgoingMetaData.end(); it1++ ) {
+    for (; it1 != mOutgoingMetaData.end(); it1++) {
         kDebug(7101) << it1.key() << " = " << it1.data();
     }
 /////////
 #endif
-    statEntry( entry );
+    statEntry(entry);
 
     finished();
 }
