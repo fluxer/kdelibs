@@ -422,14 +422,13 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
 
     int result;
     QString dest;
-    QByteArray _dest;
     int fd = -1;
 
     // Loop until we got 0 (end of data)
     do {
         QByteArray buffer;
         dataReq(); // Request for data
-        result = readData( buffer );
+        result = readData(buffer);
 
         if (result >= 0) {
             if (dest.isEmpty()) {
@@ -503,10 +502,10 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
         }
 
         KDE_struct_stat buff;
-        if (bMarkPartial && KDE::stat( dest, &buff ) == 0) {
+        if (bMarkPartial && KDE::stat(dest, &buff) == 0) {
             int size = config()->readEntry("MinimumKeepSize", DEFAULT_MINIMUM_KEEP_SIZE);
-            if (buff.st_size <  size) {
-                remove(_dest.data());
+            if (buff.st_size < size) {
+                QFile::remove(dest);
             }
         }
 
@@ -534,7 +533,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
             QFile::remove(dest_orig);
         }
         if (KDE::rename(dest, dest_orig)) {
-            kWarning(7101) << " Couldn't rename " << _dest << " to " << dest_orig;
+            kWarning(7101) << " Couldn't rename " << dest << " to " << dest_orig;
             error(KIO::ERR_CANNOT_RENAME_PARTIAL, dest_orig);
             return;
         }
