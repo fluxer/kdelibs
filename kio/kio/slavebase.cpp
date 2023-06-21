@@ -1129,8 +1129,3 @@ void SlaveBase::send(int cmd, const QByteArray &arr)
         exit();
     }
 }
-
-QByteArray SlaveBase::protocol() const
-{
-    return d->m_protocol;
-}

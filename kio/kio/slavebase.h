@@ -258,7 +258,6 @@ public:
 
 
     /**
-     * @internal for ForwardingSlaveBase
      * Contains all metadata (but no config) sent by the application to the slave.
      */
     MetaData allMetaData() const;
@@ -713,12 +712,6 @@ public:
      * @internal
      */
     void setKillFlag();
-
-protected:
-    /**
-     * @internal
-     */
-    QByteArray protocol() const;
 
 private:
     void send(int cmd, const QByteArray &arr = QByteArray());

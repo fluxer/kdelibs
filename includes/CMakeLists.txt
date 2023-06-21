@@ -380,7 +380,6 @@ install(
     KIO/CopyJob
     KIO/DeleteJob
     KIO/FileCopyJob
-    KIO/ForwardingSlaveBase
     KIO/Job
     KIO/JobClasses
     KIO/JobUiDelegate
