@@ -29,18 +29,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 
-#include <config-acl.h>
-
-#ifdef HAVE_POSIX_ACL
-#include <sys/acl.h>
-#include <acl/libacl.h>
-#endif
-
 #include <sys/types.h>
-#include <sys/stat.h>
-
-#include <stdio.h>
-#include <unistd.h>
 
 class FileProtocol : public QObject, public KIO::SlaveBase
 {
@@ -62,10 +51,6 @@ public:
     void chown(const KUrl &url, const QString &owner, const QString &group) final;
     void setModificationTime(const KUrl &url, const QDateTime &mtime) final;
     void del(const KUrl &url, bool isfile) final;
-
-#ifdef HAVE_POSIX_ACL
-    static bool isExtendedACL(acl_t acl);
-#endif
 
 private:
     bool createUDSEntry(const QString &filename, const QByteArray &path, KIO::UDSEntry &entry,

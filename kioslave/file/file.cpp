@@ -27,6 +27,7 @@
 #include "file.h"
 
 #include <config.h>
+#include <config-acl.h>
 #include <config-kioslave-file.h>
 
 #include <sys/types.h>
@@ -45,6 +46,11 @@
 #include <utime.h>
 #include <unistd.h>
 #include <string.h>
+
+#ifdef HAVE_POSIX_ACL
+#include <sys/acl.h>
+#include <acl/libacl.h>
+#endif
 
 #include <QByteArray>
 #include <QDateTime>
@@ -677,11 +683,6 @@ bool FileProtocol::createUDSEntry(const QString &filename, const QByteArray &pat
  *
  *************************************/
 #ifdef HAVE_POSIX_ACL
-bool FileProtocol::isExtendedACL(acl_t acl)
-{
-    return (acl_equiv_mode(acl, 0) != 0);
-}
-
 static void appendACLAtoms(const QByteArray &path, UDSEntry &entry, mode_t type, bool withACL)
 {
     // first check for a noop
@@ -698,7 +699,7 @@ static void appendACLAtoms(const QByteArray &path, UDSEntry &entry, mode_t type,
      * ACL separately. Since a directory can have both, we need to check again. */
     if (isDir) {
         if (acl) {
-            if (!FileProtocol::isExtendedACL(acl)) {
+            if (acl_equiv_mode(acl, 0) == 0) {
                 acl_free(acl);
                 acl = 0;
             }
