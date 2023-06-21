@@ -44,46 +44,42 @@
 
 class FileProtocol : public QObject, public KIO::SlaveBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  FileProtocol( const QByteArray &app);
-  virtual ~FileProtocol();
+    FileProtocol(const QByteArray &app);
+    ~FileProtocol();
 
-  virtual void get( const KUrl& url );
-  virtual void put( const KUrl& url, int _mode,
-                     KIO::JobFlags _flags );
-  virtual void copy( const KUrl &src, const KUrl &dest,
-                     int mode, KIO::JobFlags flags );
-  virtual void rename( const KUrl &src, const KUrl &dest,
-                       KIO::JobFlags flags );
-  virtual void symlink( const QString &target, const KUrl &dest,
-                        KIO::JobFlags flags );
+    void get(const KUrl &url) final;
+    void put(const KUrl &url, int _mode, KIO::JobFlags _flags) final;
+    void copy(const KUrl &src, const KUrl &dest, int mode, KIO::JobFlags flags) final;
+    void rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags) final;
+    void symlink(const QString &target, const KUrl &dest, KIO::JobFlags flags) final;
 
-  virtual void stat( const KUrl& url );
-  virtual void listDir( const KUrl& url );
-  virtual void mkdir( const KUrl& url, int permissions );
-  virtual void chmod( const KUrl& url, int permissions );
-  virtual void chown( const KUrl& url, const QString& owner, const QString& group );
-  virtual void setModificationTime( const KUrl& url, const QDateTime& mtime );
-  virtual void del( const KUrl& url, bool isfile);
+    void stat(const KUrl &url) final;
+    void listDir(const KUrl &url) final;
+    void mkdir(const KUrl &url, int permissions) final;
+    void chmod(const KUrl &url, int permissions) final;
+    void chown(const KUrl &url, const QString &owner, const QString &group) final;
+    void setModificationTime(const KUrl &url, const QDateTime &mtime) final;
+    void del(const KUrl &url, bool isfile) final;
 
 #ifdef HAVE_POSIX_ACL
-  static bool isExtendedACL(acl_t acl);
+    static bool isExtendedACL(acl_t acl);
 #endif
 
 private:
-  bool createUDSEntry( const QString & filename, const QByteArray & path, KIO::UDSEntry & entry,
-                       short int details, bool withACL );
-  int setACL( const char *path, mode_t perm, bool _directoryDefault );
+    bool createUDSEntry(const QString &filename, const QByteArray &path, KIO::UDSEntry &entry,
+                        short int details, bool withACL);
+    int setACL(const char *path, mode_t perm, bool _directoryDefault);
 
-  QString getUserName( uid_t uid ) const;
-  QString getGroupName( gid_t gid ) const;
+    QString getUserName(uid_t uid) const;
+    QString getGroupName(gid_t gid) const;
 
-    bool deleteRecursive(const QString& path);
+    bool deleteRecursive(const QString &path);
 
 private:
-  mutable QHash<uid_t, QString> mUsercache;
-  mutable QHash<gid_t, QString> mGroupcache;
+    mutable QHash<uid_t, QString> mUsercache;
+    mutable QHash<gid_t, QString> mGroupcache;
 };
 
 #endif
