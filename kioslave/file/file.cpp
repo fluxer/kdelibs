@@ -46,13 +46,12 @@
 #include <unistd.h>
 #include <string.h>
 
-#include <qbytearray.h>
-#include <qdatetime.h>
+#include <QByteArray>
+#include <QDateTime>
 #include <QVarLengthArray>
 #include <QCoreApplication>
 #include <QRegExp>
 #include <QFile>
-#include <QProcess>
 #include <QDirIterator>
 
 #include <kdebug.h>
