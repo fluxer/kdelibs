@@ -509,7 +509,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
             }
         }
 
-        ::exit(255);
+        return;
     }
 
     if (fd == -1) {
