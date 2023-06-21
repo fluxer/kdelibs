@@ -29,6 +29,7 @@
 
 #include <config.h>
 #include <config-kioslave-file.h>
+#include <config-acl.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -46,33 +47,36 @@
 #include <utime.h>
 #include <stdlib.h>
 
+#ifdef HAVE_POSIX_ACL
+# include <sys/acl.h>
+# include <acl/libacl.h>
+#endif
+
 //sendfile has different semantics in different platforms
 #if defined HAVE_SENDFILE && defined Q_OS_LINUX
-#define USE_SENDFILE 1
+# define USE_SENDFILE 1
 #endif
 
 #ifdef USE_SENDFILE
-#include <sys/sendfile.h>
+# include <sys/sendfile.h>
 #endif
 
 using namespace KIO;
 
 #define MAX_IPC_SIZE (1024*32)
 
-static bool
-same_inode(const KDE_struct_stat &src, const KDE_struct_stat &dest)
+static bool same_inode(const KDE_struct_stat &src, const KDE_struct_stat &dest)
 {
-   if (src.st_ino == dest.st_ino &&
-       src.st_dev == dest.st_dev)
-     return true;
-
-   return false;
+    if (src.st_ino == dest.st_ino && src.st_dev == dest.st_dev) {
+        return true;
+    }
+    return false;
 }
 
 extern int write_all(int fd, const char *buf, size_t len);
 
-void FileProtocol::copy( const KUrl &srcUrl, const KUrl &destUrl,
-                         int _mode, JobFlags _flags )
+void FileProtocol::copy(const KUrl &srcUrl, const KUrl &destUrl,
+                        int _mode, JobFlags _flags)
 {
     kDebug(7101) << "copy(): " << srcUrl << " -> " << destUrl << ", mode=" << _mode;
 
@@ -169,7 +173,7 @@ void FileProtocol::copy( const KUrl &srcUrl, const KUrl &destUrl,
 
 #ifdef HAVE_POSIX_ACL
     acl = acl_get_fd(src_fd);
-    if ( acl && !isExtendedACL( acl ) ) {
+    if (acl && acl_equiv_mode(acl, 0) == 0) {
         kDebug(7101) << _dest.data() << " doesn't have extended ACL";
         acl_free( acl );
         acl = NULL;

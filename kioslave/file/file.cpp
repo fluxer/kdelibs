@@ -48,8 +48,8 @@
 #include <string.h>
 
 #ifdef HAVE_POSIX_ACL
-#include <sys/acl.h>
-#include <acl/libacl.h>
+# include <sys/acl.h>
+# include <acl/libacl.h>
 #endif
 
 #include <QByteArray>
@@ -349,7 +349,7 @@ void FileProtocol::get(const KUrl &url)
         data(QByteArray::fromRawData(buffer, n));
 
         processed_size += n;
-        processedSize( processed_size );
+        processedSize(processed_size);
 
         // kDebug(7101) << "Processed: " << KIO::number(processed_size);
     }
@@ -438,7 +438,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
                     dest = dest_part;
                     if (bPartExists && !(_flags & KIO::Resume)) {
                         kDebug(7101) << "Deleting partial file" << dest_part;
-                        QFile::remove( dest_part );
+                        QFile::remove(dest_part);
                         // Catch errors when we try to open the file.
                     }
                 } else {
@@ -601,7 +601,7 @@ QString FileProtocol::getGroupName(gid_t gid) const
 }
 
 bool FileProtocol::createUDSEntry(const QString &filename, const QByteArray &path, UDSEntry &entry,
-                                  short int details, bool withACL )
+                                  short int details, bool withACL)
 {
 #ifndef HAVE_POSIX_ACL
     Q_UNUSED(withACL);
@@ -617,14 +617,14 @@ bool FileProtocol::createUDSEntry(const QString &filename, const QByteArray &pat
 
     if (KDE_lstat(path.data(), &buff) == 0) {
         if (details > 2) {
-            entry.insert( KIO::UDSEntry::UDS_DEVICE_ID, buff.st_dev);
-            entry.insert( KIO::UDSEntry::UDS_INODE, buff.st_ino);
+            entry.insert(KIO::UDSEntry::UDS_DEVICE_ID, buff.st_dev);
+            entry.insert(KIO::UDSEntry::UDS_INODE, buff.st_ino);
         }
 
         if (S_ISLNK(buff.st_mode)) {
             char buffer2[1000];
             ::memset(buffer2, 0, 1000 * sizeof(char));
-            readlink(path.data(), buffer2, 999 );
+            readlink(path.data(), buffer2, 999);
             entry.insert(KIO::UDSEntry::UDS_LINK_DEST, QFile::decodeName(buffer2));
 
             // A symlink -> follow it only if details>1
