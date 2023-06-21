@@ -78,10 +78,11 @@ public:
     QPushButton *m_DelBtn;
 };
 
-KACLEditWidget::KACLEditWidget( QWidget *parent )
-    : QWidget(parent), d(new KACLEditWidgetPrivate)
+KACLEditWidget::KACLEditWidget(QWidget *parent)
+    : QWidget(parent),
+    d(new KACLEditWidgetPrivate())
 {
-    QHBoxLayout *hbox = new QHBoxLayout( this );
+    QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->setMargin( 0 );
     d->m_listView = new KACLListView(this);
     hbox->addWidget(d->m_listView);
@@ -118,17 +119,19 @@ void KACLEditWidget::KACLEditWidgetPrivate::_k_slotUpdateButtons()
     bool atLeastOneIsNotAllowedToChangeType = false;
     int selectedCount = 0;
     QList<QTreeWidgetItem*> selected = m_listView->selectedItems();
-    QListIterator<QTreeWidgetItem*> it( selected );
-    while ( it.hasNext() ) {
-        KACLListViewItem *item = static_cast<KACLListViewItem*>( it.next() );
+    QListIterator<QTreeWidgetItem*> it(selected);
+    while (it.hasNext()) {
+        KACLListViewItem *item = static_cast<KACLListViewItem*>(it.next());
         ++selectedCount;
-        if ( !item->isDeletable() )
+        if (!item->isDeletable()) {
             atLeastOneIsNotDeletable = true;
-        if ( !item->isAllowedToChangeType() )
+        }
+        if (!item->isAllowedToChangeType()) {
             atLeastOneIsNotAllowedToChangeType = true;
+        }
     }
-    m_EditBtn->setEnabled( selectedCount && !atLeastOneIsNotAllowedToChangeType );
-    m_DelBtn->setEnabled( selectedCount && !atLeastOneIsNotDeletable );
+    m_EditBtn->setEnabled(selectedCount && !atLeastOneIsNotAllowedToChangeType);
+    m_DelBtn->setEnabled(selectedCount && !atLeastOneIsNotDeletable);
 }
 
 KACL KACLEditWidget::getACL() const
@@ -141,74 +144,80 @@ KACL KACLEditWidget::getDefaultACL() const
     return d->m_listView->getDefaultACL();
 }
 
-void KACLEditWidget::setACL( const KACL &acl )
+void KACLEditWidget::setACL(const KACL &acl)
 {
     return d->m_listView->setACL(acl);
 }
 
-void KACLEditWidget::setDefaultACL( const KACL &acl )
+void KACLEditWidget::setDefaultACL(const KACL &acl)
 {
     return d->m_listView->setDefaultACL(acl);
 }
 
-void KACLEditWidget::setAllowDefaults( bool value )
+void KACLEditWidget::setAllowDefaults(bool value)
 {
     d->m_listView->setAllowDefaults(value);
 }
 
-KACLListViewItem::KACLListViewItem( QTreeWidget* parent,
-                                    KACLListView::EntryType _type,
-                                    unsigned short _value, bool defaults,
-                                    const QString& _qualifier )
- : QTreeWidgetItem( parent),
-   type( _type ), value( _value ), isDefault( defaults ),
-   qualifier( _qualifier ), isPartial( false )
+KACLListViewItem::KACLListViewItem(QTreeWidget *parent,
+                                   KACLListView::EntryType _type,
+                                   unsigned short _value, bool defaults,
+                                   const QString &_qualifier)
+ : QTreeWidgetItem(parent),
+   type(_type), value(_value), isDefault(defaults),
+   qualifier(_qualifier), isPartial(false)
 {
-    m_pACLListView = qobject_cast<KACLListView*>( parent );
+    m_pACLListView = qobject_cast<KACLListView*>(parent);
     repaint();
 }
 
 
 KACLListViewItem::~ KACLListViewItem()
 {
-
 }
 
 QString KACLListViewItem::key() const
 {
     QString key;
-    if ( !isDefault )
+    if (!isDefault) {
         key = 'A';
-    else
+    } else {
         key = 'B';
-    switch ( type )
-    {
-        case KACLListView::User:
+    }
+    switch (type) {
+        case KACLListView::User: {
             key += 'A';
             break;
-        case KACLListView::Group:
+        }
+        case KACLListView::Group: {
             key += 'B';
             break;
-        case KACLListView::Others:
+        }
+        case KACLListView::Others: {
             key += 'C';
             break;
-        case KACLListView::Mask:
+        }
+        case KACLListView::Mask: {
             key += 'D';
             break;
-        case KACLListView::NamedUser:
-            key += 'E' + text( 1 );
+        }
+        case KACLListView::NamedUser: {
+            key += 'E' + text(1);
             break;
-        case KACLListView::NamedGroup:
-            key += 'F' + text( 1 );
+        }
+        case KACLListView::NamedGroup: {
+            key += 'F' + text(1);
             break;
-        default:
-            key += text( 0 );
+        }
+        default: {
+            key += text(0);
             break;
+        }
     }
     return key;
 }
 
-bool KACLListViewItem::operator< ( const QTreeWidgetItem& other ) const
+bool KACLListViewItem::operator< (const QTreeWidgetItem &other) const
 {
     return key() < static_cast<const KACLListViewItem&>(other).key();
 }
@@ -217,144 +226,151 @@ void KACLListViewItem::updatePermPixmaps()
 {
     unsigned int partialPerms = value;
 
-    if ( value & ACL_READ )
+    if (value & ACL_READ)
         setIcon( 2, m_pACLListView->getYesPixmap() );
-    else if ( partialPerms & ACL_READ )
-        setIcon( 2, m_pACLListView->getYesPartialPixmap() );
+    else if (partialPerms & ACL_READ)
+        setIcon(2, m_pACLListView->getYesPartialPixmap());
     else
-        setIcon( 2, QIcon() );
+        setIcon(2, QIcon());
 
-    if ( value & ACL_WRITE )
-        setIcon( 3, m_pACLListView->getYesPixmap() );
-    else if ( partialPerms & ACL_WRITE )
-        setIcon( 3, m_pACLListView->getYesPartialPixmap() );
-    else
-        setIcon( 3, QIcon() );
+    if (value & ACL_WRITE) {
+        setIcon(3, m_pACLListView->getYesPixmap());
+    } else if (partialPerms & ACL_WRITE) {
+        setIcon(3, m_pACLListView->getYesPartialPixmap());
+    } else {
+        setIcon(3, QIcon());
+    }
 
-    if ( value & ACL_EXECUTE )
-        setIcon( 4, m_pACLListView->getYesPixmap() );
-    else if ( partialPerms & ACL_EXECUTE )
-        setIcon( 4, m_pACLListView->getYesPartialPixmap() );
-    else
-        setIcon( 4, QIcon() );
+    if (value & ACL_EXECUTE) {
+        setIcon(4, m_pACLListView->getYesPixmap());
+    } else if (partialPerms & ACL_EXECUTE) {
+        setIcon(4, m_pACLListView->getYesPartialPixmap());
+    } else {
+        setIcon(4, QIcon());
+    }
 }
 
 void KACLListViewItem::repaint()
 {
     int idx = 0;
-    switch ( type )
-    {
-      case KACLListView::User:
+    switch (type) {
+      case KACLListView::User: {
             idx = KACLListView::OWNER_IDX;
             break;
-        case KACLListView::Group:
+        }
+        case KACLListView::Group: {
             idx = KACLListView::GROUP_IDX;
             break;
-        case KACLListView::Others:
+        }
+        case KACLListView::Others: {
             idx = KACLListView::OTHERS_IDX;
             break;
-        case KACLListView::Mask:
+        }
+        case KACLListView::Mask: {
             idx = KACLListView::MASK_IDX;
             break;
-        case KACLListView::NamedUser:
+        }
+        case KACLListView::NamedUser: {
             idx = KACLListView::NAMED_USER_IDX;
             break;
-        case KACLListView::NamedGroup:
+        }
+        case KACLListView::NamedGroup: {
             idx = KACLListView::NAMED_GROUP_IDX;
             break;
-        default:
+        }
+        default: {
             idx = KACLListView::OWNER_IDX;
             break;
+        }
     }
-    setText( 0, i18n(s_itemAttributes[idx].label) );
-    setIcon( 0, *s_itemAttributes[idx].pixmap );
-    if ( isDefault )
-        setText( 0, text( 0 ) + i18n( " (Default)" ) );
-    setText( 1, qualifier );
+    setText(0, i18n(s_itemAttributes[idx].label));
+    setIcon(0, *s_itemAttributes[idx].pixmap);
+    if (isDefault) {
+        setText(0, text(0) + i18n(" (Default)"));
+    }
+    setText(1, qualifier);
     // Set the pixmaps for which of the perms are set
     updatePermPixmaps();
 }
 
 void KACLListViewItem::calcEffectiveRights()
 {
-    QString strEffective = QString( "---" );
+    QString strEffective = QString::fromLatin1("---");
 
     // Do we need to worry about the mask entry? It applies to named users,
     // owning group, and named groups
-    if ( m_pACLListView->hasMaskEntry()
-            && ( type == KACLListView::NamedUser
-              || type == KACLListView::Group
-              || type == KACLListView::NamedGroup )
-            && !isDefault )
+    if (m_pACLListView->hasMaskEntry()
+        && ( type == KACLListView::NamedUser
+            || type == KACLListView::Group
+            || type == KACLListView::NamedGroup)
+        && !isDefault)
     {
-
-        strEffective[0] = ( m_pACLListView->maskPermissions() & value & ACL_READ ) ? 'r' : '-';
-        strEffective[1] = ( m_pACLListView->maskPermissions() & value & ACL_WRITE ) ? 'w' : '-';
-        strEffective[2] = ( m_pACLListView->maskPermissions() & value & ACL_EXECUTE ) ? 'x' : '-';
+        strEffective[0] = (m_pACLListView->maskPermissions() & value & ACL_READ) ? 'r' : '-';
+        strEffective[1] = (m_pACLListView->maskPermissions() & value & ACL_WRITE) ? 'w' : '-';
+        strEffective[2] = (m_pACLListView->maskPermissions() & value & ACL_EXECUTE) ? 'x' : '-';
 /*
         // What about any partial perms?
-        if ( maskPerms & partialPerms & ACL_READ || // Partial perms on entry
-             maskPartialPerms & perms & ACL_READ || // Partial perms on mask
-             maskPartialPerms & partialPerms & ACL_READ ) // Partial perms on mask and entry
+        if (maskPerms & partialPerms & ACL_READ || // Partial perms on entry
+            maskPartialPerms & perms & ACL_READ || // Partial perms on mask
+            maskPartialPerms & partialPerms & ACL_READ) // Partial perms on mask and entry
             strEffective[0] = 'R';
-        if ( maskPerms & partialPerms & ACL_WRITE || // Partial perms on entry
-             maskPartialPerms & perms & ACL_WRITE || // Partial perms on mask
-             maskPartialPerms & partialPerms & ACL_WRITE ) // Partial perms on mask and entry
+        if (maskPerms & partialPerms & ACL_WRITE || // Partial perms on entry
+            maskPartialPerms & perms & ACL_WRITE || // Partial perms on mask
+            maskPartialPerms & partialPerms & ACL_WRITE) // Partial perms on mask and entry
             strEffective[1] = 'W';
-        if ( maskPerms & partialPerms & ACL_EXECUTE || // Partial perms on entry
-             maskPartialPerms & perms & ACL_EXECUTE || // Partial perms on mask
-             maskPartialPerms & partialPerms & ACL_EXECUTE ) // Partial perms on mask and entry
+        if (maskPerms & partialPerms & ACL_EXECUTE || // Partial perms on entry
+            maskPartialPerms & perms & ACL_EXECUTE || // Partial perms on mask
+            maskPartialPerms & partialPerms & ACL_EXECUTE) // Partial perms on mask and entry
             strEffective[2] = 'X';
 */
-    }
-    else
-    {
+    } else {
         // No, the effective value are just the value in this entry
-        strEffective[0] = ( value & ACL_READ ) ? 'r' : '-';
-        strEffective[1] = ( value & ACL_WRITE ) ? 'w' : '-';
-        strEffective[2] = ( value & ACL_EXECUTE ) ? 'x' : '-';
+        strEffective[0] = (value & ACL_READ) ? 'r' : '-';
+        strEffective[1] = (value & ACL_WRITE) ? 'w' : '-';
+        strEffective[2] = (value & ACL_EXECUTE) ? 'x' : '-';
 
         /*
         // What about any partial perms?
-        if ( partialPerms & ACL_READ )
+        if (partialPerms & ACL_READ)
             strEffective[0] = 'R';
-        if ( partialPerms & ACL_WRITE )
+        if (partialPerms & ACL_WRITE)
             strEffective[1] = 'W';
-        if ( partialPerms & ACL_EXECUTE )
+        if (partialPerms & ACL_EXECUTE)
             strEffective[2] = 'X';
             */
     }
-    setText( 5, strEffective );
+    setText(5, strEffective);
 }
 
 bool KACLListViewItem::isDeletable() const
 {
     bool isMaskAndDeletable = false;
-    if (type == KACLListView::Mask ) {
-        if ( !isDefault &&  m_pACLListView->maskCanBeDeleted() )
+    if (type == KACLListView::Mask) {
+        if (!isDefault && m_pACLListView->maskCanBeDeleted()) {
             isMaskAndDeletable = true;
-        else if ( isDefault &&  m_pACLListView->defaultMaskCanBeDeleted() )
+        } else if (isDefault && m_pACLListView->defaultMaskCanBeDeleted()) {
             isMaskAndDeletable = true;
+        }
     }
-    return type != KACLListView::User &&
+    return (type != KACLListView::User &&
            type != KACLListView::Group &&
            type != KACLListView::Others &&
-           ( type != KACLListView::Mask || isMaskAndDeletable );
+           (type != KACLListView::Mask || isMaskAndDeletable));
 }
 
 bool KACLListViewItem::isAllowedToChangeType() const
 {
-    return type != KACLListView::User &&
+    return (type != KACLListView::User &&
            type != KACLListView::Group &&
            type != KACLListView::Others &&
-           type != KACLListView::Mask;
+           type != KACLListView::Mask);
 }
 
-void KACLListViewItem::togglePerm( acl_perm_t perm )
+void KACLListViewItem::togglePerm(acl_perm_t perm)
 {
     value ^= perm; // Toggle the perm
-    if ( type == KACLListView::Mask && !isDefault ) {
-        m_pACLListView->setMaskPermissions( value );
+    if (type == KACLListView::Mask && !isDefault) {
+        m_pACLListView->setMaskPermissions(value);
     }
     calcEffectiveRights();
     updatePermPixmaps();
@@ -378,24 +394,24 @@ void KACLListViewItem::togglePerm( acl_perm_t perm )
 
 
 
-EditACLEntryDialog::EditACLEntryDialog( KACLListView *listView, KACLListViewItem *item,
-                                        const QStringList &users,
-                                        const QStringList &groups,
-                                        const QStringList &defaultUsers,
-                                        const QStringList &defaultGroups,
-                                        int allowedTypes, int allowedDefaultTypes,
-                                        bool allowDefaults )
-      : KDialog( listView ),
-        m_listView( listView ), m_item( item ), m_users( users ), m_groups( groups ),
-        m_defaultUsers( defaultUsers ), m_defaultGroups( defaultGroups ),
-        m_allowedTypes( allowedTypes ), m_allowedDefaultTypes( allowedDefaultTypes ),
-        m_defaultCB( 0 )
+EditACLEntryDialog::EditACLEntryDialog(KACLListView *listView, KACLListViewItem *item,
+                                       const QStringList &users,
+                                       const QStringList &groups,
+                                       const QStringList &defaultUsers,
+                                       const QStringList &defaultGroups,
+                                       int allowedTypes, int allowedDefaultTypes,
+                                       bool allowDefaults)
+      : KDialog(listView),
+        m_listView(listView), m_item(item), m_users(users), m_groups(groups),
+        m_defaultUsers(defaultUsers), m_defaultGroups(defaultGroups),
+        m_allowedTypes(allowedTypes), m_allowedDefaultTypes(allowedDefaultTypes),
+        m_defaultCB(0)
 {
-    setObjectName( "edit_entry_dialog" );
-    setModal( true );
-    setCaption( i18n( "Edit ACL Entry" ) );
-    setButtons( KDialog::Ok | KDialog::Cancel );
-    setDefaultButton( KDialog::Ok );
+    setObjectName("edit_entry_dialog");
+    setModal(true);
+    setCaption(i18n("Edit ACL Entry"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    setDefaultButton(KDialog::Ok);
 
     QWidget *page = new QWidget(  this );
     setMainWidget( page );
