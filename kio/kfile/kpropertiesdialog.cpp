@@ -691,9 +691,10 @@ KFilePropsPlugin::KFilePropsPlugin(KPropertiesDialog *props)
     QString iconStr = KMimeType::iconNameForUrl(url, mode);
     QString directory = properties->kurl().directory();
     QString protocol = properties->kurl().protocol();
+    const QString desktopPath = KGlobalSettings::desktopPath();
     d->bKDesktopMode = (
-        protocol == QLatin1String("desktop") ||
-        properties->currentDir().protocol() == QLatin1String("desktop")
+        properties->kurl() == desktopPath ||
+        properties->currentDir() == desktopPath
     );
     QString mimeComment = item.mimeComment();
     d->mimeType = item.mimetype();
@@ -3018,9 +3019,10 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
 
     properties->addPage(d->m_frame, i18n("&Application"));
 
+    const QString desktopPath = KGlobalSettings::desktopPath();
     bool bKDesktopMode = (
-        properties->kurl().protocol() == QLatin1String("desktop") ||
-        properties->currentDir().protocol() == QLatin1String("desktop")
+        properties->kurl() == desktopPath ||
+        properties->currentDir() == desktopPath
     );
 
     if (bKDesktopMode) {
