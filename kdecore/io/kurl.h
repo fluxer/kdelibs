@@ -423,24 +423,6 @@ public:
   void adjustPath(AdjustPathOption trailing);
 
   /**
-   * @param query This is considered to be encoded. This has a good reason:
-   * The query may contain the 0 character.
-   *
-   * The query should start with a '?'. If it doesn't '?' is prepended.
-   */
-  void setQuery( const QString& query );
-
-  /**
-   * Returns the query of the URL.
-   * The query may contain the 0 character.
-   * If a query is present it always starts with a '?'.
-   * A single '?' means an empty query.
-   * An empty string means no query.
-   * @return The encoded query, or QString() if there is none.
-   */
-  QString query() const;
-
-  /**
    * Checks whether the file is local.
    * @return true if the file is a plain local file (i.e. uses the file protocol
    *   and no hostname, or the local hostname).
@@ -813,8 +795,6 @@ public:
   inline QString queryItem(const QString &item) const { return queryItemValue(item); }
 
 private:
-  void _setQuery( const QString& query );
-  void _setEncodedUrl(const QByteArray& url);
   QString toString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
   operator QString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
 };

@@ -353,7 +353,7 @@ KUrl::KUrl( const QString &str )
     if ( str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~') )
       setPath( str );
     else {
-      _setEncodedUrl( str.toUtf8() );
+      setUrl( str );
     }
   }
 }
@@ -365,7 +365,7 @@ KUrl::KUrl( const char * str )
     if ( str[0] == '/' || str[0] == '~' )
       setPath( QString::fromUtf8( str ) );
     else
-      _setEncodedUrl( str );
+      setUrl( QString::fromUtf8(str), QUrl::TolerantMode );
   }
 }
 
@@ -376,7 +376,7 @@ KUrl::KUrl( const QByteArray& str )
     if ( str[0] == '/' || str[0] == '~' )
       setPath( QString::fromUtf8( str ) );
     else
-      _setEncodedUrl( str );
+      setUrl( QString::fromUtf8(str.constData(), str.size()), QUrl::TolerantMode );
   }
 }
 
@@ -425,7 +425,7 @@ KUrl::KUrl( const KUrl& _u, const QString& _rel_url )
   {
     *this = _u;
     setFragment( QString() );
-    setEncodedQuery( QByteArray() );
+    setQuery( QString() );
     QString strPath = path();
     if ( rUrl[0] == QLatin1Char('/') )
     {
@@ -518,7 +518,7 @@ bool KUrl::equals( const KUrl &_u, const EqualsOptions& options ) const
 
     if ( scheme() == _u.scheme() &&
          authority() == _u.authority() && // user+pass+host+port
-         encodedQuery() == _u.encodedQuery() &&
+         query() == _u.query() &&
          (fragment() == _u.fragment() || options & CompareWithoutFragment )    )
       return true;
 
@@ -757,7 +757,7 @@ QString KUrl::prettyUrl( AdjustPathOption trailing ) const
 
   if (hasQuery()) {
     result += QLatin1Char('?');
-    result += QString::fromLatin1(encodedQuery());
+    result += query();
   }
 
   if (hasFragment()) {
@@ -770,7 +770,7 @@ QString KUrl::prettyUrl( AdjustPathOption trailing ) const
 
 QString KUrl::pathOrUrl(AdjustPathOption trailing) const
 {
-  if ( isLocalFile() && fragment().isNull() && encodedQuery().isNull() ) {
+  if ( isLocalFile() && fragment().isNull() && !hasQuery() ) {
     return toLocalFile(trailing);
   } else {
     return prettyUrl(trailing);
@@ -919,7 +919,7 @@ bool KUrl::cd( const QString& _dir )
     //m_strPath_encoded.clear();
     setPath( _dir );
     setFragment( QString() );
-    setEncodedQuery( QByteArray() );
+    setQuery( QString() );
     return true;
   }
 
@@ -932,7 +932,7 @@ bool KUrl::cd( const QString& _dir )
     strPath += _dir.right( strPath.length() - 1 );
     setPath( strPath );
     setFragment( QString() );
-    setEncodedQuery( QByteArray() );
+    setQuery( QString() );
     return true;
   }
 
@@ -947,7 +947,7 @@ bool KUrl::cd( const QString& _dir )
   setPath( p );
 
   setFragment( QString() );
-  setEncodedQuery( QByteArray() );
+  setQuery( QString() );
 
   return true;
 }
@@ -957,10 +957,10 @@ KUrl KUrl::upUrl( ) const
   if (!isValid() || isRelative())
     return KUrl();
 
-  if (!encodedQuery().isEmpty())
+  if (hasQuery())
   {
      KUrl u(*this);
-     u.setEncodedQuery(QByteArray());
+     u.setQuery(QString());
      return u;
   }
 
@@ -976,42 +976,6 @@ void KUrl::setDirectory( const QString &dir)
   else
      setPath(dir + QLatin1Char('/'));
 }
-
-void KUrl::setQuery( const QString &_txt )
-{
-  if (!_txt.isEmpty() && _txt[0] == QLatin1Char('?'))
-    _setQuery( _txt.length() > 1 ? _txt.mid(1) : QString::fromLatin1("") /*empty, not null*/ );
-  else
-    _setQuery( _txt );
-}
-
-void KUrl::_setQuery( const QString& query )
-{
-    if ( query.isNull() ) {
-        setEncodedQuery( QByteArray() );
-    } else if ( query.isEmpty() ) {
-        setEncodedQuery("");
-    } else {
-        setEncodedQuery( query.toLatin1() ); // already percent-escaped, so toLatin1 is ok
-    }
-}
-
-QString KUrl::query() const
-{
-  if (!hasQuery()) {
-    return QString();
-  }
-  return QString(QLatin1Char('?')) + QString::fromLatin1(encodedQuery());
-}
-
-void KUrl::_setEncodedUrl(const QByteArray& url)
-{
-  setEncodedUrl(url, QUrl::TolerantMode);
-  if (!isValid()) // see unit tests referring to N183630/task 183874
-    setUrl(QString::fromUtf8(url), QUrl::TolerantMode);
-}
-
-
 
 static QString _relativePath(const QString &base_dir, const QString &path, bool &isParent)
 {
