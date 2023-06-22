@@ -517,58 +517,11 @@ void KUrlTest::testURLsWithoutPath()
 
 void KUrlTest::testPathAndQuery()
 {
-#if 0
-  // this KDE3 test fails, but Tobias Anton didn't say where it came from, and Andreas Hanssen (TT) says:
-  // "I can't see any reason to support this; it looks like a junk artifact from older days.
-  // Everything after # is the fragment. Parsing what comes after # is broken; tolerant or not."
-  KUrl tobi0("http://some.host.net/path/to/file#fragmentPrecedes?theQuery");
-  QCOMPARE( tobi0.ref(), QString("fragmentPrecedes") );
-  QCOMPARE( tobi0.query(), QString("?theQuery") );
-#else
   // So we treat it as part of the fragment
   KUrl tobi0("http://some.host.net/path/to/file#foo?bar");
   QCOMPARE( tobi0.ref(), QString("foo?bar") );
   QCOMPARE( tobi0.query(), QString() );
   QCOMPARE( tobi0.prettyUrl(), QString("http://some.host.net/path/to/file#foo?bar") );
-#endif
-
-  KUrl tobi1( "http://host.net/path?myfirstquery#andsomeReference" );
-  tobi1.setEncodedPathAndQuery("another/path/?another&query");
-  QCOMPARE( tobi1.query(), QString("?another&query") );
-  QCOMPARE( tobi1.path(), QString("another/path/") ); // with trailing slash
-  QCOMPARE( tobi1.encodedPathAndQuery(), QString( "another/path/?another&query" ) );
-  tobi1.setEncodedPathAndQuery("another/path?another&query");
-  QCOMPARE( tobi1.query(), QString("?another&query") );
-  QCOMPARE( tobi1.path(), QString("another/path") ); // without trailing slash
-  QCOMPARE( tobi1.encodedPathAndQuery(), QString( "another/path?another&query" ) );
-  tobi1.setEncodedPathAndQuery("and%20another%2Bpath%2E?bug=%2B258301&query%2Bword");
-  QCOMPARE( tobi1.query(), QString("?bug=%2B258301&query%2Bword") ); // encoded
-  QCOMPARE( tobi1.queryItem("bug"), QString("+258301") ); // decoded
-  QCOMPARE( tobi1.path(), QString("and another+path.") ); // decoded
-  QCOMPARE( tobi1.encodedPath().constData(), "and%20another+path." ); // from QUrl. It only encodes the space.
-  QCOMPARE( tobi1.encodedPathAndQuery(), QString( "and%20another+path.?bug=%2B258301&query%2Bword" ) );
-
-  tobi1 = "http://host.net/path/#no-query";
-  QCOMPARE( tobi1.encodedPathAndQuery(), QString( "/path/" ) );
-
-  KUrl kde( "http://www.kde.org" );
-  QCOMPARE( kde.encodedPathAndQuery(), QString( "" ) );
-  QCOMPARE( kde.encodedPathAndQuery( KUrl::LeaveTrailingSlash, KUrl::AvoidEmptyPath ), QString( "/" ) );
-
-  KUrl theKow( "http://www.google.de/search?q=frerich&hlx=xx&hl=de&empty=&lr=lang+de&test=%2B%20%3A%25" );
-  QCOMPARE( theKow.encodedPathAndQuery(), QString( "/search?q=frerich&hlx=xx&hl=de&empty=&lr=lang+de&test=%2B%20%3A%25" ) );
-
-  KUrl uloc( "file:///home/dfaure/konqtests/Mat%C3%A9riel" );
-  QCOMPARE( uloc.encodedPathAndQuery(), QString( "/home/dfaure/konqtests/Mat%C3%A9riel" ) );
-
-  KUrl urlWithAccent( "file:///home/dfaure/konqtests/Matériel" );
-  QCOMPARE(urlWithAccent.encodedPathAndQuery(), QString("/home/dfaure/konqtests/Mat%C3%A9riel"));
-
-  KUrl urlWithUnicodeChar(QString::fromUtf8("file:///home/dfaure/konqtests/Matériel"));
-  QCOMPARE(urlWithUnicodeChar.encodedPathAndQuery(), QString("/home/dfaure/konqtests/Mat%C3%A9riel"));
-
-  KUrl maelcum(QString::fromUtf8("http://a.b.c/äöu"));
-  QCOMPARE(maelcum.encodedPathAndQuery(), QString("/%C3%A4%C3%B6u"));
 
   KUrl gof("file:%2Ftmp%2Fkde-ogoffart%2Fkmail"); // weird URL, but well ;)
   QCOMPARE(gof.path(), QString("/tmp/kde-ogoffart/kmail"));

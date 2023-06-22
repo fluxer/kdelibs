@@ -423,49 +423,6 @@ public:
   void adjustPath(AdjustPathOption trailing);
 
   /**
-   * This is useful for HTTP. It looks first for '?' and decodes then.
-   * The encoded path is the concatenation of the current path and the query.
-   * @param _txt the new path and query.
-   */
-  void setEncodedPathAndQuery( const QString& _txt );
-
-#if 0
-  /**
-   * Sets the (already encoded) path
-   * @param _txt the new path
-   * @see QTextCodec::mibEnum()
-   */
-  void setEncodedPath(const QString& _txt );
-#endif
-
-  /**
-   * Option to be used in encodedPathAndQuery
-   **/
-  enum EncodedPathAndQueryOption
-  {
-    /**
-     * Permit empty path (default)
-     */
-    PermitEmptyPath=0x00,
-    /**
-     * If set to true then an empty path is substituted by "/"
-     * (this is the opposite of PermitEmptyPath)
-     */
-    AvoidEmptyPath=0x01
-  };
-  Q_DECLARE_FLAGS( EncodedPathAndQueryOptions, EncodedPathAndQueryOption)
-
-  /**
-   * Returns the encoded path and the query.
-   *
-   * @param trailing  add or remove a trailing '/', see adjustPath
-   * @param options a set of flags from EncodedPathAndQueryOption
-   * @return The concatenation of the encoded path , '?' and the encoded query.
-   *
-   */
-  QString encodedPathAndQuery( AdjustPathOption trailing = LeaveTrailingSlash, const EncodedPathAndQueryOptions &options = PermitEmptyPath ) const;
-
-  /**
    * @param query This is considered to be encoded. This has a good reason:
    * The query may contain the 0 character.
    *
@@ -482,28 +439,6 @@ public:
    * @return The encoded query, or QString() if there is none.
    */
   QString query() const;
-
-  /**
-   * Returns the @em encoded reference (or "fragment") of the URL (everything after '#').
-   * @return the encoded reference, or QString("") if the reference part is empty,
-   *   or QString() if the URL has no reference.
-   */
-  QString ref() const;
-
-  /**
-   * Sets the reference/fragment part (everything after '#').
-   * If you have an encoded fragment already (as a QByteArray), you can call setEncodedFragment directly.
-   * @param fragment the @em encoded reference (or QString() to remove it).
-   */
-  void setRef( const QString& fragment );
-
-  /**
-   * Checks whether the URL has a reference/fragment part.
-   * @return true if the URL has a reference part. In a URL like
-   *         http://www.kde.org/kdebase.tar#tar:/README it would
-   *         return true, too.
-   */
-  bool hasRef() const;
 
   /**
    * Checks whether the file is local.
@@ -541,54 +476,6 @@ public:
    * @param txt The text to add. It is considered to be decoded.
    */
   void addPath( const QString& txt );
-
-  /**
-   * Options for queryItems. Currently, only one option is
-   * defined:
-   *
-   * @param CaseInsensitiveKeys normalize query keys to lowercase.
-   **/
-  enum QueryItemsOption { CaseInsensitiveKeys = 1 };
-  Q_DECLARE_FLAGS(QueryItemsOptions,QueryItemsOption)
-
-  /**
-   * Returns the list of query items as a map mapping keys to values.
-   *
-   * This does the same as QUrl::queryItems(), except that it
-   * decodes "+" into " " in the value, supports CaseInsensitiveKeys,
-   * and returns a different data type.
-   *
-   * @param options any of QueryItemsOption <em>or</em>ed together.
-   *
-   * @return the map of query items or the empty map if the url has no
-   * query items.
-   */
-  QMap< QString, QString > queryItems( const QueryItemsOptions& options = 0 ) const;
-  // #### TODO port the above queryItems to look more like QUrl's
-  //using QUrl::queryItems; // temporary
-
-  /**
-   * Returns the value of a certain query item.
-   *
-   * This does the same as QUrl::queryItemValue(), except that it
-   * decodes "+" into " " in the value.
-   *
-   * @param item Item whose value we want
-   *
-   * @return the value of the given query item name or QString() if the
-   * specified item does not exist.
-   */
-  QString queryItem(const QString &item) const;
-
-  /**
-   * Add an additional query item.
-   * To replace an existing query item, the item should first be
-   * removed with removeQueryItem()
-   *
-   * @param _item Name of item to add
-   * @param _value Value of item to add
-   */
-  void addQueryItem( const QString& _item, const QString& _value );
 
 
   /**
@@ -920,6 +807,10 @@ public:
   inline bool hasPass() const { return !password().isEmpty(); };
   inline bool hasHost() const { return !host().isEmpty(); };
   inline bool hasPath() const { return !path().isEmpty(); };
+  inline QString ref() const { return fragment(); }
+  inline void setRef( const QString &ref) { setFragment(ref); }
+  inline bool hasRef() const { return hasFragment(); }
+  inline QString queryItem(const QString &item) const { return queryItemValue(item); }
 
 private:
   void _setQuery( const QString& query );
@@ -928,9 +819,7 @@ private:
   operator QString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::EncodedPathAndQueryOptions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::CleanPathOptions)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::QueryItemsOptions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::EqualsOptions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::DirectoryOptions)
 

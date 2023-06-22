@@ -606,62 +606,9 @@ static QString trailingSlash( KUrl::AdjustPathOption trailing, const QString &pa
 
 void KUrl::adjustPath( AdjustPathOption trailing )
 {
-#if 0
-  if (!m_strPath_encoded.isEmpty())
-  {
-     m_strPath_encoded = trailingSlash( _trailing, m_strPath_encoded );
-  }
-#endif
   const QString newPath = trailingSlash( trailing, path() );
   if ( path() != newPath )
       setPath( newPath );
-}
-
-
-QString KUrl::encodedPathAndQuery( AdjustPathOption trailing , const EncodedPathAndQueryOptions &options) const
-{
-    QString encodedPath;
-    encodedPath = trailingSlash(trailing, QString::fromLatin1(QUrl::encodedPath()));
-
-    if ((options & AvoidEmptyPath) && encodedPath.isEmpty()) {
-        encodedPath.append(QLatin1Char('/'));
-    }
-
-    if (hasQuery()) {
-        return encodedPath + QLatin1Char('?') + QString::fromLatin1(encodedQuery());
-    } else {
-        return encodedPath;
-    }
-}
-
-#if 0
-void KUrl::setEncodedPath( const QString& _txt, int encoding_hint )
-{
-  m_strPath_encoded = _txt;
-
-  decode( m_strPath_encoded, m_strPath, m_strPath_encoded, encoding_hint );
-  // Throw away encoding for local files, makes file-operations faster.
-  if (m_strProtocol == "file")
-     m_strPath_encoded.clear();
-
-  if ( m_iUriMode == Auto )
-    m_iUriMode = URL;
-}
-#endif
-
-void KUrl::setEncodedPathAndQuery( const QString& _txt )
-{
-  const int pos = _txt.indexOf(QLatin1Char('?'));
-  if ( pos == -1 )
-  {
-    setPath( QUrl::fromPercentEncoding( _txt.toLatin1() ) );
-    setEncodedQuery( QByteArray() );
-  }
-  else
-  {
-    setPath( QUrl::fromPercentEncoding(_txt.toLatin1().left(pos)) );
-    _setQuery( _txt.right( _txt.length() - pos - 1 ) );
-  }
 }
 
 QString KUrl::path( AdjustPathOption trailing ) const
@@ -699,51 +646,14 @@ void KUrl::setFileEncoding(const QString &encoding)
   if (!isLocalFile())
      return;
 
-  QString q = query();
-
-  if (!q.isEmpty() && q[0] == QLatin1Char('?'))
-     q = q.mid(1);
-
-  QStringList args = q.split(QLatin1Char('&'), QString::SkipEmptyParts);
-  for(QStringList::Iterator it = args.begin();
-      it != args.end();)
-  {
-      QString s = QUrl::fromPercentEncoding( (*it).toLatin1() );
-      if (s.startsWith(QLatin1String("charset=")))
-         it = args.erase(it);
-      else
-         ++it;
-  }
-  if (!encoding.isEmpty())
-      args.append(QLatin1String("charset=") + QString::fromLatin1(QUrl::toPercentEncoding(encoding)));
-
-  if (args.isEmpty())
-     _setQuery(QString());
-  else
-     _setQuery(args.join(QString(QLatin1Char('&'))));
+  addQueryItem(QLatin1String("charset"), encoding);
 }
 
 QString KUrl::fileEncoding() const
 {
   if (!isLocalFile())
      return QString();
-
-  QString q = query();
-
-  if (q.isEmpty())
-     return QString();
-
-  if (q[0] == QLatin1Char('?'))
-     q = q.mid(1);
-
-  const QStringList args = q.split(QLatin1Char('&'), QString::SkipEmptyParts);
-  foreach(const QString &it, args)
-  {
-      QString s = QUrl::fromPercentEncoding(it.toLatin1());
-      if (s.startsWith(QLatin1String("charset=")))
-         return s.mid(8);
-  }
-  return QString();
+  return queryItem(QLatin1String("charset"));
 }
 
 QString KUrl::url( AdjustPathOption trailing ) const
@@ -766,9 +676,9 @@ QString KUrl::url( AdjustPathOption trailing ) const
           if (path() != QLatin1String("/")) {
               QUrl fixedUrl = *this;
               fixedUrl.setPath(cleanedPath);
-              return QLatin1String(fixedUrl.toEncoded(None));
+              return QString::fromLatin1(fixedUrl.toEncoded(None));
           }
-          return QLatin1String(toEncoded(None));
+          return QString::fromLatin1(toEncoded(None));
       }
   }
   return QString::fromLatin1(toEncoded(trailing == RemoveTrailingSlash ? StripTrailingSlash : None));
@@ -858,17 +768,6 @@ QString KUrl::prettyUrl( AdjustPathOption trailing ) const
   return result;
 }
 
-#if 0
-QString KUrl::prettyUrl( int _trailing, AdjustementFlags _flags) const
-{
-  QString u = prettyUrl(_trailing);
-  if (_flags & StripFileProtocol && u.startsWith("file://")) {
-    u.remove(0, 7);
-  }
-  return u;
-}
-#endif
-
 QString KUrl::pathOrUrl(AdjustPathOption trailing) const
 {
   if ( isLocalFile() && fragment().isNull() && encodedQuery().isNull() ) {
@@ -926,17 +825,6 @@ QString KUrl::fileName( const DirectoryOptions& options ) const
 
   // Skip last n slashes
   int n = 1;
-#if 0
-  if (!m_strPath_encoded.isEmpty())
-  {
-     // This is hairy, we need the last unencoded slash.
-     // Count in the encoded string how many encoded slashes follow the last
-     // unencoded one.
-     int i = m_strPath_encoded.lastIndexOf( QLatin1Char('/'), len - 1 );
-     QString fileName_encoded = m_strPath_encoded.mid(i+1);
-     n += fileName_encoded.count("%2f", Qt::CaseInsensitive);
-  }
-#endif
   int i = len;
   do {
     i = path.lastIndexOf( QLatin1Char('/'), i - 1 );
@@ -1219,117 +1107,12 @@ void KUrl::setPath( const QString& _path )
     QUrl::setPath( path );
 }
 
-#if 0 // this would be if we didn't decode '+' into ' '
-QMap< QString, QString > KUrl::queryItems( int options ) const {
-  QMap< QString, QString > result;
-  const QList<QPair<QString, QString> > items = QUrl::queryItems();
-  QPair<QString, QString> item;
-  Q_FOREACH( item, items ) {
-      result.insert( options & CaseInsensitiveKeys ? item.first.toLower() : item.first, item.second );
-  }
-  return result;
-}
-#endif
-
-QMap< QString, QString > KUrl::queryItems( const QueryItemsOptions &options ) const
-{
-  const QString strQueryEncoded = QString::fromLatin1(encodedQuery());
-  if ( strQueryEncoded.isEmpty() )
-    return QMap<QString,QString>();
-
-  QMap< QString, QString > result;
-  const QStringList items = strQueryEncoded.split( QLatin1Char('&'), QString::SkipEmptyParts );
-  foreach(const QString &it, items) {
-    const int equal_pos = it.indexOf(QLatin1Char('='));
-    if ( equal_pos > 0 ) { // = is not the first char...
-      QString name = it.left( equal_pos );
-      if ( options & CaseInsensitiveKeys )
-	name = name.toLower();
-      QString value = it.mid( equal_pos + 1 );
-      if ( value.isEmpty() )
-        result.insert( name, QString::fromLatin1("") );
-      else {
-	// ### why is decoding name not necessary?
-	value.replace( QLatin1Char('+'), QLatin1Char(' ') ); // + in queries means space
-	result.insert( name, QUrl::fromPercentEncoding( value.toLatin1() ) );
-      }
-    } else if ( equal_pos < 0 ) { // no =
-      QString name = it;
-      if ( options & CaseInsensitiveKeys )
-	name = name.toLower();
-      result.insert( name, QString() );
-    }
-  }
-
-  return result;
-}
-
-QString KUrl::queryItem( const QString& _item ) const
-{
-  const QString strQueryEncoded = QString::fromLatin1(encodedQuery());
-  const QString item = _item + QLatin1Char('=');
-  if ( strQueryEncoded.length() <= 1 )
-    return QString();
-
-  const QStringList items = strQueryEncoded.split( QString(QLatin1Char('&')), QString::SkipEmptyParts );
-  const int _len = item.length();
-  for ( QStringList::ConstIterator it = items.begin(); it != items.end(); ++it )
-  {
-    if ( (*it).startsWith( item ) )
-    {
-      if ( (*it).length() > _len )
-      {
-        QString str = (*it).mid( _len );
-        str.replace( QLatin1Char('+'), QLatin1Char(' ') ); // + in queries means space.
-        return QUrl::fromPercentEncoding( str.toLatin1() );
-      }
-      else // empty value
-        return QString::fromLatin1("");
-    }
-  }
-
-  return QString();
-}
-
-void KUrl::addQueryItem( const QString& _item, const QString& _value )
-{
-  QString item = _item + QLatin1Char('=');
-  QString value = QString::fromLatin1(QUrl::toPercentEncoding(_value));
-
-  QString strQueryEncoded = QString::fromLatin1(encodedQuery());
-  if (!strQueryEncoded.isEmpty())
-     strQueryEncoded += QLatin1Char('&');
-  strQueryEncoded += item + value;
-  setEncodedQuery( strQueryEncoded.toLatin1() );
-}
-
 void KUrl::populateMimeData( QMimeData* mimeData,
                              const MetaDataMap& metaData,
                              MimeDataFlags flags ) const
 {
   KUrl::List lst( *this );
   lst.populateMimeData( mimeData, metaData, flags );
-}
-
-bool KUrl::hasRef() const
-{
-  return hasFragment();
-}
-
-void KUrl::setRef( const QString& fragment )
-{
-  if ( fragment.isEmpty() ) // empty or null
-    setFragment( fragment );
-  else
-    setFragment( QUrl::fromPercentEncoding( fragment.toLatin1() ) );
-}
-
-QString KUrl::ref() const
-{
-  if ( !hasFragment() )
-    return QString();
-  else
-    return QString::fromLatin1( encodedFragment() );
 }
 
 bool KUrl::isParentOf( const KUrl& u ) const
