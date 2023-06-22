@@ -177,6 +177,9 @@ void KEMailDialog::showEvent(QShowEvent *event)
     KDialog::showEvent(event);
     qApp->processEvents();
 
+    setButtonText(KDialog::Ok, i18nc("@action:button", "Send"));
+    setButtonIcon(KDialog::Ok, KIcon("mail-send"));
+
     // NOTE: delayed until show so that startup notification is done, cursor is not grabbed and
     // the password dialog is interactable via mouse
     const bool isuserempty = d->ui.userlineedit->text().isEmpty();
