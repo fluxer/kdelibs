@@ -29,5 +29,4 @@ private Q_SLOTS:
     void testMimeDataBookmarkList();
 };
 
-
-#endif
+#endif // KBOOKMARKTEST_H
