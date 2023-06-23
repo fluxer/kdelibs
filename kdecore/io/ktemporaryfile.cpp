@@ -66,6 +66,7 @@ QString KTemporaryFile::filePath(const QString &pathtemplate)
         QString result = KGlobal::dirs()->saveLocation("tmp");
         result.append(KGlobal::mainComponent().componentName());
         result.append(underscorechar);
+        result.reserve(result.size() + 10);
         for (ushort i = 0; i < 10; i++) {
             result.append(QChar::fromLatin1(tmpnamechars[KRandom::randomMax(52)]));
         }
