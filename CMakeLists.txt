@@ -69,6 +69,9 @@ set(KDE4_DEFINITIONS
     -DQT_DEPRECATED_WARNINGS
 )
 
+include(KDE4Defaults)
+include(KDE4Macros)
+
 configure_file(
     "${CMAKE_SOURCE_DIR}/cmake/modules/kde4_exec.sh.in"
     "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"
@@ -81,9 +84,6 @@ file(
 )
 
 ################# now find all used packages #################
-
-include(KDE4Defaults)
-include(KDE4Macros)
 
 if(ENABLE_TESTING)
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
