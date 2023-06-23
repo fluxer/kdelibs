@@ -713,7 +713,7 @@ void KUrlTest::testIsRelative()
   QVERIFY( !KUrl::isRelativeUrl("javascript:doSomething()") );
   QVERIFY( !KUrl::isRelativeUrl("file:///blah") );
   // arguable, but necessary for KUrl( baseURL, "//www1.foo.bar" );
-  QVERIFY( KUrl::isRelativeUrl("/path") );
+  QVERIFY( KUrl::isRelativeUrl("/path") ); // FIXME: how is that relative?
   QVERIFY( KUrl::isRelativeUrl("something") );
 
   KUrl something("something");
