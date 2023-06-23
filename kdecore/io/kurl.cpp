@@ -392,9 +392,9 @@ KUrl::KUrl(const char *str)
 {
     if (str && str[0]) {
         if (str[0] == '/' || str[0] == '~') {
-            setPath(QString::fromUtf8(str));
+            setPath(QUrl::fromPercentEncoding(str));
         } else {
-            setUrl(QString::fromUtf8(str), QUrl::TolerantMode);
+            setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
             if (scheme().isEmpty() && qstrncmp(str, "file:/", 6) != 0) {
                 setScheme(QLatin1String("file"));
             }
@@ -407,9 +407,9 @@ KUrl::KUrl(const QByteArray &str)
 {
     if (!str.isEmpty()) {
         if (str[0] == '/' || str[0] == '~') {
-            setPath(QString::fromUtf8(str));
+            setPath(QUrl::fromPercentEncoding(str));
         } else {
-            setUrl(QString::fromUtf8(str.constData(), str.size()), QUrl::TolerantMode);
+            setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
             if (scheme().isEmpty() && !str.startsWith("file:/")) {
                 setScheme(QLatin1String("file"));
             }
@@ -603,19 +603,19 @@ QString KUrl::url(AdjustPathOption trailing) const
         // Let's hope this is fast, or not called often...
         QUrl newUrl(*this);
         newUrl.setPath(path() + QLatin1Char('/'));
-        return QString::fromLatin1(newUrl.toEncoded());
+        return QString::fromUtf8(newUrl.toEncoded());
     } else if (trailing == RemoveTrailingSlash) {
         const QString cleanedPath = trailingSlash(trailing, path());
         if (cleanedPath == QLatin1String("/")) {
             if (path() != QLatin1String("/")) {
                 QUrl fixedUrl = *this;
                 fixedUrl.setPath(cleanedPath);
-                return QString::fromLatin1(fixedUrl.toEncoded(None));
+                return QString::fromUtf8(fixedUrl.toEncoded(None));
             }
-            return QString::fromLatin1(toEncoded(None));
+            return QString::fromUtf8(toEncoded(None));
         }
     }
-    return QString::fromLatin1(toEncoded(trailing == RemoveTrailingSlash ? StripTrailingSlash : None));
+    return QString::fromUtf8(toEncoded(trailing == RemoveTrailingSlash ? StripTrailingSlash : None));
 }
 
 QString KUrl::prettyUrl(AdjustPathOption trailing) const
@@ -821,15 +821,11 @@ QString KUrl::directory(const DirectoryOptions &options) const
 
 KUrl KUrl::upUrl() const
 {
-#if 0
-   return resolved(QUrl(QString::fromLatin1("..")));
-#else
     KUrl u(*this);
     QDir d(QUrl::path());
     d.cdUp();
     u.setPath(d.path());
     return u;
-#endif
 }
 
 void KUrl::setDirectory(const QString &dir)
@@ -872,7 +868,7 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
         bool dummy;
         QString basePath = base_url.directory(KUrl::ObeyTrailingSlash);
         static const char s_pathExcludeChars[] = "!$&'()*+,;=:@/";
-        relURL = QString::fromLatin1(QUrl::toPercentEncoding(_relativePath(basePath, url.path(), dummy), s_pathExcludeChars));
+        relURL = QString::fromUtf8(QUrl::toPercentEncoding(_relativePath(basePath, url.path(), dummy), s_pathExcludeChars));
         relURL += url.query();
     }
 
