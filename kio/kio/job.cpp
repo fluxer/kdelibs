@@ -1508,8 +1508,8 @@ void FileCopyJobPrivate::slotStart()
       if ((m_src.protocol() == m_dest.protocol()) &&
           (m_src.host() == m_dest.host()) &&
           (m_src.port() == m_dest.port()) &&
-          (m_src.user() == m_dest.user()) &&
-          (m_src.pass() == m_dest.pass()))
+          (m_src.userName() == m_dest.userName()) &&
+          (m_src.password() == m_dest.password()))
       {
          startRenameJob(m_src);
          return;
@@ -1534,8 +1534,8 @@ void FileCopyJobPrivate::startBestCopyMethod()
    if ((m_src.protocol() == m_dest.protocol()) &&
        (m_src.host() == m_dest.host()) &&
        (m_src.port() == m_dest.port()) &&
-       (m_src.user() == m_dest.user()) &&
-       (m_src.pass() == m_dest.pass()))
+       (m_src.userName() == m_dest.userName()) &&
+       (m_src.password() == m_dest.password()))
    {
       startCopyJob();
    }

@@ -67,10 +67,10 @@ int main(int argc, char **argv)
             return 2;
         }
 
-    if (!url.user().isEmpty())
+    if (!url.userName().isEmpty())
     {
         cmd << "-l";
-        cmd << url.user();
+        cmd << url.userName();
     }
 
         QString host;

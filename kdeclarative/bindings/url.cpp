@@ -47,7 +47,7 @@ static QScriptValue protocol(QScriptContext *ctx, QScriptEngine *eng)
     DECLARE_SELF(KUrl, protocol);
     if (ctx->argumentCount()) {
         QString v = ctx->argument(0).toString();
-        self->setProtocol(v);
+        self->setScheme(v);
     }
 
     return QScriptValue(eng, self->protocol());
@@ -80,10 +80,10 @@ static QScriptValue user(QScriptContext *ctx, QScriptEngine *eng)
     DECLARE_SELF(KUrl, user);
     if (ctx->argumentCount()) {
         QString v = ctx->argument(0).toString();
-        self->setUser(v);
+        self->setUserName(v);
     }
 
-    return QScriptValue(eng, self->user());
+    return QScriptValue(eng, self->userName());
 }
 
 static QScriptValue password(QScriptContext *ctx, QScriptEngine *eng)

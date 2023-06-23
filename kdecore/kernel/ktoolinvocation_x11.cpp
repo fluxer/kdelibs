@@ -160,7 +160,7 @@ void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
     //url.setQuery( qry.join( "&" ) );
 
     if ( ! (to.isEmpty() && (!url.hasQuery())) )
-        url.setProtocol(QString::fromLatin1("mailto"));
+        url.setScheme(QString::fromLatin1("mailto"));
 
     QHash<QChar, QString> keyMap;
     keyMap.insert(QLatin1Char('t'), to);

@@ -53,7 +53,7 @@ static KUrl cleanupUrl(const KUrl& url) {
     u.cleanPath(); // remove double slashes in the path, simplify "foo/." to "foo/", etc.
     u.adjustPath(KUrl::RemoveTrailingSlash); // KDirLister does this too, so we remove the slash before comparing with the root node url.
     u.setQuery(QString());
-    u.setRef(QString());
+    u.setFragment(QString());
     return u;
 }
 
@@ -173,9 +173,9 @@ public:
          * so we have to remove the query in both to be able to compare the URLs
          */
         KUrl url(node == m_rootNode ? m_dirLister->url() : node->item().url());
-        if (url.hasQuery() || url.hasRef()) { // avoid detach if not necessary.
+        if (url.hasQuery() || url.hasFragment()) { // avoid detach if not necessary.
             url.setQuery(QString());
-            url.setRef(QString()); // kill ref (#171117)
+            url.setFragment(QString()); // kill fragment (#171117)
         }
         return url;
     }

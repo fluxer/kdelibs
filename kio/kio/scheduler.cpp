@@ -803,7 +803,7 @@ MetaData SchedulerPrivate::metaDataFor(const QString &protocol, const QStringLis
          configData.value("EnableAutoLogin").compare("true", Qt::CaseInsensitive) == 0 )
     {
         NetRC::AutoLogin l;
-        l.login = url.user();
+        l.login = url.userName();
         bool usern = (protocol == "ftp");
         if ( NetRC::self()->lookup( url, l, usern) )
         {
@@ -830,8 +830,8 @@ void SchedulerPrivate::setupSlave(KIO::SlaveInterface *slave, const KUrl &url, c
     if ( port == -1 ) // no port is -1 in QUrl, but in kde3 we used 0 and the kioslaves assume that.
         port = 0;
     const QString host = url.host();
-    const QString user = url.user();
-    const QString passwd = url.pass();
+    const QString user = url.userName();
+    const QString passwd = url.password();
 
     if (newSlave || slave->host() != host || slave->port() != port ||
         slave->user() != user || slave->passwd() != passwd) {

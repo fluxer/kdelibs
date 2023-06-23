@@ -641,11 +641,11 @@ QString KUrlCompletion::makeCompletion(const QString& text)
 
     d->compl_text = text;
 
-    // Set d->prepend to the original URL, with the filename [and ref/query] stripped.
+    // Set d->prepend to the original URL, with the filename [and fragment/query] stripped.
     // This is what gets prepended to the directory-listing matches.
     int toRemove = url.file().length() - url.kurl().query().length();
-    if (url.kurl().hasRef())
-        toRemove += url.kurl().ref().length() + 1;
+    if (url.kurl().hasFragment())
+        toRemove += url.kurl().fragment().length() + 1;
     d->prepend = text.left(text.length() - toRemove);
     d->complete_url = url.isURL();
 

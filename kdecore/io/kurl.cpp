@@ -155,7 +155,8 @@ bool KUrl::isRelativeUrl(const QString &_url)
 {
     int len = _url.length();
     if (!len) {
-        return true; // Very short relative URL.
+        // Very short relative URL.
+        return true;
     }
     const QChar *str = _url.unicode();
 
@@ -575,7 +576,7 @@ QString KUrl::fileEncoding() const
     if (!isLocalFile()) {
         return QString();
     }
-    return queryItem(QLatin1String("charset"));
+    return queryItemValue(QLatin1String("charset"));
 }
 
 QString KUrl::url(AdjustPathOption trailing) const
@@ -842,8 +843,8 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
     if ((url.protocol() != base_url.protocol()) ||
         (url.host() != base_url.host()) ||
         (url.port() && url.port() != base_url.port()) ||
-        (url.hasUser() && url.user() != base_url.user()) ||
-        (url.hasPass() && url.pass() != base_url.pass()))
+        (url.hasUser() && url.userName() != base_url.userName()) ||
+        (url.hasPass() && url.password() != base_url.password()))
     {
         return url.url();
     }
@@ -857,9 +858,9 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
         relURL += url.query();
     }
 
-    if (url.hasRef()) {
+    if (url.hasFragment()) {
         relURL += QLatin1Char('#');
-        relURL += url.ref();
+        relURL += url.fragment();
     }
 
     if (relURL.isEmpty()) {

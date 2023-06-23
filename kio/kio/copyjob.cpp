@@ -708,8 +708,8 @@ void CopyJobPrivate::statCurrentSrc()
                     (m_currentSrcURL.protocol() == info.uDest.protocol()) &&
                     (m_currentSrcURL.host() == info.uDest.host()) &&
                     (m_currentSrcURL.port() == info.uDest.port()) &&
-                    (m_currentSrcURL.user() == info.uDest.user()) &&
-                    (m_currentSrcURL.pass() == info.uDest.pass()) ) {
+                    (m_currentSrcURL.userName() == info.uDest.userName()) &&
+                    (m_currentSrcURL.password() == info.uDest.password()) ) {
                     // This is the case of creating a real symlink
                     info.uDest.addPath( m_currentSrcURL.fileName() );
                 } else {
@@ -745,8 +745,8 @@ void CopyJobPrivate::statCurrentSrc()
            if ( (m_currentSrcURL.protocol() == m_dest.protocol()) &&
               (m_currentSrcURL.host() == m_dest.host()) &&
               (m_currentSrcURL.port() == m_dest.port()) &&
-              (m_currentSrcURL.user() == m_dest.user()) &&
-              (m_currentSrcURL.pass() == m_dest.pass()) )
+              (m_currentSrcURL.userName() == m_dest.userName()) &&
+              (m_currentSrcURL.password() == m_dest.password()) )
            {
               startRenameJob( m_currentSrcURL );
               return;
@@ -1475,8 +1475,8 @@ KIO::Job* CopyJobPrivate::linkNextFile( const KUrl& uSource, const KUrl& uDest, 
         (uSource.protocol() == uDest.protocol()) &&
         (uSource.host() == uDest.host()) &&
         (uSource.port() == uDest.port()) &&
-        (uSource.user() == uDest.user()) &&
-        (uSource.pass() == uDest.pass()) )
+        (uSource.userName() == uDest.userName()) &&
+        (uSource.password() == uDest.password()) )
     {
         // This is the case of creating a real symlink
         KIO::SimpleJob *newJob = KIO::symlink( uSource.path(), uDest, flags|HideProgressInfo /*no GUI*/ );
@@ -1504,7 +1504,7 @@ KIO::Job* CopyJobPrivate::linkNextFile( const KUrl& uSource, const KUrl& uDest, 
             KDesktopFile desktopFile( path );
             KConfigGroup config = desktopFile.desktopGroup();
             KUrl url = uSource;
-            url.setPass( "" );
+            url.setPassword( "" );
             config.writePathEntry( "URL", url.url() );
             config.writeEntry( "Name", url.url() );
             config.writeEntry( "Type", QString::fromLatin1("Link") );
@@ -1593,8 +1593,8 @@ void CopyJobPrivate::copyNextFile()
                   (uSource.protocol() == uDest.protocol()) &&
                   (uSource.host() == uDest.host()) &&
                   (uSource.port() == uDest.port()) &&
-                  (uSource.user() == uDest.user()) &&
-                  (uSource.pass() == uDest.pass()))
+                  (uSource.userName() == uDest.userName()) &&
+                  (uSource.password() == uDest.password()))
             // Copying a symlink - only on the same protocol/host/etc. (#5601, downloading an FTP file through its link),
         {
             const JobFlags flags = bOverwrite ? Overwrite : DefaultFlags;

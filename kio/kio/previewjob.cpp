@@ -483,7 +483,7 @@ bool PreviewJobPrivate::statResultThumbnail()
 
     KUrl url = currentItem.item.mostLocalUrl();
     // Don't include the password if any
-    url.setPass(QString());
+    url.setPassword(QString());
     origName = url.url();
 
     // NOTE: make sure the algorithm and name match those used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
@@ -531,7 +531,7 @@ void PreviewJobPrivate::createThumbnail(const QString &pixPath)
     Q_Q(PreviewJob);
     state = PreviewJobPrivate::STATE_CREATETHUMB;
     KUrl thumbURL;
-    thumbURL.setProtocol("thumbnail");
+    thumbURL.setScheme("thumbnail");
     thumbURL.setPath(pixPath);
     KIO::TransferJob *job = KIO::get(thumbURL, NoReload, HideProgressInfo);
     q->addSubjob(job);
