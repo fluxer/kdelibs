@@ -25,6 +25,8 @@ class KUrlTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testcleanPath_data();
+    void testcleanPath();
     void testEquals_data();
     void testEquals();
     void testUriMode();

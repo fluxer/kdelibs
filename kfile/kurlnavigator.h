@@ -26,11 +26,11 @@
 #include <kfile_export.h>
 
 #include <kurl.h>
-#include <QtGui/QWidget>
+#include <QWidget>
+#include <QMouseEvent>
 
 class KFilePlacesModel;
 class KUrlComboBox;
-#include <QMouseEvent>
 
 /**
  * @brief Widget that allows to navigate through the paths of an URL.

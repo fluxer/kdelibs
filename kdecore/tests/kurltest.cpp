@@ -29,6 +29,35 @@ QTEST_KDEMAIN_CORE(KUrlTest)
 
 Q_DECLARE_METATYPE(KUrl::EqualsOptions);
 
+void KUrlTest::testcleanPath_data()
+{
+    QTest::addColumn<KUrl>("url" );
+    QTest::addColumn<KUrl>("url2");
+
+    QTest::newRow("local file 1")
+        << KUrl("file:///")
+        << KUrl("file:///");
+    QTest::newRow("local file 2")
+        << KUrl("file:///home/kde/")
+        << KUrl("file:///home/kde");
+    QTest::newRow("local file 3")
+        << KUrl("kde//")
+        << KUrl("kde");
+    QTest::newRow("ftp url - 3 trailing slashes")
+        << KUrl("ftp://ftp.kde.org///")
+        << KUrl("ftp://ftp.kde.org/");
+}
+
+void KUrlTest::testcleanPath()
+{
+    QFETCH(KUrl, url);
+    QFETCH(KUrl, url2);
+
+    KUrl copy(url);
+    copy.cleanPath();
+    QCOMPARE(copy, url2);
+}
+
 void KUrlTest::testEquals_data()
 {
     QTest::addColumn<KUrl>("url" );
@@ -46,13 +75,17 @@ void KUrlTest::testEquals_data()
         << KUrl("file:///home/kde")
         << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
         << true;
+    QTest::newRow("local file 3")
+        << KUrl("file:///home/kde//")
+        << KUrl("file:///home/kde")
+        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << true;
     QTest::newRow("ftp url - 3 trailing slashes")
         << KUrl("ftp://ftp.kde.org///")
         << KUrl("ftp://ftp.kde.org/")
         << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
         << true;
 }
-
 
 void KUrlTest::testEquals()
 {

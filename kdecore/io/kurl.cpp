@@ -379,6 +379,10 @@ KUrl::KUrl(const QString &str)
             setPath(str);
         } else {
             setUrl(str);
+            // do what KUrl::setPath() does - anything without scheme is a set to be a file
+            if (scheme().isEmpty() && !str.startsWith(QLatin1String("file:/"))) {
+                setScheme(QLatin1String("file"));
+            }
         }
     }
 }
@@ -391,6 +395,9 @@ KUrl::KUrl(const char *str)
             setPath(QString::fromUtf8(str));
         } else {
             setUrl(QString::fromUtf8(str), QUrl::TolerantMode);
+            if (scheme().isEmpty() && qstrncmp(str, "file:/", 6) != 0) {
+                setScheme(QLatin1String("file"));
+            }
         }
     }
 }
@@ -403,6 +410,9 @@ KUrl::KUrl(const QByteArray &str)
             setPath(QString::fromUtf8(str));
         } else {
             setUrl(QString::fromUtf8(str.constData(), str.size()), QUrl::TolerantMode);
+            if (scheme().isEmpty() && !str.startsWith("file:/")) {
+                setScheme(QLatin1String("file"));
+            }
         }
     }
 }
@@ -415,6 +425,9 @@ KUrl::KUrl(const KUrl &u)
 KUrl::KUrl(const QUrl &u)
     : QUrl(u)
 {
+    if (scheme().isEmpty() && !path().startsWith(QLatin1String("file:/"))) {
+        setScheme(QLatin1String("file"));
+    }
 }
 
 KUrl::KUrl(const KUrl &u, const QString &relurl)
@@ -591,7 +604,7 @@ QString KUrl::url(AdjustPathOption trailing) const
         QUrl newUrl(*this);
         newUrl.setPath(path() + QLatin1Char('/'));
         return QString::fromLatin1(newUrl.toEncoded());
-    } else if ( trailing == RemoveTrailingSlash) {
+    } else if (trailing == RemoveTrailingSlash) {
         const QString cleanedPath = trailingSlash(trailing, path());
         if (cleanedPath == QLatin1String("/")) {
             if (path() != QLatin1String("/")) {
