@@ -46,14 +46,14 @@ static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
 
 static QByteArray uriListData(const KUrl::List &urls)
 {
-    QByteArray uriListData;
+    QByteArray result;
     foreach(const KUrl &uit, urls) {
         // Get each URL encoded in utf8 - and since we get it in escaped
         // form on top of that, .toLatin1() is fine.
-        uriListData += uit.toMimeDataString().toLatin1();
-        uriListData += "\r\n";
+        result += uit.toMimeDataString().toLatin1();
+        result += "\r\n";
     }
-    return uriListData;
+    return result;
 }
 
 static QString trailingSlash(KUrl::AdjustPathOption trailing, const QString &path)
@@ -215,12 +215,12 @@ QStringList KUrl::List::toStringList() const
 
 QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
 {
-    QStringList lst;
-    lst.reserve(size());
+    QStringList result;
+    result.reserve(size());
     for (KUrl::List::ConstIterator it = constBegin(); it != constEnd(); ++it) {
-        lst.append(it->url(trailing));
+        result.append(it->url(trailing));
     }
-    return lst;
+    return result;
 }
 
 void KUrl::List::populateMimeData(QMimeData* mimeData,
@@ -353,12 +353,12 @@ KUrl::List::operator QVariant() const
 
 KUrl::List::operator QList<QUrl>() const
 {
-    QList<QUrl> list;
-    list.reserve(size());
+    QList<QUrl> result;
+    result.reserve(size());
     foreach(const KUrl &url, *this) {
-        list << url;
+        result << url;
     }
-    return list;
+    return result;
 }
 
 ///
