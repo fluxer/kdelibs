@@ -584,8 +584,7 @@ QString KUrl::prettyUrl(AdjustPathOption trailing) const
 {
     // reconstruct the URL in a "pretty" form
     // a "pretty" URL is NOT suitable for data transfer. It's only for showing data to the user.
-    // however, it must be parseable back to its original state, since
-    // notably Konqueror displays it in the Location address.
+    // however, it must be parseable back to its original state.
 
     // A pretty URL is the same as a normal URL, except that:
     // - the password is removed
