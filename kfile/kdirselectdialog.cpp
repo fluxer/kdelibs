@@ -422,7 +422,7 @@ void KDirSelectDialog::setCurrentUrl( const KUrl& url )
 
     if (url.protocol() != d->m_rootUrl.protocol()) {
         KUrl u( url );
-        u.cd("/");//NOTE portability?
+        u.setPath(QDir::rootPath());
         d->m_treeView->setRootUrl( u );
         d->m_rootUrl = u;
     }

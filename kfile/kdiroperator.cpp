@@ -1169,9 +1169,7 @@ KUrl KDirOperator::url() const
 
 void KDirOperator::cdUp()
 {
-    KUrl tmp(d->currUrl);
-    tmp.cd(QLatin1String(".."));
-    setUrl(tmp, true);
+    setUrl(d->currUrl.upUrl(), true);
 }
 
 void KDirOperator::home()

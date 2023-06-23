@@ -378,34 +378,11 @@ public:
   void setPath( const QString& path );
 
   /**
-   * Options to be used in cleanPath
-   */
-  enum CleanPathOption
-  {
-    /**
-     * if set, occurrences of consecutive directory separators
-     * (e.g. /foo//bar) are cleaned up as well.  (set by default)
-     */
-    SimplifyDirSeparators = 0x00,
-
-    /**
-     * The opposite of SimplifyDirSeparators.
-     */
-    KeepDirSeparators = 0x01
-  };
-
-  Q_DECLARE_FLAGS(CleanPathOptions,CleanPathOption)
-
-  /**
    * Resolves "." and ".." components in path.
    * Some servers seem not to like the removal of extra '/'
    * even though it is against the specification in RFC 2396.
-   *
-   * @param options use KeepDirSeparators if you don't want to remove consecutive
-   *                occurrences of directory separator
    */
-  void cleanPath(const CleanPathOption& options = SimplifyDirSeparators);
-
+  void cleanPath();
 
   /**
    * Add or remove a trailing slash to/from the path.
@@ -531,21 +508,6 @@ public:
    * Set the directory to @p dir, leaving the filename empty.
    */
   void setDirectory(const QString &dir);
-
-  /**
-   * Changes the directory by descending into the given directory.
-   * It is assumed the current URL represents a directory.
-   * If @p dir starts with a "/" the
-   * current URL will be "protocol://host/dir" otherwise @p _dir will
-   * be appended to the path. @p _dir can be ".."
-   * This function won't strip protocols. That means that when you are in
-   * file:///dir/dir2/my.tgz#tar:/ and you do cd("..") you will
-   * still be in file:///dir/dir2/my.tgz#tar:/
-   *
-   * @param _dir the directory to change to
-   * @return true if successful
-   */
-  bool cd( const QString& _dir );
 
   /**
    * Returns the URL as string, with all escape sequences intact,
@@ -799,7 +761,6 @@ private:
   operator QString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::CleanPathOptions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::EqualsOptions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::DirectoryOptions)
 

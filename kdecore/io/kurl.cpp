@@ -18,8 +18,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-/// KDE4 TODO: maybe we should use QUrl::resolved()
-
 /*
  * The currently active RFC for URL/URIs is RFC3986
  * Previous (and now deprecated) RFCs are RFC1738 and RFC2396
@@ -39,111 +37,45 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
-#include <QtCore/QRegExp>
 #include <QtCore/QMimeData>
-#include <QtCore/QTextCodec>
 #include <QtNetwork/QHostInfo>
 
-#ifdef DEBUG_KURL
-static const int kurlDebugArea = 181; // see kdebug.areas
-#endif
-
-static QString cleanpath( const QString &_path, bool cleanDirSeparator, bool decodeDots )
-{
-  if (_path.isEmpty())
-      return QString();
-
-  if (QFileInfo(_path).isRelative())
-     return _path; // Don't mangle mailto-style URLs
-
-  QString path = _path;
-
-  int len = path.length();
-
-  if (decodeDots)
-  {
-     static const QString encodedDot = QString::fromLatin1("%2e");
-     if (path.indexOf(encodedDot, 0, Qt::CaseInsensitive) != -1)
-     {
-        static const QString encodedDOT = QString::fromLatin1("%2E"); // Uppercase!
-        path.replace(encodedDot, QString(QLatin1Char('.')));
-        path.replace(encodedDOT, QString(QLatin1Char('.')));
-        len = path.length();
-     }
-  }
-
-  const bool slash = (len && path[len-1] == QLatin1Char('/')) ||
-                     (len > 1 && path[len-2] == QLatin1Char('/') && path[len-1] == QLatin1Char('.'));
-
-  // The following code cleans up directory path much like
-  // QDir::cleanPath() except it can be made to ignore multiple
-  // directory separators by setting the flag to false.  That fixes
-  // bug# 15044, mail.altavista.com and other similar brain-dead server
-  // implementations that do not follow what has been specified in
-  // RFC 2396!! (dA)
-  QString result;
-  int cdUp, orig_pos, pos;
-
-  cdUp = 0;
-  pos = orig_pos = len;
-  while ( pos && (pos = path.lastIndexOf(QLatin1Char('/'),--pos)) != -1 )
-  {
-    len = orig_pos - pos - 1;
-    if ( len == 2 && path[pos+1] == QLatin1Char('.') && path[pos+2] == QLatin1Char('.') )
-      cdUp++;
-    else
-    {
-      // Ignore any occurrences of '.'
-      // This includes entries that simply do not make sense like /..../
-      if ( (len || !cleanDirSeparator) &&
-           (len != 1 || path[pos+1] != QLatin1Char('.') ) )
-      {
-          if ( !cdUp )
-              result.prepend(path.mid(pos, len+1));
-          else
-              cdUp--;
-      }
-    }
-    orig_pos = pos;
-  }
-
-
-  if ( result.isEmpty() )
-    result = QLatin1Char('/');
-  else if ( slash && result[result.length()-1] != QLatin1Char('/') )
-       result.append(QLatin1Char('/'));
-
-  return result;
-}
-
+// static const int kurlDebugArea = 181; // see kdebug.areas
 
 bool KUrl::isRelativeUrl(const QString &_url)
 {
-  int len = _url.length();
-  if (!len) return true; // Very short relative URL.
-  const QChar *str = _url.unicode();
+    int len = _url.length();
+    if (!len) {
+        return true; // Very short relative URL.
+    }
+    const QChar *str = _url.unicode();
 
-  // Absolute URL must start with alpha-character
-  if (!isalpha(str[0].toLatin1()))
-     return true; // Relative URL
+    // Absolute URL must start with alpha-character
+    if (!isalpha(str[0].toLatin1())) {
+         // Relative URL
+        return true;
+    }
 
-  for(int i = 1; i < len; i++)
-  {
-     char c = str[i].toLatin1(); // Note: non-latin1 chars return 0!
-     if (c == ':')
-        return false; // Absolute URL
+    for(int i = 1; i < len; i++) {
+        char c = str[i].toLatin1(); // Note: non-latin1 chars return 0!
+        if (c == ':') {
+            // Absolute URL
+            return false;
+        }
 
-     // Protocol part may only contain alpha, digit, + or -
-     if (!isalpha(c) && !isdigit(c) && (c != '+') && (c != '-'))
-        return true; // Relative URL
-  }
-  // URL did not contain ':'
-  return true; // Relative URL
+        // Protocol part may only contain alpha, digit, + or -
+        if (!isalpha(c) && !isdigit(c) && (c != '+') && (c != '-')) {
+             // Relative URL
+            return true;
+        }
+    }
+    // Relative URL, did not contain ':'
+    return true;
 }
 
 KUrl::List::List(const KUrl &url)
 {
-    append( url );
+    append(url);
 }
 
 KUrl::List::List(const QList<KUrl> &list)
@@ -153,18 +85,16 @@ KUrl::List::List(const QList<KUrl> &list)
 
 KUrl::List::List(const QList<QUrl> &list)
 {
-    foreach(const QUrl& url, list) {
+    foreach(const QUrl &url, list) {
         append(KUrl(url));
     }
 }
 
 KUrl::List::List(const QStringList &list)
 {
-  for (QStringList::ConstIterator it = list.begin();
-       it != list.end();
-       ++it)
-    {
-      append( KUrl(*it) );
+    reserve(size() + list.size());
+    foreach (const QString &str, list) {
+        append(KUrl(str));
     }
 }
 
@@ -176,14 +106,14 @@ QStringList KUrl::List::toStringList() const
 QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
 {
     QStringList lst;
-    for(KUrl::List::ConstIterator it = constBegin();
-         it != constEnd(); ++it) {
+    lst.reserve(size());
+    for (KUrl::List::ConstIterator it = constBegin(); it != constEnd(); ++it) {
         lst.append(it->url(trailing));
     }
     return lst;
 }
 
-static QByteArray uriListData(const KUrl::List& urls)
+static QByteArray uriListData(const KUrl::List &urls)
 {
     QByteArray uriListData;
     foreach(const KUrl &uit, urls) {
@@ -192,53 +122,51 @@ static QByteArray uriListData(const KUrl::List& urls)
         uriListData += uit.toMimeDataString().toLatin1();
         uriListData += "\r\n";
     }
-
     return uriListData;
 }
 
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
 
-void KUrl::List::populateMimeData( QMimeData* mimeData,
-                                   const KUrl::MetaDataMap& metaData,
-                                   MimeDataFlags flags ) const
+void KUrl::List::populateMimeData(QMimeData* mimeData,
+                                  const KUrl::MetaDataMap& metaData,
+                                  MimeDataFlags flags) const
 {
     mimeData->setData(QString::fromLatin1("text/uri-list"), uriListData(*this));
 
-    if ( ( flags & KUrl::NoTextExport ) == 0 )
-    {
+    if ((flags & KUrl::NoTextExport) == 0) {
         QStringList prettyURLsList;
         KUrl::List::ConstIterator uit = constBegin();
         const KUrl::List::ConstIterator uEnd = constEnd();
         for ( ; uit != uEnd ; ++uit ) {
             QString prettyURL = (*uit).prettyUrl();
-            if ( (*uit).protocol() == QLatin1String("mailto") ) {
-                prettyURL = (*uit).path(); // remove mailto: when pasting into konsole
+            if ((*uit).protocol() == QLatin1String("mailto")) {
+                 // remove mailto: when pasting into konsole
+                prettyURL = (*uit).path();
             }
-            prettyURLsList.append( prettyURL );
+            prettyURLsList.append(prettyURL);
         }
 
         QByteArray plainTextData = prettyURLsList.join(QString(QLatin1Char('\n'))).toLocal8Bit();
-        if( count() > 1 ) // terminate last line, unless it's the only line
-            plainTextData.append( "\n" );
+        if (count() > 1 ) {
+            // terminate last line, unless it's the only line
+            plainTextData.append("\n");
+        }
         mimeData->setData( QString::fromLatin1("text/plain"), plainTextData );
     }
 
-    if ( !metaData.isEmpty() )
-    {
+    if (!metaData.isEmpty()) {
         QByteArray metaDataData; // :)
         QMapIterator<QString, QString> it(metaData);
-        while(it.hasNext())
-        {
+        while(it.hasNext()) {
             it.next();
             metaDataData += it.key().toUtf8();
             metaDataData += "$@@$";
             metaDataData += it.value().toUtf8();
             metaDataData += "$@@$";
         }
-        mimeData->setData( QString::fromLatin1("application/x-kio-metadata"), metaDataData );
+        mimeData->setData(QString::fromLatin1("application/x-kio-metadata"), metaDataData);
     }
 }
-
 
 void KUrl::List::populateMimeData(const KUrl::List& mostLocalUrls,
                                   QMimeData* mimeData,
@@ -247,21 +175,21 @@ void KUrl::List::populateMimeData(const KUrl::List& mostLocalUrls,
 {
     // Export the most local urls as text/uri-list and plain text.
     mostLocalUrls.populateMimeData(mimeData, metaData, flags);
-
     mimeData->setData(QString::fromLatin1(s_kdeUriListMime), uriListData(*this));
 }
 
 bool KUrl::List::canDecode( const QMimeData *mimeData )
 {
-    return mimeData->hasFormat(QString::fromLatin1("text/uri-list")) ||
-        mimeData->hasFormat(QString::fromLatin1(s_kdeUriListMime));
+    return (
+        mimeData->hasFormat(QString::fromLatin1("text/uri-list")) ||
+        mimeData->hasFormat(QString::fromLatin1(s_kdeUriListMime))
+    );
 }
 
 QStringList KUrl::List::mimeDataTypes()
 {
     return QStringList() << QString::fromLatin1(s_kdeUriListMime) << QString::fromLatin1("text/uri-list");
 }
-
 
 KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
                                     KUrl::MetaDataMap* metaData,
@@ -275,31 +203,32 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
         qSwap(firstMimeType, secondMimeType);
     }
     QByteArray payload = mimeData->data(QString::fromLatin1(firstMimeType));
-    if (payload.isEmpty())
+    if (payload.isEmpty()) {
         payload = mimeData->data(QString::fromLatin1(secondMimeType));
-    if ( !payload.isEmpty() ) {
+    }
+    if (!payload.isEmpty()) {
         int c = 0;
         const char* d = payload.constData();
-        while ( c < payload.size() && d[c] ) {
+        while (c < payload.size() && d[c]) {
             int f = c;
             // Find line end
-            while (c < payload.size() && d[c] && d[c]!='\r'
-                   && d[c] != '\n')
+            while (c < payload.size() && d[c] && d[c]!='\r' && d[c] != '\n') {
                 c++;
+            }
             QByteArray s( d+f, c-f );
-            if ( s[0] != '#' ) // non-comment?
-                uris.append( KUrl::fromMimeDataByteArray( s ) );
+            if (s[0] != '#') {
+                // non-comment?
+                uris.append( KUrl::fromMimeDataByteArray(s));
+            }
             // Skip junk
-            while ( c < payload.size() && d[c] &&
-                    ( d[c] == '\n' || d[c] == '\r' ) )
+            while (c < payload.size() && d[c] && (d[c] == '\n' || d[c] == '\r')) {
                 ++c;
+            }
         }
     }
-    if ( metaData )
-    {
+    if (metaData) {
         const QByteArray metaDataPayload = mimeData->data(QLatin1String("application/x-kio-metadata"));
-        if ( !metaDataPayload.isEmpty() )
-        {
+        if (!metaDataPayload.isEmpty()) {
             QString str = QString::fromUtf8( metaDataPayload );
             Q_ASSERT(str.endsWith(QLatin1String("$@@$")));
             str.truncate( str.length() - 4 );
@@ -307,10 +236,11 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
             bool readingKey = true; // true, then false, then true, etc.
             QString key;
             foreach(const QString &it, lst) {
-                if ( readingKey )
+                if (readingKey) {
                     key = it;
-                else
-                    metaData->insert( key, it );
+                } else {
+                    metaData->insert(key, it);
+                }
                 readingKey = !readingKey;
             }
             Q_ASSERT( readingKey ); // an odd number of items would be, well, odd ;-)
@@ -322,7 +252,7 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
 
 KUrl::List::operator QVariant() const
 {
-  return qVariantFromValue(*this);
+    return qVariantFromValue(*this);
 }
 
 KUrl::List::operator QList<QUrl>() const
@@ -345,278 +275,201 @@ KUrl::~KUrl()
 {
 }
 
-
-KUrl::KUrl( const QString &str )
+KUrl::KUrl(const QString &str)
   : QUrl()
 {
-  if ( !str.isEmpty() ) {
-    if ( str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~') )
-      setPath( str );
-    else {
-      setUrl( str );
-    }
-  }
-}
-
-KUrl::KUrl( const char * str )
-  : QUrl()
-{
-  if ( str && str[0] ) {
-    if ( str[0] == '/' || str[0] == '~' )
-      setPath( QString::fromUtf8( str ) );
-    else
-      setUrl( QString::fromUtf8(str), QUrl::TolerantMode );
-  }
-}
-
-KUrl::KUrl( const QByteArray& str )
-   : QUrl()
-{
-  if ( !str.isEmpty() ) {
-    if ( str[0] == '/' || str[0] == '~' )
-      setPath( QString::fromUtf8( str ) );
-    else
-      setUrl( QString::fromUtf8(str.constData(), str.size()), QUrl::TolerantMode );
-  }
-}
-
-KUrl::KUrl( const KUrl& _u )
-    : QUrl( _u )
-{
-}
-
-KUrl::KUrl( const QUrl &u )
-    : QUrl( u )
-{
-}
-
-KUrl::KUrl( const KUrl& _u, const QString& _rel_url )
-   : QUrl()
-{
-  QString rUrl = _rel_url;
-
-  // WORKAROUND THE RFC 1606 LOOPHOLE THAT ALLOWS
-  // http:/index.html AS A VALID SYNTAX FOR RELATIVE
-  // URLS. ( RFC 2396 section 5.2 item # 3 )
-  const int len = _u.scheme().length();
-  if ( !_u.host().isEmpty() && !rUrl.isEmpty() &&
-       rUrl.indexOf( _u.scheme(), 0, Qt::CaseInsensitive ) == 0 &&
-       rUrl[len] == QLatin1Char(':') && (rUrl[len+1] != QLatin1Char('/') ||
-       (rUrl[len+1] == QLatin1Char('/') && rUrl[len+2] != QLatin1Char('/'))) )
-  {
-    rUrl.remove( 0, rUrl.indexOf( QLatin1Char(':') ) + 1 );
-  }
-
-
-  if ( rUrl.isEmpty() )
-  {
-    *this = _u;
-  }
-  else if ( rUrl[0] == QLatin1Char('#') )
-  {
-    *this = _u;
-    QByteArray strRef_encoded = rUrl.mid(1).toLatin1();
-    if ( strRef_encoded.isNull() )
-        setFragment(QString::fromLatin1("")); // we know there was an (empty) html ref, we saw the '#'
-    else
-        setFragment(QUrl::fromPercentEncoding(strRef_encoded));
-  }
-  else if ( isRelativeUrl( rUrl ) )
-  {
-    *this = _u;
-    setFragment( QString() );
-    setQuery( QString() );
-    QString strPath = path();
-    if ( rUrl[0] == QLatin1Char('/') )
-    {
-        if ((rUrl.length() > 1) && (rUrl[1] == QLatin1Char('/')))
-        {
-            setHost( QString() );
-            setPort( -1 );
-            // File protocol returns file:/// without host, strip // from rUrl
-            if ( _u.isLocalFile() )
-                rUrl.remove(0, 2);
+    if (!str.isEmpty()) {
+        if (str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~')) {
+            setPath(str);
+        } else {
+            setUrl(str);
         }
-        strPath.clear();
     }
-    else if ( rUrl[0] != QLatin1Char('?') )
-    {
-       const int pos = strPath.lastIndexOf( QLatin1Char('/') );
-       if (pos >= 0)
-          strPath.truncate(pos);
-       strPath += QLatin1Char('/');
-    }
-    else
-    {
-       if ( strPath.isEmpty() )
-          strPath = QLatin1Char('/');
-    }
-    setPath( strPath );
-    //kDebug(kurlDebugArea) << "url()=" << url() << " rUrl=" << rUrl;
-    const KUrl tmp( url() + rUrl);
-    //kDebug(kurlDebugArea) << "assigning tmp=" << tmp.url();
-    *this = tmp;
-    cleanPath(KeepDirSeparators);
-  }
-  else
-  {
-    const KUrl tmp( rUrl );
-    //kDebug(kurlDebugArea) << "not relative; assigning tmp=" << tmp.url();
-    *this = tmp;
-    // Preserve userinfo if applicable.
-    if (!_u.userInfo().isEmpty() && userInfo().isEmpty()
-        && (_u.host() == host()) && (_u.scheme() == scheme()))
-    {
-       setUserInfo( _u.userInfo() );
-    }
-    cleanPath(KeepDirSeparators);
-  }
 }
 
-KUrl& KUrl::operator=( const KUrl& _u )
+KUrl::KUrl(const char *str)
+  : QUrl()
 {
-  QUrl::operator=( _u );
-  return *this;
+    if (str && str[0]) {
+        if (str[0] == '/' || str[0] == '~') {
+            setPath(QString::fromUtf8(str));
+        } else {
+            setUrl(QString::fromUtf8(str), QUrl::TolerantMode);
+        }
+    }
 }
 
-bool KUrl::operator==( const KUrl& _u ) const
+KUrl::KUrl(const QByteArray &str)
+   : QUrl()
 {
-  return QUrl::operator==( _u );
+    if (!str.isEmpty()) {
+        if (str[0] == '/' || str[0] == '~') {
+            setPath(QString::fromUtf8(str));
+        } else {
+            setUrl(QString::fromUtf8(str.constData(), str.size()), QUrl::TolerantMode);
+        }
+    }
 }
 
-bool KUrl::operator==( const QString& _u ) const
+KUrl::KUrl(const KUrl &u)
+    : QUrl(u)
 {
-  KUrl u( _u );
-  return ( *this == u );
+}
+
+KUrl::KUrl(const QUrl &u)
+    : QUrl(u)
+{
+}
+
+KUrl::KUrl(const KUrl &u, const QString &relurl)
+   : QUrl(u.resolved(relurl))
+{
+}
+
+KUrl& KUrl::operator=(const KUrl &u)
+{
+    QUrl::operator=(u);
+    return *this;
+}
+
+bool KUrl::operator==(const KUrl &u) const
+{
+    return QUrl::operator==(u);
+}
+
+bool KUrl::operator==(const QString &_u) const
+{
+    KUrl u(_u);
+    return (*this == u);
 }
 
 KUrl::operator QVariant() const
 {
-  return qVariantFromValue(*this);
+    return qVariantFromValue(*this);
 }
 
-
-bool KUrl::equals( const KUrl &_u, const EqualsOptions& options ) const
+bool KUrl::equals(const KUrl &_u, const EqualsOptions &options) const
 {
-  if ( !isValid() || !_u.isValid() )
-    return false;
-
-  if ( options & CompareWithoutTrailingSlash || options & CompareWithoutFragment )
-  {
-    QString path1 = path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
-    QString path2 = _u.path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
-
-    if (options & AllowEmptyPath) {
-        if (path1 == QLatin1String("/"))
-            path1.clear();
-        if (path2 == QLatin1String("/"))
-            path2.clear();
+    if (!isValid() || !_u.isValid()) {
+        return false;
     }
 
-    if ( path1 != path2 )
-      return false;
+    if (options & CompareWithoutTrailingSlash || options & CompareWithoutFragment) {
+        QString path1 = path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
+        QString path2 = _u.path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
 
-    if ( scheme() == _u.scheme() &&
-         authority() == _u.authority() && // user+pass+host+port
-         query() == _u.query() &&
-         (fragment() == _u.fragment() || options & CompareWithoutFragment )    )
-      return true;
+        if (options & AllowEmptyPath) {
+            if (path1 == QLatin1String("/")) {
+                path1.clear();
+            }
+            if (path2 == QLatin1String("/")) {
+                path2.clear();
+            }
+        }
 
-    return false;
-  }
+        if (path1 != path2) {
+            return false;
+        }
 
-  return ( *this == _u );
+        if (scheme() == _u.scheme() &&
+            authority() == _u.authority() && // user+pass+host+port
+            query() == _u.query() &&
+            (fragment() == _u.fragment() || options & CompareWithoutFragment))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    return (*this == _u);
 }
 
-KUrl KUrl::fromPath( const QString& text )
+KUrl KUrl::fromPath(const QString &text)
 {
     KUrl u;
-    u.setPath( text );
+    u.setPath(text);
     return u;
 }
 
-void KUrl::setFileName( const QString& _txt )
+void KUrl::setFileName(const QString &_txt)
 {
-  setFragment( QString() );
-  int i = 0;
-  while( i < _txt.length() && _txt[i] == QLatin1Char('/') )
-      ++i;
-  QString tmp = i ? _txt.mid( i ) : _txt;
-
-  QString path = this->path();
-  if ( path.isEmpty() )
-    path = QDir::rootPath();
-  else
-  {
-    int lastSlash = path.lastIndexOf( QLatin1Char('/') );
-    if ( lastSlash == -1)
-      path.clear(); // there's only the file name, remove it
-    else if ( !path.endsWith( QLatin1Char('/') ) )
-      path.truncate( lastSlash+1 ); // keep the "/"
-  }
-
-  path += tmp;
-  setPath( path );
-
-  cleanPath();
-}
-
-void KUrl::cleanPath( const CleanPathOption& options )
-{
-  //if (m_iUriMode != URL) return;
-  const QString newPath = cleanpath(path(), !(options & KeepDirSeparators), false);
-  if ( path() != newPath )
-      setPath( newPath );
-  // WABA: Is this safe when "/../" is encoded with %?
-  //m_strPath_encoded = cleanpath(m_strPath_encoded, cleanDirSeparator, true);
-}
-
-static QString trailingSlash( KUrl::AdjustPathOption trailing, const QString &path )
-{
-  if ( trailing == KUrl::LeaveTrailingSlash ) {
-    return path;
-  }
-
-  QString result = path;
-
-  if ( trailing == KUrl::AddTrailingSlash )
-  {
-    int len = result.length();
-    if ((len > 0) && (result[ len - 1 ] != QLatin1Char('/')))
-      result += QLatin1Char('/');
-    return result;
-  }
-  else if ( trailing == KUrl::RemoveTrailingSlash )
-  {
-    if ( result == QLatin1String("/") )
-      return result;
-    int len = result.length();
-    while (len > 1 && result[ len - 1 ] == QLatin1Char('/'))
-    {
-      len--;
+    setFragment(QString());
+    int i = 0;
+    while(i < _txt.length() && _txt[i] == QLatin1Char('/')) {
+        ++i;
     }
-    result.truncate( len );
-    return result;
-  }
-  else {
-    assert( 0 );
-    return result;
-  }
+
+    QString tmp = (i ? _txt.mid(i) : _txt);
+    QString path = this->path();
+    if (path.isEmpty()) {
+        path = QDir::rootPath();
+    } else {
+        int lastSlash = path.lastIndexOf( QLatin1Char('/') );
+        if (lastSlash == -1) {
+            // there's only the file name, remove it
+            path.clear();
+        } else if (!path.endsWith(QLatin1Char('/'))) {
+            // keep the "/"
+            path.truncate(lastSlash + 1);
+        }
+    }
+
+    path += tmp;
+    setPath(path);
+
+    cleanPath();
 }
 
-void KUrl::adjustPath( AdjustPathOption trailing )
+void KUrl::cleanPath()
 {
-  const QString newPath = trailingSlash( trailing, path() );
-  if ( path() != newPath )
-      setPath( newPath );
+    const QString newPath = QDir::cleanPath(path());
+    if (path() != newPath) {
+        setPath(newPath);
+    }
 }
 
-QString KUrl::path( AdjustPathOption trailing ) const
+static QString trailingSlash(KUrl::AdjustPathOption trailing, const QString &path)
 {
-  return trailingSlash( trailing, QUrl::path() );
+    if (trailing == KUrl::LeaveTrailingSlash) {
+        return path;
+    }
+
+    QString result = path;
+    if (trailing == KUrl::AddTrailingSlash) {
+        int len = result.length();
+        if (len > 0 && result[len - 1] != QLatin1Char('/')) {
+            result += QLatin1Char('/');
+        }
+        return result;
+    } else if (trailing == KUrl::RemoveTrailingSlash) {
+        if (result == QLatin1String("/")) {
+            return result;
+        }
+        int len = result.length();
+        while (len > 1 && result[len - 1] == QLatin1Char('/')) {
+            len--;
+        }
+        result.truncate(len);
+        return result;
+    }
+    Q_ASSERT(false);
+    return result;
 }
 
-QString KUrl::toLocalFile( AdjustPathOption trailing ) const
+void KUrl::adjustPath(AdjustPathOption trailing)
+{
+    const QString newPath = trailingSlash(trailing, path());
+    if (path() != newPath) {
+        setPath(newPath);
+    }
+}
+
+QString KUrl::path(AdjustPathOption trailing) const
+{
+  return trailingSlash(trailing, QUrl::path());
+}
+
+QString KUrl::toLocalFile(AdjustPathOption trailing) const
 {
     if (hasHost() && isLocalFile()) {
         KUrl urlWithoutHost(*this);
@@ -632,462 +485,416 @@ QString KUrl::toLocalFile( AdjustPathOption trailing ) const
 
 bool KUrl::isLocalFile() const
 {
-  if ( scheme().compare(QLatin1String("file"), Qt::CaseInsensitive) != 0 )
-     return false;
-
-  if (host().isEmpty() || (host() == QLatin1String("localhost")))
-     return true;
-
-  return (host() == QHostInfo::localHostName().toLower());
+    if (scheme().compare(QLatin1String("file"), Qt::CaseInsensitive) != 0) {
+        return false;
+    }
+    if (host().isEmpty() || (host() == QLatin1String("localhost"))) {
+        return true;
+    }
+    return (host() == QHostInfo::localHostName().toLower());
 }
 
 void KUrl::setFileEncoding(const QString &encoding)
 {
-  if (!isLocalFile())
-     return;
-
-  addQueryItem(QLatin1String("charset"), encoding);
+    if (!isLocalFile()) {
+        return;
+    }
+    addQueryItem(QLatin1String("charset"), encoding);
 }
 
 QString KUrl::fileEncoding() const
 {
-  if (!isLocalFile())
-     return QString();
-  return queryItem(QLatin1String("charset"));
+    if (!isLocalFile()) {
+        return QString();
+    }
+    return queryItem(QLatin1String("charset"));
 }
 
-QString KUrl::url( AdjustPathOption trailing ) const
+QString KUrl::url(AdjustPathOption trailing) const
 {
-  if (QString::compare(scheme(), QLatin1String("mailto"), Qt::CaseInsensitive) == 0) {
-      // mailto urls should be prettified, see the url183433 testcase.
-      return prettyUrl(trailing);
-  }
-  if ( trailing == AddTrailingSlash && !path().endsWith( QLatin1Char('/') ) ) {
-      // -1 and 0 are provided by QUrl, but not +1, so that one is a bit tricky.
-      // To avoid reimplementing toEncoded() all over again, I just use another QUrl
-      // Let's hope this is fast, or not called often...
-      QUrl newUrl( *this );
-      newUrl.setPath( path() + QLatin1Char('/') );
-      return QString::fromLatin1(newUrl.toEncoded());
-  }
-  else if ( trailing == RemoveTrailingSlash) {
-      const QString cleanedPath = trailingSlash(trailing, path());
-      if (cleanedPath == QLatin1String("/")) {
-          if (path() != QLatin1String("/")) {
-              QUrl fixedUrl = *this;
-              fixedUrl.setPath(cleanedPath);
-              return QString::fromLatin1(fixedUrl.toEncoded(None));
-          }
-          return QString::fromLatin1(toEncoded(None));
-      }
-  }
-  return QString::fromLatin1(toEncoded(trailing == RemoveTrailingSlash ? StripTrailingSlash : None));
+    if (QString::compare(scheme(), QLatin1String("mailto"), Qt::CaseInsensitive) == 0) {
+        // mailto urls should be prettified, see the url183433 testcase.
+        return prettyUrl(trailing);
+    }
+    if (trailing == AddTrailingSlash && !path().endsWith(QLatin1Char('/'))) {
+        // -1 and 0 are provided by QUrl, but not +1, so that one is a bit tricky.
+        // To avoid reimplementing toEncoded() all over again, I just use another QUrl
+        // Let's hope this is fast, or not called often...
+        QUrl newUrl(*this);
+        newUrl.setPath(path() + QLatin1Char('/'));
+        return QString::fromLatin1(newUrl.toEncoded());
+    } else if ( trailing == RemoveTrailingSlash) {
+        const QString cleanedPath = trailingSlash(trailing, path());
+        if (cleanedPath == QLatin1String("/")) {
+            if (path() != QLatin1String("/")) {
+                QUrl fixedUrl = *this;
+                fixedUrl.setPath(cleanedPath);
+                return QString::fromLatin1(fixedUrl.toEncoded(None));
+            }
+            return QString::fromLatin1(toEncoded(None));
+        }
+    }
+    return QString::fromLatin1(toEncoded(trailing == RemoveTrailingSlash ? StripTrailingSlash : None));
 }
 
 static QString toPrettyPercentEncoding(const QString &input, bool forFragment)
 {
-  QString result;
-  result.reserve(input.length());
-  for (int i = 0; i < input.length(); ++i) {
-    const QChar c = input.at(i);
-    ushort u = c.unicode();
-    if (u < 0x20
-        || (!forFragment && u == '?') // don't escape '?' in fragments, not needed and wrong (#173101)
-        || u == '#' || u == '%'
-        || (u == ' ' && (i+1 == input.length() || input.at(i+1).unicode() == ' '))) {
-      static const char hexdigits[] = "0123456789ABCDEF";
-      result += QLatin1Char('%');
-      result += QLatin1Char(hexdigits[(u & 0xf0) >> 4]);
-      result += QLatin1Char(hexdigits[u & 0xf]);
-    } else {
-      result += c;
+    QString result;
+    result.reserve(input.length());
+    for (int i = 0; i < input.length(); ++i) {
+        const QChar c = input.at(i);
+        ushort u = c.unicode();
+        if (u < 0x20
+            || (!forFragment && u == '?') // don't escape '?' in fragments, not needed and wrong (#173101)
+            || u == '#' || u == '%'
+            || (u == ' ' && (i+1 == input.length() || input.at(i+1).unicode() == ' ')))
+        {
+            static const char hexdigits[] = "0123456789ABCDEF";
+            result += QLatin1Char('%');
+            result += QLatin1Char(hexdigits[(u & 0xf0) >> 4]);
+            result += QLatin1Char(hexdigits[u & 0xf]);
+        } else {
+            result += c;
+        }
     }
-  }
 
-  return result;
+    return result;
 }
 
-QString KUrl::prettyUrl( AdjustPathOption trailing ) const
+QString KUrl::prettyUrl(AdjustPathOption trailing) const
 {
-  // reconstruct the URL in a "pretty" form
-  // a "pretty" URL is NOT suitable for data transfer. It's only for showing data to the user.
-  // however, it must be parseable back to its original state, since
-  // notably Konqueror displays it in the Location address.
+    // reconstruct the URL in a "pretty" form
+    // a "pretty" URL is NOT suitable for data transfer. It's only for showing data to the user.
+    // however, it must be parseable back to its original state, since
+    // notably Konqueror displays it in the Location address.
 
-  // A pretty URL is the same as a normal URL, except that:
-  // - the password is removed
-  // - the hostname is shown in Unicode (as opposed to ACE/Punycode)
-  // - the pathname and fragment parts are shown in Unicode (as opposed to %-encoding)
-  QString result = scheme();
-  if (!result.isEmpty())
-  {
-    if (!authority().isEmpty() || result == QLatin1String("file") || (path().isEmpty()
-        && scheme().compare(QLatin1String("mailto"), Qt::CaseInsensitive) != 0))
-        result += QLatin1String("://");
-    else
+    // A pretty URL is the same as a normal URL, except that:
+    // - the password is removed
+    // - the hostname is shown in Unicode (as opposed to ACE/Punycode)
+    // - the pathname and fragment parts are shown in Unicode (as opposed to %-encoding)
+    QString result = scheme();
+    if (!result.isEmpty()) {
+        if (!authority().isEmpty() || result == QLatin1String("file") || (path().isEmpty()
+            && scheme().compare(QLatin1String("mailto"), Qt::CaseInsensitive) != 0))
+        {
+            result += QLatin1String("://");
+        } else {
+            result += QLatin1Char(':');
+        }
+    }
+
+    QString tmp = userName();
+    if (!tmp.isEmpty()) {
+        result += QString::fromLatin1(QUrl::toPercentEncoding(tmp));
+        result += QLatin1Char('@');
+    }
+
+    // Check if host is an ipv6 address
+    tmp = host();
+    if (tmp.contains(QLatin1Char(':'))) {
+        result += QLatin1Char('[') + tmp + QLatin1Char(']');
+    } else {
+        result += tmp;
+    }
+
+    if (port() != -1) {
         result += QLatin1Char(':');
-  }
+        result += QString::number(port());
+    }
 
-  QString tmp = userName();
-  if (!tmp.isEmpty()) {
-    result += QString::fromLatin1(QUrl::toPercentEncoding(tmp));
-    result += QLatin1Char('@');
-  }
+    tmp = path();
+    result += toPrettyPercentEncoding(tmp, false);
 
-  // Check if host is an ipv6 address
-  tmp = host();
-  if (tmp.contains(QLatin1Char(':')))
-    result += QLatin1Char('[') + tmp + QLatin1Char(']');
-  else
-    result += tmp;
+    // adjust the trailing slash, if necessary
+    if (trailing == AddTrailingSlash && !tmp.endsWith(QLatin1Char('/'))) {
+        result += QLatin1Char('/');
+    } else if (trailing == RemoveTrailingSlash && tmp.length() > 1 && tmp.endsWith(QLatin1Char('/'))) {
+        result.chop(1);
+    }
 
-  if (port() != -1) {
-    result += QLatin1Char(':');
-    result += QString::number(port());
-  }
+    if (hasQuery()) {
+        result += QLatin1Char('?');
+        result += query();
+    }
 
-  tmp = path();
-  result += toPrettyPercentEncoding(tmp, false);
+    if (hasFragment()) {
+        result += QLatin1Char('#');
+        result += toPrettyPercentEncoding(fragment(), true);
+    }
 
-  // adjust the trailing slash, if necessary
-  if (trailing == AddTrailingSlash && !tmp.endsWith(QLatin1Char('/')))
-    result += QLatin1Char('/');
-  else if (trailing == RemoveTrailingSlash && tmp.length() > 1 && tmp.endsWith(QLatin1Char('/')))
-    result.chop(1);
-
-  if (hasQuery()) {
-    result += QLatin1Char('?');
-    result += query();
-  }
-
-  if (hasFragment()) {
-    result += QLatin1Char('#');
-    result += toPrettyPercentEncoding(fragment(), true);
-  }
-
-  return result;
+    return result;
 }
 
 QString KUrl::pathOrUrl(AdjustPathOption trailing) const
 {
-  if ( isLocalFile() && fragment().isNull() && !hasQuery() ) {
-    return toLocalFile(trailing);
-  } else {
+    if (isLocalFile() && fragment().isNull() && !hasQuery()) {
+        return toLocalFile(trailing);
+    }
     return prettyUrl(trailing);
-  }
 }
 
-// Used for text/uri-list in the mime data
-QString KUrl::toMimeDataString() const // don't fold this into populateMimeData, it's also needed by other code like konqdrag
+// used for text/uri-list in the mime data. don't fold this into populateMimeData, it's also needed
+// by other code like konqdrag
+QString KUrl::toMimeDataString() const
 {
-  if ( isLocalFile() )
-  {
+    if (isLocalFile()) {
+        return url();
+    }
+
+    if (hasPass()) {
+        KUrl safeUrl(*this);
+        safeUrl.setPassword(QString());
+        return safeUrl.url();
+    }
     return url();
-  }
-
-  if (hasPass()) {
-    KUrl safeUrl(*this);
-    safeUrl.setPassword(QString());
-    return safeUrl.url();
-  }
-  return url();
 }
 
-KUrl KUrl::fromMimeDataByteArray( const QByteArray& str )
+KUrl KUrl::fromMimeDataByteArray(const QByteArray &str)
 {
-  if ( str.startsWith( "file:" ) ) // krazy:exclude=strings
-    return KUrl( str /*, QTextCodec::codecForLocale()->mibEnum()*/ );
-
-  return KUrl( str /*, 106*/ ); // 106 is mib enum for utf8 codec;
+    if (str.startsWith("file:")) {
+        return KUrl(str);
+    }
+    return KUrl(str);
 }
 
-QString KUrl::fileName( const DirectoryOptions& options ) const
+QString KUrl::fileName(const DirectoryOptions &options) const
 {
-  Q_ASSERT( options != 0 ); //Disallow options == false
-  QString fname;
-  const QString path = this->path();
+    Q_ASSERT(options != 0); // Disallow options == false
+    QString fname;
+    const QString path = this->path();
 
-  int len = path.length();
-  if ( len == 0 )
+    int len = path.length();
+    if (len == 0) {
+        return fname;
+    }
+
+    if (!(options & ObeyTrailingSlash)) {
+        while (len >= 1 && path[len - 1] == QLatin1Char('/')) {
+            len--;
+        }
+    } else if (path[len - 1] == QLatin1Char('/')) {
+        return fname;
+    }
+
+    // Does the path only consist of '/' characters ?
+    if (len == 1 && path[0] == QLatin1Char('/')) {
+        return fname;
+    }
+
+    // Skip last n slashes
+    int n = 1;
+    int i = len;
+    do {
+        i = path.lastIndexOf(QLatin1Char('/'), i - 1);
+    } while (--n && i > 0);
+
+    // If ( i == -1 ) => the first character is not a '/'
+    // So it's some URL like file:blah.tgz, return the whole path
+    if (i == -1) {
+        if (len == (int)path.length()) {
+            fname = path;
+        } else {
+            // Might get here if _strip_trailing_slash is true
+            fname = path.left(len);
+        }
+    } else {
+        fname = path.mid(i + 1, len - i - 1); // TO CHECK
+    }
     return fname;
-
-  if (!(options & ObeyTrailingSlash) )
-  {
-    while ( len >= 1 && path[ len - 1 ] == QLatin1Char('/') )
-      len--;
-  }
-  else if ( path[ len - 1 ] == QLatin1Char('/') )
-    return fname;
-
-  // Does the path only consist of '/' characters ?
-  if ( len == 1 && path[ 0 ] == QLatin1Char('/') )
-    return fname;
-
-  // Skip last n slashes
-  int n = 1;
-  int i = len;
-  do {
-    i = path.lastIndexOf( QLatin1Char('/'), i - 1 );
-  }
-  while (--n && (i > 0));
-
-  // If ( i == -1 ) => the first character is not a '/'
-  // So it's some URL like file:blah.tgz, return the whole path
-  if ( i == -1 ) {
-    if ( len == (int)path.length() )
-      fname = path;
-    else
-      // Might get here if _strip_trailing_slash is true
-      fname = path.left( len );
-  }
-  else
-  {
-     fname = path.mid( i + 1, len - i - 1 ); // TO CHECK
-  }
-  return fname;
 }
 
-void KUrl::addPath( const QString& _txt )
+void KUrl::addPath(const QString &_txt)
 {
-  //m_strPath_encoded.clear();
+    if (_txt.isEmpty()) {
+        return;
+    }
 
-  if ( _txt.isEmpty() )
-    return;
+    QString strPath = path();
+    int i = 0;
+    int len = strPath.length();
+    // Add the trailing '/' if it is missing
+    if (_txt[0] != QLatin1Char('/') && (len == 0 || strPath[len - 1] != QLatin1Char('/'))) {
+        strPath += QLatin1Char('/');
+    }
 
-  QString strPath = path();
-  int i = 0;
-  int len = strPath.length();
-  // Add the trailing '/' if it is missing
-  if ( _txt[0] != QLatin1Char('/') && ( len == 0 || strPath[ len - 1 ] != QLatin1Char('/') ) )
-    strPath += QLatin1Char('/');
+    // No double '/' characters
+    i = 0;
+    const int _txtlen = _txt.length();
+    if (strPath.endsWith(QLatin1Char('/'))) {
+        while (i < _txtlen && _txt[i] == QLatin1Char('/')) {
+            ++i;
+        }
+    }
 
-  // No double '/' characters
-  i = 0;
-  const int _txtlen = _txt.length();
-  if ( strPath.endsWith( QLatin1Char('/') ) )
-  {
-    while ( ( i < _txtlen ) && ( _txt[i] == QLatin1Char('/') ) )
-      ++i;
-  }
-
-  setPath( strPath + _txt.mid( i ) );
-  //kDebug(kurlDebugArea)<<"addPath: resultpath="<<path();
+    setPath(strPath + _txt.mid(i));
 }
 
-QString KUrl::directory( const DirectoryOptions& options ) const
+QString KUrl::directory(const DirectoryOptions &options) const
 {
-  Q_ASSERT( options != 0 ); //Disallow options == false
-  QString result = path(); //m_strPath_encoded.isEmpty() ? m_strPath : m_strPath_encoded;
-  if ( !(options & ObeyTrailingSlash) )
-    result = trailingSlash( RemoveTrailingSlash, result );
+    Q_ASSERT(options != 0); // Disallow options == false
+    QString result = path();
+    if (!(options & ObeyTrailingSlash)) {
+        result = trailingSlash(RemoveTrailingSlash, result);
+    }
 
-  if ( result.isEmpty() || result == QLatin1String ( "/" ) )
+    if (result.isEmpty() || result == QLatin1String("/")) {
+        return result;
+    }
+
+    int i = result.lastIndexOf(QLatin1Char('/'));
+    // If ( i == -1 ) => the first character is not a '/'
+    // So it's some URL like file:blah.tgz, with no path
+    if (i == -1) {
+        return QString();
+    }
+
+    if (i == 0) {
+        return QString(QLatin1Char('/'));
+    }
+
+
+    if (options & AppendTrailingSlash) {
+        result = result.left(i + 1);
+    } else {
+        result = result.left(i);
+    }
+
     return result;
-
-  int i = result.lastIndexOf( QLatin1Char('/') );
-  // If ( i == -1 ) => the first character is not a '/'
-  // So it's some URL like file:blah.tgz, with no path
-  if ( i == -1 )
-    return QString();
-
-  if ( i == 0 )
-  {
-    return QString(QLatin1Char('/'));
-  }
-
-
-  if ( options & AppendTrailingSlash )
-    result = result.left( i + 1 );
-  else
-    result = result.left( i );
-
-  //if (!m_strPath_encoded.isEmpty())
-  //  result = decode(result);
-
-  return result;
-}
-
-
-bool KUrl::cd( const QString& _dir )
-{
-  if ( _dir.isEmpty() || !isValid() )
-    return false;
-
-  // absolute path ?
-  if ( _dir[0] == QLatin1Char('/') )
-  {
-    //m_strPath_encoded.clear();
-    setPath( _dir );
-    setFragment( QString() );
-    setQuery( QString() );
-    return true;
-  }
-
-  // Users home directory on the local disk ?
-  if (_dir[0] == QLatin1Char('~') && scheme() == QLatin1String ("file"))
-  {
-    //m_strPath_encoded.clear();
-    QString strPath = QDir::homePath();
-    strPath += QLatin1Char('/');
-    strPath += _dir.right( strPath.length() - 1 );
-    setPath( strPath );
-    setFragment( QString() );
-    setQuery( QString() );
-    return true;
-  }
-
-  // relative path
-  // we always work on the past of the first url.
-  // Sub URLs are not touched.
-
-  // append '/' if necessary
-  QString p = path(AddTrailingSlash);
-  p += _dir;
-  p = cleanpath( p, true, false );
-  setPath( p );
-
-  setFragment( QString() );
-  setQuery( QString() );
-
-  return true;
 }
 
 KUrl KUrl::upUrl( ) const
 {
-  if (!isValid() || isRelative())
-    return KUrl();
-
-  if (hasQuery())
-  {
-     KUrl u(*this);
-     u.setQuery(QString());
-     return u;
-  }
-
-  KUrl u(*this);
-  u.cd(QLatin1String("../"));
-  return u;
+    KUrl u(*this);
+    u.setPath(QUrl::path() + QLatin1String("/.."));
+    return u;
 }
 
-void KUrl::setDirectory( const QString &dir)
+void KUrl::setDirectory(const QString &dir)
 {
-  if ( dir.endsWith(QLatin1Char('/')))
-     setPath(dir);
-  else
-     setPath(dir + QLatin1Char('/'));
+    if (dir.endsWith(QLatin1Char('/'))) {
+        setPath(dir);
+    } else {
+        setPath(dir + QLatin1Char('/'));
+    }
 }
 
 static QString _relativePath(const QString &base_dir, const QString &path, bool &isParent)
 {
-   QString _base_dir(QDir::cleanPath(base_dir));
-   QString _path(QDir::cleanPath(path.isEmpty() || QDir::isRelativePath(path) ? _base_dir+QLatin1Char('/')+path : path));
+    QString _base_dir(QDir::cleanPath(base_dir));
+    QString _path(QDir::cleanPath(path.isEmpty() || QDir::isRelativePath(path) ? _base_dir+QLatin1Char('/') + path : path));
 
-   if (_base_dir.isEmpty())
-      return _path;
+    if (_base_dir.isEmpty()) {
+        return _path;
+    }
 
-   if (_base_dir[_base_dir.length()-1] != QLatin1Char('/'))
-      _base_dir.append(QLatin1Char('/') );
+    if (_base_dir[_base_dir.length() - 1] != QLatin1Char('/')) {
+        _base_dir.append(QLatin1Char('/'));
+    }
 
-   const QStringList list1 = _base_dir.split(QLatin1Char('/'), QString::SkipEmptyParts);
-   const QStringList list2 = _path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    const QStringList list1 = _base_dir.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    const QStringList list2 = _path.split(QLatin1Char('/'), QString::SkipEmptyParts);
 
-   // Find where they meet
-   int level = 0;
-   int maxLevel = qMin(list1.count(), list2.count());
-   while((level < maxLevel) && (list1[level] == list2[level])) level++;
+    // Find where they meet
+    int level = 0;
+    int maxLevel = qMin(list1.count(), list2.count());
+    while (level < maxLevel && list1[level] == list2[level]) {
+        level++;
+    }
 
-   QString result;
-   // Need to go down out of the first path to the common branch.
-   for(int i = level; i < list1.count(); i++)
-      result.append(QLatin1String("../"));
+    QString result;
+    // Need to go down out of the first path to the common branch.
+    for(int i = level; i < list1.count(); i++) {
+        result.append(QLatin1String("../"));
+    }
 
-   // Now up up from the common branch to the second path.
-   for(int i = level; i < list2.count(); i++)
-      result.append(list2[i]).append(QLatin1Char('/'));
+    // Now up up from the common branch to the second path.
+    for(int i = level; i < list2.count(); i++) {
+        result.append(list2[i]).append(QLatin1Char('/'));
+    }
 
-   if ((level < list2.count()) && (path[path.length()-1] != QLatin1Char('/')))
-      result.truncate(result.length()-1);
+    if ((level < list2.count()) && (path[path.length() - 1] != QLatin1Char('/'))) {
+        result.truncate(result.length() - 1);
+    }
 
-   isParent = (level == list1.count());
+    isParent = (level == list1.count());
 
-   return result;
+    return result;
 }
 
 QString KUrl::relativePath(const QString &base_dir, const QString &path, bool *isParent)
 {
-   bool parent = false;
-   QString result = _relativePath(base_dir, path, parent);
-   if (parent)
-      result.prepend(QLatin1String("./"));
+    bool parent = false;
+    QString result = _relativePath(base_dir, path, parent);
+    if (parent) {
+        result.prepend(QLatin1String("./"));
+    }
 
-   if (isParent)
+    if (isParent) {
       *isParent = parent;
+    }
 
-   return result;
+    return result;
 }
-
 
 QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
 {
-   if ((url.protocol() != base_url.protocol()) ||
-       (url.host() != base_url.host()) ||
-       (url.port() && url.port() != base_url.port()) ||
-       (url.hasUser() && url.user() != base_url.user()) ||
-       (url.hasPass() && url.pass() != base_url.pass()))
-   {
-      return url.url();
-   }
+    if ((url.protocol() != base_url.protocol()) ||
+        (url.host() != base_url.host()) ||
+        (url.port() && url.port() != base_url.port()) ||
+        (url.hasUser() && url.user() != base_url.user()) ||
+        (url.hasPass() && url.pass() != base_url.pass()))
+    {
+        return url.url();
+    }
 
    QString relURL;
 
-   if ((base_url.path() != url.path()) || (base_url.query() != url.query()))
-   {
-      bool dummy;
-      QString basePath = base_url.directory(KUrl::ObeyTrailingSlash);
-      static const char s_pathExcludeChars[] = "!$&'()*+,;=:@/";
-      relURL = QString::fromLatin1(QUrl::toPercentEncoding(_relativePath(basePath, url.path(), dummy), s_pathExcludeChars));
-      relURL += url.query();
-   }
+    if ((base_url.path() != url.path()) || (base_url.query() != url.query())) {
+        bool dummy;
+        QString basePath = base_url.directory(KUrl::ObeyTrailingSlash);
+        static const char s_pathExcludeChars[] = "!$&'()*+,;=:@/";
+        relURL = QString::fromLatin1(QUrl::toPercentEncoding(_relativePath(basePath, url.path(), dummy), s_pathExcludeChars));
+        relURL += url.query();
+    }
 
-   if ( url.hasRef() )
-   {
-      relURL += QLatin1Char('#');
-      relURL += url.ref();
-   }
+    if (url.hasRef()) {
+        relURL += QLatin1Char('#');
+        relURL += url.ref();
+    }
 
-   if ( relURL.isEmpty() )
-      return QLatin1String("./");
+    if (relURL.isEmpty()) {
+        return QLatin1String("./");
+    }
 
-   return relURL;
+    return relURL;
 }
 
-void KUrl::setPath( const QString& _path )
+void KUrl::setPath(const QString &_path)
 {
-    if ( scheme().isEmpty() && !_path.startsWith( QLatin1String("file:/") ) )
-        setScheme( QLatin1String( "file" ) );
-    QString path = KShell::tildeExpand( _path );
-    if (path.isEmpty())
+    if (scheme().isEmpty() && !_path.startsWith(QLatin1String("file:/"))) {
+        setScheme(QLatin1String("file"));
+    }
+    QString path = KShell::tildeExpand(_path);
+    if (path.isEmpty()) {
         path = _path;
-    QUrl::setPath( path );
+    }
+    QUrl::setPath(path);
 }
 
-void KUrl::populateMimeData( QMimeData* mimeData,
-                             const MetaDataMap& metaData,
-                             MimeDataFlags flags ) const
+void KUrl::populateMimeData(QMimeData* mimeData, const MetaDataMap& metaData, MimeDataFlags flags) const
 {
-  KUrl::List lst( *this );
-  lst.populateMimeData( mimeData, metaData, flags );
+    KUrl::List lst(*this);
+    lst.populateMimeData(mimeData, metaData, flags);
 }
 
-bool KUrl::isParentOf( const KUrl& u ) const
+bool KUrl::isParentOf(const KUrl &u) const
 {
-  return QUrl::isParentOf( u ) || equals( u, CompareWithoutTrailingSlash );
+    return QUrl::isParentOf(u) || equals(u, CompareWithoutTrailingSlash);
 }
 
 uint qHash(const KUrl& kurl)
 {
-  // qHash(kurl.url()) was the worse implementation possible, since QUrl::toEncoded()
-  // had to concatenate the bits of the url into the full url every time.
-
-  return qHash(kurl.protocol()) ^ qHash(kurl.path()) ^ qHash(kurl.fragment()) ^ qHash(kurl.query());
+    // qHash(kurl.url()) was the worse implementation possible, since QUrl::toEncoded()
+    // had to concatenate the bits of the url into the full url every time.
+    return qHash(kurl.protocol()) ^ qHash(kurl.path()) ^ qHash(kurl.fragment()) ^ qHash(kurl.query());
 }
