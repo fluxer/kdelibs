@@ -23,8 +23,7 @@ KDECORE_UNIT_TESTS(
     kmountpointtest
     kstandarddirstest
     kaboutdatatest
-    # FIXME: enable after KUrl/QUrl rewrite
-    # kurltest
+    kurltest
     kstringhandlertest
     cplusplustest
     ksortablelisttest

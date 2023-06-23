@@ -624,7 +624,7 @@ public:
         */
         AllowEmptyPath = 0x04
     };
-    Q_DECLARE_FLAGS(EqualsOptions,EqualsOption)
+    Q_DECLARE_FLAGS(EqualsOptions, EqualsOption)
 
     /**
      * Compares this url with @p u.

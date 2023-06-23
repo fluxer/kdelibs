@@ -25,48 +25,8 @@ class KUrlTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testQUrl();
-    void testEmptyURL();
-    void testIsValid();
-    void testSetQuery();
-    void testEmptyNullReference();
-    void testSetRef();
-    void testDirectory();
-    void testUtf8();
-    void testIsLocalFile();
-    void testSimpleMethods();
-    void testHostName();
-    void testParsingTolerance();
-    void testNewLine();
-    void testQueryParsing();
-    void testEmptyQueryOrRef();
-    void testURLsWithoutPath();
-    void testPathAndQuery();
-    void testUpUrl();
-    void testSetFileName();
-    void testPrettyURL();
-    void testIsRelative();
-    void testRelativePath();
-    void testRelativeURL();
-    void testAdjustPath();
-    void testIPV6();
-    void testBaseURL();
-    void testSetUser();
-    void testSetEncodedFragment_data();
-    void testSetEncodedFragment();
-    void testComparisons();
-    void testStreaming();
-    void testBrokenStuff();
-    void testMoreBrokenStuff();
-    void testMailto();
-    void testSftp();
-    void testOtherProtocols();
-    void testOtherEncodings();
-    void testPathOrURL();
-    void testAssignment();
-    void testQueryItem();
-    void testEncodeString();
-    void testIdn();
+    void testEquals_data();
+    void testEquals();
     void testUriMode();
     void testToLocalFile();
     void testUrl_data();
@@ -74,5 +34,4 @@ private Q_SLOTS:
     void testToStringList();
 };
 
-#endif
-
+#endif // KURLTEST_H
