@@ -362,7 +362,6 @@ KUrl::List::operator QList<QUrl>() const
 }
 
 ///
-
 KUrl::KUrl()
     : QUrl()
 {
@@ -501,7 +500,7 @@ void KUrl::setFileName(const QString &_txt)
     if (path.isEmpty()) {
         path = QDir::rootPath();
     } else {
-        int lastSlash = path.lastIndexOf( QLatin1Char('/') );
+        int lastSlash = path.lastIndexOf(QLatin1Char('/'));
         if (lastSlash == -1) {
             // there's only the file name, remove it
             path.clear();
@@ -807,11 +806,17 @@ QString KUrl::directory(const DirectoryOptions &options) const
     return result;
 }
 
-KUrl KUrl::upUrl( ) const
+KUrl KUrl::upUrl() const
 {
+#if 0
+   return resolved(QUrl(QString::fromLatin1("..")));
+#else
     KUrl u(*this);
-    u.setPath(QUrl::path() + QLatin1String("/.."));
+    QDir d(QUrl::path());
+    d.cdUp();
+    u.setPath(d.path());
     return u;
+#endif
 }
 
 void KUrl::setDirectory(const QString &dir)
@@ -849,7 +854,7 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
         return url.url();
     }
 
-   QString relURL;
+    QString relURL;
     if ((base_url.path() != url.path()) || (base_url.query() != url.query())) {
         bool dummy;
         QString basePath = base_url.directory(KUrl::ObeyTrailingSlash);

@@ -382,7 +382,7 @@ void KUrlTest::testEmptyQueryOrRef()
   QCOMPARE( url.query(), QString() );
   url = QUrl::fromEncoded( "http://www.kde.org?" );
   QCOMPARE( url.toEncoded(), QByteArray( "http://www.kde.org?" ) );
-  QCOMPARE( url.query(), QString() ); // note that QByteArray() == QByteArray("")
+  QCOMPARE( url.query(), QString() ); // note that QString() == QString("")
 
   url = QUrl::fromEncoded( "http://www.kde.org" );
   QVERIFY( url.query().isEmpty() );
