@@ -42,6 +42,115 @@
 
 // static const int kurlDebugArea = 181; // see kdebug.areas
 
+static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
+
+static QByteArray uriListData(const KUrl::List &urls)
+{
+    QByteArray uriListData;
+    foreach(const KUrl &uit, urls) {
+        // Get each URL encoded in utf8 - and since we get it in escaped
+        // form on top of that, .toLatin1() is fine.
+        uriListData += uit.toMimeDataString().toLatin1();
+        uriListData += "\r\n";
+    }
+    return uriListData;
+}
+
+static QString trailingSlash(KUrl::AdjustPathOption trailing, const QString &path)
+{
+    if (trailing == KUrl::LeaveTrailingSlash) {
+        return path;
+    }
+
+    QString result = path;
+    if (trailing == KUrl::AddTrailingSlash) {
+        int len = result.length();
+        if (len > 0 && result[len - 1] != QLatin1Char('/')) {
+            result += QLatin1Char('/');
+        }
+        return result;
+    } else if (trailing == KUrl::RemoveTrailingSlash) {
+        if (result == QLatin1String("/")) {
+            return result;
+        }
+        int len = result.length();
+        while (len > 1 && result[len - 1] == QLatin1Char('/')) {
+            len--;
+        }
+        result.truncate(len);
+        return result;
+    }
+    Q_ASSERT(false);
+    return result;
+}
+
+static QString toPrettyPercentEncoding(const QString &input, bool forFragment)
+{
+    QString result;
+    result.reserve(input.length());
+    for (int i = 0; i < input.length(); ++i) {
+        const QChar c = input.at(i);
+        ushort u = c.unicode();
+        if (u < 0x20
+            || (!forFragment && u == '?') // don't escape '?' in fragments, not needed and wrong (#173101)
+            || u == '#' || u == '%'
+            || (u == ' ' && (i+1 == input.length() || input.at(i+1).unicode() == ' ')))
+        {
+            static const char hexdigits[] = "0123456789ABCDEF";
+            result += QLatin1Char('%');
+            result += QLatin1Char(hexdigits[(u & 0xf0) >> 4]);
+            result += QLatin1Char(hexdigits[u & 0xf]);
+        } else {
+            result += c;
+        }
+    }
+
+    return result;
+}
+
+static QString _relativePath(const QString &base_dir, const QString &path, bool &isParent)
+{
+    QString _base_dir(QDir::cleanPath(base_dir));
+    QString _path(QDir::cleanPath(path.isEmpty() || QDir::isRelativePath(path) ? _base_dir+QLatin1Char('/') + path : path));
+
+    if (_base_dir.isEmpty()) {
+        return _path;
+    }
+
+    if (_base_dir[_base_dir.length() - 1] != QLatin1Char('/')) {
+        _base_dir.append(QLatin1Char('/'));
+    }
+
+    const QStringList list1 = _base_dir.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    const QStringList list2 = _path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+
+    // Find where they meet
+    int level = 0;
+    int maxLevel = qMin(list1.count(), list2.count());
+    while (level < maxLevel && list1[level] == list2[level]) {
+        level++;
+    }
+
+    QString result;
+    // Need to go down out of the first path to the common branch.
+    for(int i = level; i < list1.count(); i++) {
+        result.append(QLatin1String("../"));
+    }
+
+    // Now up up from the common branch to the second path.
+    for(int i = level; i < list2.count(); i++) {
+        result.append(list2[i]).append(QLatin1Char('/'));
+    }
+
+    if ((level < list2.count()) && (path[path.length() - 1] != QLatin1Char('/'))) {
+        result.truncate(result.length() - 1);
+    }
+
+    isParent = (level == list1.count());
+
+    return result;
+}
+
 bool KUrl::isRelativeUrl(const QString &_url)
 {
     int len = _url.length();
@@ -112,20 +221,6 @@ QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
     }
     return lst;
 }
-
-static QByteArray uriListData(const KUrl::List &urls)
-{
-    QByteArray uriListData;
-    foreach(const KUrl &uit, urls) {
-        // Get each URL encoded in utf8 - and since we get it in escaped
-        // form on top of that, .toLatin1() is fine.
-        uriListData += uit.toMimeDataString().toLatin1();
-        uriListData += "\r\n";
-    }
-    return uriListData;
-}
-
-static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
 
 void KUrl::List::populateMimeData(QMimeData* mimeData,
                                   const KUrl::MetaDataMap& metaData,
@@ -218,7 +313,7 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
             QByteArray s( d+f, c-f );
             if (s[0] != '#') {
                 // non-comment?
-                uris.append( KUrl::fromMimeDataByteArray(s));
+                uris.append(KUrl::fromMimeDataByteArray(s));
             }
             // Skip junk
             while (c < payload.size() && d[c] && (d[c] == '\n' || d[c] == '\r')) {
@@ -229,7 +324,7 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
     if (metaData) {
         const QByteArray metaDataPayload = mimeData->data(QLatin1String("application/x-kio-metadata"));
         if (!metaDataPayload.isEmpty()) {
-            QString str = QString::fromUtf8( metaDataPayload );
+            QString str = QString::fromUtf8(metaDataPayload);
             Q_ASSERT(str.endsWith(QLatin1String("$@@$")));
             str.truncate( str.length() - 4 );
             const QStringList lst = str.split(QLatin1String("$@@$"));
@@ -243,7 +338,7 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
                 }
                 readingKey = !readingKey;
             }
-            Q_ASSERT( readingKey ); // an odd number of items would be, well, odd ;-)
+            Q_ASSERT(readingKey); // an odd number of items would be, well, odd ;-)
         }
     }
 
@@ -396,7 +491,7 @@ void KUrl::setFileName(const QString &_txt)
 {
     setFragment(QString());
     int i = 0;
-    while(i < _txt.length() && _txt[i] == QLatin1Char('/')) {
+    while (i < _txt.length() && _txt[i] == QLatin1Char('/')) {
         ++i;
     }
 
@@ -427,34 +522,6 @@ void KUrl::cleanPath()
     if (path() != newPath) {
         setPath(newPath);
     }
-}
-
-static QString trailingSlash(KUrl::AdjustPathOption trailing, const QString &path)
-{
-    if (trailing == KUrl::LeaveTrailingSlash) {
-        return path;
-    }
-
-    QString result = path;
-    if (trailing == KUrl::AddTrailingSlash) {
-        int len = result.length();
-        if (len > 0 && result[len - 1] != QLatin1Char('/')) {
-            result += QLatin1Char('/');
-        }
-        return result;
-    } else if (trailing == KUrl::RemoveTrailingSlash) {
-        if (result == QLatin1String("/")) {
-            return result;
-        }
-        int len = result.length();
-        while (len > 1 && result[len - 1] == QLatin1Char('/')) {
-            len--;
-        }
-        result.truncate(len);
-        return result;
-    }
-    Q_ASSERT(false);
-    return result;
 }
 
 void KUrl::adjustPath(AdjustPathOption trailing)
@@ -536,30 +603,6 @@ QString KUrl::url(AdjustPathOption trailing) const
         }
     }
     return QString::fromLatin1(toEncoded(trailing == RemoveTrailingSlash ? StripTrailingSlash : None));
-}
-
-static QString toPrettyPercentEncoding(const QString &input, bool forFragment)
-{
-    QString result;
-    result.reserve(input.length());
-    for (int i = 0; i < input.length(); ++i) {
-        const QChar c = input.at(i);
-        ushort u = c.unicode();
-        if (u < 0x20
-            || (!forFragment && u == '?') // don't escape '?' in fragments, not needed and wrong (#173101)
-            || u == '#' || u == '%'
-            || (u == ' ' && (i+1 == input.length() || input.at(i+1).unicode() == ' ')))
-        {
-            static const char hexdigits[] = "0123456789ABCDEF";
-            result += QLatin1Char('%');
-            result += QLatin1Char(hexdigits[(u & 0xf0) >> 4]);
-            result += QLatin1Char(hexdigits[u & 0xf]);
-        } else {
-            result += c;
-        }
-    }
-
-    return result;
 }
 
 QString KUrl::prettyUrl(AdjustPathOption trailing) const
@@ -779,49 +822,6 @@ void KUrl::setDirectory(const QString &dir)
     }
 }
 
-static QString _relativePath(const QString &base_dir, const QString &path, bool &isParent)
-{
-    QString _base_dir(QDir::cleanPath(base_dir));
-    QString _path(QDir::cleanPath(path.isEmpty() || QDir::isRelativePath(path) ? _base_dir+QLatin1Char('/') + path : path));
-
-    if (_base_dir.isEmpty()) {
-        return _path;
-    }
-
-    if (_base_dir[_base_dir.length() - 1] != QLatin1Char('/')) {
-        _base_dir.append(QLatin1Char('/'));
-    }
-
-    const QStringList list1 = _base_dir.split(QLatin1Char('/'), QString::SkipEmptyParts);
-    const QStringList list2 = _path.split(QLatin1Char('/'), QString::SkipEmptyParts);
-
-    // Find where they meet
-    int level = 0;
-    int maxLevel = qMin(list1.count(), list2.count());
-    while (level < maxLevel && list1[level] == list2[level]) {
-        level++;
-    }
-
-    QString result;
-    // Need to go down out of the first path to the common branch.
-    for(int i = level; i < list1.count(); i++) {
-        result.append(QLatin1String("../"));
-    }
-
-    // Now up up from the common branch to the second path.
-    for(int i = level; i < list2.count(); i++) {
-        result.append(list2[i]).append(QLatin1Char('/'));
-    }
-
-    if ((level < list2.count()) && (path[path.length() - 1] != QLatin1Char('/'))) {
-        result.truncate(result.length() - 1);
-    }
-
-    isParent = (level == list1.count());
-
-    return result;
-}
-
 QString KUrl::relativePath(const QString &base_dir, const QString &path, bool *isParent)
 {
     bool parent = false;
@@ -849,7 +849,6 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
     }
 
    QString relURL;
-
     if ((base_url.path() != url.path()) || (base_url.query() != url.query())) {
         bool dummy;
         QString basePath = base_url.directory(KUrl::ObeyTrailingSlash);
