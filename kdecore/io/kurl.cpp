@@ -258,7 +258,8 @@ KUrl::List::operator QVariant() const
 KUrl::List::operator QList<QUrl>() const
 {
     QList<QUrl> list;
-    foreach(const KUrl& url, *this) {
+    list.reserve(size());
+    foreach(const KUrl &url, *this) {
         list << url;
     }
     return list;
