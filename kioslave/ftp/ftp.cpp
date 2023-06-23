@@ -352,11 +352,11 @@ bool Ftp::ftpOpenConnection (LoginMode loginMode)
   if (userNameChanged && m_bLoggedOn)
   {
     KUrl realURL;
-    realURL.setProtocol( "ftp" );
+    realURL.setScheme( "ftp" );
     if (m_user != FTP_LOGIN)
-      realURL.setUser( m_user );
+      realURL.setUserName( m_user );
     if (m_pass != FTP_PASSWD)
-      realURL.setPass( m_pass );
+      realURL.setPassword( m_pass );
     realURL.setHost( m_host );
     if ( m_port > 0 && m_port != DEFAULT_FTP_PORT )
       realURL.setPort( m_port );
@@ -451,12 +451,12 @@ bool Ftp::ftpLogin(bool* userChanged)
   }
 
   AuthInfo info;
-  info.url.setProtocol( "ftp" );
+  info.url.setScheme( "ftp" );
   info.url.setHost( m_host );
   if ( m_port > 0 && m_port != DEFAULT_FTP_PORT )
       info.url.setPort( m_port );
   if (!user.isEmpty())
-      info.url.setUser(user);
+      info.url.setUserName(user);
 
   // Check for cached authentication first and fallback to
   // anonymous login when no stored credentials are found.
@@ -569,7 +569,7 @@ bool Ftp::ftpLogin(bool* userChanged)
       {
         // Update the username in case it was changed during login.
         if (!m_user.isEmpty()) {
-            info.url.setUser (user);
+            info.url.setUserName (user);
             m_user = user;
         }
 
@@ -1456,9 +1456,9 @@ void Ftp::listDir( const KUrl &url )
   if ( path.isEmpty() )
   {
     KUrl realURL;
-    realURL.setProtocol( "ftp" );
-    realURL.setUser( m_user );
-    realURL.setPass( m_pass );
+    realURL.setScheme( "ftp" );
+    realURL.setUserName( m_user );
+    realURL.setPassword( m_pass );
     realURL.setHost( m_host );
     if ( m_port > 0 && m_port != DEFAULT_FTP_PORT )
         realURL.setPort( m_port );

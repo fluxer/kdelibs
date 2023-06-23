@@ -319,7 +319,7 @@ void KUrlNavigator::Private::slotProtocolChanged(const QString& protocol)
     Q_ASSERT(m_editable);
 
     KUrl url;
-    url.setProtocol(protocol);
+    url.setScheme(protocol);
     url.setPath((protocol == QLatin1String("file")) ? QLatin1String("/") : QLatin1String("//"));
 
     m_pathBox->setEditUrl(url);

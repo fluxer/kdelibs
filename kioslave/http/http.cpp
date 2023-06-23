@@ -621,7 +621,7 @@ bool HttpProtocol::authUrl(const KUrl &url)
         kioauthinfo.comment = i18n("<b>%1</b>", url.prettyUrl());
         if (openPasswordDialog(kioauthinfo)) {
             KUrl newurl(url);
-            newurl.setUser(kioauthinfo.username);
+            newurl.setUserName(kioauthinfo.username);
             newurl.setPassword(kioauthinfo.password);
             redirection(newurl);
             finished();

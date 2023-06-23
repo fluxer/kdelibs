@@ -379,7 +379,7 @@ KDirOperator::KDirOperator(const KUrl& _url, QWidget *parent) :
     } else {
         d->currUrl = _url;
         if (d->currUrl.protocol().isEmpty()) {
-            d->currUrl.setProtocol(QLatin1String("file"));
+            d->currUrl.setScheme(QLatin1String("file"));
         }
     }
 

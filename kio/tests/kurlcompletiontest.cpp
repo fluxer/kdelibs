@@ -157,7 +157,7 @@ void KUrlCompletionTest::testLocalURL()
 
     // Completion from URL with a ref -> no match
     url = KUrl( m_dirURL.toLocalFile() + 'f' );
-    url.setRef( "ref" );
+    url.setFragment( "ref" );
     kDebug() << "makeCompletion(" << url << ")";
     m_completion->makeCompletion( url.prettyUrl() );
     waitForCompletion();

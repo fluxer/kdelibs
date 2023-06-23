@@ -313,7 +313,7 @@ void FileProtocol::listDir(const KUrl &url)
 {
     if (!url.isLocalFile()) {
         KUrl redir(url);
-        redir.setProtocol(config()->readEntry("DefaultRemoteProtocol", "sftp"));
+        redir.setScheme(config()->readEntry("DefaultRemoteProtocol", "sftp"));
         redirection(redir);
         kDebug(7101) << "redirecting to " << redir.url();
         finished();
@@ -604,7 +604,7 @@ void FileProtocol::stat(const KUrl &url)
 {
     if (!url.isLocalFile()) {
         KUrl redir(url);
-        redir.setProtocol(config()->readEntry("DefaultRemoteProtocol", "sftp"));
+        redir.setScheme(config()->readEntry("DefaultRemoteProtocol", "sftp"));
         redirection(redir);
         kDebug(7101) << "redirecting to " << redir.url();
         finished();

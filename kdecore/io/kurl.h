@@ -751,6 +751,7 @@ public:
     inline bool hasUser() const { return !userName().isEmpty(); };
     inline bool hasPass() const { return !password().isEmpty(); };
     inline bool hasHost() const { return !host().isEmpty(); };
+    inline bool hasPath() const { return !path().isEmpty(); };
 
 private:
     QString toString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
