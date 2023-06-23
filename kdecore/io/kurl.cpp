@@ -169,6 +169,7 @@ KUrl::List::List(const QList<KUrl> &list)
 
 KUrl::List::List(const QList<QUrl> &list)
 {
+    reserve(size() + list.size());
     foreach (const QUrl &url, list) {
         append(KUrl(url));
     }
@@ -353,7 +354,7 @@ KUrl::KUrl(const QString &str)
             setPath(str);
         } else {
             setUrl(str);
-            // do what KUrl::setPath() does - anything without scheme is a set to be a file
+            // do what KUrl::setPath() does - anything without scheme is set to be a file
             if (scheme().isEmpty() && !str.startsWith(QLatin1String("file:/"))) {
                 setScheme(QLatin1String("file"));
             }
