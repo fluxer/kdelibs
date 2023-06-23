@@ -1489,57 +1489,55 @@ KIO::Job* CopyJobPrivate::linkNextFile( const KUrl& uSource, const KUrl& uDest, 
         m_bURLDirty = true;
         //Observer::self()->slotCopying( this, uSource, uDest ); // should be slotLinking perhaps
         return newJob;
-    } else {
-        Q_Q(CopyJob);
-        //kDebug(7007) << "Linking URL=" << uSource << "link=" << uDest;
-        if ( uDest.isLocalFile() ) {
-            // if the source is a devices url, handle it a littlebit special
+    }
+    Q_Q(CopyJob);
+    //kDebug(7007) << "Linking URL=" << uSource << "link=" << uDest;
+    if ( uDest.isLocalFile() ) {
+        // if the source is a devices url, handle it a littlebit special
 
-            QString path = uDest.toLocalFile();
-            //kDebug(7007) << "path=" << path;
-            QFile f( path );
-            if ( f.open( QIODevice::ReadWrite ) )
-            {
-                f.close();
-                KDesktopFile desktopFile( path );
-                KConfigGroup config = desktopFile.desktopGroup();
-                KUrl url = uSource;
-                url.setPass( "" );
-                config.writePathEntry( "URL", url.url() );
-                config.writeEntry( "Name", url.url() );
-                config.writeEntry( "Type", QString::fromLatin1("Link") );
-                QString protocol = uSource.protocol();
-                if ( protocol == QLatin1String("ftp") )
-                    config.writeEntry( "Icon", QString::fromLatin1("folder-remote") );
-                else if ( protocol == QLatin1String("http") )
-                    config.writeEntry( "Icon", QString::fromLatin1("text-html") );
-                else if ( protocol == QLatin1String("mailto") )   // sven:
-                    config.writeEntry( "Icon", QString::fromLatin1("internet-mail") ); // added mailto: support
-                else
-                    config.writeEntry( "Icon", QString::fromLatin1("unknown") );
-                config.sync();
-                files.erase( files.begin() ); // done with this one, move on
-                m_processedFiles++;
-                //emit processedAmount( this, KJob::Files, m_processedFiles );
-                copyNextFile();
-                return 0;
-            }
+        QString path = uDest.toLocalFile();
+        //kDebug(7007) << "path=" << path;
+        QFile f( path );
+        if ( f.open( QIODevice::ReadWrite ) )
+        {
+            f.close();
+            KDesktopFile desktopFile( path );
+            KConfigGroup config = desktopFile.desktopGroup();
+            KUrl url = uSource;
+            url.setPass( "" );
+            config.writePathEntry( "URL", url.url() );
+            config.writeEntry( "Name", url.url() );
+            config.writeEntry( "Type", QString::fromLatin1("Link") );
+            QString protocol = uSource.protocol();
+            if ( protocol == QLatin1String("ftp") )
+                config.writeEntry( "Icon", QString::fromLatin1("folder-remote") );
+            else if ( protocol == QLatin1String("http") )
+                config.writeEntry( "Icon", QString::fromLatin1("text-html") );
+            else if ( protocol == QLatin1String("mailto") )   // sven:
+                config.writeEntry( "Icon", QString::fromLatin1("internet-mail") ); // added mailto: support
             else
-            {
-                kDebug(7007) << "ERR_CANNOT_OPEN_FOR_WRITING";
-                q->setError( ERR_CANNOT_OPEN_FOR_WRITING );
-                q->setErrorText( uDest.toLocalFile() );
-                q->emitResult();
-                return 0;
-            }
-        } else {
-            // Todo: not show "link" on remote dirs if the src urls are not from the same protocol+host+...
-            q->setError( ERR_CANNOT_SYMLINK );
-            q->setErrorText( uDest.prettyUrl() );
+                config.writeEntry( "Icon", QString::fromLatin1("unknown") );
+            config.sync();
+            files.erase( files.begin() ); // done with this one, move on
+            m_processedFiles++;
+            //emit processedAmount( this, KJob::Files, m_processedFiles );
+            copyNextFile();
+            return 0;
+        }
+        else
+        {
+            kDebug(7007) << "ERR_CANNOT_OPEN_FOR_WRITING";
+            q->setError( ERR_CANNOT_OPEN_FOR_WRITING );
+            q->setErrorText( uDest.toLocalFile() );
             q->emitResult();
             return 0;
         }
     }
+    // Todo: not show "link" on remote dirs if the src urls are not from the same protocol+host+...
+    q->setError( ERR_CANNOT_SYMLINK );
+    q->setErrorText( uDest.prettyUrl() );
+    q->emitResult();
+    return 0;
 }
 
 void CopyJobPrivate::copyNextFile()
