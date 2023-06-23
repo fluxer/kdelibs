@@ -571,13 +571,8 @@ QString KUrl::url(AdjustPathOption trailing) const
         // mailto urls should be prettified, see the url183433 testcase.
         return prettyUrl(trailing);
     }
-    if (trailing == AddTrailingSlash && !path().endsWith(QLatin1Char('/'))) {
-        // -1 and 0 are provided by QUrl, but not +1, so that one is a bit tricky.
-        // To avoid reimplementing toEncoded() all over again, I just use another QUrl
-        // Let's hope this is fast, or not called often...
-        QUrl newUrl(*this);
-        newUrl.setPath(path() + QLatin1Char('/'));
-        return newUrl.toString(QUrl::None);
+    if (trailing == AddTrailingSlash) {
+        return QUrl::toString(QUrl::AddTrailingSlash);
     } else if (trailing == RemoveTrailingSlash) {
         return QUrl::toString(QUrl::StripTrailingSlash);
     }
@@ -595,13 +590,8 @@ QString KUrl::prettyUrl(AdjustPathOption trailing) const
     // - the password is removed
     // - the hostname is shown in Unicode (as opposed to ACE/Punycode)
     // - the pathname and fragment parts are shown in Unicode (as opposed to %-encoding)
-    if (trailing == AddTrailingSlash && !path().endsWith(QLatin1Char('/'))) {
-        // -1 and 0 are provided by QUrl, but not +1, so that one is a bit tricky.
-        // To avoid reimplementing toEncoded() all over again, I just use another QUrl
-        // Let's hope this is fast, or not called often...
-        QUrl newUrl(*this);
-        newUrl.setPath(path() + QLatin1Char('/'));
-        return newUrl.toString(QUrl::RemovePassword);
+    if (trailing == AddTrailingSlash) {
+        return QUrl::toString(QUrl::AddTrailingSlash | QUrl::RemovePassword);
     } else if (trailing == RemoveTrailingSlash) {
         return QUrl::toString(QUrl::StripTrailingSlash | QUrl::RemovePassword);
     }
