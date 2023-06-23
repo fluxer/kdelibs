@@ -385,8 +385,8 @@ KUrl::KUrl(const QByteArray &str)
             setPath(QUrl::fromPercentEncoding(str));
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
-            if (scheme().isEmpty()) {
-                setPath(QUrl::fromPercentEncoding(str));
+            if (scheme().isEmpty() && !str.startsWith("file:/")) {
+                setScheme(QLatin1String("file"));
             }
         }
     }
