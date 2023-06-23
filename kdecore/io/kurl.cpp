@@ -532,7 +532,6 @@ QString KUrl::toLocalFile(AdjustPathOption trailing) const
         urlWithoutHost.setHost(QString());
         return trailingSlash(trailing, urlWithoutHost.toLocalFile());
     }
-#warning FIXME: Remove condition below once QTBUG-20322 is fixed, also see BR# 194746.
     if (isLocalFile()) {
         return trailingSlash(trailing, QUrl::path());
     }
@@ -600,7 +599,7 @@ QString KUrl::prettyUrl(AdjustPathOption trailing) const
 
 QString KUrl::pathOrUrl(AdjustPathOption trailing) const
 {
-    if (isLocalFile() && fragment().isNull() && !hasQuery()) {
+    if (isLocalFile() && !hasFragment() && !hasQuery()) {
         return toLocalFile(trailing);
     }
     return prettyUrl(trailing);
