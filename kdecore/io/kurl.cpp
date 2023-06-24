@@ -353,11 +353,7 @@ KUrl::KUrl(const QString &str)
         if (str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~')) {
             setPath(str);
         } else {
-            setUrl(str);
-            // do what KUrl::setPath() does - anything without scheme is set to be a file
-            if (scheme().isEmpty() && !str.startsWith(QLatin1String("file:/"))) {
-                setScheme(QLatin1String("file"));
-            }
+            setUrl(str, QUrl::TolerantMode);
         }
     }
 }
@@ -367,12 +363,9 @@ KUrl::KUrl(const char *str)
 {
     if (str && str[0]) {
         if (str[0] == '/' || str[0] == '~') {
-            setPath(QUrl::fromPercentEncoding(str));
+            setPath(QString::fromUtf8(str));
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
-            if (scheme().isEmpty() && qstrncmp(str, "file:/", 6) != 0) {
-                setScheme(QLatin1String("file"));
-            }
         }
     }
 }
@@ -382,12 +375,9 @@ KUrl::KUrl(const QByteArray &str)
 {
     if (!str.isEmpty()) {
         if (str[0] == '/' || str[0] == '~') {
-            setPath(QUrl::fromPercentEncoding(str));
+            setPath(QString::fromUtf8(str.constData(), str.size()));
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
-            if (scheme().isEmpty() && !str.startsWith("file:/")) {
-                setScheme(QLatin1String("file"));
-            }
         }
     }
 }
@@ -400,9 +390,6 @@ KUrl::KUrl(const KUrl &u)
 KUrl::KUrl(const QUrl &u)
     : QUrl(u)
 {
-    if (scheme().isEmpty() && !path().startsWith(QLatin1String("file:/"))) {
-        setScheme(QLatin1String("file"));
-    }
 }
 
 KUrl::KUrl(const KUrl &u, const QString &relurl)
@@ -522,7 +509,7 @@ void KUrl::adjustPath(AdjustPathOption trailing)
 
 QString KUrl::path(AdjustPathOption trailing) const
 {
-  return trailingSlash(trailing, QUrl::path());
+    return trailingSlash(trailing, QUrl::path());
 }
 
 QString KUrl::toLocalFile(AdjustPathOption trailing) const
@@ -571,6 +558,19 @@ QString KUrl::url(AdjustPathOption trailing) const
         // mailto urls should be prettified, see the url183433 testcase.
         return prettyUrl(trailing);
     }
+    if (isLocalFile()) {
+        QString result = path(trailing);
+        result.prepend(QLatin1String("file://"));
+        if (hasQuery()) {
+            result.append(QLatin1Char('?'));
+            result.append(query());
+        }
+        if (hasFragment()) {
+            result.append(QLatin1Char('#'));
+            result.append(fragment());
+        }
+        return result;
+    }
     if (trailing == AddTrailingSlash) {
         return QUrl::toString(QUrl::AddTrailingSlash);
     } else if (trailing == RemoveTrailingSlash) {
@@ -579,16 +579,24 @@ QString KUrl::url(AdjustPathOption trailing) const
     return QUrl::toString(QUrl::None);
 }
 
+// A pretty URL is the same as a normal URL, except that:
+// - the password is removed
+// - the hostname is shown in Unicode (as opposed to ACE/Punycode)
+// - the pathname and fragment parts are shown in Unicode (as opposed to %-encoding)
 QString KUrl::prettyUrl(AdjustPathOption trailing) const
 {
-    // reconstruct the URL in a "pretty" form
-    // a "pretty" URL is NOT suitable for data transfer. It's only for showing data to the user.
-    // however, it must be parseable back to its original state.
-
-    // A pretty URL is the same as a normal URL, except that:
-    // - the password is removed
-    // - the hostname is shown in Unicode (as opposed to ACE/Punycode)
-    // - the pathname and fragment parts are shown in Unicode (as opposed to %-encoding)
+    if (isLocalFile()) {
+        QString result = path(trailing);
+        if (hasQuery()) {
+            result.append(QLatin1Char('?'));
+            result.append(query());
+        }
+        if (hasFragment()) {
+            result.append(QLatin1Char('#'));
+            result.append(fragment());
+        }
+        return result;
+    }
     if (trailing == AddTrailingSlash) {
         return QUrl::toString(QUrl::AddTrailingSlash | QUrl::RemovePassword);
     } else if (trailing == RemoveTrailingSlash) {
