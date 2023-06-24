@@ -495,7 +495,8 @@ void KUrl::cleanPath()
 {
     const QString newPath = QDir::cleanPath(path());
     if (path() != newPath) {
-        setPath(newPath);
+        // NOTE: not changing the scheme, comparison of relative paths will fail otherwise
+        QUrl::setPath(newPath);
     }
 }
 
