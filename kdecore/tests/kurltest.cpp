@@ -141,12 +141,12 @@ void KUrlTest::testUrl_data()
     QTest::newRow("ftp url")
         << KUrl("ftp://ftp.kde.org/")
         << QString::fromLatin1("ftp://ftp.kde.org/")
-        << QString::fromLatin1("ftp://ftp.kde.org/")
+        << QString::fromLatin1("ftp://ftp.kde.org")
         << QString::fromLatin1("ftp://ftp.kde.org/");
     QTest::newRow("ftp url - 3 trailing slashes")
         << KUrl("ftp://ftp.kde.org///")
         << QString::fromLatin1("ftp://ftp.kde.org///")
-        << QString::fromLatin1("ftp://ftp.kde.org/")
+        << QString::fromLatin1("ftp://ftp.kde.org")
         << QString::fromLatin1("ftp://ftp.kde.org///");
 }
 
@@ -189,8 +189,8 @@ void KUrlTest::testToStringList()
             << QLatin1String("file:///")
             << QLatin1String("file:///home/kde")
             << QLatin1String("file:///home/kde")
-            << QLatin1String("ftp://ftp.kde.org/")
-            << QLatin1String("ftp://ftp.kde.org/")
+            << QLatin1String("ftp://ftp.kde.org")
+            << QLatin1String("ftp://ftp.kde.org")
     );
 
     //kDebug() << urls.toStringList(KUrl::AddTrailingSlash);
