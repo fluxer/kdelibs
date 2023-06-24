@@ -627,17 +627,14 @@ QString KUrl::pathOrUrl(AdjustPathOption trailing) const
     if (isLocalFile() && !hasFragment() && !hasQuery()) {
         return toLocalFile(trailing);
     }
-    return prettyUrl(trailing);
+    return url(trailing);
 }
 
 // used for text/uri-list in the mime data. don't fold this into populateMimeData, it's also needed
 // by other code like konqdrag
 QString KUrl::toMimeDataString() const
 {
-    if (isLocalFile()) {
-        return url();
-    }
-    if (hasPass()) {
+    if (hasPass() && !isLocalFile()) {
         KUrl safeUrl(*this);
         safeUrl.setPassword(QString());
         return safeUrl.url();
