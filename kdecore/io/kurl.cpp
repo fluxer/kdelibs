@@ -40,9 +40,25 @@
 #include <QtCore/QMimeData>
 #include <QtNetwork/QHostInfo>
 
-// static const int kurlDebugArea = 181; // see kdebug.areas
-
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
+
+// FIXME: using local files to pass around queries and fragments is tottaly bonkers, this will make
+// sure they are not a thing
+// #define KURL_COMPAT_CHECK
+
+#ifdef KURL_COMPAT_CHECK
+static const int kurlDebugArea = 181; // see kdebug.areas
+
+void kCheckLocalFile(KUrl *kurl)
+{
+    if (kurl->isLocalFile()) {
+        const QString kurlstring = kurl->url();
+        if (kurlstring.contains(QLatin1Char('?')) || kurlstring.contains(QLatin1Char('#'))) {
+            kFatal(kurlDebugArea) << "Query or fragment detected in" << kurlstring;
+        }
+    }
+}
+#endif
 
 static QByteArray uriListData(const KUrl::List &urls)
 {
@@ -812,6 +828,9 @@ void KUrl::setPath(const QString &_path)
     if (path.isEmpty()) {
         path = _path;
     }
+#ifdef KURL_COMPAT_CHECK
+    kCheckLocalFile(this);
+#endif
     QUrl::setPath(path);
 }
 

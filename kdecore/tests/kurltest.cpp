@@ -29,6 +29,50 @@ QTEST_KDEMAIN_CORE(KUrlTest)
 
 Q_DECLARE_METATYPE(KUrl::EqualsOptions);
 
+
+void KUrlTest::testQueryAndFragment_data()
+{
+    QTest::addColumn<KUrl>("url" );
+    QTest::addColumn<QString>("query");
+    QTest::addColumn<QString>("fragment");
+
+    QTest::newRow("local file 1")
+        << KUrl("file:///")
+        << QString()
+        << QString();
+    QTest::newRow("local file 1 - with query and fragment")
+        << KUrl("file:///?foo=bar#baz")
+        << QString::fromLatin1("foo=bar")
+        << QString::fromLatin1("baz");
+    QTest::newRow("local file 2")
+        << KUrl("file:///home/kde/?foo=bar#baz")
+        << QString::fromLatin1("foo=bar")
+        << QString::fromLatin1("baz");
+    QTest::newRow("local file 3")
+        << KUrl("kde//?foo=bar#baz")
+        << QString::fromLatin1("foo=bar")
+        << QString::fromLatin1("baz");
+    // NOTE: not supported and will trigger the warning in KUrl 
+    QTest::newRow("local file 4")
+        << KUrl("/foo?bar=baz#foobar")
+        << QString()
+        << QString();
+    QTest::newRow("ftp url - 3 trailing slashes")
+        << KUrl("ftp://ftp.kde.org///?foo=bar#baz")
+        << QString::fromLatin1("foo=bar")
+        << QString::fromLatin1("baz");
+}
+
+void KUrlTest::testQueryAndFragment()
+{
+    QFETCH(KUrl, url);
+    QFETCH(QString, query);
+    QFETCH(QString, fragment);
+
+    QCOMPARE(url.query(), query);
+    QCOMPARE(url.fragment(), fragment);
+}
+
 void KUrlTest::testcleanPath_data()
 {
     QTest::addColumn<KUrl>("url" );
