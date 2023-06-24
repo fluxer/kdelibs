@@ -26,19 +26,11 @@
 #include "kurl.h"
 
 #include <kdebug.h>
-#include <kglobal.h>
 #include <kshell.h>
 
-#include <stdio.h>
-#include <assert.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <QtCore/QDir>
-#include <QtCore/QStringList>
-#include <QtCore/QMimeData>
-#include <QtNetwork/QHostInfo>
+#include <QDir>
+#include <QMimeData>
+#include <QHostInfo>
 
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
 
