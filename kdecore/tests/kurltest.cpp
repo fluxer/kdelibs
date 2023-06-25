@@ -52,6 +52,7 @@ void KUrlTest::testHash()
     QFETCH(KUrl, url);
 
     {
+        // re-construction on purpose
         KUrl testurl;
         testurl.setScheme(url.scheme());
         testurl.setAuthority(url.authority());
@@ -70,6 +71,7 @@ void KUrlTest::testHash()
         if (url.isLocalFile()) {
             return;
         }
+
         KUrl testurl(url);
         QCOMPARE(qHash(testurl), qHash(url));
         QCOMPARE(qHash(testurl), qHash(testurl));
@@ -210,7 +212,7 @@ void KUrlTest::testToLocalFile()
     const KUrl urlWithoutHost("file:///tmp/print.pdf");
 
     QCOMPARE(urlWithHost.toLocalFile(), localFile);
-    QCOMPARE(urlWithoutHost.toLocalFile(), localFile );
+    QCOMPARE(urlWithoutHost.toLocalFile(), localFile);
 }
 
 void KUrlTest::testUrl_data()
