@@ -91,7 +91,9 @@ void KUrlTest::testQueryAndFragment_data()
         << KUrl("kde//?foo=bar#baz")
         << QString::fromLatin1("foo=bar")
         << QString::fromLatin1("baz");
-    // NOTE: not supported and will trigger the fatal message in kCheckLocalFile()
+    // NOTE: adding query or fragment to local file URLs is not supported and will trigger the
+    // fatal message in kCheckLocalFile(). why? because what looks like query and fragment can
+    // actually be part of the file name (i.e. not an actual query) so it is passed as-is
     QTest::newRow("local file 4")
         << KUrl("/foo?bar=baz#foobar")
         << QString()
