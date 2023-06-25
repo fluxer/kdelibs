@@ -42,7 +42,7 @@ void KUrlTest::testHash_data()
         << KUrl("file:///home/kde/foo?bar=baz#foobar");
     QTest::newRow("local file 3")
         << KUrl("kde//foo?bar=baz#foobar");
-    QTest::newRow("ftp url - 3 trailing slashes")
+    QTest::newRow("ftp url")
         << KUrl("ftp://ftp.kde.org/foo?bar=baz#foobar");
 }
 
@@ -52,16 +52,16 @@ void KUrlTest::testHash()
 
     {
         // re-construction on purpose
-        KUrl testurl;
-        testurl.setScheme(url.scheme());
-        testurl.setAuthority(url.authority());
-        testurl.setPath(url.path());
-        testurl.setQuery(url.query());
-        testurl.setFragment(url.fragment());
-        // qDebug() << Q_FUNC_INFO << url << testurl;
-        QCOMPARE(url.url(), testurl.url());
-        // qDebug() << qHash(url) << qHash(testurl);
-        QCOMPARE(qHash(url), qHash(testurl));
+        KUrl testUrl;
+        testUrl.setScheme(url.scheme());
+        testUrl.setAuthority(url.authority());
+        testUrl.setPath(url.path());
+        testUrl.setQuery(url.query());
+        testUrl.setFragment(url.fragment());
+        // qDebug() << Q_FUNC_INFO << url << testUrl;
+        QCOMPARE(url.url(), testUrl.url());
+        // qDebug() << qHash(url) << qHash(testUrl);
+        QCOMPARE(qHash(url), qHash(testUrl));
     }
 
     {
@@ -71,15 +71,15 @@ void KUrlTest::testHash()
             return;
         }
 
-        KUrl testurl(url);
-        QCOMPARE(qHash(testurl), qHash(url));
-        QCOMPARE(qHash(testurl), qHash(testurl));
+        KUrl testUrl(url);
+        QCOMPARE(qHash(testUrl), qHash(url));
+        QCOMPARE(qHash(testUrl), qHash(testUrl));
 
         // change of authority
-        KUrl testurl2(url);
-        testurl2.setPort(url.port() + 10);
-        // qDebug() << Q_FUNC_INFO << testurl << testurl2;
-        QVERIFY(qHash(testurl) != qHash(testurl2));
+        KUrl testUrl2(url);
+        testUrl2.setPort(url.port() + 10);
+        // qDebug() << Q_FUNC_INFO << testUrl << testUrl2;
+        QVERIFY(qHash(testUrl) != qHash(testUrl2));
     }
 }
 
@@ -164,6 +164,31 @@ void KUrlTest::testEquals_data()
     QTest::addColumn<KUrl::EqualsOptions>("options");
     QTest::addColumn<bool>("equals");
 
+    QTest::newRow("null")
+        << KUrl()
+        << KUrl()
+        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << true;
+    QTest::newRow("null vs file:///")
+        << KUrl()
+        << KUrl("file:///")
+        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << false;
+    QTest::newRow("empty")
+        << KUrl("")
+        << KUrl("")
+        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << true;
+    QTest::newRow("empty vs file:///")
+        << KUrl("")
+        << KUrl("file:///")
+        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << false;
+    QTest::newRow("null vs empty")
+        << KUrl()
+        << KUrl("")
+        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << true;
     QTest::newRow("local file 1")
         << KUrl("file:///")
         << KUrl("file:///")

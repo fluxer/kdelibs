@@ -355,7 +355,7 @@ KUrl::operator QVariant() const
 
 bool KUrl::equals(const KUrl &u, const EqualsOptions &options) const
 {
-    if (!isValid() || !u.isValid()) {
+    if (isValid() != u.isValid()) {
         return false;
     }
 
