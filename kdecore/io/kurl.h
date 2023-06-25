@@ -217,7 +217,6 @@ public:
          * @param metaData KIO metadata shipped in the mime data, which is used for instance to
          * set a correct HTTP referrer (some websites require it for downloading e.g. an image)
          * @param flags set NoTextExport to prevent setting plain/text data into @p mimeData
-         * In such a case, setExportAsText( false ) should be called.
          */
         void populateMimeData(QMimeData *mimeData,
                               const KUrl::MetaDataMap &metaData = MetaDataMap(),
@@ -253,8 +252,7 @@ public:
          *                      (some websites require it for downloading e.g. an
          *                      image)
          * @param flags         set NoTextExport to prevent setting plain/text
-         *                      data into @p mimeData. In such a case,
-         *                      <code>setExportAsText(false)</code> should be called.
+         *                      data into @p mimeData.
          * @since 4.2
          */
         void populateMimeData(const KUrl::List &mostLocalUrls,
@@ -663,7 +661,6 @@ public:
      * @param metaData KIO metadata shipped in the mime data, which is used for instance to
      * set a correct HTTP referrer (some websites require it for downloading e.g. an image)
      * @param flags set NoTextExport to prevent setting plain/text data into @p mimeData
-     * In such a case, setExportAsText( false ) should be called.
      */
     void populateMimeData(QMimeData* mimeData,
                           const MetaDataMap& metaData = MetaDataMap(),
