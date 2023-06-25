@@ -641,13 +641,6 @@ public:
     static KUrl fromPath(const QString &text);
 
     /**
-     * Creates a KUrl from a string, using the standard conventions for mime data
-     * (drag-n-drop or copy-n-paste).
-     * Internally used by KUrl::List::fromMimeData, which is probably what you want to use instead.
-     */
-    static KUrl fromMimeDataByteArray(const QByteArray &str);
-
-    /**
      * Adds URL data into the given QMimeData.
      *
      * By default, populateMimeData also exports the URL as plain text, for e.g. dropping

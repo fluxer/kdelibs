@@ -295,7 +295,7 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
             QByteArray s( d+f, c-f );
             if (s[0] != '#') {
                 // non-comment?
-                uris.append(KUrl::fromMimeDataByteArray(s));
+                uris.append(KUrl(s));
             }
             // Skip junk
             while (c < payload.size() && d[c] && (d[c] == '\n' || d[c] == '\r')) {
@@ -601,14 +601,6 @@ QString KUrl::toMimeDataString() const
         return safeUrl.url();
     }
     return url();
-}
-
-KUrl KUrl::fromMimeDataByteArray(const QByteArray &str)
-{
-    if (str.startsWith("file:")) {
-        return KUrl(str);
-    }
-    return KUrl(str);
 }
 
 QString KUrl::fileName(const DirectoryOptions &options) const
