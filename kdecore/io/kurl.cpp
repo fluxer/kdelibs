@@ -205,7 +205,6 @@ QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
 }
 
 void KUrl::List::populateMimeData(QMimeData* mimeData,
-                                  const KUrl::MetaDataMap& metaData,
                                   MimeDataFlags flags) const
 {
     mimeData->setData(QString::fromLatin1("text/uri-list"), uriListData(*this));
@@ -230,28 +229,14 @@ void KUrl::List::populateMimeData(QMimeData* mimeData,
         }
         mimeData->setData(QString::fromLatin1("text/plain"), plainTextData);
     }
-
-    if (!metaData.isEmpty()) {
-        QByteArray metaDataData; // :)
-        QMapIterator<QString, QString> it(metaData);
-        while(it.hasNext()) {
-            it.next();
-            metaDataData += it.key().toUtf8();
-            metaDataData += "$@@$";
-            metaDataData += it.value().toUtf8();
-            metaDataData += "$@@$";
-        }
-        mimeData->setData(QString::fromLatin1("application/x-kio-metadata"), metaDataData);
-    }
 }
 
 void KUrl::List::populateMimeData(const KUrl::List& mostLocalUrls,
                                   QMimeData* mimeData,
-                                  const KUrl::MetaDataMap& metaData,
                                   MimeDataFlags flags) const
 {
     // Export the most local urls as text/uri-list and plain text.
-    mostLocalUrls.populateMimeData(mimeData, metaData, flags);
+    mostLocalUrls.populateMimeData(mimeData, flags);
     mimeData->setData(QString::fromLatin1(s_kdeUriListMime), uriListData(*this));
 }
 
@@ -269,7 +254,6 @@ QStringList KUrl::List::mimeDataTypes()
 }
 
 KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
-                                    KUrl::MetaDataMap* metaData,
                                     DecodeOptions decodeOptions)
 {
 
@@ -301,26 +285,6 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
             while (c < payload.size() && d[c] && (d[c] == '\n' || d[c] == '\r')) {
                 ++c;
             }
-        }
-    }
-    if (metaData) {
-        const QByteArray metaDataPayload = mimeData->data(QLatin1String("application/x-kio-metadata"));
-        if (!metaDataPayload.isEmpty()) {
-            QString str = QString::fromUtf8(metaDataPayload);
-            Q_ASSERT(str.endsWith(QLatin1String("$@@$")));
-            str.truncate(str.length() - 4);
-            const QStringList lst = str.split(QLatin1String("$@@$"));
-            bool readingKey = true; // true, then false, then true, etc.
-            QString key;
-            foreach (const QString &it, lst) {
-                if (readingKey) {
-                    key = it;
-                } else {
-                    metaData->insert(key, it);
-                }
-                readingKey = !readingKey;
-            }
-            Q_ASSERT(readingKey); // an odd number of items would be, well, odd ;-)
         }
     }
 
@@ -789,10 +753,10 @@ void KUrl::setPath(const QString &_path)
     QUrl::setPath(newPath);
 }
 
-void KUrl::populateMimeData(QMimeData *mimeData, const MetaDataMap &metaData, MimeDataFlags flags) const
+void KUrl::populateMimeData(QMimeData *mimeData, const  MimeDataFlags flags) const
 {
     KUrl::List lst(*this);
-    lst.populateMimeData(mimeData, metaData, flags);
+    lst.populateMimeData(mimeData, flags);
 }
 
 bool KUrl::isParentOf(const KUrl &u) const

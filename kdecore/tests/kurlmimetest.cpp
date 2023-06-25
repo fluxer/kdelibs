@@ -37,18 +37,14 @@ void KUrlMimeTest::testURLList()
     urls.append( KUrl( "http://www.kde.org" ) );
     urls.append( KUrl( "http://wstephenson:secret@example.com/path" ) );
     urls.append( KUrl( "file:///home/dfaure/konqtests/Mat%C3%A9riel" ) );
-    QMap<QString, QString> metaData;
-    metaData["key"] = "value";
-    metaData["key2"] = "value2";
 
-    urls.populateMimeData( mimeData, metaData );
+    urls.populateMimeData( mimeData );
 
     QVERIFY(KUrl::List::canDecode( mimeData ));
     QVERIFY(mimeData->hasUrls());
     QVERIFY(mimeData->hasText());
 
-    QMap<QString, QString> decodedMetaData;
-    KUrl::List decodedURLs = KUrl::List::fromMimeData( mimeData, &decodedMetaData );
+    KUrl::List decodedURLs = KUrl::List::fromMimeData( mimeData );
     QVERIFY( !decodedURLs.isEmpty() );
     KUrl::List expectedUrls = urls;
     expectedUrls[1] = KUrl("http://wstephenson@example.com/path"); // password removed
@@ -58,10 +54,6 @@ void KUrlMimeTest::testURLList()
     QCOMPARE(qurls.count(), urls.count());
     for (int i = 0; i < qurls.count(); ++i )
         QCOMPARE(qurls[i].toString(), decodedURLs[i].url());
-
-    QVERIFY( !decodedMetaData.isEmpty() );
-    QCOMPARE( decodedMetaData["key"], QString( "value" ) );
-    QCOMPARE( decodedMetaData["key2"], QString( "value2" ) );
 
     delete mimeData;
 }
@@ -74,12 +66,10 @@ void KUrlMimeTest::testOneURL()
     oneURL.populateMimeData( mimeData );
 
     QVERIFY( KUrl::List::canDecode( mimeData ) );
-    QMap<QString, QString> decodedMetaData;
-    KUrl::List decodedURLs = KUrl::List::fromMimeData( mimeData, &decodedMetaData );
+    KUrl::List decodedURLs = KUrl::List::fromMimeData( mimeData );
     QVERIFY( !decodedURLs.isEmpty() );
     QCOMPARE( decodedURLs.count(), 1 );
     QCOMPARE( decodedURLs[0].url(), oneURL.url() );
-    QVERIFY( decodedMetaData.isEmpty() );
     delete mimeData;
 }
 
@@ -92,13 +82,11 @@ void KUrlMimeTest::testFromQUrl()
     mimeData->setUrls(qurls);
 
     QVERIFY(KUrl::List::canDecode(mimeData));
-    QMap<QString, QString> decodedMetaData;
-    KUrl::List decodedURLs = KUrl::List::fromMimeData( mimeData, &decodedMetaData );
+    KUrl::List decodedURLs = KUrl::List::fromMimeData( mimeData );
     QVERIFY( !decodedURLs.isEmpty() );
     QCOMPARE( decodedURLs.count(), 2 );
     QCOMPARE( static_cast<QUrl>(decodedURLs[0]), qurls[0] );
     QCOMPARE( static_cast<QUrl>(decodedURLs[1]), qurls[1] );
-    QVERIFY( decodedMetaData.isEmpty() );
     delete mimeData;
 }
 
@@ -125,7 +113,7 @@ void KUrlMimeTest::testMostLocalUrlList()
     QCOMPARE(decodedURLs.toStringList().join(" "), urls.toStringList().join(" ") );
 
     // KUrl can also be told to decode the "most local" urls
-    decodedURLs = KUrl::List::fromMimeData(mimeData, 0, KUrl::List::PreferLocalUrls);
+    decodedURLs = KUrl::List::fromMimeData(mimeData, KUrl::List::PreferLocalUrls);
     QVERIFY(!decodedURLs.isEmpty());
     QCOMPARE(decodedURLs.toStringList().join(" "), localUrls.toStringList().join(" ") );
 

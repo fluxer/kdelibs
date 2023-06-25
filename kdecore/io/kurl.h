@@ -103,8 +103,6 @@ class KUrlPrivate;
 class KDECORE_EXPORT KUrl : public QUrl
 {
 public:
-    typedef QMap<QString, QString> MetaDataMap;
-
     enum MimeDataFlags {
         DefaultMimeDataFlags = 0,
         NoTextExport = 1
@@ -214,12 +212,9 @@ public:
          * you can add urls only once. But you can add other things, e.g. images, XML...
          *
          * @param mimeData the QMimeData instance used to drag or copy this URL
-         * @param metaData KIO metadata shipped in the mime data, which is used for instance to
-         * set a correct HTTP referrer (some websites require it for downloading e.g. an image)
          * @param flags set NoTextExport to prevent setting plain/text data into @p mimeData
          */
         void populateMimeData(QMimeData *mimeData,
-                              const KUrl::MetaDataMap &metaData = MetaDataMap(),
                               MimeDataFlags flags = DefaultMimeDataFlags) const;
 
         /**
@@ -247,17 +242,12 @@ public:
          *
          * @param mostLocalUrls the "most local" urls
          * @param mimeData      the mime data object to populate
-         * @param metaData      KIO metadata shipped in the mime data, which is
-         *                      used for instance to set a correct HTTP referrer
-         *                      (some websites require it for downloading e.g. an
-         *                      image)
          * @param flags         set NoTextExport to prevent setting plain/text
          *                      data into @p mimeData.
          * @since 4.2
          */
         void populateMimeData(const KUrl::List &mostLocalUrls,
                               QMimeData *mimeData,
-                              const KUrl::MetaDataMap &metaData = MetaDataMap(),
                               MimeDataFlags flags = DefaultMimeDataFlags) const;
 
         /**
@@ -296,13 +286,11 @@ public:
          * Decoding will fail if @p mimeData does not contain any URLs, or if at
          * least one extracted URL is not valid.
          * @param mimeData the mime data to extract from; cannot be 0
-         * @param metaData optional pointer to a map holding the metadata
          * @param decodeOptions options for decoding
          * @return the list of urls
          * @since 4.2.3
          */
         static KUrl::List fromMimeData(const QMimeData *mimeData,
-                                       KUrl::MetaDataMap* metaData = 0,
                                        DecodeOptions decodeOptions = PreferKdeUrls);
     };
 
@@ -651,12 +639,9 @@ public:
      * WARNING: do not call this method multiple times, use KUrl::List::populateMimeData instead.
      *
      * @param mimeData the QMimeData instance used to drag or copy this URL
-     * @param metaData KIO metadata shipped in the mime data, which is used for instance to
-     * set a correct HTTP referrer (some websites require it for downloading e.g. an image)
      * @param flags set NoTextExport to prevent setting plain/text data into @p mimeData
      */
     void populateMimeData(QMimeData* mimeData,
-                          const MetaDataMap& metaData = MetaDataMap(),
                           MimeDataFlags flags = DefaultMimeDataFlags) const;
 
 

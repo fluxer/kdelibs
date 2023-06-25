@@ -642,7 +642,7 @@ void KBookmark::List::populateMimeData(QMimeData *mimeData) const
     }
 
     // This sets text/uri-list and text/plain into the mimedata
-    urls.populateMimeData(mimeData, KUrl::MetaDataMap());
+    urls.populateMimeData(mimeData);
 
     mimeData->setData("application/x-xbel", doc.toByteArray());
 }

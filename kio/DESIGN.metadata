@@ -30,9 +30,6 @@ window-id       number          winId() of the window the request is associated 
 resume          number          Try to get the file starting at the given offset (set by file_copy
                                 when finding a .part file, but can also be set by apps.)
 
-charset         string          Charset of the current content as returned by a HTTP Header
-                                Response.
-
 Charsets        string          Charset(s) send in the "Accept-Charset:" HTTP Request Header.
 
 Languages       string          Language(s) send in the "Accept-Language:" HTTP Request Header.
