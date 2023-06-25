@@ -74,7 +74,7 @@ void KUrlTest::testHash()
         QCOMPARE(qHash(testurl), qHash(url));
         QCOMPARE(qHash(testurl), qHash(testurl));
 
-        // change of authorirty
+        // change of authority
         KUrl testurl2(url);
         testurl2.setPort(url.port() + 10);
         // qDebug() << Q_FUNC_INFO << testurl << testurl2;
