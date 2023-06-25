@@ -51,22 +51,41 @@ void KUrlTest::testHash()
 {
     QFETCH(KUrl, url);
 
-    KUrl testurl;
-    testurl.setScheme(url.scheme());
-    testurl.setAuthority(url.authority());
-    testurl.setPath(url.path());
-    testurl.setQuery(url.query());
-    testurl.setFragment(url.fragment());
-    // qDebug() << Q_FUNC_INFO << url << testurl;
-    if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
-        QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
+    {
+        KUrl testurl;
+        testurl.setScheme(url.scheme());
+        testurl.setAuthority(url.authority());
+        testurl.setPath(url.path());
+        testurl.setQuery(url.query());
+        testurl.setFragment(url.fragment());
+        // qDebug() << Q_FUNC_INFO << url << testurl;
+        if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
+            QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
+        }
+        QCOMPARE(url.url(), testurl.url());
+        // qDebug() << qHash(url) << qHash(testurl);
+        if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
+            QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
+        }
+        QCOMPARE(qHash(url), qHash(testurl));
     }
-    QCOMPARE(url.url(), testurl.url());
-    // qDebug() << qHash(url) << qHash(testurl);
-    if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
-        QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
+
+    {
+        // changing the port of local files is not going to do what you think, especially if they
+        // are not full path
+        if (url.isLocalFile()) {
+            return;
+        }
+        KUrl testurl(url);
+        QCOMPARE(qHash(testurl), qHash(url));
+        QCOMPARE(qHash(testurl), qHash(testurl));
+
+        // change of authorirty
+        KUrl testurl2(url);
+        testurl2.setPort(url.port() + 10);
+        // qDebug() << Q_FUNC_INFO << testurl << testurl2;
+        QVERIFY(qHash(testurl) != qHash(testurl2));
     }
-    QCOMPARE(qHash(url), qHash(testurl));
 }
 
 void KUrlTest::testQueryAndFragment_data()
