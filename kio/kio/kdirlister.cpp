@@ -2697,7 +2697,7 @@ void KDirLister::setDelayedMimeTypes( bool delayedMimeTypes )
 // called by KDirListerCache::slotRedirection
 void KDirLister::Private::redirect(const KUrl& oldUrl, const KUrl& newUrl, bool keepItems)
 {
-    if ( url.equals( oldUrl, KUrl::CompareWithoutTrailingSlash ) ) {
+    if ( url.equals( oldUrl, KUrl::RemoveTrailingSlash ) ) {
         if (!keepItems) {
             rootFileItem = KFileItem();
         } else {

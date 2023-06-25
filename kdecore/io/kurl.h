@@ -454,8 +454,7 @@ public:
          */
         IgnoreTrailingSlash = 0x01
     };
-    Q_DECLARE_FLAGS(DirectoryOptions,DirectoryOption)
-
+    Q_DECLARE_FLAGS(DirectoryOptions, DirectoryOption)
 
     /**
      * Returns the filename of the path.
@@ -558,44 +557,15 @@ public:
     operator QVariant() const;
 
     /**
-     * Flags to be used in URL comparison functions like equals, or urlcmp
-     */
-    enum EqualsOption {
-        /**
-         * ignore trailing '/' characters. The paths "dir" and "dir/" are treated the same.
-         * Note however, that by default, the paths "" and "/" are not the same
-         * (For instance ftp://user@host redirects to ftp://user@host/home/user (on a linux server),
-         * while ftp://user@host/ is the root dir).
-         * This is also why path(RemoveTrailingSlash) for "/" returns "/" and not "".
-         *
-         * When dealing with web pages however, you should also set AllowEmptyPath so that
-         * no path and "/" are considered equal.
-         */
-        CompareWithoutTrailingSlash = 0x01,
-
-        /**
-         * Treat a URL with no path as equal to a URL with a path of "/",
-         * when CompareWithoutTrailingSlash is set.
-         * Example:
-         * KUrl::urlcmp("http://www.kde.org", "http://www.kde.org/", KUrl::CompareWithoutTrailingSlash | KUrl::AllowEmptyPath)
-         * returns true.
-         * This option is ignored if CompareWithoutTrailingSlash isn't set.
-         * @since 4.5
-        */
-        AllowEmptyPath = 0x02
-    };
-    Q_DECLARE_FLAGS(EqualsOptions, EqualsOption)
-
-    /**
      * Compares this url with @p u.
      * @param u the URL to compare this one with.
-     * @param options a set of EqualsOption flags
+     * @param trailing use to add or remove a trailing slash to/from the path. See adjustPath
      * @return True if both urls are the same. If at least one of the urls is invalid,
      * false is returned.
      * @see operator==. This function should be used if you want to
      * set additional options, like ignoring trailing '/' characters.
      */
-    bool equals(const KUrl &u, const EqualsOptions& options = 0) const;
+    bool equals(const KUrl &u, AdjustPathOption trailing = LeaveTrailingSlash) const;
 
     /**
      * Checks whether the given URL is parent of this URL.
@@ -707,7 +677,6 @@ private:
     operator QString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::EqualsOptions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::DirectoryOptions)
 
 Q_DECLARE_METATYPE(KUrl)

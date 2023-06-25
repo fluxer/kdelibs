@@ -972,8 +972,8 @@ void KUrlNavigator::setLocationUrl(const KUrl& newUrl)
     // Check whether current history element has the same URL.
     // If this is the case, just ignore setting the URL.
     const LocationData& data = d->m_history[d->m_historyIndex];
-    const bool isUrlEqual = url.equals(locationUrl(), KUrl::CompareWithoutTrailingSlash) ||
-                            (!url.isValid() && url.equals(data.url, KUrl::CompareWithoutTrailingSlash));
+    const bool isUrlEqual = url.equals(locationUrl(), KUrl::RemoveTrailingSlash) ||
+                            (!url.isValid() && url.equals(data.url, KUrl::RemoveTrailingSlash));
     if (isUrlEqual) {
         return;
     }

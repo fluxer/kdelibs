@@ -26,7 +26,42 @@ QTEST_KDEMAIN_CORE(KUrlTest)
 #include "kurl.h"
 #include <kdebug.h>
 
-Q_DECLARE_METATYPE(KUrl::EqualsOptions);
+Q_DECLARE_METATYPE(KUrl::AdjustPathOption);
+
+void KUrlTest::testUpUrl_data()
+{
+    QTest::addColumn<KUrl>("url");
+    QTest::addColumn<KUrl>("url2");
+
+    QTest::newRow("null")
+        << KUrl()
+        << KUrl();
+    QTest::newRow("empty")
+        << KUrl("")
+        << KUrl("");
+    QTest::newRow("local file 1")
+        << KUrl("file:///")
+        << KUrl("file:///");
+    QTest::newRow("local file 2")
+        << KUrl("file:///home/kde/foo?bar=baz#foobar")
+        << KUrl("file:///home/");
+    QTest::newRow("local file 3")
+        << KUrl("kde//foo?bar=baz#foobar")
+        << KUrl("../kde/");
+    QTest::newRow("ftp url")
+        << KUrl("ftp://ftp.kde.org/foo?bar=baz#foobar")
+        << KUrl("ftp://ftp.kde.org/");
+}
+
+void KUrlTest::testUpUrl()
+{
+    QFETCH(KUrl, url);
+    QFETCH(KUrl, url2);
+
+    KUrl newUrl = url.upUrl();
+    // qDebug() << Q_FUNC_INFO << newUrl << url2;
+    QCOMPARE(newUrl, url2);
+}
 
 void KUrlTest::testHash_data()
 {
@@ -161,53 +196,53 @@ void KUrlTest::testEquals_data()
 {
     QTest::addColumn<KUrl>("url");
     QTest::addColumn<KUrl>("url2");
-    QTest::addColumn<KUrl::EqualsOptions>("options");
+    QTest::addColumn<KUrl::AdjustPathOption>("trailing");
     QTest::addColumn<bool>("equals");
 
     QTest::newRow("null")
         << KUrl()
         << KUrl()
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
     QTest::newRow("null vs file:///")
         << KUrl()
         << KUrl("file:///")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << false;
     QTest::newRow("empty")
         << KUrl("")
         << KUrl("")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
     QTest::newRow("empty vs file:///")
         << KUrl("")
         << KUrl("file:///")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << false;
     QTest::newRow("null vs empty")
         << KUrl()
         << KUrl("")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
     QTest::newRow("local file 1")
         << KUrl("file:///")
         << KUrl("file:///")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
     QTest::newRow("local file 2")
         << KUrl("file:///home/kde/")
         << KUrl("file:///home/kde")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
     QTest::newRow("local file 3")
         << KUrl("file:///home/kde//")
         << KUrl("file:///home/kde")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
     QTest::newRow("ftp url - 3 trailing slashes")
         << KUrl("ftp://ftp.kde.org///")
         << KUrl("ftp://ftp.kde.org/")
-        << KUrl::EqualsOptions(KUrl::CompareWithoutTrailingSlash)
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
 }
 
@@ -215,10 +250,10 @@ void KUrlTest::testEquals()
 {
     QFETCH(KUrl, url);
     QFETCH(KUrl, url2);
-    QFETCH(KUrl::EqualsOptions, options);
+    QFETCH(KUrl::AdjustPathOption, trailing);
     QFETCH(bool, equals);
 
-    QCOMPARE(url.equals(url2, options), equals);
+    QCOMPARE(url.equals(url2, trailing), equals);
 }
 
 void KUrlTest::testUriMode()

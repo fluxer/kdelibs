@@ -25,6 +25,8 @@ class KUrlTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testUpUrl_data();
+    void testUpUrl();
     void testHash_data();
     void testHash();
     void testQueryAndFragment_data();

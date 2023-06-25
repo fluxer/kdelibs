@@ -2423,7 +2423,7 @@ void KFileWidgetPrivate::_k_toggleSpeedbar(bool show)
             QModelIndex index = model->index(rowIndex, 0);
             KUrl url = model->url(index);
 
-            if ( homeURL.equals( url, KUrl::CompareWithoutTrailingSlash ) ) {
+            if ( homeURL.equals( url, KUrl::RemoveTrailingSlash ) ) {
                 toolbar->removeAction( ops->actionCollection()->action( "home" ) );
                 break;
             }

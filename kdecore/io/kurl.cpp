@@ -339,7 +339,7 @@ KUrl& KUrl::operator=(const KUrl &u)
 
 bool KUrl::operator==(const KUrl &u) const
 {
-    return equals(u, CompareWithoutTrailingSlash);
+    return equals(u, KUrl::RemoveTrailingSlash);
 }
 
 bool KUrl::operator==(const QString &_u) const
@@ -353,29 +353,12 @@ KUrl::operator QVariant() const
     return qVariantFromValue(*this);
 }
 
-bool KUrl::equals(const KUrl &u, const EqualsOptions &options) const
+bool KUrl::equals(const KUrl &u, AdjustPathOption trailing) const
 {
     if (isValid() != u.isValid()) {
         return false;
     }
-
-    QString path1 = path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
-    QString path2 = u.path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
-    if (options & AllowEmptyPath) {
-        if (path1 == QLatin1String("/")) {
-            path1.clear();
-        }
-        if (path2 == QLatin1String("/")) {
-            path2.clear();
-        }
-    }
-    if (path1 != path2) {
-        return false;
-    }
-
-    return ((scheme() == u.scheme() || (isLocalFile() && u.isLocalFile())) &&
-            authority() == u.authority() && // user+pass+host+port
-            query() == u.query() && fragment() == u.fragment());
+    return (url(trailing) == u.url(trailing));
 }
 
 KUrl KUrl::fromPath(const QString &text)
@@ -641,11 +624,22 @@ QString KUrl::directory(const DirectoryOptions &options) const
 
 KUrl KUrl::upUrl() const
 {
-    KUrl u(*this);
-    QDir d(QUrl::path());
-    d.cdUp();
-    u.setPath(d.path());
-    return u;
+    const QString urlpath = QUrl::path();
+    if (urlpath.isEmpty()) {
+        return *this;
+    }
+
+    if (QDir::isRelativePath(urlpath)) {
+        KUrl u(*this);
+        QString newPath = QString::fromLatin1("../");
+        newPath.append(QFileInfo(urlpath).path());
+        u.setPath(newPath);
+        u.setQuery(QString());
+        u.setFragment(QString());
+        return u;
+    }
+
+    return resolved(QUrl(QString::fromLatin1("..")));
 }
 
 void KUrl::setDirectory(const QString &dir)
@@ -761,7 +755,7 @@ void KUrl::populateMimeData(QMimeData *mimeData, const  MimeDataFlags flags) con
 
 bool KUrl::isParentOf(const KUrl &u) const
 {
-    return QUrl::isParentOf(u) || equals(u, CompareWithoutTrailingSlash);
+    return QUrl::isParentOf(u) || equals(u, KUrl::RemoveTrailingSlash);
 }
 
 uint qHash(const KUrl &kurl)
