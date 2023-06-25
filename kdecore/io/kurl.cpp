@@ -534,13 +534,11 @@ QString KUrl::url(AdjustPathOption trailing) const
         // mailto urls should be prettified, see the url183433 testcase.
         return prettyUrl(trailing);
     }
-    const bool islocalfile = isLocalFile();
-    const QString urlpath = path(trailing);
-    if (islocalfile) {
+    if (isLocalFile()) {
 #ifdef KURL_COMPAT_CHECK
         kCheckLocalFile(this);
 #endif
-        QString result = urlpath;
+        QString result = path(trailing);
         if (hasQuery()) {
             result.append(QLatin1Char('?'));
             result.append(query());
