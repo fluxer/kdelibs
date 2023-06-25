@@ -183,9 +183,9 @@ void KRunUnitTest::testProcessDesktopExecNoFile_data()
     QTest::newRow("%F l0") << "klauncher4 %F" << l0 << false << klauncher;
     QTest::newRow("%F l1") << "klauncher4 %F" << l1 << false << QString(klauncher + " /tmp");
     QTest::newRow("%F l2") << "klauncher4 %F" << l2 << false << QString(kioexec + " 'klauncher4 %F' http://localhost/foo");
-    QTest::newRow("%F l3") << "klauncher4 %F" << l3 << false << QString(kioexec + " 'klauncher4 %F' file:///local/file http://remotehost.org/bar");
+    QTest::newRow("%F l3") << "klauncher4 %F" << l3 << false << QString(kioexec + " 'klauncher4 %F' /local/file http://remotehost.org/bar");
 
-    QTest::newRow("%F l1 tempfile") << "klauncher4 %F" << l1 << true << QString(kioexec + " --tempfiles 'klauncher4 %F' file:///tmp");
+    QTest::newRow("%F l1 tempfile") << "klauncher4 %F" << l1 << true << QString(kioexec + " --tempfiles 'klauncher4 %F' /tmp");
 
     QTest::newRow("sh -c klauncher4 %F") << "sh -c \"klauncher4 \"'\\\"'\"%F\"'\\\"'"
                                    << l1 << false << QString(m_sh + " -c 'klauncher4 \\\"/tmp\\\"'");

@@ -57,7 +57,7 @@ void KUrlMimeTest::testURLList()
     const QList<QUrl> qurls = mimeData->urls();
     QCOMPARE(qurls.count(), urls.count());
     for (int i = 0; i < qurls.count(); ++i )
-        QCOMPARE(qurls[i], static_cast<QUrl>(decodedURLs[i]));
+        QCOMPARE(qurls[i].toString(), decodedURLs[i].url());
 
     QVERIFY( !decodedMetaData.isEmpty() );
     QCOMPARE( decodedMetaData["key"], QString( "value" ) );
@@ -133,6 +133,6 @@ void KUrlMimeTest::testMostLocalUrlList()
     const QList<QUrl> qurls = mimeData->urls();
     QCOMPARE(qurls.count(), localUrls.count());
     for (int i = 0; i < qurls.count(); ++i )
-        QCOMPARE(qurls[i], static_cast<QUrl>(localUrls[i]));
+        QCOMPARE(qurls[i].toString(), localUrls[i].url());
     delete mimeData;
 }

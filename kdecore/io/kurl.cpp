@@ -33,7 +33,6 @@
 #include <QHostInfo>
 
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
-static const char s_kurlLocalFileDelimiter = 'l';
 
 // FIXME: using local files to pass around queries and fragments is totally bonkers, this will make
 // sure they are not a thing
@@ -43,7 +42,7 @@ static const int kurlDebugArea = 181; // see kdebug.areas
 
 void kCheckLocalFile(const KUrl *kurl)
 {
-    if (kurl->isLocalFile() && kurl->queryPairDelimiter() == s_kurlLocalFileDelimiter) {
+    if (kurl->isLocalFile()) {
         if (kurl->hasQuery() || kurl->hasFragment()) {
             kFatal(kurlDebugArea) << "Query or fragment detected in" << kurl->prettyUrl();
         }
@@ -355,7 +354,6 @@ KUrl::KUrl(const QString &str)
     if (!str.isEmpty()) {
         if (str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~')) {
             setPath(str);
-            setQueryDelimiters('=', s_kurlLocalFileDelimiter);
         } else {
             setUrl(str, QUrl::TolerantMode);
         }
@@ -368,7 +366,6 @@ KUrl::KUrl(const char *str)
     if (str && str[0]) {
         if (str[0] == '/' || str[0] == '~') {
             setPath(QString::fromUtf8(str));
-            setQueryDelimiters('=', s_kurlLocalFileDelimiter);
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
         }
@@ -381,7 +378,6 @@ KUrl::KUrl(const QByteArray &str)
     if (!str.isEmpty()) {
         if (str[0] == '/' || str[0] == '~') {
             setPath(QString::fromUtf8(str.constData(), str.size()));
-            setQueryDelimiters('=', s_kurlLocalFileDelimiter);
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
         }
@@ -445,7 +441,7 @@ bool KUrl::equals(const KUrl &u, const EqualsOptions &options) const
         return false;
     }
 
-    return (scheme() == u.scheme() &&
+    return ((scheme() == u.scheme() || isLocalFile() && u.isLocalFile()) &&
             authority() == u.authority() && // user+pass+host+port
             query() == u.query() && fragment() == u.fragment());
 }
@@ -540,7 +536,7 @@ QString KUrl::url(AdjustPathOption trailing) const
     }
     const bool islocalfile = isLocalFile();
     const QString urlpath = path(trailing);
-    if (islocalfile && queryPairDelimiter() == s_kurlLocalFileDelimiter) {
+    if (islocalfile) {
 #ifdef KURL_COMPAT_CHECK
         kCheckLocalFile(this);
 #endif
@@ -554,9 +550,6 @@ QString KUrl::url(AdjustPathOption trailing) const
             result.append(fragment());
         }
         return result;
-    }
-    if (islocalfile && (urlpath.isEmpty() || urlpath == QLatin1String("/"))) {
-        return QString::fromLatin1("file:///");
     }
     if (trailing == AddTrailingSlash) {
         return QUrl::toString(QUrl::AddTrailingSlash);
@@ -788,14 +781,22 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
 
 void KUrl::setPath(const QString &_path)
 {
-    QString path = KShell::tildeExpand(_path);
-    if (path.isEmpty()) {
-        path = _path;
+    QString newPath = KShell::tildeExpand(_path);
+    if (newPath.isEmpty()) {
+        newPath = _path;
     }
-    if (scheme().isEmpty() && !path.startsWith(QLatin1String("file:/"))) {
+    if (newPath.startsWith(QLatin1String("file://"))) {
+        newPath.chop(7);
+    }
+    if (scheme().isEmpty()) {
+        if (newPath.isEmpty()) {
+            // Empty scheme and path - that's null/empty local file URL regardless of query and fragment
+            QUrl::clear();
+            return;
+        }
         setScheme(QLatin1String("file"));
     }
-    QUrl::setPath(path);
+    QUrl::setPath(newPath);
 }
 
 void KUrl::populateMimeData(QMimeData *mimeData, const MetaDataMap &metaData, MimeDataFlags flags) const

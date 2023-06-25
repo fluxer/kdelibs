@@ -59,14 +59,8 @@ void KUrlTest::testHash()
         testurl.setQuery(url.query());
         testurl.setFragment(url.fragment());
         // qDebug() << Q_FUNC_INFO << url << testurl;
-        if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
-            QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
-        }
         QCOMPARE(url.url(), testurl.url());
         // qDebug() << qHash(url) << qHash(testurl);
-        if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
-            QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
-        }
         QCOMPARE(qHash(url), qHash(testurl));
     }
 
@@ -228,19 +222,19 @@ void KUrlTest::testUrl_data()
 
     QTest::newRow("local file 1")
         << KUrl("file:///")
-        << QString::fromLatin1("file:///")
-        << QString::fromLatin1("file:///")
-        << QString::fromLatin1("file:///");
+        << QString::fromLatin1("/")
+        << QString::fromLatin1("/")
+        << QString::fromLatin1("/");
     QTest::newRow("local file 2")
         << KUrl("file:///home/kde/")
-        << QString::fromLatin1("file:///home/kde/")
-        << QString::fromLatin1("file:///home/kde")
-        << QString::fromLatin1("file:///home/kde/");
+        << QString::fromLatin1("/home/kde/")
+        << QString::fromLatin1("/home/kde")
+        << QString::fromLatin1("/home/kde/");
     QTest::newRow("local file 3")
         << KUrl("file:///home/kde//")
-        << QString::fromLatin1("file:///home/kde//")
-        << QString::fromLatin1("file:///home/kde")
-        << QString::fromLatin1("file:///home/kde//");
+        << QString::fromLatin1("/home/kde//")
+        << QString::fromLatin1("/home/kde")
+        << QString::fromLatin1("/home/kde//");
 
     QTest::newRow("ftp url")
         << KUrl("ftp://ftp.kde.org/")
@@ -275,35 +269,35 @@ void KUrlTest::testToStringList()
          << KUrl("ftp://ftp.kde.org/")
          << KUrl("ftp://ftp.kde.org///");
 
-    //kDebug() << urls.toStringList(KUrl::LeaveTrailingSlash);
+    // kDebug() << urls.toStringList(KUrl::LeaveTrailingSlash);
     QCOMPARE(
         urls.toStringList(KUrl::LeaveTrailingSlash),
         QStringList()
-            << QLatin1String("file:///")
-            << QLatin1String("file:///home/kde/")
-            << QLatin1String("file:///home/kde//")
+            << QLatin1String("/")
+            << QLatin1String("/home/kde/")
+            << QLatin1String("/home/kde//")
             << QLatin1String("ftp://ftp.kde.org/")
             << QLatin1String("ftp://ftp.kde.org///")
     );
 
-    //kDebug() << urls.toStringList(KUrl::RemoveTrailingSlash);
+    // kDebug() << urls.toStringList(KUrl::RemoveTrailingSlash);
     QCOMPARE(
         urls.toStringList(KUrl::RemoveTrailingSlash),
         QStringList()
-            << QLatin1String("file:///")
-            << QLatin1String("file:///home/kde")
-            << QLatin1String("file:///home/kde")
+            << QLatin1String("/")
+            << QLatin1String("/home/kde")
+            << QLatin1String("/home/kde")
             << QLatin1String("ftp://ftp.kde.org")
             << QLatin1String("ftp://ftp.kde.org")
     );
 
-    //kDebug() << urls.toStringList(KUrl::AddTrailingSlash);
+    // kDebug() << urls.toStringList(KUrl::AddTrailingSlash);
     QCOMPARE(
         urls.toStringList(KUrl::AddTrailingSlash),
         QStringList()
-            << QLatin1String("file:///")
-            << QLatin1String("file:///home/kde/")
-            << QLatin1String("file:///home/kde//")
+            << QLatin1String("/")
+            << QLatin1String("/home/kde/")
+            << QLatin1String("/home/kde//")
             << QLatin1String("ftp://ftp.kde.org/")
             << QLatin1String("ftp://ftp.kde.org///")
     );
