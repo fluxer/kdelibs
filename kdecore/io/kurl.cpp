@@ -33,7 +33,7 @@
 #include <QHostInfo>
 
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
-static const char s_kurllocalfiledelimiter = 'l';
+static const char s_kurlLocalFileDelimiter = 'l';
 
 // FIXME: using local files to pass around queries and fragments is totally bonkers, this will make
 // sure they are not a thing
@@ -43,7 +43,7 @@ static const int kurlDebugArea = 181; // see kdebug.areas
 
 void kCheckLocalFile(KUrl *kurl)
 {
-    if (kurl->isLocalFile() && kurl->queryPairDelimiter() == s_kurllocalfiledelimiter) {
+    if (kurl->isLocalFile() && kurl->queryPairDelimiter() == s_kurlLocalFileDelimiter) {
         const QString kurlstring = kurl->url();
         if (kurl->hasQuery() || kurl->hasFragment()) {
             kFatal(kurlDebugArea) << "Query or fragment detected in" << kurlstring;
@@ -356,7 +356,7 @@ KUrl::KUrl(const QString &str)
     if (!str.isEmpty()) {
         if (str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~')) {
             setPath(str);
-            setQueryDelimiters('=', s_kurllocalfiledelimiter);
+            setQueryDelimiters('=', s_kurlLocalFileDelimiter);
         } else {
             setUrl(str, QUrl::TolerantMode);
         }
@@ -369,7 +369,7 @@ KUrl::KUrl(const char *str)
     if (str && str[0]) {
         if (str[0] == '/' || str[0] == '~') {
             setPath(QString::fromUtf8(str));
-            setQueryDelimiters('=', s_kurllocalfiledelimiter);
+            setQueryDelimiters('=', s_kurlLocalFileDelimiter);
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
         }
@@ -382,7 +382,7 @@ KUrl::KUrl(const QByteArray &str)
     if (!str.isEmpty()) {
         if (str[0] == '/' || str[0] == '~') {
             setPath(QString::fromUtf8(str.constData(), str.size()));
-            setQueryDelimiters('=', s_kurllocalfiledelimiter);
+            setQueryDelimiters('=', s_kurlLocalFileDelimiter);
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
         }
@@ -541,7 +541,7 @@ QString KUrl::url(AdjustPathOption trailing) const
     }
     const bool islocalfile = isLocalFile();
     const QString urlpath = path(trailing);
-    if (islocalfile && queryPairDelimiter() == s_kurllocalfiledelimiter) {
+    if (islocalfile && queryPairDelimiter() == s_kurlLocalFileDelimiter) {
 #ifdef KURL_COMPAT_CHECK
         kCheckLocalFile(this);
 #endif
