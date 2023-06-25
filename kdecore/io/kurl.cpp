@@ -432,34 +432,23 @@ bool KUrl::equals(const KUrl &u, const EqualsOptions &options) const
         return false;
     }
 
-    if (options & CompareWithoutTrailingSlash || options & CompareWithoutFragment) {
-        QString path1 = path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
-        QString path2 = u.path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
-
-        if (options & AllowEmptyPath) {
-            if (path1 == QLatin1String("/")) {
-                path1.clear();
-            }
-            if (path2 == QLatin1String("/")) {
-                path2.clear();
-            }
+    QString path1 = path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
+    QString path2 = u.path((options & CompareWithoutTrailingSlash) ? RemoveTrailingSlash : LeaveTrailingSlash);
+    if (options & AllowEmptyPath) {
+        if (path1 == QLatin1String("/")) {
+            path1.clear();
         }
-
-        if (path1 != path2) {
-            return false;
+        if (path2 == QLatin1String("/")) {
+            path2.clear();
         }
-
-        if (scheme() == u.scheme() &&
-            authority() == u.authority() && // user+pass+host+port
-            query() == u.query() &&
-            (fragment() == u.fragment() || options & CompareWithoutFragment))
-        {
-            return true;
-        }
+    }
+    if (path1 != path2) {
         return false;
     }
 
-    return (*this == u);
+    return (scheme() == u.scheme() &&
+            authority() == u.authority() && // user+pass+host+port
+            query() == u.query() && fragment() == u.fragment());
 }
 
 KUrl KUrl::fromPath(const QString &text)

@@ -588,11 +588,6 @@ public:
         CompareWithoutTrailingSlash = 0x01,
 
         /**
-         * disables comparison of HTML-style references.
-         */
-        CompareWithoutFragment = 0x02,
-
-        /**
          * Treat a URL with no path as equal to a URL with a path of "/",
          * when CompareWithoutTrailingSlash is set.
          * Example:
@@ -601,7 +596,7 @@ public:
          * This option is ignored if CompareWithoutTrailingSlash isn't set.
          * @since 4.5
         */
-        AllowEmptyPath = 0x04
+        AllowEmptyPath = 0x02
     };
     Q_DECLARE_FLAGS(EqualsOptions, EqualsOption)
 
