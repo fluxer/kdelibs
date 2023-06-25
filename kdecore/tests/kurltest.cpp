@@ -52,7 +52,7 @@ void KUrlTest::testQueryAndFragment_data()
         << KUrl("kde//?foo=bar#baz")
         << QString::fromLatin1("foo=bar")
         << QString::fromLatin1("baz");
-    // NOTE: not supported and will trigger the warning in KUrl 
+    // NOTE: not supported and will trigger the fatal message in kCheckLocalFile()
     QTest::newRow("local file 4")
         << KUrl("/foo?bar=baz#foobar")
         << QString()

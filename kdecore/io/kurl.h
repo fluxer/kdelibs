@@ -415,22 +415,6 @@ public:
     bool isLocalFile() const;
 
     /**
-     * Adds encoding information to url by adding a "charset" parameter. If there
-     * is already a charset parameter, it will be replaced.
-     * @param encoding the encoding to add or QString() to remove the
-     *                 encoding.
-     */
-    void setFileEncoding(const QString &encoding);
-
-    /**
-     * Returns encoding information from url, the content of the "charset"
-     * parameter.
-     * @return An encoding suitable for QTextCodec::codecForName()
-     *         or QString() if not encoding was specified.
-     */
-    QString fileEncoding() const;
-
-    /**
      * Adds to the current path.
      * Assumes that the current path is a directory. @p txt is appended to the
      * current path. The function adds '/' if needed while concatenating.

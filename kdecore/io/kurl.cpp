@@ -33,19 +33,19 @@
 #include <QHostInfo>
 
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
+static const char s_kurllocalfiledelimiter = 'l';
 
-// FIXME: using local files to pass around queries and fragments is tottaly bonkers, this will make
+// FIXME: using local files to pass around queries and fragments is totally bonkers, this will make
 // sure they are not a thing
 // #define KURL_COMPAT_CHECK
-
 #ifdef KURL_COMPAT_CHECK
 static const int kurlDebugArea = 181; // see kdebug.areas
 
 void kCheckLocalFile(KUrl *kurl)
 {
-    if (kurl->isLocalFile()) {
+    if (kurl->isLocalFile() && kurl->queryPairDelimiter() == s_kurllocalfiledelimiter) {
         const QString kurlstring = kurl->url();
-        if (kurlstring.contains(QLatin1Char('?')) || kurlstring.contains(QLatin1Char('#'))) {
+        if (kurl->hasQuery() || kurl->hasFragment()) {
             kFatal(kurlDebugArea) << "Query or fragment detected in" << kurlstring;
         }
     }
@@ -360,6 +360,7 @@ KUrl::KUrl(const QString &str)
     if (!str.isEmpty()) {
         if (str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~')) {
             setPath(str);
+            setQueryDelimiters('=', s_kurllocalfiledelimiter);
         } else {
             setUrl(str, QUrl::TolerantMode);
         }
@@ -372,6 +373,7 @@ KUrl::KUrl(const char *str)
     if (str && str[0]) {
         if (str[0] == '/' || str[0] == '~') {
             setPath(QString::fromUtf8(str));
+            setQueryDelimiters('=', s_kurllocalfiledelimiter);
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
         }
@@ -384,6 +386,7 @@ KUrl::KUrl(const QByteArray &str)
     if (!str.isEmpty()) {
         if (str[0] == '/' || str[0] == '~') {
             setPath(QString::fromUtf8(str.constData(), str.size()));
+            setQueryDelimiters('=', s_kurllocalfiledelimiter);
         } else {
             setUrl(QUrl::fromPercentEncoding(str), QUrl::TolerantMode);
         }
@@ -545,31 +548,19 @@ bool KUrl::isLocalFile() const
     return (host() == QHostInfo::localHostName().toLower());
 }
 
-void KUrl::setFileEncoding(const QString &encoding)
-{
-    if (!isLocalFile()) {
-        return;
-    }
-    addQueryItem(QLatin1String("charset"), encoding);
-}
-
-QString KUrl::fileEncoding() const
-{
-    if (!isLocalFile()) {
-        return QString();
-    }
-    return queryItemValue(QLatin1String("charset"));
-}
-
 QString KUrl::url(AdjustPathOption trailing) const
 {
     if (QString::compare(scheme(), QLatin1String("mailto"), Qt::CaseInsensitive) == 0) {
         // mailto urls should be prettified, see the url183433 testcase.
         return prettyUrl(trailing);
     }
-    if (isLocalFile()) {
-        QString result = path(trailing);
-        result.prepend(QLatin1String("file://"));
+    const bool islocalfile = isLocalFile();
+    const QString urlpath = path(trailing);
+    if (islocalfile && queryPairDelimiter() == s_kurllocalfiledelimiter) {
+#ifdef KURL_COMPAT_CHECK
+        kCheckLocalFile(this);
+#endif
+        QString result = urlpath;
         if (hasQuery()) {
             result.append(QLatin1Char('?'));
             result.append(query());
@@ -579,6 +570,9 @@ QString KUrl::url(AdjustPathOption trailing) const
             result.append(fragment());
         }
         return result;
+    }
+    if (islocalfile && (urlpath.isEmpty() || urlpath == QLatin1String("/"))) {
+        return QString::fromLatin1("file:///");
     }
     if (trailing == AddTrailingSlash) {
         return QUrl::toString(QUrl::AddTrailingSlash);
@@ -817,13 +811,10 @@ void KUrl::setPath(const QString &_path)
     if (path.isEmpty()) {
         path = _path;
     }
-#ifdef KURL_COMPAT_CHECK
-    kCheckLocalFile(this);
-#endif
     QUrl::setPath(path);
 }
 
-void KUrl::populateMimeData(QMimeData* mimeData, const MetaDataMap& metaData, MimeDataFlags flags) const
+void KUrl::populateMimeData(QMimeData *mimeData, const MetaDataMap &metaData, MimeDataFlags flags) const
 {
     KUrl::List lst(*this);
     lst.populateMimeData(mimeData, metaData, flags);
@@ -834,7 +825,7 @@ bool KUrl::isParentOf(const KUrl &u) const
     return QUrl::isParentOf(u) || equals(u, CompareWithoutTrailingSlash);
 }
 
-uint qHash(const KUrl& kurl)
+uint qHash(const KUrl &kurl)
 {
     // qHash(kurl.url()) was the worse implementation possible, since QUrl::toEncoded()
     // had to concatenate the bits of the url into the full url every time.
