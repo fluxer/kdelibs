@@ -350,10 +350,6 @@ KUrl::KUrl()
 {
 }
 
-KUrl::~KUrl()
-{
-}
-
 KUrl::KUrl(const QString &str)
   : QUrl()
 {

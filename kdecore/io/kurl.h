@@ -314,11 +314,6 @@ public:
     KUrl();
 
     /**
-     * Destructs the KUrl object.
-     */
-    ~KUrl();
-
-    /**
      * Usual constructor, to construct from a string.
      * @param urlOrPath An encoded URL or a path.
      */
