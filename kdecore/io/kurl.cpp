@@ -441,7 +441,7 @@ bool KUrl::equals(const KUrl &u, const EqualsOptions &options) const
         return false;
     }
 
-    return ((scheme() == u.scheme() || isLocalFile() && u.isLocalFile()) &&
+    return ((scheme() == u.scheme() || (isLocalFile() && u.isLocalFile())) &&
             authority() == u.authority() && // user+pass+host+port
             query() == u.query() && fragment() == u.fragment());
 }
