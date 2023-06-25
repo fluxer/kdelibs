@@ -1,4 +1,3 @@
-// krazy:excludeall=qclasses
 /* This file is part of the KDE libraries
     Copyright (c) 1999-2005 Waldo Bastian <bastian@kde.org>
     Copyright (c) 2000-2005 David Faure <faure@kde.org>

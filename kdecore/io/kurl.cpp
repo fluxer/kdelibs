@@ -131,38 +131,6 @@ static QString _relativePath(const QString &base_dir, const QString &path, bool 
     return result;
 }
 
-bool KUrl::isRelativeUrl(const QString &_url)
-{
-    int len = _url.length();
-    if (!len) {
-        // Very short relative URL.
-        return true;
-    }
-    const QChar *str = _url.unicode();
-
-    // Absolute URL must start with alpha-character
-    if (!isalpha(str[0].toLatin1())) {
-         // Relative URL
-        return true;
-    }
-
-    for(int i = 1; i < len; i++) {
-        char c = str[i].toLatin1(); // Note: non-latin1 chars return 0!
-        if (c == ':') {
-            // Absolute URL
-            return false;
-        }
-
-        // Protocol part may only contain alpha, digit, + or -
-        if (!isalpha(c) && !isdigit(c) && (c != '+') && (c != '-')) {
-             // Relative URL
-            return true;
-        }
-    }
-    // Relative URL, did not contain ':'
-    return true;
-}
-
 KUrl::List::List(const KUrl &url)
 {
     append(url);
@@ -731,6 +699,38 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
     }
 
     return relURL;
+}
+
+bool KUrl::isRelativeUrl(const QString &_url)
+{
+    int len = _url.length();
+    if (!len) {
+        // Very short relative URL.
+        return true;
+    }
+    const QChar *str = _url.unicode();
+
+    // Absolute URL must start with alpha-character
+    if (!isalpha(str[0].toLatin1())) {
+         // Relative URL
+        return true;
+    }
+
+    for(int i = 1; i < len; i++) {
+        char c = str[i].toLatin1(); // Note: non-latin1 chars return 0!
+        if (c == ':') {
+            // Absolute URL
+            return false;
+        }
+
+        // Protocol part may only contain alpha, digit, + or -
+        if (!isalpha(c) && !isdigit(c) && (c != '+') && (c != '-')) {
+             // Relative URL
+            return true;
+        }
+    }
+    // Relative URL, did not contain ':'
+    return true;
 }
 
 void KUrl::setPath(const QString &_path)
