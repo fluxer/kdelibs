@@ -37,7 +37,7 @@ static const char s_kurlLocalFileDelimiter = 'l';
 
 // FIXME: using local files to pass around queries and fragments is totally bonkers, this will make
 // sure they are not a thing
-#define KURL_COMPAT_CHECK
+// #define KURL_COMPAT_CHECK
 #ifdef KURL_COMPAT_CHECK
 static const int kurlDebugArea = 181; // see kdebug.areas
 
@@ -45,7 +45,7 @@ void kCheckLocalFile(const KUrl *kurl)
 {
     if (kurl->isLocalFile() && kurl->queryPairDelimiter() == s_kurlLocalFileDelimiter) {
         if (kurl->hasQuery() || kurl->hasFragment()) {
-            kFatal(kurlDebugArea) << "Query or fragment detected in" << kurl->url();
+            kFatal(kurlDebugArea) << "Query or fragment detected in" << kurl->prettyUrl();
         }
     }
 }
