@@ -412,7 +412,7 @@ KUrl& KUrl::operator=(const KUrl &u)
 
 bool KUrl::operator==(const KUrl &u) const
 {
-    return QUrl::operator==(u);
+    return equals(u, CompareWithoutTrailingSlash);
 }
 
 bool KUrl::operator==(const QString &_u) const
@@ -789,12 +789,12 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
 
 void KUrl::setPath(const QString &_path)
 {
-    if (scheme().isEmpty() && !_path.startsWith(QLatin1String("file:/"))) {
-        setScheme(QLatin1String("file"));
-    }
     QString path = KShell::tildeExpand(_path);
     if (path.isEmpty()) {
         path = _path;
+    }
+    if (scheme().isEmpty() && !path.startsWith(QLatin1String("file:/"))) {
+        setScheme(QLatin1String("file"));
     }
     QUrl::setPath(path);
 }

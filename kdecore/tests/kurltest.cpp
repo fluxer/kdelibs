@@ -29,10 +29,49 @@ QTEST_KDEMAIN_CORE(KUrlTest)
 
 Q_DECLARE_METATYPE(KUrl::EqualsOptions);
 
+void KUrlTest::testHash_data()
+{
+    QTest::addColumn<KUrl>("url");
+
+    QTest::newRow("null")
+        << KUrl();
+    QTest::newRow("empty")
+        << KUrl("");
+    QTest::newRow("local file 1")
+        << KUrl("file:///");
+    QTest::newRow("local file 2")
+        << KUrl("file:///home/kde/foo?bar=baz#foobar");
+    QTest::newRow("local file 3")
+        << KUrl("kde//foo?bar=baz#foobar");
+    QTest::newRow("ftp url - 3 trailing slashes")
+        << KUrl("ftp://ftp.kde.org/foo?bar=baz#foobar");
+}
+
+void KUrlTest::testHash()
+{
+    QFETCH(KUrl, url);
+
+    KUrl testurl;
+    testurl.setScheme(url.scheme());
+    testurl.setAuthority(url.authority());
+    testurl.setPath(url.path());
+    testurl.setQuery(url.query());
+    testurl.setFragment(url.fragment());
+    // qDebug() << Q_FUNC_INFO << url << testurl;
+    if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
+        QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
+    }
+    QCOMPARE(url.url(), testurl.url());
+    // qDebug() << qHash(url) << qHash(testurl);
+    if (testurl.path().isEmpty() || testurl.url().contains(QLatin1String("kde//"))) {
+        QEXPECT_FAIL("", "The legacy of KUrl::setPath()", Continue);
+    }
+    QCOMPARE(qHash(url), qHash(testurl));
+}
 
 void KUrlTest::testQueryAndFragment_data()
 {
-    QTest::addColumn<KUrl>("url" );
+    QTest::addColumn<KUrl>("url");
     QTest::addColumn<QString>("query");
     QTest::addColumn<QString>("fragment");
 
@@ -75,7 +114,7 @@ void KUrlTest::testQueryAndFragment()
 
 void KUrlTest::testcleanPath_data()
 {
-    QTest::addColumn<KUrl>("url" );
+    QTest::addColumn<KUrl>("url");
     QTest::addColumn<KUrl>("url2");
 
     QTest::newRow("local file 1")
@@ -104,7 +143,7 @@ void KUrlTest::testcleanPath()
 
 void KUrlTest::testEquals_data()
 {
-    QTest::addColumn<KUrl>("url" );
+    QTest::addColumn<KUrl>("url");
     QTest::addColumn<KUrl>("url2");
     QTest::addColumn<KUrl::EqualsOptions>("options");
     QTest::addColumn<bool>("equals");
@@ -161,7 +200,7 @@ void KUrlTest::testToLocalFile()
 
 void KUrlTest::testUrl_data()
 {
-    QTest::addColumn<KUrl>("url" );
+    QTest::addColumn<KUrl>("url");
     QTest::addColumn<QString>("urlLTS");
     QTest::addColumn<QString>("urlRTS");
     QTest::addColumn<QString>("urlATS");
