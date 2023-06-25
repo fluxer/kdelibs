@@ -48,7 +48,8 @@ K_GLOBAL_STATIC_WITH_ARGS(
     ("org.kde.kuiserver", "/JobViewServer", QDBusConnection::sessionBus(), qApp)
 );
 
-static KUrl cleanupUrl(const KUrl& url) {
+static KUrl cleanupUrl(const KUrl& url)
+{
     KUrl u = url;
     u.cleanPath(); // remove double slashes in the path, simplify "foo/." to "foo/", etc.
     u.adjustPath(KUrl::RemoveTrailingSlash); // KDirLister does this too, so we remove the slash before comparing with the root node url.
@@ -403,7 +404,7 @@ void KDirModelPrivate::_k_slotNewItems(const KUrl& directoryUrl, const KFileItem
 
     QList<QModelIndex> emitExpandFor;
 
-    foreach (const KFileItem it, items) {
+    foreach (const KFileItem &it, items) {
         const bool isDir = it.isDir();
         KDirModelNode* node = isDir
                               ? new KDirModelDirNode( dirNode, it )
