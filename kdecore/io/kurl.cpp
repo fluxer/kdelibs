@@ -358,6 +358,10 @@ bool KUrl::equals(const KUrl &u, AdjustPathOption trailing) const
     if (isValid() != u.isValid()) {
         return false;
     }
+    if (isLocalFile()) {
+        // that is how QFileInfo does it essentially
+        return (QDir::cleanPath(url(trailing)) == QDir::cleanPath(u.url(trailing)));
+    }
     return (url(trailing) == u.url(trailing));
 }
 
@@ -401,8 +405,7 @@ void KUrl::cleanPath()
 {
     const QString newpath = QDir::cleanPath(path());
     if (path() != newpath) {
-        // NOTE: not changing the scheme, comparison of relative paths will fail otherwise
-        QUrl::setPath(newpath);
+        setPath(newpath);
     }
 }
 
@@ -642,8 +645,8 @@ KUrl KUrl::upUrl() const
     if (isLocalFile()) {
         // the only way to be sure is to stat because the path can include or omit the trailing
         // slash (indicating if it is directory)
-        QFileInfo urlinfo(urlpath);
         QString newpath;
+        QFileInfo urlinfo(urlpath);
         if (urlinfo.isDir()) {
             newpath = urlinfo.path();
         } else {
