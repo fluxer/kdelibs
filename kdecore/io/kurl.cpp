@@ -399,18 +399,18 @@ void KUrl::setFileName(const QString &txt)
 
 void KUrl::cleanPath()
 {
-    const QString newPath = QDir::cleanPath(path());
-    if (path() != newPath) {
+    const QString newpath = QDir::cleanPath(path());
+    if (path() != newpath) {
         // NOTE: not changing the scheme, comparison of relative paths will fail otherwise
-        QUrl::setPath(newPath);
+        QUrl::setPath(newpath);
     }
 }
 
 void KUrl::adjustPath(AdjustPathOption trailing)
 {
-    const QString newPath = trailingSlash(trailing, path());
-    if (path() != newPath) {
-        setPath(newPath);
+    const QString newpath = trailingSlash(trailing, path());
+    if (path() != newpath) {
+        setPath(newpath);
     }
 }
 
@@ -631,9 +631,26 @@ KUrl KUrl::upUrl() const
 
     if (QDir::isRelativePath(urlpath)) {
         KUrl u(*this);
-        QString newPath = QString::fromLatin1("../");
-        newPath.append(QFileInfo(urlpath).path());
-        u.setPath(newPath);
+        QString newpath = QString::fromLatin1("../");
+        newpath.append(QFileInfo(urlpath).path());
+        u.setPath(newpath);
+        u.setQuery(QString());
+        u.setFragment(QString());
+        return u;
+    }
+
+    if (isLocalFile()) {
+        // the only way to be sure is to stat because the path can include or omit the traling
+        // slash (indicating if it is directory)
+        QFileInfo urlinfo(urlpath);
+        QString newpath;
+        if (urlinfo.isDir()) {
+            newpath = urlinfo.path();
+        } else {
+            newpath = QFileInfo(urlinfo.path()).path();
+        }
+        KUrl u(*this);
+        u.setPath(newpath);
         u.setQuery(QString());
         u.setFragment(QString());
         return u;
@@ -729,22 +746,22 @@ bool KUrl::isRelativeUrl(const QString &_url)
 
 void KUrl::setPath(const QString &_path)
 {
-    QString newPath = KShell::tildeExpand(_path);
-    if (newPath.isEmpty()) {
-        newPath = _path;
+    QString newpath = KShell::tildeExpand(_path);
+    if (newpath.isEmpty()) {
+        newpath = _path;
     }
-    if (newPath.startsWith(QLatin1String("file://"))) {
-        newPath.chop(7);
+    if (newpath.startsWith(QLatin1String("file://"))) {
+        newpath.chop(7);
     }
     if (scheme().isEmpty()) {
-        if (newPath.isEmpty()) {
+        if (newpath.isEmpty()) {
             // Empty scheme and path - that's null/empty local file URL regardless of query and fragment
             QUrl::clear();
             return;
         }
         setScheme(QLatin1String("file"));
     }
-    QUrl::setPath(newPath);
+    QUrl::setPath(newpath);
 }
 
 void KUrl::populateMimeData(QMimeData *mimeData, const  MimeDataFlags flags) const
