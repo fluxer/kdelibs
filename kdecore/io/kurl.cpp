@@ -630,17 +630,17 @@ KUrl KUrl::upUrl() const
     }
 
     if (QDir::isRelativePath(urlpath)) {
-        KUrl u(*this);
+        KUrl result(*this);
         QString newpath = QString::fromLatin1("../");
         newpath.append(QFileInfo(urlpath).path());
-        u.setPath(newpath);
-        u.setQuery(QString());
-        u.setFragment(QString());
-        return u;
+        result.setPath(newpath);
+        result.setQuery(QString());
+        result.setFragment(QString());
+        return result;
     }
 
     if (isLocalFile()) {
-        // the only way to be sure is to stat because the path can include or omit the traling
+        // the only way to be sure is to stat because the path can include or omit the trailing
         // slash (indicating if it is directory)
         QFileInfo urlinfo(urlpath);
         QString newpath;
@@ -649,11 +649,11 @@ KUrl KUrl::upUrl() const
         } else {
             newpath = QFileInfo(urlinfo.path()).path();
         }
-        KUrl u(*this);
-        u.setPath(newpath);
-        u.setQuery(QString());
-        u.setFragment(QString());
-        return u;
+        KUrl result(*this);
+        result.setPath(newpath);
+        result.setQuery(QString());
+        result.setFragment(QString());
+        return result;
     }
 
     return resolved(QUrl(QString::fromLatin1("..")));
@@ -719,8 +719,8 @@ bool KUrl::isRelativeUrl(const QString &_url)
         // Very short relative URL.
         return true;
     }
-    const QChar *str = _url.unicode();
 
+    const QChar *str = _url.unicode();
     // Absolute URL must start with alpha-character
     if (!isalpha(str[0].toLatin1())) {
          // Relative URL
