@@ -61,7 +61,7 @@ static QString kPathDirectory(const QString &path)
 {
     const int lastslash = path.lastIndexOf(QLatin1Char('/'));
     if (lastslash == -1) {
-        return QString(QLatin1Char('.'));
+        return QString();
     }
     if (lastslash == 0) {
         return QString(QLatin1Char('/'));
