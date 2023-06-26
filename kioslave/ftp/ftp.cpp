@@ -1323,7 +1323,7 @@ void Ftp::stat(const KUrl &url)
 
   KUrl tempurl( url );
   tempurl.setPath( path ); // take the clean one
-  QString listarg; // = tempurl.directory(KUrl::ObeyTrailingSlash);
+  QString listarg; // = tempurl.directory(KUrl::LeaveTrailingSlash);
   QString parentDir;
   QString filename = tempurl.fileName();
   Q_ASSERT(!filename.isEmpty());
@@ -1351,7 +1351,7 @@ void Ftp::stat(const KUrl &url)
   if (!isDir)
   {
     // It is a file or it doesn't exist, try going to parent directory
-    parentDir = tempurl.directory(KUrl::AppendTrailingSlash);
+    parentDir = tempurl.directory(KUrl::AddTrailingSlash);
     // With files we can do "LIST <filename>" to avoid listing the whole dir
     listarg = filename;
   }

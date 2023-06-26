@@ -521,50 +521,16 @@ QString KUrl::toMimeDataString() const
     return url();
 }
 
-QString KUrl::fileName(const DirectoryOptions &options) const
+QString KUrl::fileName(AdjustPathOption trailing) const
 {
-    Q_ASSERT(options != 0); // Disallow options == false
-    QString fname;
-    const QString path = this->path();
-
-    int len = path.length();
-    if (len == 0) {
-        return fname;
+    const QString urlpath = path();
+    if (urlpath.isEmpty()) {
+        return urlpath;
     }
-
-    if (!(options & ObeyTrailingSlash)) {
-        while (len >= 1 && path[len - 1] == QLatin1Char('/')) {
-            len--;
-        }
-    } else if (path[len - 1] == QLatin1Char('/')) {
-        return fname;
+    if (!urlpath.contains(QLatin1Char('/'))) {
+        return urlpath;
     }
-
-    // Does the path only consist of '/' characters ?
-    if (len == 1 && path[0] == QLatin1Char('/')) {
-        return fname;
-    }
-
-    // Skip last n slashes
-    int n = 1;
-    int i = len;
-    do {
-        i = path.lastIndexOf(QLatin1Char('/'), i - 1);
-    } while (--n && i > 0);
-
-    // If ( i == -1 ) => the first character is not a '/'
-    // So it's some URL like file:blah.tgz, return the whole path
-    if (i == -1) {
-        if (len == path.length()) {
-            fname = path;
-        } else {
-            // Might get here if _strip_trailing_slash is true
-            fname = path.left(len);
-        }
-    } else {
-        fname = path.mid(i + 1, len - i - 1); // TO CHECK
-    }
-    return fname;
+    return trailingSlash(trailing, QFileInfo(urlpath).fileName());
 }
 
 void KUrl::addPath(const QString &txt)
@@ -593,36 +559,13 @@ void KUrl::addPath(const QString &txt)
     setPath(strPath + txt.mid(i));
 }
 
-QString KUrl::directory(const DirectoryOptions &options) const
+QString KUrl::directory(AdjustPathOption trailing) const
 {
-    Q_ASSERT(options != 0); // Disallow options == false
-    QString result = path();
-    if (!(options & ObeyTrailingSlash)) {
-        result = trailingSlash(RemoveTrailingSlash, result);
+    QString urlpath = path();
+    if (urlpath.isEmpty() || urlpath == QLatin1String("/")) {
+        return urlpath;
     }
-
-    if (result.isEmpty() || result == QLatin1String("/")) {
-        return result;
-    }
-
-    int i = result.lastIndexOf(QLatin1Char('/'));
-    // If ( i == -1 ) => the first character is not a '/'
-    // So it's some URL like file:blah.tgz, with no path
-    if (i == -1) {
-        return QString();
-    }
-
-    if (i == 0) {
-        return QString(QLatin1Char('/'));
-    }
-
-    if (options & AppendTrailingSlash) {
-        result = result.left(i + 1);
-    } else {
-        result = result.left(i);
-    }
-
-    return result;
+    return trailingSlash(trailing, QFileInfo(urlpath).path());
 }
 
 KUrl KUrl::upUrl() const
@@ -643,7 +586,7 @@ KUrl KUrl::upUrl() const
     }
 
     if (isLocalFile()) {
-        // the only way to be sure is to stat because the path can include or omit the trailing
+        // the only way to be sure is to stat() because the path can include or omit the trailing
         // slash (indicating if it is directory)
         QString newpath;
         QFileInfo urlinfo(urlpath);
@@ -698,7 +641,7 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
     QString relURL;
     if ((base_url.path() != url.path()) || (base_url.query() != url.query())) {
         bool dummy = false;
-        QString basePath = base_url.directory(KUrl::ObeyTrailingSlash);
+        QString basePath = base_url.directory(KUrl::LeaveTrailingSlash);
         relURL = _relativePath(basePath, url.path(), dummy);
         relURL += url.query();
     }

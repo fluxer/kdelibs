@@ -468,7 +468,7 @@ void CopyJobPrivate::sourceStated(const UDSEntry& entry, const KUrl& sourceUrl)
         //kDebug(7007) << "Source is a file (or a symlink), or we are linking -> no recursive listing";
 
         if (srcurl.isLocalFile()) {
-            const QString parentDir = srcurl.directory(KUrl::ObeyTrailingSlash);
+            const QString parentDir = srcurl.directory(KUrl::LeaveTrailingSlash);
             m_parentDirs.insert(parentDir);
         }
 
@@ -820,7 +820,7 @@ void CopyJobPrivate::startRenameJob( const KUrl& slave_url )
 
     // Silence KDirWatch notifications, otherwise performance is horrible
     if (m_currentSrcURL.isLocalFile()) {
-        const QString parentDir = m_currentSrcURL.directory(KUrl::ObeyTrailingSlash);
+        const QString parentDir = m_currentSrcURL.directory(KUrl::LeaveTrailingSlash);
         if (!m_parentDirs.contains(parentDir)) {
             m_parentDirs.insert(parentDir);
         }
@@ -1848,7 +1848,7 @@ void CopyJobPrivate::slotResultRenaming( KJob* job )
             kDebug(7007) << "Couldn't rename directly, dest already exists. Detected special case of lower/uppercase renaming in same dir, try with 2 rename calls";
             const QString _src( m_currentSrcURL.toLocalFile() );
             const QString _dest( dest.toLocalFile() );
-            const QString _tmpPrefix = m_currentSrcURL.directory(KUrl::ObeyTrailingSlash|KUrl::AppendTrailingSlash);
+            const QString _tmpPrefix = m_currentSrcURL.directory(KUrl::AddTrailingSlash);
             KTemporaryFile tmpFile;
             tmpFile.setPrefix(_tmpPrefix);
             const bool openOk = tmpFile.open();

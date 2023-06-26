@@ -313,7 +313,7 @@ void PreviewJobPrivate::startPreview()
             items.append(item);
             if (!bNeedCache && bSave &&
                 (kit.url().protocol() != "file" ||
-                 !kit.url().directory( KUrl::AppendTrailingSlash ).startsWith(thumbRoot)) &&
+                 !kit.url().directory( KUrl::AddTrailingSlash ).startsWith(thumbRoot)) &&
                 itemplugin->property("CacheThumbnail").toBool()) {
                 bNeedCache = true;
             }
@@ -553,7 +553,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
     bool save = bSave &&
                 currentItem.plugin->property("CacheThumbnail").toBool() &&
                 (currentItem.item.url().protocol() != "file" ||
-                 !currentItem.item.url().directory( KUrl::AppendTrailingSlash ).startsWith(thumbRoot)) && !sequenceIndex;
+                 !currentItem.item.url().directory( KUrl::AddTrailingSlash ).startsWith(thumbRoot)) && !sequenceIndex;
     QImage thumb;
     QDataStream s(data);
     s >> thumb;

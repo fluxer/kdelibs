@@ -416,7 +416,7 @@ public:
      * Any reference is reset.
      *
      * @param txt The filename to be set. It is considered to be decoded. If the
-     *             current path ends with '/' then @p txt int just appended, otherwise
+     *             current path ends with '/' then @p txt is just appended, otherwise
      *             all text behind the last '/' in the current path is erased and
      *             @p txt is appended then. It does not matter whether @p txt starts
      *             with '/' or not.
@@ -424,55 +424,22 @@ public:
     void setFileName(const QString &txt);
 
     /**
-     * option to be used in fileName and directory
-     */
-    enum DirectoryOption {
-        /**
-         * This tells whether a trailing '/' should be ignored.
-         *
-         * If the flag is not set, for both <tt>file:///hallo/torben/</tt> and <tt>file:///hallo/torben</tt>
-         * the fileName is "torben" and the path is "hallo"
-         *
-         * If the flag is set, then everything behind the last '/'is considered to be the filename.
-         * So "hallo/torben" will be the path and the filename will be empty.
-         */
-        ObeyTrailingSlash = 0x02,
-
-        /**
-         * tells whether the returned result should end with '/' or not.
-         * If the flag is set, '/' is added to the end of the path
-         *
-         * If the path is empty or just "/" then this flag has no effect.
-         *
-         * This option should only be used in directory(), it has no effect in fileName()
-         */
-        AppendTrailingSlash = 0x04,
-
-        /**
-         * Opposite of ObeyTrailingSlash  (default)
-         * fileName("file:/foo/") and fileName("file:/foo") is "foo" in both cases.
-         */
-        IgnoreTrailingSlash = 0x01
-    };
-    Q_DECLARE_FLAGS(DirectoryOptions, DirectoryOption)
-
-    /**
      * Returns the filename of the path.
-     * @param options a set of DirectoryOption flags.  (StripTrailingSlashFromResult has no effect)
+     * @param trailing use to add or remove a trailing slash to/from the path. See adjustPath
      * @return The filename of the current path. The returned string is decoded. Null
      *         if there is no file (and thus no path).
      */
-    QString fileName(const DirectoryOptions& options = IgnoreTrailingSlash) const;
+    QString fileName(AdjustPathOption trailing = RemoveTrailingSlash) const;
 
     /**
      * Returns the directory of the path.
-     * @param options a set of DirectoryOption flags
+     * @param trailing use to add or remove a trailing slash to/from the path. See adjustPath
      * @return The directory part of the current path. Everything between the last and the second last '/'
      *         is returned. For example <tt>file:///hallo/torben/</tt> would return "/hallo/torben/" while
      *         <tt>file:///hallo/torben</tt> would return "hallo/". The returned string is decoded.
      *         QString() is returned when there is no path.
      */
-    QString directory(const DirectoryOptions& options = IgnoreTrailingSlash) const;
+    QString directory(AdjustPathOption trailing = RemoveTrailingSlash) const;
 
     /**
      * Set the directory to @p dir, leaving the filename empty.
@@ -664,8 +631,6 @@ private:
     QString toString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
     operator QString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::DirectoryOptions)
 
 Q_DECLARE_METATYPE(KUrl)
 Q_DECLARE_METATYPE(KUrl::List)

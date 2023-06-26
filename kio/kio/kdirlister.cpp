@@ -989,8 +989,7 @@ void KDirListerCache::slotFileRenamed( const QString &_src, const QString &_dst 
     // Check to see if a URL exists, and if so, if only the file part has changed,
     // only update the name and not the underlying URL.
     bool nameOnly = !fileitem->entry().stringValue( KIO::UDSEntry::UDS_URL ).isEmpty();
-    nameOnly &= src.directory( KUrl::IgnoreTrailingSlash | KUrl::AppendTrailingSlash ) ==
-                dst.directory( KUrl::IgnoreTrailingSlash | KUrl::AppendTrailingSlash );
+    nameOnly &= src.directory( KUrl::AddTrailingSlash ) == dst.directory( KUrl::AddTrailingSlash );
 
     if (!nameOnly && fileitem->isDir()) {
         renameDir( src, dst );

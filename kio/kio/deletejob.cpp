@@ -372,7 +372,7 @@ void DeleteJobPrivate::currentSourceStated(bool isDir, bool isLink)
         }
     }
     if (url.isLocalFile()) {
-        const QString parentDir = url.directory(KUrl::IgnoreTrailingSlash);
+        const QString parentDir = url.directory(KUrl::RemoveTrailingSlash);
         m_parentDirs.insert(parentDir);
     }
 }

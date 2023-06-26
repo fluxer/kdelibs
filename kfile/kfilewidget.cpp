@@ -24,15 +24,15 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "kfilewidget.h"
+#include <config-kfile.h>
 
+#include "kfilewidget.h"
 #include "kfileplacesview.h"
 #include "kfileplacesmodel.h"
 #include "kfilebookmarkhandler_p.h"
 #include "kurlcombobox.h"
 #include "kurlnavigator.h"
 #include "kfilepreviewgenerator.h"
-#include <config-kfile.h>
 
 #include <kactioncollection.h>
 #include <kdiroperator.h>
@@ -51,23 +51,23 @@
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
 #include <kio/scheduler.h>
+#include <kio/kfileitemdelegate.h>
 #include <krecentdirs.h>
 #include <kdebug.h>
-#include <kio/kfileitemdelegate.h>
 #include <kde_file.h>
-
-#include <QtCore/QTimer>
-#include <QtGui/QCheckBox>
-#include <QtGui/QDockWidget>
-#include <QtGui/QLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QSplitter>
-#include <QtGui/QAbstractProxyModel>
-#include <QtGui/qevent.h>
-#include <QtGui/QApplication>
 #include <kshell.h>
 #include <kmessagebox.h>
+
+#include <QTimer>
+#include <QCheckBox>
+#include <QDockWidget>
+#include <QLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QSplitter>
+#include <QAbstractProxyModel>
+#include <QResizeEvent>
+#include <QApplication>
 
 class KFileWidgetPrivate
 {

@@ -460,10 +460,10 @@ public:
     }
     // The directory with a trailing '/'
     QString dir() const {
-        return m_kurl.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash);
+        return m_kurl.directory(KUrl::AddTrailingSlash);
     }
     QString file() const {
-        return m_kurl.fileName(KUrl::ObeyTrailingSlash);
+        return m_kurl.fileName(KUrl::LeaveTrailingSlash);
     }
 
     // The initial, unparsed, url, as a string.
@@ -1027,7 +1027,7 @@ bool KUrlCompletionPrivate::urlCompletion(const KUrlCompletionPrivate::MyURL& ur
             return false;
 
         // url does not specify a valid directory
-        if (url_dir.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash).isEmpty())
+        if (url_dir.directory(KUrl::AddTrailingSlash).isEmpty())
             return false;
 
         // automatic completion is disabled
@@ -1042,7 +1042,7 @@ bool KUrlCompletionPrivate::urlCompletion(const KUrlCompletionPrivate::MyURL& ur
     url_dir.setFileName(QString()); // not really nesseccary, but clear the filename anyway...
 
     // Remove escapes
-    QString directory = unescape(url_dir.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash));
+    QString directory = unescape(url_dir.directory(KUrl::AddTrailingSlash));
 
     url_dir.setPath(directory);
 
