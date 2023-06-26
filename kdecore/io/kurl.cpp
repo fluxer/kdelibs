@@ -28,7 +28,6 @@
 #include <kde_file.h>
 
 #include <QDir>
-#include <QMimeData>
 #include <QHostInfo>
 
 static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
