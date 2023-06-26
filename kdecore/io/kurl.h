@@ -415,13 +415,13 @@ public:
      *
      * Any reference is reset.
      *
-     * @param _txt The filename to be set. It is considered to be decoded. If the
-     *             current path ends with '/' then @p _txt int just appended, otherwise
+     * @param txt The filename to be set. It is considered to be decoded. If the
+     *             current path ends with '/' then @p txt int just appended, otherwise
      *             all text behind the last '/' in the current path is erased and
-     *             @p _txt is appended then. It does not matter whether @p _txt starts
+     *             @p txt is appended then. It does not matter whether @p txt starts
      *             with '/' or not.
      */
-    void setFileName(const QString &_txt);
+    void setFileName(const QString &txt);
 
     /**
      * option to be used in fileName and directory
@@ -574,18 +574,6 @@ public:
      *
      */
     bool isParentOf(const KUrl &u) const;
-
-    // (this overload of the QUrl method allows to use the implicit KUrl constructors)
-    // but also the equality test
-
-    /**
-     * Reverses split(). Only the first URL may have a reference. This reference
-     * is considered to be HTML-like and is appended at the end of the resulting
-     * joined URL.
-     * @param _list the list to join
-     * @return the joined URL
-     */
-    static KUrl join(const List &_list);
 
     /**
      * Creates a KUrl object from a QString representing an absolute path.
