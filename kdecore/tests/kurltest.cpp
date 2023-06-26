@@ -244,6 +244,11 @@ void KUrlTest::testEquals_data()
         << KUrl("file:///home/../foo")
         << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
         << true;
+    QTest::newRow("relative vs relative")
+        << KUrl("file:///../bar")
+        << KUrl("file:///home/../foo")
+        << KUrl::AdjustPathOption(KUrl::RemoveTrailingSlash)
+        << false;
     QTest::newRow("ftp url - 3 trailing slashes")
         << KUrl("ftp://ftp.kde.org///")
         << KUrl("ftp://ftp.kde.org/")
