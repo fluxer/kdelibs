@@ -147,6 +147,7 @@ PackageStructure::Ptr PackageStructure::load(const QString &packageFormat)
     }
 
     // if that didn't give us any love, try to load from absolute file path
+    structure = new PackageStructure();
     KUrl url(packageFormat);
     if (url.isLocalFile()) {
         KConfig config(url.toLocalFile(), KConfig::SimpleConfig);
