@@ -41,9 +41,9 @@
 static const int s_khttpdebugarea = 7050;
 
 // for reference:
-// https://datatracker.ietf.org/doc/html/rfc9110
-// https://datatracker.ietf.org/doc/html/rfc7230
-// https://datatracker.ietf.org/doc/html/rfc7235
+// https://www.rfc-editor.org/rfc/rfc9110
+// https://www.rfc-editor.org/rfc/rfc7230
+// https://www.rfc-editor.org/rfc/rfc7235
 // https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 
 static QByteArray HTTPStatusToBytes(const ushort httpstatus)

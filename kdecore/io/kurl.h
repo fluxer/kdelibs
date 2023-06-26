@@ -637,4 +637,4 @@ Q_DECLARE_METATYPE(KUrl::List)
 
 KDECORE_EXPORT uint qHash(const KUrl& kurl);
 
-#endif
+#endif // KURL_H

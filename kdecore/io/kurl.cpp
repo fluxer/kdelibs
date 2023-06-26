@@ -18,10 +18,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-/*
- * The currently active RFC for URL/URIs is RFC3986
- * Previous (and now deprecated) RFCs are RFC1738 and RFC2396
- */
+// for reference:
+// https://www.rfc-editor.org/rfc/rfc3986
 
 #include "kurl.h"
 
