@@ -27,6 +27,7 @@
 
 #include <kdebug.h>
 #include <kshell.h>
+#include <kde_file.h>
 
 #include <QDir>
 #include <QMimeData>
@@ -50,7 +51,25 @@ void kCheckLocalFile(const KUrl *kurl)
 }
 #endif
 
-static QByteArray uriListData(const KUrl::List &urls)
+static QString kPathFileName(const QString &path)
+{
+    const int lastslash = path.lastIndexOf(QLatin1Char('/'));
+    return path.mid(lastslash + 1);
+}
+
+static QString kPathDirectory(const QString &path)
+{
+    const int lastslash = path.lastIndexOf(QLatin1Char('/'));
+    if (lastslash == -1) {
+        return QString(QLatin1Char('.'));
+    }
+    if (lastslash == 0) {
+        return QString(QLatin1Char('/'));
+    }
+    return path.left(lastslash);
+}
+
+static QByteArray kUriListData(const KUrl::List &urls)
 {
     QByteArray result;
     foreach (const KUrl &url, urls) {
@@ -61,7 +80,7 @@ static QByteArray uriListData(const KUrl::List &urls)
     return result;
 }
 
-static QString trailingSlash(KUrl::AdjustPathOption trailing, const QString &path)
+static QString kTrailingSlash(KUrl::AdjustPathOption trailing, const QString &path)
 {
     if (trailing == KUrl::LeaveTrailingSlash) {
         return path;
@@ -88,7 +107,7 @@ static QString trailingSlash(KUrl::AdjustPathOption trailing, const QString &pat
     return result;
 }
 
-static QString _relativePath(const QString &base_dir, const QString &path, bool &isParent)
+static QString kRelativePath(const QString &base_dir, const QString &path, bool &isParent)
 {
     QString _base_dir(QDir::cleanPath(base_dir));
     QString _path(QDir::cleanPath(path.isEmpty() || QDir::isRelativePath(path) ? _base_dir+QLatin1Char('/') + path : path));
@@ -175,7 +194,7 @@ QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
 void KUrl::List::populateMimeData(QMimeData* mimeData,
                                   MimeDataFlags flags) const
 {
-    mimeData->setData(QString::fromLatin1("text/uri-list"), uriListData(*this));
+    mimeData->setData(QString::fromLatin1("text/uri-list"), kUriListData(*this));
 
     if ((flags & KUrl::NoTextExport) == 0) {
         QStringList prettyURLsList;
@@ -205,7 +224,7 @@ void KUrl::List::populateMimeData(const KUrl::List& mostLocalUrls,
 {
     // Export the most local urls as text/uri-list and plain text.
     mostLocalUrls.populateMimeData(mimeData, flags);
-    mimeData->setData(QString::fromLatin1(s_kdeUriListMime), uriListData(*this));
+    mimeData->setData(QString::fromLatin1(s_kdeUriListMime), kUriListData(*this));
 }
 
 bool KUrl::List::canDecode( const QMimeData *mimeData )
@@ -411,7 +430,7 @@ void KUrl::cleanPath()
 
 void KUrl::adjustPath(AdjustPathOption trailing)
 {
-    const QString newpath = trailingSlash(trailing, path());
+    const QString newpath = kTrailingSlash(trailing, path());
     if (path() != newpath) {
         setPath(newpath);
     }
@@ -419,7 +438,7 @@ void KUrl::adjustPath(AdjustPathOption trailing)
 
 QString KUrl::path(AdjustPathOption trailing) const
 {
-    return trailingSlash(trailing, QUrl::path());
+    return kTrailingSlash(trailing, QUrl::path());
 }
 
 QString KUrl::toLocalFile(AdjustPathOption trailing) const
@@ -427,12 +446,12 @@ QString KUrl::toLocalFile(AdjustPathOption trailing) const
     if (hasHost() && isLocalFile()) {
         KUrl urlWithoutHost(*this);
         urlWithoutHost.setHost(QString());
-        return trailingSlash(trailing, urlWithoutHost.toLocalFile());
+        return kTrailingSlash(trailing, urlWithoutHost.toLocalFile());
     }
     if (isLocalFile()) {
-        return trailingSlash(trailing, QUrl::path());
+        return kTrailingSlash(trailing, QUrl::path());
     }
-    return trailingSlash(trailing, QUrl::toLocalFile());
+    return kTrailingSlash(trailing, QUrl::toLocalFile());
 }
 
 bool KUrl::isLocalFile() const
@@ -530,7 +549,7 @@ QString KUrl::fileName(AdjustPathOption trailing) const
     if (!urlpath.contains(QLatin1Char('/'))) {
         return urlpath;
     }
-    return trailingSlash(trailing, QFileInfo(urlpath).fileName());
+    return kTrailingSlash(trailing, kPathFileName(urlpath));
 }
 
 void KUrl::addPath(const QString &txt)
@@ -565,7 +584,7 @@ QString KUrl::directory(AdjustPathOption trailing) const
     if (urlpath.isEmpty() || urlpath == QLatin1String("/")) {
         return urlpath;
     }
-    return trailingSlash(trailing, QFileInfo(urlpath).path());
+    return kTrailingSlash(trailing, kPathDirectory(urlpath));
 }
 
 KUrl KUrl::upUrl() const
@@ -578,7 +597,7 @@ KUrl KUrl::upUrl() const
     if (QDir::isRelativePath(urlpath)) {
         KUrl result(*this);
         QString newpath = QString::fromLatin1("../");
-        newpath.append(QFileInfo(urlpath).path());
+        newpath.append(kPathDirectory(urlpath));
         result.setPath(newpath);
         result.setQuery(QString());
         result.setFragment(QString());
@@ -586,14 +605,19 @@ KUrl KUrl::upUrl() const
     }
 
     if (isLocalFile()) {
-        // the only way to be sure is to stat() because the path can include or omit the trailing
-        // slash (indicating if it is directory)
         QString newpath;
-        QFileInfo urlinfo(urlpath);
-        if (urlinfo.isDir()) {
-            newpath = urlinfo.path();
+        if (urlpath.endsWith(QLatin1Char('/'))) {
+            // assuming it is directory
+            newpath = kPathDirectory(urlpath);
         } else {
-            newpath = QFileInfo(urlinfo.path()).path();
+            // the only way to be sure is to stat() then
+            KDE_struct_stat statbuff;
+            const QByteArray urlpathencoded = QFile::encodeName(urlpath);
+            if (KDE_stat(urlpathencoded, &statbuff) == 0 && S_ISDIR(statbuff.st_mode)) {
+                newpath = kPathDirectory(urlpath);
+            } else {
+                newpath = kPathDirectory(kPathDirectory(urlpath));
+            }
         }
         KUrl result(*this);
         result.setPath(newpath);
@@ -617,7 +641,7 @@ void KUrl::setDirectory(const QString &dir)
 QString KUrl::relativePath(const QString &base_dir, const QString &path, bool *isParent)
 {
     bool parent = false;
-    QString result = _relativePath(base_dir, path, parent);
+    QString result = kRelativePath(base_dir, path, parent);
     if (parent) {
         result.prepend(QLatin1String("./"));
     }
@@ -642,7 +666,7 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
     if ((base_url.path() != url.path()) || (base_url.query() != url.query())) {
         bool dummy = false;
         QString basePath = base_url.directory(KUrl::LeaveTrailingSlash);
-        relURL = _relativePath(basePath, url.path(), dummy);
+        relURL = kRelativePath(basePath, url.path(), dummy);
         relURL += url.query();
     }
 
