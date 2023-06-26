@@ -379,7 +379,6 @@ public:
     void cacheAreas();
     void destroyDevices();
 
-    bool disableAll() const;
     QIODevice* areaDevice(const QtMsgType type, const char* const funcinfo, const int area);
 
 private:
@@ -445,11 +444,6 @@ void KDebugConfig::cacheAreas()
     }
 }
 
-bool KDebugConfig::disableAll() const
-{
-    return m_disableall;
-}
-
 QByteArray KDebugConfig::areaName(const int area) const
 {
     const QByteArray areaname = m_areanames.value(area);
@@ -494,6 +488,10 @@ void KDebugConfig::destroyDevices()
 
 QIODevice* KDebugConfig::areaDevice(const QtMsgType type, const char* const funcinfo, const int area)
 {
+    if (m_disableall) {
+        return globalKDebugNullDevie;
+    }
+
     const KDebugAreaCache kdebugareacache = KDebugConfig::areaCache(area);
     int areaoutput = int(KDebugType::TypeShell);
     QString areafilename;
@@ -633,9 +631,6 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
     }
 
     QMutexLocker locker(globalKDebugMutex);
-    if (globalKDebugConfig->disableAll()) {
-        return QDebug(globalKDebugNullDevie);
-    }
     return QDebug(globalKDebugConfig->areaDevice(type, funcinfo, area));
 }
 
