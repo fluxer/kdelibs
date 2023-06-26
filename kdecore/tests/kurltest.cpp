@@ -163,7 +163,7 @@ void KUrlTest::testQueryAndFragment()
     QCOMPARE(url.fragment(), fragment);
 }
 
-void KUrlTest::testcleanPath_data()
+void KUrlTest::testCleanPath_data()
 {
     QTest::addColumn<KUrl>("url");
     QTest::addColumn<KUrl>("url2");
@@ -182,7 +182,7 @@ void KUrlTest::testcleanPath_data()
         << KUrl("ftp://ftp.kde.org/");
 }
 
-void KUrlTest::testcleanPath()
+void KUrlTest::testCleanPath()
 {
     QFETCH(KUrl, url);
     QFETCH(KUrl, url2);

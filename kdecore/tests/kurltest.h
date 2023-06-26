@@ -19,7 +19,7 @@
 #ifndef KURLTEST_H
 #define KURLTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class KUrlTest : public QObject
 {
@@ -31,8 +31,8 @@ private Q_SLOTS:
     void testHash();
     void testQueryAndFragment_data();
     void testQueryAndFragment();
-    void testcleanPath_data();
-    void testcleanPath();
+    void testCleanPath_data();
+    void testCleanPath();
     void testEquals_data();
     void testEquals();
     void testUriMode();
