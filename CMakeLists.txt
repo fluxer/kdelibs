@@ -72,6 +72,10 @@ set(KDE4_DEFINITIONS
 include(KDE4Defaults)
 include(KDE4Macros)
 
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DNDEBUG)
+endif()
+
 configure_file(
     "${CMAKE_SOURCE_DIR}/cmake/modules/kde4_exec.sh.in"
     "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"
