@@ -346,6 +346,10 @@ void HttpProtocol::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 {
     kDebug(7103) << "URL" << url.prettyUrl();
 
+    // no permissions to set, it is POST
+    Q_UNUSED(permissions);
+    Q_UNUSED(flags);
+
     if (redirectUrl(url)) {
         return;
     }
