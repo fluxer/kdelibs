@@ -60,9 +60,9 @@ void KUiServerJobTracker::Private::_k_killJob()
 }
 
 KUiServerJobTracker::KUiServerJobTracker(QObject *parent)
-    : KJobTrackerInterface(parent), d(new Private(this))
+    : KJobTrackerInterface(parent),
+    d(new Private(this))
 {
-
 }
 
 KUiServerJobTracker::~KUiServerJobTracker()
