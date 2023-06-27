@@ -355,48 +355,53 @@ void KWidgetJobTracker::Private::ProgressWidget::processedAmount(KJob::Unit unit
 {
     QString tmp;
 
-    switch(unit)
-    {
-    case KJob::Bytes:
-        if (processedSize == amount)
-            return;
-        processedSize = amount;
+    switch(unit) {
+        case KJob::Bytes: {
+            if (processedSize == amount) {
+                return;
+            }
+            processedSize = amount;
 
-        if (totalSizeKnown) {
-            tmp = i18np( "%2 of %3 complete", "%2 of %3 complete",
-						amount,
-                        KGlobal::locale()->formatByteSize(amount),
-                        KGlobal::locale()->formatByteSize(totalSize));
-        } else {
-            tmp = KGlobal::locale()->formatByteSize(amount);
+            if (totalSizeKnown) {
+                tmp = i18np( "%2 of %3 complete", "%2 of %3 complete",
+                            amount,
+                            KGlobal::locale()->formatByteSize(amount),
+                            KGlobal::locale()->formatByteSize(totalSize));
+            } else {
+                tmp = KGlobal::locale()->formatByteSize(amount);
+            }
+            sizeLabel->setText(tmp);
+            if (!totalSizeKnown) {
+                // update jumping progressbar
+                progressBar->setValue(amount);
+            }
+            break;
         }
-        sizeLabel->setText(tmp);
-        if (!totalSizeKnown) // update jumping progressbar
-            progressBar->setValue(amount);
-        break;
+        case KJob::Directories: {
+            if (processedDirs == amount) {
+                return;
+            }
+            processedDirs = amount;
 
-    case KJob::Directories:
-        if (processedDirs == amount)
-            return;
-        processedDirs = amount;
-
-        tmp = i18np("%2 / %1 folder", "%2 / %1 folders", totalDirs,  processedDirs);
-        tmp += "   ";
-        tmp += i18np("%2 / %1 file", "%2 / %1 files", totalFiles,  processedFiles);
-        progressLabel->setText(tmp);
-        break;
-
-    case KJob::Files:
-        if (processedFiles == amount)
-            return;
-        processedFiles = amount;
-
-        if (totalDirs > 1) {
             tmp = i18np("%2 / %1 folder", "%2 / %1 folders", totalDirs,  processedDirs);
             tmp += "   ";
+            tmp += i18np("%2 / %1 file", "%2 / %1 files", totalFiles,  processedFiles);
+            progressLabel->setText(tmp);
+            break;
         }
-        tmp += i18np("%2 / %1 file", "%2 / %1 files", totalFiles,  processedFiles);
-        progressLabel->setText(tmp);
+        case KJob::Files: {
+            if (processedFiles == amount) {
+                return;
+            }
+            processedFiles = amount;
+
+            if (totalDirs > 1) {
+                tmp = i18np("%2 / %1 folder", "%2 / %1 folders", totalDirs,  processedDirs);
+                tmp += "   ";
+            }
+            tmp += i18np("%2 / %1 file", "%2 / %1 files", totalFiles,  processedFiles);
+            progressLabel->setText(tmp);
+        }
     }
 }
 
@@ -429,7 +434,7 @@ void KWidgetJobTracker::Private::ProgressWidget::speed(unsigned long value)
         if (totalSizeKnown) {
             const int remaining = 1000*(totalSize - processedSize)/value;
             speedLabel->setText(i18np("%2/s (%3 remaining)", "%2/s (%3 remaining)", remaining, speedStr,
-                                     KGlobal::locale()->prettyFormatDuration(remaining)));
+                                      KGlobal::locale()->prettyFormatDuration(remaining)));
         } else { // total size is not known (#24228)
             speedLabel->setText(i18nc("speed in bytes per second", "%1/s", speedStr));
         }
@@ -448,10 +453,11 @@ void KWidgetJobTracker::Private::ProgressWidget::slotClean()
     pauseButton->setEnabled(false);
     if (startTime.isValid()) {
         qint64 s = startTime.elapsed();
-        if (!s)
+        if (!s) {
             s = 1;
+        }
         speedLabel->setText(i18n("%1/s (done)",
-                                    KGlobal::locale()->formatByteSize(1000 * totalSize / s)));
+                                  KGlobal::locale()->formatByteSize(1000 * totalSize / s)));
     }
 }
 
@@ -480,8 +486,8 @@ void KWidgetJobTracker::Private::ProgressWidget::init()
 {
     // Set a useful icon for this window!
     KWindowSystem::setIcons( winId(),
-                             KIconLoader::global()->loadIcon( "document-save", KIconLoader::NoGroup, 32 ),
-                             KIconLoader::global()->loadIcon( "document-save", KIconLoader::NoGroup, 16 ) );
+                             KIconLoader::global()->loadIcon("document-save", KIconLoader::NoGroup, 32),
+                             KIconLoader::global()->loadIcon("document-save", KIconLoader::NoGroup, 16));
 
     QVBoxLayout *topLayout = new QVBoxLayout(this);
 
@@ -591,12 +597,12 @@ void KWidgetJobTracker::Private::ProgressWidget::showTotals()
     // Show the totals in the progress label, if we still haven't
     // processed anything. This is useful when the stat'ing phase
     // of CopyJob takes a long time (e.g. over networks).
-    if (processedFiles == 0 && processedDirs == 0)
-    {
+    if (processedFiles == 0 && processedDirs == 0) {
         QString tmps;
-        if (totalDirs > 1)
+        if (totalDirs > 1) {
             // that we have a singular to translate looks weired but is only logical
             tmps = i18np("%1 folder", "%1 folders", totalDirs) + "   ";
+        }
         tmps += i18np("%1 file", "%1 files", totalFiles);
         progressLabel->setText( tmps );
     }
@@ -606,13 +612,10 @@ void KWidgetJobTracker::Private::ProgressWidget::setDestVisible(bool visible)
 {
     // We can't hide the destInvite/destEdit labels,
     // because it screws up the QGridLayout.
-    if (visible)
-    {
+    if (visible) {
         destInvite->show();
         destEdit->show();
-    }
-    else
-    {
+    } else {
         destInvite->hide();
         destEdit->hide();
         destInvite->setText( QString() );
@@ -624,13 +627,15 @@ void KWidgetJobTracker::Private::ProgressWidget::setDestVisible(bool visible)
 void KWidgetJobTracker::Private::ProgressWidget::checkDestination(const KUrl &dest)
 {
     bool ok = true;
-
     if (dest.isLocalFile()) {
         QString path = dest.toLocalFile( KUrl::RemoveTrailingSlash );
         const QStringList tmpDirs = KGlobal::dirs()->resourceDirs( "tmp" );
-        for (QStringList::ConstIterator it = tmpDirs.begin() ; ok && it != tmpDirs.end() ; ++it)
-            if (path.contains(*it))
-                ok = false; // it's in the tmp resource
+        for (QStringList::ConstIterator it = tmpDirs.begin() ; ok && it != tmpDirs.end() ; ++it) {
+            if (path.contains(*it)) {
+                // it's in the tmp resource
+                ok = false;
+            }
+        }
     }
 
     if (ok) {
