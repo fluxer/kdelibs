@@ -392,7 +392,7 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
     }
     QList<KMimeMagicMatch> matches; // toplevel matches (indent==0)
     int priority = 50;
-    QString mimeTypeName;
+    QByteArray mimeTypeName;
 
     static const int sharedmimeinfover = mimeDataBaseVersion();
     static const int sharedmimeinfo200 = KDE_MAKE_VERSION(2, 0, 0);
@@ -406,10 +406,11 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
             if (!mimeTypeName.isEmpty()) {
                 // workaround for:
                 // https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/144
-                if (sharedmimeinfover <= sharedmimeinfo200 && mimeTypeName == QLatin1String("audio/x-mod")) {
+                if (sharedmimeinfover <= sharedmimeinfo200 && mimeTypeName == "audio/x-mod") {
                     kDebug(servicesDebugArea()) << "Ignoring audio/x-mod magic rules";
                 } else {
-                    rules.append(KMimeMagicRule(mimeTypeName, priority, matches));
+                    const QString mimeTypeNameStr = QString::fromLatin1(mimeTypeName.constData(), mimeTypeName.size());
+                    rules.append(KMimeMagicRule(mimeTypeNameStr, priority, matches));
                 }
                 matches.clear();
                 mimeTypeName.clear();
@@ -418,8 +419,8 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
                 break; // done
 
             // Parse new section
-            const QString line = QString::fromLatin1(file->readLine());
-            const int pos = line.indexOf(QLatin1Char(':'));
+            const QByteArray line = file->readLine();
+            const int pos = line.indexOf(':');
             if (pos == -1) { // syntax error
                 kWarning(servicesDebugArea()) << "Syntax error in " << mimeTypeName
                                << " ':' not present in section name";
