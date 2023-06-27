@@ -21,26 +21,13 @@
 
 #include "kjob.h"
 
-class KJobTrackerInterface::Private
-{
-public:
-    Private(KJobTrackerInterface *interface) : q(interface)
-    {
-
-    }
-
-    KJobTrackerInterface *const q;
-};
-
 KJobTrackerInterface::KJobTrackerInterface(QObject *parent)
-    : QObject(parent), d(new Private(this))
+    : QObject(parent)
 {
-
 }
 
 KJobTrackerInterface::~KJobTrackerInterface()
 {
-    delete d;
 }
 
 void KJobTrackerInterface::registerJob(KJob *job)

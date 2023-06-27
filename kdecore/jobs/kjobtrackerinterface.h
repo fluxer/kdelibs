@@ -154,10 +154,6 @@ protected Q_SLOTS:
      * @param value the current speed of the job
      */
     virtual void speed(KJob *job, unsigned long value);
-
-private:
-    class Private;
-    Private *const d;
 };
 
-#endif
+#endif // KJOBTRACKERINTERFACE_H
