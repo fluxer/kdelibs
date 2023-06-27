@@ -121,7 +121,7 @@ void KUiServerJobTracker::registerJob(KJob *job)
 
         QVariant destUrl = job->property("destUrl");
         if (destUrl.isValid()) {
-            jobView->setDestUrl(QDBusVariant(destUrl));
+            jobView->setDestUrl(destUrl.toString());
         }
 
         if (!jobWatch) {

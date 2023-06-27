@@ -55,7 +55,7 @@
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="setDestUrl">
-      <arg name="destUrl" type="v" direction="in"/>
+      <arg name="destUrl" type="s" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <signal name="suspendRequested"/>
