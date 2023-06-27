@@ -39,8 +39,9 @@ struct AllTrackers
 class KDynamicJobTracker::Private
 {
 public:
-    Private() : kuiserverTracker(0),
-                widgetTracker(0)
+    Private()
+        : kuiserverTracker(nullptr),
+        widgetTracker(nullptr)
     {
     }
 
@@ -57,7 +58,7 @@ public:
 
 KDynamicJobTracker::KDynamicJobTracker(QObject *parent)
     : KJobTrackerInterface(parent),
-      d(new Private)
+      d(new Private())
 {
 }
 
@@ -101,11 +102,12 @@ void KDynamicJobTracker::unregisterJob(KJob *job)
         return;
     }
 
-    if(kuiserverTracker)
+    if (kuiserverTracker) {
         kuiserverTracker->unregisterJob(job);
-
-    if(widgetTracker)
+    }
+    if (widgetTracker) {
         widgetTracker->unregisterJob(job);
+    }
 }
 
 #include "moc_kdynamicjobtracker.cpp"

@@ -34,7 +34,10 @@
 class KDialogJobUiDelegate::Private
 {
 public:
-    Private() : userTimestamp(0) { }
+    Private()
+        : userTimestamp(0)
+    {
+    }
 
     QPointer<QWidget> errorParentWidget;
     unsigned long userTimestamp;

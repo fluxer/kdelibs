@@ -23,18 +23,18 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QtCore/qdatetime.h>
+#include <QDateTime>
 #include <QBoxLayout>
 #include <QStackedWidget>
+#include <QCheckBox>
+#include <QLabel>
+#include <QProgressBar>
 
 #include <kdebug.h>
 #include <kurl.h>
 
 class KPushButton;
-#include <QCheckBox>
 class KLineEdit;
-#include <QLabel>
-#include <QProgressBar>
 
 
 class KStatusBarJobTracker::Private
@@ -42,9 +42,10 @@ class KStatusBarJobTracker::Private
 public:
     Private(QWidget *parent, bool withStopButton)
         : parent(parent)
-        , currentProgressWidget(0)
+        , currentProgressWidget(nullptr)
         , showStopButton(withStopButton)
-    { }
+    {
+    }
 
     ~Private() {
     }
