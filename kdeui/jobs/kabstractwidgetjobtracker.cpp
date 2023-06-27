@@ -21,13 +21,6 @@
 
 #include "kabstractwidgetjobtracker.h"
 
-#include <QWidget>
-#include <QTimer>
-#include <QEvent>
-#include <QMap>
-
-#include <kdebug.h>
-
 KAbstractWidgetJobTracker::KAbstractWidgetJobTracker(QWidget *parent)
     : KJobTrackerInterface(parent)
 {

@@ -42,14 +42,14 @@ public:
      *
      * @param parent the parent of this object and of the widget displaying the job progresses
      */
-    KAbstractWidgetJobTracker(QWidget *parent = 0);
+    KAbstractWidgetJobTracker(QWidget *parent = nullptr);
 
     /**
      * Destroys a KAbstractWidgetJobTracker
      */
     virtual ~KAbstractWidgetJobTracker();
 
-// KDE5: move this two virtual methods to be placed correctly (ereslibre)
+    // KDE5: move this two virtual methods to be placed correctly (ereslibre)
 public Q_SLOTS:
     /**
      * Register a new job in this tracker.
