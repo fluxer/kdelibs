@@ -22,8 +22,6 @@
 #ifndef KWIDGETJOBTRACKER_P_H
 #define KWIDGETJOBTRACKER_P_H
 
-#include "kabstractwidgetjobtracker_p.h"
-
 #include <QWidget>
 #include <QMap>
 #include <QElapsedTimer>
@@ -40,28 +38,19 @@ class KPushButton;
 class KSqueezedTextLabel;
 
 class KWidgetJobTracker::Private
-    : public KAbstractWidgetJobTracker::Private
 {
 public:
-    Private(QWidget *parent, KWidgetJobTracker *tracker)
-        : KAbstractWidgetJobTracker::Private(tracker)
-        , parent(parent)
+    Private(QWidget *_parent, KWidgetJobTracker *tracker)
+        : q(tracker)
+        , parent(_parent)
     {
     }
-
-    virtual ~Private()
-    {
-    }
-
-    virtual void setStopOnClose(KJob *job, bool stopOnClose);
-    virtual bool stopOnClose(KJob *job) const;
-    virtual void setAutoDelete(KJob *job, bool autoDelete);
-    virtual bool autoDelete(KJob *job) const;
 
     void _k_showProgressWidget();
 
     class ProgressWidget;
 
+    KWidgetJobTracker *const q;
     QWidget *parent;
     QMap<KJob*, ProgressWidget*> progressWidget;
     QQueue<KJob*> progressWidgetsToBeShown;
@@ -166,41 +155,5 @@ private Q_SLOTS:
     void _k_stop();
     void _k_arrowToggled();
 };
-
-void KWidgetJobTracker::Private::setStopOnClose(KJob *job, bool stopOnClose)
-{
-    if (!progressWidget.contains(job)) {
-        return;
-    }
-    progressWidget[job]->stopOnClose = stopOnClose;
-}
-
-bool KWidgetJobTracker::Private::stopOnClose(KJob *job) const
-{
-    if (!progressWidget.contains(job)) {
-        kWarning() << "not found widget for job " << job << ". This method will return a "
-                        "hardcoded value";
-        return true;
-    }
-    return progressWidget[job]->stopOnClose;
-}
-
-void KWidgetJobTracker::Private::setAutoDelete(KJob *job, bool autoDelete)
-{
-    if (!progressWidget.contains(job)) {
-        return;
-    }
-    progressWidget[job]->setAttribute(Qt::WA_DeleteOnClose, autoDelete);
-}
-
-bool KWidgetJobTracker::Private::autoDelete(KJob *job) const
-{
-    if (!progressWidget.contains(job)) {
-        kWarning() << "not found widget for job " << job << ". This method will return a "
-                        "hardcoded value";
-        return true;
-    }
-    return progressWidget[job]->testAttribute(Qt::WA_DeleteOnClose);
-}
 
 #endif // KWIDGETJOBTRACKER_P_H

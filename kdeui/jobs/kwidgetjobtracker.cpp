@@ -62,7 +62,8 @@ void KWidgetJobTracker::Private::_k_showProgressWidget()
 }
 
 KWidgetJobTracker::KWidgetJobTracker(QWidget *parent)
-    : KAbstractWidgetJobTracker(parent), d(new Private(parent, this))
+    : KAbstractWidgetJobTracker(parent),
+    d(new Private(parent, this))
 {
 }
 
@@ -111,6 +112,42 @@ bool KWidgetJobTracker::keepOpen(KJob *job) const
     }
 
     return pWidget->keepOpenCheck->isChecked();
+}
+
+void KWidgetJobTracker::setStopOnClose(KJob *job, bool stopOnClose)
+{
+    if (!d->progressWidget.contains(job)) {
+        return;
+    }
+    d->progressWidget[job]->stopOnClose = stopOnClose;
+}
+
+bool KWidgetJobTracker::stopOnClose(KJob *job) const
+{
+    if (!d->progressWidget.contains(job)) {
+        kWarning() << "not found widget for job " << job << ". This method will return a "
+                      "hardcoded value";
+        return true;
+    }
+    return d->progressWidget[job]->stopOnClose;
+}
+
+void KWidgetJobTracker::setAutoDelete(KJob *job, bool autoDelete)
+{
+    if (!d->progressWidget.contains(job)) {
+        return;
+    }
+    d->progressWidget[job]->setAttribute(Qt::WA_DeleteOnClose, autoDelete);
+}
+
+bool KWidgetJobTracker::autoDelete(KJob *job) const
+{
+    if (!d->progressWidget.contains(job)) {
+        kWarning() << "not found widget for job " << job << ". This method will return a "
+                      "hardcoded value";
+        return true;
+    }
+    return d->progressWidget[job]->testAttribute(Qt::WA_DeleteOnClose);
 }
 
 void KWidgetJobTracker::infoMessage(KJob *job, const QString &plain, const QString &rich)

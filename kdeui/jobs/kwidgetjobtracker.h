@@ -72,6 +72,11 @@ public Q_SLOTS:
 public:
     bool keepOpen(KJob *job) const;
 
+    virtual void setStopOnClose(KJob *job, bool stopOnClose);
+    virtual bool stopOnClose(KJob *job) const;
+    virtual void setAutoDelete(KJob *job, bool autoDelete);
+    virtual bool autoDelete(KJob *job) const;
+
 protected Q_SLOTS:
     /**
      * The following slots are inherited from KJobTrackerInterface.

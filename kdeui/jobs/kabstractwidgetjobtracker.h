@@ -25,8 +25,9 @@
 #include <kdeui_export.h>
 #include <kjobtrackerinterface.h>
 
-class KJob;
 #include <QWidget>
+
+class KJob;
 
 /**
  * The base class for widget based job trackers.
@@ -83,7 +84,7 @@ public:
      * otherwise the job will continue even on close.
      * @see stopOnClose()
      */
-    void setStopOnClose(KJob *job, bool stopOnClose);
+    virtual void setStopOnClose(KJob *job, bool stopOnClose);
 
     /**
      * Checks whether the job will be killed when the dialog is closed.
@@ -92,7 +93,7 @@ public:
      * @return true if the job is killed on close event, false otherwise.
      * @see setStopOnClose()
      */
-    bool stopOnClose(KJob *job) const;
+    virtual bool stopOnClose(KJob *job) const;
 
     /**
      * This controls whether the dialog should be deleted or only cleaned when
@@ -106,7 +107,7 @@ public:
      * If true the dialog will be deleted.
      * @see autoDelete()
      */
-    void setAutoDelete(KJob *job, bool autoDelete);
+    virtual void setAutoDelete(KJob *job, bool autoDelete);
 
     /**
      * Checks whether the dialog should be deleted or cleaned.
@@ -116,7 +117,7 @@ public:
      *         deleted
      * @see setAutoDelete()
      */
-    bool autoDelete(KJob *job) const;
+    virtual bool autoDelete(KJob *job) const;
 
 protected Q_SLOTS:
     /**
@@ -180,10 +181,6 @@ Q_SIGNALS:
      * @param job The job that has been resumed
      */
     void resume(KJob *job);
-
-protected:
-    class Private;
-    Private *const d;
 };
 
-#endif
+#endif // KABSTRACTWIDGETJOBTRACKER_H

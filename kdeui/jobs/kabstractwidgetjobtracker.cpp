@@ -20,7 +20,6 @@
 */
 
 #include "kabstractwidgetjobtracker.h"
-#include "kabstractwidgetjobtracker_p.h"
 
 #include <QWidget>
 #include <QTimer>
@@ -31,13 +30,11 @@
 
 KAbstractWidgetJobTracker::KAbstractWidgetJobTracker(QWidget *parent)
     : KJobTrackerInterface(parent)
-    , d(new Private(this))
 {
 }
 
 KAbstractWidgetJobTracker::~KAbstractWidgetJobTracker()
 {
-    delete d;
 }
 
 void KAbstractWidgetJobTracker::registerJob(KJob *job)
@@ -52,22 +49,26 @@ void KAbstractWidgetJobTracker::unregisterJob(KJob *job)
 
 void KAbstractWidgetJobTracker::setStopOnClose(KJob *job, bool stopOnClose)
 {
-    d->setStopOnClose(job, stopOnClose);
+    Q_UNUSED(job);
+    Q_UNUSED(stopOnClose);
 }
 
 bool KAbstractWidgetJobTracker::stopOnClose(KJob *job) const
 {
-    return d->stopOnClose(job);
+    Q_UNUSED(job);
+    return true;
 }
 
 void KAbstractWidgetJobTracker::setAutoDelete(KJob *job, bool autoDelete)
 {
-    d->setAutoDelete(job, autoDelete);
+    Q_UNUSED(job);
+    Q_UNUSED(autoDelete);
 }
 
 bool KAbstractWidgetJobTracker::autoDelete(KJob *job) const
 {
-    return d->autoDelete(job);
+    Q_UNUSED(job);
+    return true;
 }
 
 void KAbstractWidgetJobTracker::finished(KJob *job)
