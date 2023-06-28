@@ -69,4 +69,6 @@ namespace KIO {
     };
 }
 
+Q_DECLARE_METATYPE(KIO::Task)
+
 #endif

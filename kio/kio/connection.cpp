@@ -107,6 +107,7 @@ SocketConnectionBackend::SocketConnectionBackend(QObject *parent)
     : QObject(parent), state(Idle), socket(nullptr), localServer(nullptr), len(-1),
     cmd(0), signalEmitted(false)
 {
+    qRegisterMetaType<Task>("Task");
 }
 
 SocketConnectionBackend::~SocketConnectionBackend()
