@@ -69,16 +69,7 @@ KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
 KLauncherAdaptor::~KLauncherAdaptor()
 {
     kDebug() << "terminating processes" << m_processes.size();
-    while (!m_processes.isEmpty()) {
-        QProcess* process = m_processes.takeLast();
-        disconnect(process, 0, this, 0);
-        process->terminate();
-        if (!process->waitForFinished(s_processtimeout)) {
-            kWarning() << "process still running" << process->pid();
-            // SIGKILL is non-ignorable
-            process->kill();
-        }
-    }
+    cleanup();
 }
 
 void KLauncherAdaptor::autoStart(int phase)
@@ -149,6 +140,20 @@ void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_li
     envargs += appexe;
     envargs += arg_list;
     QProcess::startDetached(envexe, envargs);
+}
+
+void KLauncherAdaptor::cleanup()
+{
+    while (!m_processes.isEmpty()) {
+        QProcess* process = m_processes.takeLast();
+        disconnect(process, 0, this, 0);
+        process->terminate();
+        if (!process->waitForFinished(s_processtimeout)) {
+            kWarning() << "process still running" << process->pid();
+            // SIGKILL is non-ignorable
+            process->kill();
+        }
+    }
 }
 
 int KLauncherAdaptor::kdeinit_exec(const QString &app, const QStringList &args, const QStringList &envs, const QString& startup_id)

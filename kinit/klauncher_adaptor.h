@@ -54,6 +54,7 @@ public Q_SLOTS:
 
     // used by ksmserver and klauncher itself
     void exec_blind(const QString &name, const QStringList &arg_list);
+    void cleanup();
 
     // used by KToolInvocation
     void setLaunchEnv(const QString &name, const QString &value);
