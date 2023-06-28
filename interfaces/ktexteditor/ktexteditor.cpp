@@ -176,115 +176,140 @@ Editor *KTextEditor::editor(const char *libname)
   return ef->editor();
 }
 
-ConfigPage::ConfigPage ( QWidget *parent )
-  : QWidget (parent)
-{}
+ConfigPage::ConfigPage(QWidget *parent)
+  : QWidget(parent)
+{
+}
 
-ConfigPage::~ConfigPage ()
-{}
+ConfigPage::~ConfigPage()
+{
+}
 
-View::View ( QWidget *parent )
-  : QWidget(parent), KXMLGUIClient()
-{}
+View::View(QWidget *parent )
+  : QWidget(parent),
+  KXMLGUIClient()
+{
+}
 
-View::~View ()
-{}
+View::~View()
+{
+}
 
-Plugin::Plugin ( QObject *parent )
-  : QObject (parent)
-{}
+Plugin::Plugin(QObject *parent)
+  : QObject(parent)
+{
+}
 
-Plugin::~Plugin ()
-{}
+Plugin::~Plugin()
+{
+}
 
-MarkInterface::MarkInterface ()
-{}
+MarkInterface::MarkInterface()
+{
+}
 
-MarkInterface::~MarkInterface ()
-{}
+MarkInterface::~MarkInterface()
+{
+}
 
 ModificationInterface::ModificationInterface ()
-{}
+{
+}
 
-ModificationInterface::~ModificationInterface ()
-{}
+ModificationInterface::~ModificationInterface()
+{
+}
 
-ContainerInterface::ContainerInterface ()
-{}
+ContainerInterface::ContainerInterface()
+{
+}
 
-ContainerInterface::~ContainerInterface ()
-{}
+ContainerInterface::~ContainerInterface()
+{
+}
 
-MdiContainer::MdiContainer ()
-{}
+MdiContainer::MdiContainer()
+{
+}
 
-MdiContainer::~MdiContainer ()
-{}
+MdiContainer::~MdiContainer()
+{
+}
 
 ViewBarContainer::ViewBarContainer()
-{}
+{
+}
 
 ViewBarContainer::~ViewBarContainer()
-{}
-
+{
+}
 
 SearchInterface::SearchInterface()
-{}
+{
+}
 
 SearchInterface::~SearchInterface()
-{}
+{
+}
 
 SessionConfigInterface::SessionConfigInterface()
-{}
+{
+}
 
 SessionConfigInterface::~SessionConfigInterface()
-{}
+{
+}
 
 ParameterizedSessionConfigInterface::ParameterizedSessionConfigInterface()
-{}
+{
+}
 
 ParameterizedSessionConfigInterface::~ParameterizedSessionConfigInterface()
-{}
+{
+}
 
 TemplateInterface::TemplateInterface()
-{}
+{
+}
 
 TemplateInterface::~TemplateInterface()
-{}
+{
+}
 
 TextHintInterface::TextHintInterface()
-{}
+{
+}
 
 TextHintInterface::~TextHintInterface()
-{}
+{
+}
 
 VariableInterface::VariableInterface()
-{}
+{
+}
 
 VariableInterface::~VariableInterface()
-{}
-
-class KTextEditor::LoadSaveFilterCheckPluginPrivate {
-  public:
-    LoadSaveFilterCheckPluginPrivate(){}
-    ~LoadSaveFilterCheckPluginPrivate(){}
-};
+{
+}
 
 LoadSaveFilterCheckPlugin::LoadSaveFilterCheckPlugin(QObject *parent):
-    QObject(parent),
-    d(new LoadSaveFilterCheckPluginPrivate()) { }
+    QObject(parent)
+{
+}
 
-LoadSaveFilterCheckPlugin::~LoadSaveFilterCheckPlugin() { delete d; }
+LoadSaveFilterCheckPlugin::~LoadSaveFilterCheckPlugin()
+{
+}
 
 CoordinatesToCursorInterface::~CoordinatesToCursorInterface() {
 }
 
-
-
-ModeInterface::ModeInterface() {
+ModeInterface::ModeInterface()
+{
 }
 
-ModeInterface::~ModeInterface() {
+ModeInterface::~ModeInterface()
+{
 }
 
 RecoveryInterface::RecoveryInterface()

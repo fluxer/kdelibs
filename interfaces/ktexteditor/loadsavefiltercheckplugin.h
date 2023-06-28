@@ -34,8 +34,6 @@
 namespace KTextEditor
 {
 
-class LoadSaveFilterCheckPluginPrivate;
-
 /**
 * \brief Plugin for load/save filtering
 */ 
@@ -53,8 +51,6 @@ class KTEXTEDITOR_EXPORT LoadSaveFilterCheckPlugin:public QObject {
     virtual bool postSaveFilterCheck(KTextEditor::Document *document, bool saveas) =0;
     /*this one is called once the document has been completely loaded and configured (encoding,highlighting, ...))*/
     virtual void postLoadFilter(KTextEditor::Document *document) =0;
-  private:
-    class LoadSaveFilterCheckPluginPrivate* const d;
 };
 
 }
