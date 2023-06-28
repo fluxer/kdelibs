@@ -327,12 +327,12 @@ bool SlaveInterface::dispatch()
     Q_D(SlaveInterface);
     Q_ASSERT(d->connection);
 
-    int cmd;
+    int cmd = 0;
     QByteArray data;
-
     int ret = d->connection->read(&cmd, data);
-    if (ret == -1)
-      return false;
+    if (ret == -1) {
+        return false;
+    }
 
     return dispatch(cmd, data);
 }

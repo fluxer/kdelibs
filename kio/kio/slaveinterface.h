@@ -82,7 +82,7 @@ class KIO_EXPORT SlaveInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit SlaveInterface(const QString &protocol, QObject *parent = 0);
+    explicit SlaveInterface(const QString &protocol, QObject *parent = nullptr);
 
     ~SlaveInterface();
 
@@ -202,12 +202,12 @@ public:
     void ref();
     void deref();
 
-    void setConnection( Connection* connection );
-    Connection *connection() const;
+    void setConnection(Connection *connection);
+    Connection* connection() const;
 
     // Send our answer to the MSG_RESUME (canResume) request
     // (to tell the "put" job whether to resume or not)
-    void sendResumeAnswer( bool resume );
+    void sendResumeAnswer(bool resume);
 
     /**
      * Sends our answer for the INF_MESSAGEBOX request.
@@ -216,32 +216,32 @@ public:
      */
     void sendMessageBoxAnswer(int result);
 
-    void setOffset( KIO::filesize_t offset );
+    void setOffset(KIO::filesize_t offset);
     KIO::filesize_t offset() const;
 
 Q_SIGNALS:
     ///////////
     // Messages sent by the slave
     ///////////
-    void data( const QByteArray & );
-    void dataReq( );
-    void error( int , const QString & );
+    void data(const QByteArray &);
+    void dataReq();
+    void error(int , const QString &);
     void finished();
-    void listEntries( const KIO::UDSEntryList& );
-    void statEntry( const KIO::UDSEntry& );
-    void canResume( KIO::filesize_t );
+    void listEntries(const KIO::UDSEntryList &);
+    void statEntry(const KIO::UDSEntry &);
+    void canResume(KIO::filesize_t );
 
     ///////////
     // Info sent by the slave
     //////////
-    void metaData( const KIO::MetaData & );
-    void totalSize( KIO::filesize_t );
-    void processedSize( KIO::filesize_t );
-    void redirection( const KUrl& );
-    void speed( unsigned long );
-    void mimeType( const QString & );
-    void warning( const QString & );
-    void infoMessage( const QString & );
+    void metaData(const KIO::MetaData &);
+    void totalSize(KIO::filesize_t );
+    void processedSize(KIO::filesize_t );
+    void redirection(const KUrl &);
+    void speed(unsigned long );
+    void mimeType(const QString &);
+    void warning(const QString &);
+    void infoMessage(const QString &);
 
     ///////////
     // Info sent for the scheduler
@@ -253,14 +253,14 @@ protected:
     // Dispatching
     ////////////////
     bool dispatch();
-    bool dispatch( int cmd, const QByteArray &data );
+    bool dispatch(int cmd, const QByteArray &data);
 
-    void messageBox( int type, const QString &text, const QString &caption,
-                     const QString &buttonYes, const QString &buttonNo );
+    void messageBox(int type, const QString &text, const QString &caption,
+                    const QString &buttonYes, const QString &buttonNo);
 
-    void messageBox( int type, const QString &text, const QString &caption,
-                     const QString &buttonYes, const QString &buttonNo,
-                     const QString &dontAskAgainName );
+    void messageBox(int type, const QString &text, const QString &caption,
+                    const QString &buttonYes, const QString &buttonNo,
+                    const QString &dontAskAgainName);
 
 protected Q_SLOTS:
     void calcSpeed();
