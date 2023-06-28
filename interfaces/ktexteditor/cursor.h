@@ -31,7 +31,6 @@ namespace KTextEditor
 {
 class Document;
 class Range;
-class SmartCursor;
 
 /**
  * \short An object which represents a position in a Document.
@@ -40,12 +39,7 @@ class SmartCursor;
  * in a Document. It is very lightweight and maintains no affiliation with a
  * particular Document.
  *
- * If you want additional functionality such as the ability to maintain position
- * in a document, see SmartCursor.
- *
- * \note The Cursor class is designed to be passed via value, while SmartCursor
- * and derivatives must be passed via pointer or reference as they maintain a
- * connection with their document internally and cannot be copied.
+ * \note The Cursor class is designed to be passed via value.
  *
  * \note Lines and columns start at 0.
  *
@@ -56,7 +50,6 @@ class SmartCursor;
  *       whenever the cursor (i.e. start or end position) changes its position.
  *       Read the class documentation about Range%s for further details.
  *
- * \sa SmartCursor
  */
 class KTEXTEDITOR_EXPORT Cursor
 {
@@ -93,21 +86,8 @@ class KTEXTEDITOR_EXPORT Cursor
     /**
      * Returns whether the current position of this cursor is a valid position
      * (line + column must both be >= 0).
-     *
-     * Smart cursors should override this to return whether the cursor is valid
-     * within the linked document.
      */
     virtual bool isValid() const;
-
-    /**
-     * Returns whether this cursor is a SmartCursor.
-     */
-    virtual bool isSmartCursor() const;
-
-    /**
-     * Returns this cursor as a SmartCursor, if it is one.
-     */
-    virtual SmartCursor* toSmartCursor() const;
 
     /**
      * Returns an invalid cursor.
@@ -129,8 +109,6 @@ class KTEXTEDITOR_EXPORT Cursor
      * Set the current cursor position to \e position.
      *
      * \param position new cursor position
-     *
-     * \todo add bool to indicate success or not, for smart cursors?
      */
     virtual void setPosition(const Cursor& position);
 

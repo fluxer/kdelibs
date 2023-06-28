@@ -283,16 +283,6 @@ void KTextEditor::Range::setBothColumns( int column )
   setRange(Range(start().line(), column, end().line(), column));
 }
 
-bool KTextEditor::Range::isSmartRange( ) const
-{
-  return false;
-}
-
-SmartRange* KTextEditor::Range::toSmartRange( ) const
-{
-  return 0L;
-}
-
 Cursor& KTextEditor::Range::start()
 {
   return *m_start;

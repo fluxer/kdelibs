@@ -21,7 +21,6 @@
 #define KDELIBS_KTEXTEDITOR_CODECOMPLETIONMODELCONTROLLERINTERFACE_H
 
 #include <ktexteditor/ktexteditor_export.h>
-#include <ktexteditor/smartrange.h>
 #include <ktexteditor/cursor.h>
 #include "codecompletionmodel.h"
 
@@ -112,9 +111,6 @@ public:
      *
      * The default implementation does nothing.
      *
-     * The smart-mutex is not locked when this is called.
-     * @warning Make sure you lock it before you change the range
-     *
      * \param view The view to generate completions for
      * \param range Reference to the current range
      * \returns the modified range
@@ -128,8 +124,6 @@ public:
      * The default implementation will return the text from \p range start to
      * the cursor \p position.
      *
-     * The smart-mutex is not locked when this is called.
-     *
      * \param view The view to generate completions for
      * \param range The completion range
      * \param position Current cursor position
@@ -142,8 +136,6 @@ public:
      * Called after every change to the range (eg. when user entered text)
      *
      * The default implementation will return true when any special character was entered, or when the range is empty.
-     *
-     * The smart-mutex is not locked when this is called.
      *
      * \param view The view to generate completions for
      * \param range The completion range

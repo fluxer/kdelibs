@@ -16,15 +16,10 @@ set(ktexteditor_LIB_SRCS
     templateinterface.cpp
     editorchooser.cpp
     attribute.cpp
-    cursorfeedback.cpp
-    rangefeedback.cpp
-    smartcursor.cpp
-    smartrange.cpp
     codecompletioninterface.cpp
     codecompletionmodel.cpp
     codecompletionmodelcontrollerinterface.cpp
     configinterface.cpp
-    smartinterface.cpp
     highlightinterface.cpp
     movinginterface.cpp
     movingcursor.cpp
@@ -76,16 +71,7 @@ install(
     templateinterface.h
     modificationinterface.h
     commandinterface.h
-    smartinterface.h
     attribute.h
-    cursorfeedback.h
-    rangefeedback.h
-    smartcursor.h
-    smartcursornotifier.h
-    smartcursorwatcher.h
-    smartrange.h
-    smartrangenotifier.h
-    smartrangewatcher.h
     codecompletioninterface.h
     codecompletionmodel.h
     codecompletionmodelcontrollerinterface.h

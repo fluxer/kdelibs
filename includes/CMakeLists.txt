@@ -458,13 +458,6 @@ install(
     KTextEditor/Range
     KTextEditor/SearchInterface
     KTextEditor/SessionConfigInterface
-    KTextEditor/SmartCursor
-    KTextEditor/SmartCursorNotifier
-    KTextEditor/SmartCursorWatcher
-    KTextEditor/SmartInterface
-    KTextEditor/SmartRange
-    KTextEditor/SmartRangeNotifier
-    KTextEditor/SmartRangeWatcher
     KTextEditor/TemplateInterface
     KTextEditor/TextHintInterface
     KTextEditor/VariableInterface

@@ -30,7 +30,6 @@
 
 namespace KTextEditor
 {
-class SmartRange;
 
 /**
  * \short An object representing a section of text, from one Cursor to another.
@@ -45,9 +44,9 @@ class SmartRange;
  * start and end will be swapped if necessary.
  *
  * If you want additional functionality such as the ability to maintain position
- * in a document, see SmartRange.
+ * in a document, see Range.
  *
- * \sa SmartRange
+ * \sa Range
  *
  * \author Hamish Rodda \<rodda@kde.org\>
  */
@@ -123,16 +122,6 @@ class KTEXTEDITOR_EXPORT Range
     static Range invalid();
 
     /**
-     * Returns whether this range is a SmartRange.
-     */
-    virtual bool isSmartRange() const;
-
-    /**
-     * Returns this range as a SmartRange, if it is one.
-     */
-    virtual SmartRange* toSmartRange() const;
-
-    /**
      * \name Position
      *
      * The following functions provide access to, and manipulation of, the range's position.
@@ -161,8 +150,6 @@ class KTEXTEDITOR_EXPORT Range
      * Get the start position of this range. This will always be <= end().
      *
      * \returns a const reference to the start position of this range.
-     *
-     * \internal this function is virtual to allow for covariant return of SmartCursor%s.
      */
     const Cursor& start() const;
 
@@ -182,8 +169,6 @@ class KTEXTEDITOR_EXPORT Range
      *       \li any notifications needed will be performed multiple times for no benefit
      *
      * \returns a reference to the end position of this range.
-     *
-     * \internal this function is virtual to allow for covariant return of SmartCursor%s.
      */
     Cursor& end();
 
@@ -191,8 +176,6 @@ class KTEXTEDITOR_EXPORT Range
      * Get the end position of this range. This will always be >= start().
      *
      * \returns a const reference to the end position of this range.
-     *
-     * \internal this function is virtual to allow for covariant return of SmartCursor%s.
      */
     const Cursor& end() const;
 

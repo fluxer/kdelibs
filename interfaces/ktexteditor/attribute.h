@@ -30,8 +30,6 @@ class KAction;
 namespace KTextEditor
 {
 
-class SmartRange;
-
 /**
  * \brief A class which provides customized text decorations.
  *
@@ -53,14 +51,11 @@ class SmartRange;
  * redrawn.  Once you have finished changing properties, you should
  * call changed() to force redrawing of affected ranges of text.
  *
- * \sa SmartInterface
  *
  * \author Hamish Rodda \<rodda@kde.org\>
  */
 class KTEXTEDITOR_EXPORT Attribute : public QTextCharFormat, public QSharedData
 {
-  friend class SmartRange;
-
   public:
     typedef KSharedPtr<Attribute> Ptr;
 
@@ -325,20 +320,6 @@ class KTEXTEDITOR_EXPORT Attribute : public QTextCharFormat, public QSharedData
      * \param a attribute to assign to this attribute.
      */
     Attribute& operator=(const Attribute& a);
-
-  protected:
-    /**
-     * \internal
-     * Add a range using this attribute.
-     * \param range range using this attribute.
-     *
-    void addRange(SmartRange* range);
-    **
-     * \internal
-     * Remove a range which is no longer using this attribute.
-     * \param range range no longer using this attribute.
-     *
-    void removeRange(SmartRange* range);*/
 
   private:
     class AttributePrivate* const d;

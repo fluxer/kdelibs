@@ -28,7 +28,6 @@
 
 // widget
 #include <QtGui/QWidget>
-
 #include <QMenu>
 
 namespace KTextEditor
@@ -499,7 +498,7 @@ class KTEXTEDITOR_EXPORT View :  public QWidget, public KXMLGUIClient
      * \see selectionRange(), selection()
      *
      * \todo rodda - is this really needed? it can now be accomplished with
-     *       SmartCursor::advance()
+     *       Cursor::advance()
      */
     virtual bool setSelection ( const Cursor &position,
                                 int length,
