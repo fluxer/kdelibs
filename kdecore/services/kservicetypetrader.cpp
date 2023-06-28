@@ -25,8 +25,6 @@
 #include "kservicetypefactory.h"
 #include "kservicefactory.h"
 
-using namespace KTraderParse;
-
 // --------------------------------------------------
 
 KServiceTypeTrader* KServiceTypeTrader::self()
@@ -46,8 +44,8 @@ void KServiceTypeTrader::applyConstraints( KService::List& lst,
     if ( lst.isEmpty() || constraint.isEmpty() )
         return;
 
-    const ParseTreeBase::Ptr constr = parseConstraints( constraint ); // for ownership
-    const ParseTreeBase* pConstraintTree = constr.data(); // for speed
+    const KTraderParse::ParseTreeBase::Ptr constr = KTraderParse::parseConstraints( constraint ); // for ownership
+    const KTraderParse::ParseTreeBase* pConstraintTree = constr.data(); // for speed
 
     if (!constr) { // parse error
         lst.clear();
