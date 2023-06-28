@@ -237,7 +237,6 @@ install(
     KRecentDocument
     KRecentFilesAction
     KRecursiveFilterProxyModel
-    KRegExpEditorInterface
     KRemoteEncoding
     KReplace
     KReplaceDialog

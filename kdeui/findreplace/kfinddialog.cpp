@@ -35,10 +35,10 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <assert.h>
 #include <kfind.h>
-#include <kregexpeditorinterface.h>
 #include <kservicetypetrader.h>
+
+#include <assert.h>
 
 KFindDialog::KFindDialog(QWidget *parent, long options, const QStringList &findStrings, bool hasSelection, bool replaceDialog)
     : KDialog(parent),
@@ -409,90 +409,71 @@ void KFindDialog::setOptions(long options)
 // compose a regular expression search pattern.
 void KFindDialog::KFindDialogPrivate::_k_showPatterns()
 {
-    if ( !regexpDialogQueryDone )
+    typedef struct
     {
-        regexpDialog = KServiceTypeTrader::createInstanceFromQuery<QDialog>( "KRegExpEditor/KRegExpEditor", QString(), q );
-        regexpDialogQueryDone = true;
-    }
+        const char *description;
+        const char *regExp;
+        int cursorAdjustment;
+    } term;
+    static const term items[] = {
+        { I18N_NOOP("Any Character"),                 ".",        0 },
+        { I18N_NOOP("Start of Line"),                 "^",        0 },
+        { I18N_NOOP("End of Line"),                   "$",        0 },
+        { I18N_NOOP("Set of Characters"),             "[]",       -1 },
+        { I18N_NOOP("Repeats, Zero or More Times"),   "*",        0 },
+        { I18N_NOOP("Repeats, One or More Times"),    "+",        0 },
+        { I18N_NOOP("Optional"),                      "?",        0 },
+        { I18N_NOOP("Escape"),                        "\\",       0 },
+        { I18N_NOOP("TAB"),                           "\\t",      0 },
+        { I18N_NOOP("Newline"),                       "\\n",      0 },
+        { I18N_NOOP("Carriage Return"),               "\\r",      0 },
+        { I18N_NOOP("White Space"),                   "\\s",      0 },
+        { I18N_NOOP("Digit"),                         "\\d",      0 },
+    };
 
-    if ( regexpDialog )
+
+    class RegExpAction : public QAction
     {
-        KRegExpEditorInterface *iface = qobject_cast<KRegExpEditorInterface*>( regexpDialog );
-        assert( iface );
-
-        iface->setRegExp( q->pattern() );
-        if ( regexpDialog->exec() == QDialog::Accepted )
-            q->setPattern( iface->regExp() );
-    }
-    else // No complete regexp-editor available, bring up the old popupmenu
-    {
-        typedef struct
+        public:
+        RegExpAction( QObject *parent, const QString &text, const QString &regExp, int cursor )
+            : QAction( text, parent ), mText( text ), mRegExp( regExp ), mCursor( cursor )
         {
-            const char *description;
-            const char *regExp;
-            int cursorAdjustment;
-        } term;
-        static const term items[] =
-            {
-                { I18N_NOOP("Any Character"),                 ".",        0 },
-                { I18N_NOOP("Start of Line"),                 "^",        0 },
-                { I18N_NOOP("End of Line"),                   "$",        0 },
-                { I18N_NOOP("Set of Characters"),             "[]",       -1 },
-                { I18N_NOOP("Repeats, Zero or More Times"),   "*",        0 },
-                { I18N_NOOP("Repeats, One or More Times"),    "+",        0 },
-                { I18N_NOOP("Optional"),                      "?",        0 },
-                { I18N_NOOP("Escape"),                        "\\",       0 },
-                { I18N_NOOP("TAB"),                           "\\t",      0 },
-                { I18N_NOOP("Newline"),                       "\\n",      0 },
-                { I18N_NOOP("Carriage Return"),               "\\r",      0 },
-                { I18N_NOOP("White Space"),                   "\\s",      0 },
-                { I18N_NOOP("Digit"),                         "\\d",      0 },
-            };
-
-
-        class RegExpAction : public QAction
-        {
-          public:
-            RegExpAction( QObject *parent, const QString &text, const QString &regExp, int cursor )
-              : QAction( text, parent ), mText( text ), mRegExp( regExp ), mCursor( cursor )
-            {
-            }
-
-            QString text() const { return mText; }
-            QString regExp() const { return mRegExp; }
-            int cursor() const { return mCursor; }
-
-          private:
-            QString mText;
-            QString mRegExp;
-            int mCursor;
-        };
-
-        int i;
-
-        // Populate the popup menu.
-        if (!patterns)
-        {
-            patterns = new QMenu(q);
-            for (i = 0; (unsigned)i < sizeof(items) / sizeof(items[0]); i++)
-            {
-                patterns->addAction(new RegExpAction(patterns, i18n(items[i].description),
-                                                     items[i].regExp,
-                                                     items[i].cursorAdjustment));
-            }
         }
 
-        // Insert the selection into the edit control.
-        QAction *action = patterns->exec(regExpItem->mapToGlobal(regExpItem->rect().bottomLeft()));
-        if (action)
-        {
-            RegExpAction *regExpAction = static_cast<RegExpAction*>( action );
-            if ( regExpAction ) {
-              QLineEdit *editor = find->lineEdit();
+        QString text() const { return mText; }
+        QString regExp() const { return mRegExp; }
+        int cursor() const { return mCursor; }
 
-              editor->insert(regExpAction->regExp());
-              editor->setCursorPosition(editor->cursorPosition() + regExpAction->cursor());
-            }
+        private:
+        QString mText;
+        QString mRegExp;
+        int mCursor;
+    };
+
+    int i;
+
+    // Populate the popup menu.
+    if (!patterns)
+    {
+        patterns = new QMenu(q);
+        for (i = 0; (unsigned)i < sizeof(items) / sizeof(items[0]); i++)
+        {
+            patterns->addAction(new RegExpAction(patterns, i18n(items[i].description),
+                                                 items[i].regExp,
+                                                 items[i].cursorAdjustment));
+        }
+    }
+
+    // Insert the selection into the edit control.
+    QAction *action = patterns->exec(regExpItem->mapToGlobal(regExpItem->rect().bottomLeft()));
+    if (action)
+    {
+        RegExpAction *regExpAction = static_cast<RegExpAction*>( action );
+        if ( regExpAction ) {
+            QLineEdit *editor = find->lineEdit();
+
+            editor->insert(regExpAction->regExp());
+            editor->setCursorPosition(editor->cursorPosition() + regExpAction->cursor());
         }
     }
 }

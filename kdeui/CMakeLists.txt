@@ -2,7 +2,6 @@ project(kdeui)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/interfaces
-    ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
     ${CMAKE_SOURCE_DIR}/kdeui
     ${KDE4_KDECORE_INCLUDES}
     actions
