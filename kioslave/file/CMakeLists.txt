@@ -12,7 +12,7 @@ configure_file(
 
 set(kio_file_PART_SRCS file.cpp file_unix.cpp)
 
-add_executable(kio_file ${kio_file_PART_SRCS})
+kde4_add_plugin(kio_file ${kio_file_PART_SRCS})
 
 target_link_libraries(kio_file kdecore kio)
 
@@ -20,7 +20,7 @@ if(ACL_FOUND)
     target_link_libraries(kio_file ${ACL_LIBS})
 endif()
 
-install(TARGETS kio_file DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
+install(TARGETS kio_file DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############

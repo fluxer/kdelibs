@@ -19,6 +19,7 @@
 #include "http.h"
 #include "kdebug.h"
 #include "kcomponentdata.h"
+#include "kpluginfactory.h"
 
 #include <QApplication>
 #include <QHostAddress>
@@ -210,27 +211,11 @@ int curlXFERCallback(void *userdata, curl_off_t dltotal, curl_off_t dlnow, curl_
     return CURLE_OK;
 }
 
-int main(int argc, char **argv)
-{
-    QApplication app(argc, argv);
-    KComponentData componentData("kio_http", "kdelibs4");
+K_PLUGIN_FACTORY(HttpProtocolFactory, registerPlugin<HttpProtocol>();)
+K_EXPORT_PLUGIN(HttpProtocolFactory("kio_http"))
 
-    kDebug(7103) << "Starting" << ::getpid();
-
-    if (argc != 2) {
-        ::fprintf(stderr, "Usage: kio_http app-socket\n");
-        ::exit(-1);
-    }
-
-    HttpProtocol slave(argv[1]);
-    slave.dispatchLoop();
-
-    kDebug(7103) << "Done";
-    return 0;
-}
-
-HttpProtocol::HttpProtocol(const QByteArray &app)
-    : SlaveBase("http", app),
+HttpProtocol::HttpProtocol(QObject *parent, const QVariantList &args)
+    : SlaveBase(args[0].toByteArray(), args[1].toByteArray(), parent),
     aborttransfer(false), m_emitmime(true),
     m_curl(nullptr), m_curlheaders(nullptr)
 {

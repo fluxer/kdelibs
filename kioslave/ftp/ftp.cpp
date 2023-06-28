@@ -52,6 +52,7 @@
 #include <kremoteencoding.h>
 #include <kde_file.h>
 #include <kconfiggroup.h>
+#include <kpluginfactory.h>
 
 #ifdef HAVE_STRTOLL
   #define charToLongLong(a) strtoll(a, 0, 10)
@@ -147,34 +148,19 @@ KIO::filesize_t Ftp::UnknownSize = (KIO::filesize_t)-1;
 
 using namespace KIO;
 
-int main( int argc, char **argv )
-{
-  QApplication app(argc, argv);
-  KComponentData componentData( "kio_ftp", "kdelibs4" );
-  ( void ) KGlobal::locale();
-
-  kDebug(7102) << "Starting " << getpid();
-
-  if (argc != 2)
-  {
-     fprintf(stderr, "Usage: kio_ftp app-socket\n");
-     exit(-1);
-  }
-
-  Ftp slave(argv[1]);
-  slave.dispatchLoop();
-
-  kDebug(7102) << "Done";
-  return 0;
-}
-
 //===============================================================================
 // Ftp
 //===============================================================================
 
-Ftp::Ftp( const QByteArray &app )
-    : SlaveBase( "ftp", app )
+K_PLUGIN_FACTORY(FtpFactory, registerPlugin<Ftp>();)
+K_EXPORT_PLUGIN(FtpFactory("kio_ftp"))
+
+Ftp::Ftp(QObject *parent, const QVariantList &args)
+    : SlaveBase(args[0].toByteArray(), args[1].toByteArray(), parent)
 {
+  KComponentData componentData( "kio_ftp", "kdelibs4" );
+  ( void ) KGlobal::locale();
+
   // init the socket data
   m_data = m_control = NULL;
   m_server = NULL;

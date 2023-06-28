@@ -86,9 +86,6 @@ public:
 
     ~SlaveInterface();
 
-    void setPID(pid_t);
-    pid_t pid() const;
-
     void setJob(KIO::SimpleJob *job);
     KIO::SimpleJob *job() const;
 

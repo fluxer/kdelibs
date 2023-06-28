@@ -52,7 +52,6 @@ public:
     QString m_passwd;
     KIO::ConnectionServer *slaveconnserver;
     KIO::SimpleJob *m_job;
-    pid_t m_pid;
     quint16 m_port;
     bool dead;
     time_t contact_started;

@@ -11,12 +11,6 @@ endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1210)
 
-########### kioslave ###############
-
-add_executable(kioslave kioslave.cpp)
-
-install(TARGETS kioslave DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
-
 ########### klauncher ###############
 
 set(klauncher_SRCS

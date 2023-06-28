@@ -748,7 +748,7 @@ void SchedulerPrivate::cancelJob(SimpleJob *job)
     SlaveInterface *slave = getJobSlave(job);
     kDebug(7006) << job << slave;
     if (slave) {
-        kDebug(7006) << "Scheduler: killing slave " << slave->pid();
+        kDebug(7006) << "Scheduler: killing slave " << slave;
         slave->kill();
     }
     jobFinished(job, slave);

@@ -27,7 +27,7 @@
 class HttpProtocol : public KIO::SlaveBase
 {
 public:
-    HttpProtocol(const QByteArray &app);
+    HttpProtocol(QObject *parent, const QVariantList &args);
     ~HttpProtocol();
 
     void stat(const KUrl &url) final;

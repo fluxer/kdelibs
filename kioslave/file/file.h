@@ -31,11 +31,11 @@
 
 #include <sys/types.h>
 
-class FileProtocol : public QObject, public KIO::SlaveBase
+class FileProtocol : public KIO::SlaveBase
 {
     Q_OBJECT
 public:
-    FileProtocol(const QByteArray &app);
+    FileProtocol(QObject *parent, const QVariantList &args);
     ~FileProtocol();
 
     void get(const KUrl &url) final;

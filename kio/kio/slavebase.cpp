@@ -27,9 +27,7 @@
 
 #include <sys/time.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <unistd.h>
-#include <signal.h>
 #include <time.h>
 
 #include <QtCore/QBuffer>
@@ -57,10 +55,6 @@
 #define AUTHINFO_EXTRAFIELD_ANONYMOUS QLatin1String("anonymous")
 #define AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT QLatin1String("hide-username-line")
 
-extern "C" {
-    static void sigpipe_handler(int sig);
-}
-
 using namespace KIO;
 
 typedef QList<QByteArray> AuthKeysList;
@@ -68,14 +62,9 @@ typedef QMap<QString,QByteArray> AuthKeysMap;
 #define KIO_DATA QByteArray data; QDataStream stream( &data, QIODevice::WriteOnly ); stream
 #define KIO_FILESIZE_T(x) quint64(x)
 
-namespace KIO {
+static const int s_taskwaittime = 100;
 
-static const int s_quit_signals[] = {
-    SIGTERM,
-    SIGHUP,
-    SIGINT,
-    0
-};
+namespace KIO {
 
 static QByteArray authInfoKey(const AuthInfo &authinfo)
 {
@@ -101,7 +90,8 @@ static AuthInfo authInfoFromData(const QByteArray &authdata)
     return authinfo;
 }
 
-class SlaveBasePrivate {
+class SlaveBasePrivate
+{
 public:
     SlaveBasePrivate(const QByteArray &protocol);
     ~SlaveBasePrivate();
@@ -112,7 +102,6 @@ public:
 
     bool needSendCanResume;
     bool wasKilled;
-    bool exit_loop;
     MetaData configData;
     KConfig *config;
     KConfigGroup *configGroup;
@@ -177,7 +166,6 @@ public:
 SlaveBasePrivate::SlaveBasePrivate(const QByteArray &protocol)
     : needSendCanResume(false),
     wasKilled(false),
-    exit_loop(false),
     config(nullptr),
     configGroup(nullptr),
     totalSize(0),
@@ -200,57 +188,17 @@ SlaveBasePrivate::~SlaveBasePrivate()
 
 }
 
-static SlaveBase *globalSlave = nullptr;
-
-static volatile bool slaveWriteError = false;
-
-static void genericsig_handler(int sigNumber)
-{
-    KDE_signal(sigNumber, SIG_DFL);
-
-    kDebug(7019) << "exiting due to signal" << sigNumber;
-    // set the flag which will be checked in dispatchLoop() and which *should* be checked
-    // in lengthy operations in the various slaves
-    if (globalSlave) {
-        globalSlave->setKillFlag();
-    }
-}
-
 //////////////
-
-SlaveBase::SlaveBase(const QByteArray &protocol,
-                     const QByteArray &app_socket)
-    : d(new SlaveBasePrivate(protocol))
-
+SlaveBase::SlaveBase(const QByteArray &protocol, const QByteArray &app_socket, QObject *parent)
+    : QThread(parent),
+    d(new SlaveBasePrivate(protocol))
 {
-    if (qgetenv("KDE_DEBUG").isEmpty()) {
-        KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi | KCrash::NoRestart);
-    }
-
-    struct sigaction act;
-    act.sa_handler = sigpipe_handler;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    sigaction(SIGPIPE, &act, 0);
-
-    sigset_t handlermask;
-    ::sigemptyset(&handlermask);
-    int counter = 0;
-    while (s_quit_signals[counter]) {
-        KDE_signal(s_quit_signals[counter], genericsig_handler);
-        ::sigaddset(&handlermask, s_quit_signals[counter]);
-        counter++;
-    }
-    ::sigprocmask(SIG_UNBLOCK, &handlermask, NULL);
-
-    globalSlave = this;
-
     const QString address = QFile::decodeName(app_socket);
     d->appConnection.connectToRemote(address);
     if (!d->appConnection.inited()) {
-        kDebug(7019) << "failed to connect to" << address << '\n'
-                     << "Reason:" << d->appConnection.errorString();
-        exit();
+        kWarning(7019) << "failed to connect to" << address << '\n'
+                       << "Reason:" << d->appConnection.errorString();
+        return;
     }
 }
 
@@ -262,9 +210,11 @@ SlaveBase::~SlaveBase()
     delete d;
 }
 
-void SlaveBase::dispatchLoop()
+void SlaveBase::run()
 {
-    while (!d->exit_loop) {
+    kDebug(7019) << "slave started" << this;
+
+    while (!wasKilled()) {
         if (d->timeout && (d->timeout < time(0))) {
             QByteArray data = d->timeoutData;
             d->timeout = 0;
@@ -274,7 +224,7 @@ void SlaveBase::dispatchLoop()
 
         Q_ASSERT(d->appConnection.inited());
 
-        int ms = -1;
+        int ms = s_taskwaittime;
         if (d->timeout) {
             ms = 1000 * qMax<time_t>(d->timeout - time(0), 1);
         }
@@ -295,19 +245,11 @@ void SlaveBase::dispatchLoop()
             // some error occurred or not connected to application socket
             break;
         }
-
-        // I think we get here when we were killed in dispatch() and not in select()
-        if (wasKilled()) {
-            kDebug(7019) << "slave was killed, returning";
-            break;
-        }
-
-        // execute deferred deletes
-        QCoreApplication::sendPostedEvents(NULL, QEvent::DeferredDelete);
     }
 
     // execute deferred deletes
     QCoreApplication::sendPostedEvents(NULL, QEvent::DeferredDelete);
+    deleteLater();
 }
 
 void SlaveBase::setMetaData(const QString &key, const QString &value)
@@ -510,7 +452,7 @@ void SlaveBase::mimeType(const QString &_type)
         while (true) {
             cmd = 0;
             int ret = -1;
-            if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(-1)) {
+            if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(s_taskwaittime)) {
                 ret = d->appConnection.read(&cmd, data);
             }
             if (ret == -1) {
@@ -531,14 +473,6 @@ void SlaveBase::mimeType(const QString &_type)
         }
     } while (cmd != CMD_NONE);
     d->m_outgoingMetaData.clear();
-}
-
-void SlaveBase::exit()
-{
-    d->exit_loop = true;
-    // We do need to call exit(), otherwise a long download (get()) would
-    // keep going until it ends, even though the application exited.
-    ::exit(255);
 }
 
 void SlaveBase::warning(const QString &_msg)
@@ -595,17 +529,6 @@ void SlaveBase::listEntries(const UDSEntryList &list)
         stream << *it;
     }
     send(MSG_LIST_ENTRIES, data);
-}
-
-static void sigpipe_handler (int)
-{
-    // We ignore a SIGPIPE in slaves.
-    // A SIGPIPE can happen in two cases:
-    // 1) Communication error with application.
-    // 2) Communication error with network.
-    slaveWriteError = true;
-
-    // Don't add anything else here, especially no debug output
 }
 
 void SlaveBase::setHost(const QString&, quint16, const QString&, QString const &)
@@ -789,7 +712,7 @@ int SlaveBase::waitForAnswer(int expected1, int expected2, QByteArray &data, int
     int cmd = 0;
     int result = -1;
     for (;;) {
-        if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(-1)) {
+        if (d->appConnection.hasTaskAvailable() || d->appConnection.waitForIncomingTask(s_taskwaittime)) {
             result = d->appConnection.read(&cmd, data);
         }
         if (result == -1) {
@@ -1120,12 +1043,8 @@ void SlaveBase::setKillFlag()
 
 void SlaveBase::send(int cmd, const QByteArray &arr)
 {
-    slaveWriteError = false;
     if (!d->appConnection.send(cmd, arr)) {
-        // Note that slaveWriteError can also be set by sigpipe_handler
-        slaveWriteError = true;
-    }
-    if (slaveWriteError) {
+        kDebug(7019) << "Could not send command" << cmd;
         exit();
     }
 }

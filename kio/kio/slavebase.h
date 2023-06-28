@@ -25,6 +25,7 @@
 #include <kio/authinfo.h>
 #include <kio/jobclasses.h> // for KIO::JobFlags
 #include <klocale.h>
+#include <QThread>
 
 class KConfigGroup;
 class KRemoteEncoding;
@@ -43,22 +44,12 @@ class SlaveBasePrivate;
  *
  * A call to foo() results in a call to slotFoo() on the other end.
  */
-class KIO_EXPORT SlaveBase
+class KIO_EXPORT SlaveBase : public QThread
 {
+    Q_OBJECT
 public:
-    SlaveBase(const QByteArray &protocol, const QByteArray &app_socket);
+    SlaveBase(const QByteArray &protocol, const QByteArray &app_socket, QObject *parent = nullptr);
     virtual ~SlaveBase();
-
-    /**
-     * @internal
-     * Terminate the slave by calling the destructor and then ::exit()
-     */
-    void exit();
-
-    /**
-     * @internal
-     */
-    void dispatchLoop();
 
     ///////////
     // Message Signals to send to the job
@@ -712,6 +703,10 @@ public:
      * @internal
      */
     void setKillFlag();
+
+private:
+    // reimplementation
+    void run();
 
 private:
     void send(int cmd, const QByteArray &arr = QByteArray());

@@ -85,6 +85,7 @@ void KStandarddirsTest::testFindResource()
     if ( !isKdelibsInstalled() )
         QSKIP( "kdelibs not installed", SkipAll );
 
+    // TODO: adjust
 #define EXT ""
 #define KIOSLAVE "/kioslave"
     const QString bin = KGlobal::dirs()->findResource( "exe", "kioslave" EXT );

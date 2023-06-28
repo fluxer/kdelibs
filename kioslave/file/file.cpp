@@ -77,6 +77,7 @@
 #include <kglobal.h>
 #include <kmimetype.h>
 #include <kuser.h>
+#include <kpluginfactory.h>
 
 using namespace KIO;
 
@@ -86,29 +87,14 @@ using namespace KIO;
 static void appendACLAtoms(const QByteArray & path, UDSEntry& entry, mode_t type);
 #endif
 
-int main(int argc, char **argv)
+K_PLUGIN_FACTORY(FileProtocolFactory, registerPlugin<FileProtocol>();)
+K_EXPORT_PLUGIN(FileProtocolFactory("kio_file"))
+
+FileProtocol::FileProtocol(QObject *parent, const QVariantList &args)
+    : SlaveBase(args[0].toByteArray(), args[1].toByteArray(), parent)
 {
-    QCoreApplication app(argc, argv); // needed for QSocketNotifier
     KComponentData componentData("kio_file", "kdelibs4");
     (void) KGlobal::locale();
-
-    kDebug(7101) << "Starting" << getpid();
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: kio_file app-socket\n");
-        exit(-1);
-    }
-
-    FileProtocol slave(argv[1]);
-    slave.dispatchLoop();
-
-    kDebug(7101) << "Done";
-    return 0;
-}
-
-FileProtocol::FileProtocol(const QByteArray &app)
-    : SlaveBase("file", app)
-{
 }
 
 FileProtocol::~FileProtocol()

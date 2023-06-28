@@ -65,7 +65,6 @@ SlaveInterfacePrivate::SlaveInterfacePrivate(const QString &protocol)
     m_protocol(protocol),
     slaveconnserver(new KIO::ConnectionServer()),
     m_job(nullptr),
-    m_pid(0),
     m_port(0),
     dead(false),
     contact_started(time(0)),
@@ -172,18 +171,6 @@ time_t SlaveInterface::idleTime() const
     return time_t(difftime(time(0), d->m_idleSince));
 }
 
-void SlaveInterface::setPID(pid_t pid)
-{
-    Q_D(SlaveInterface);
-    d->m_pid = pid;
-}
-
-pid_t SlaveInterface::pid() const
-{
-    Q_D(const SlaveInterface);
-    return d->m_pid;
-}
-
 void SlaveInterface::setJob(KIO::SimpleJob *job)
 {
     Q_D(SlaveInterface);
@@ -230,12 +217,7 @@ void SlaveInterface::kill()
 {
     Q_D(SlaveInterface);
     d->dead = true; // OO can be such simple.
-    kDebug(7002) << "killing slave pid" << d->m_pid
-                 << "(" << d->m_protocol + "://" + d->m_host << ")";
-    if (d->m_pid) {
-       ::kill(d->m_pid, SIGTERM);
-       d->m_pid = 0;
-    }
+    kDebug(7002) << "killing slave (" << d->m_protocol + "://" + d->m_host << ")";
 }
 
 void SlaveInterface::setHost( const QString &host, quint16 port,
@@ -272,41 +254,44 @@ SlaveInterface* SlaveInterface::createSlave(const QString &protocol, const KUrl 
 {
     kDebug(7002) << "createSlave" << protocol << "for" << url;
     SlaveInterface *slave = new SlaveInterface(protocol);
-    const QString slaveaddress = slave->d_func()->slaveconnserver->address();
 
     const QString slavename = KProtocolInfo::exec(protocol);
     if (slavename.isEmpty()) {
         error_text = i18n("Unknown protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
-        return 0;
+        return nullptr;
     }
-    const QString slaveexe = KStandardDirs::locate("libexec", slavename);
-    if (slaveexe.isEmpty()) {
-        error_text = i18n("Can not find io-slave for protocol '%1'.", protocol);
+
+    KPluginLoader slavelibrary(slavename);
+    const QString slavefilename = slavelibrary.fileName();
+    if (slavefilename.isEmpty()) {
+        error_text = i18n("Cannot find io-slave for protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
-        return 0;
+        return nullptr;
     }
 
-    kDebug() << "kioslave" << ", " << slaveexe << ", " << protocol << ", " << slaveaddress;
-
-    const QStringList slaveargs = QStringList() << slaveexe << slaveaddress;
-    Q_PID slavepid = 0;
-    const bool result = QProcess::startDetached(
-        KStandardDirs::findExe("kioslave"),
-        slaveargs,
-        QDir::currentPath(),
-        &slavepid
-    );
-    if (!result || !slavepid) {
-        error_text = i18n("Can not start io-slave for protocol '%1'.", protocol);
+    KPluginFactory* slavefactory = slavelibrary.factory();
+    if (!slavefactory) {
+        error_text = i18n("Cannot create io-slave for protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
-        return 0;
+        return nullptr;
     }
-    slave->setPID(slavepid);
 
+    const QString slaveaddress = slave->d_func()->slaveconnserver->address();
+    const QVariantList slaveargs = QVariantList() << QVariant(protocol) << QVariant(slaveaddress.toUtf8());
+    SlaveBase* slavebase = slavefactory->create<SlaveBase>(slave, slaveargs);
+    if (!slavebase) {
+        error_text = i18n("Cannot create io-slave instance for protocol '%1'.", protocol);
+        error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
+        delete slave;
+        return nullptr;
+    }
+
+    kDebug() << "kioslave" << ", " << slavebase << ", " << protocol << ", " << slaveaddress;
+    slavebase->start();
     return slave;
 }
 
@@ -624,7 +609,7 @@ void SlaveInterface::gotInput()
         if (!d->m_host.isEmpty()) {
             arg += QString::fromLatin1("://") + d->m_host;
         }
-        kDebug(7002) << "slave died pid = " << d->m_pid;
+        kDebug(7002) << "slave died";
         // Tell the job about the problem.
         emit error(ERR_SLAVE_DIED, arg);
         // Tell the scheduler about the problem.
@@ -645,24 +630,13 @@ void SlaveInterface::timeout()
         return;
     }
 
-    kDebug(7002) << "slave failed to connect to application pid=" << d->m_pid
-                 << " protocol=" << d->m_protocol;
-    if (d->m_pid && (::kill(d->m_pid, 0) == 0)) {
-        int delta_t = (int) difftime(time(0), d->contact_started);
-        kDebug(7002) << "slave is slow... pid=" << d->m_pid << " t=" << delta_t;
-        if (delta_t < SLAVE_CONNECTION_TIMEOUT_MAX) {
-            QTimer::singleShot(1000*SLAVE_CONNECTION_TIMEOUT_MIN, this, SLOT(timeout()));
-            return;
-        }
-    }
-    kDebug(7002) << "Houston, we lost our slave, pid=" << d->m_pid;
+    kDebug(7002) << "slave failed to connect to application, protocol=" << d->m_protocol;
     d->connection->close();
     d->dead = true;
     QString arg = d->m_protocol;
     if (!d->m_host.isEmpty()) {
         arg += QString::fromLatin1("://") + d->m_host;
     }
-    kDebug(7002) << "slave died pid = " << d->m_pid;
 
     ref();
     // Tell the job about the problem.

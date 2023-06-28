@@ -48,12 +48,12 @@ struct FtpEntry
 //===============================================================================
 // Ftp
 //===============================================================================
-class Ftp : public QObject, public KIO::SlaveBase
+class Ftp : public KIO::SlaveBase
 {
   Q_OBJECT
 
 public:
-  Ftp( const QByteArray &app );
+  Ftp( QObject *parent, const QVariantList &args );
   virtual ~Ftp();
 
   virtual void setHost( const QString& host, quint16 port, const QString& user, const QString& pass );
