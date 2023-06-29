@@ -190,7 +190,7 @@ public:
      * Call to signal a message, to be displayed if the application wants to,
      * for instance in a status bar. Usual examples are "connecting to host xyz", etc.
      */
-    void infoMessage( const QString &msg );
+    void infoMessage( const QString &msg);
 
     enum MessageBoxType {
         QuestionYesNo = 1,
@@ -560,11 +560,11 @@ public:
      * frame exceeded (to make sure the app gets some
      * items in time but not too many items one by one
      * as this will cause a drastic performance penalty)
-     * @param _entry The UDSEntry containing all of the object attributes.
+     * @param entry The UDSEntry containing all of the object attributes.
      * @param ready set to true after emitting all items. @p _entry is not
      *        used in this case
      */
-    void listEntry(const UDSEntry &_entry, bool ready);
+    void listEntry(const UDSEntry &entry, bool ready);
 
     /**
      * Prompt the user for Authorization info (login & password).

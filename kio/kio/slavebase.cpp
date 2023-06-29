@@ -559,7 +559,7 @@ void SlaveBase::statEntry(const UDSEntry &entry)
     send(MSG_STAT_ENTRY, data);
 }
 
-void SlaveBase::listEntry(const UDSEntry &entry, bool _ready)
+void SlaveBase::listEntry(const UDSEntry &entry, bool ready)
 {
     static const int maximum_updatetime = 300;
 
@@ -568,16 +568,16 @@ void SlaveBase::listEntry(const UDSEntry &entry, bool _ready)
         d->m_timeSinceLastBatch.restart();
     }
 
-    if (!_ready) {
+    if (!ready) {
         d->pendingListEntries.append(entry);
 
         // If more then maximum_updatetime time is passed, emit the current batch
         if (d->m_timeSinceLastBatch.elapsed() > maximum_updatetime) {
-            _ready = true;
+            ready = true;
         }
     }
 
-    if (_ready) { // may happen when we started with !ready
+    if (ready) { // may happen when we started with !ready
         listEntries(d->pendingListEntries);
         d->pendingListEntries.clear();
 
@@ -748,7 +748,7 @@ int SlaveBase::messageBox(MessageBoxType type, const QString &text, const QStrin
 
 int SlaveBase::messageBox(const QString &text, MessageBoxType type, const QString &caption,
                           const QString &buttonYes, const QString &buttonNo,
-                          const QString &dontAskAgainName )
+                          const QString &dontAskAgainName)
 {
     kDebug(7019) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo;
     KIO_DATA << (qint32)type << text << caption << buttonYes << buttonNo << dontAskAgainName;
