@@ -178,7 +178,7 @@ KMimeType::Ptr KMimeType::findByUrlHelper(const KUrl &_url, mode_t mode,
     const QString fileName(_url.fileName());
     if (!fileName.isEmpty() && !path.endsWith(QLatin1Char('/'))) {
         // and if we can trust it (e.g. don't trust *.pl over HTTP, could be anything)
-        if ( is_local_file || KProtocolInfo::determineMimetypeFromExtension(_url.protocol())) {
+        if (is_local_file || KProtocolInfo::determineMimetypeFromExtension(_url.protocol())) {
             mimeList = KMimeTypeRepository::self()->findFromFileName(fileName);
         }
     }
@@ -301,7 +301,7 @@ KMimeType::Ptr KMimeType::findByUrl(const KUrl& url, mode_t mode,
         QFile file(url.toLocalFile());
         return findByUrlHelper(url, mode, is_local_file, &file, accuracy);
     }
-    return findByUrlHelper(url, mode, is_local_file, 0, accuracy);
+    return findByUrlHelper(url, mode, is_local_file, nullptr, accuracy);
 }
 
 KMimeType::Ptr KMimeType::findByPath(const QString &path, mode_t mode,

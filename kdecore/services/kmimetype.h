@@ -40,6 +40,11 @@ public:
 
     virtual ~KMimeType();
 
+    /**
+     * Return the name of the mimetype, e.g. "text/plain".
+     *
+     * @return the name of the mimetype.
+     */
     QString name() const;
 
     /**
@@ -49,7 +54,7 @@ public:
      * @param url argument only used for directories, where the icon
      * can be specified in the .directory file.
      *
-     * @return The name of the icon associated with this MIME type.
+     * @return the name of the icon associated with this MIME type.
      */
     QString iconName(const KUrl &url = KUrl()) const;
 
