@@ -405,6 +405,7 @@ KMimeType::KMimeType(KMimeTypePrivate &dd)
 
 KMimeType::~KMimeType()
 {
+    delete d_ptr;
 }
 
 QString KMimeType::iconNameForUrl(const KUrl &_url, mode_t mode)
