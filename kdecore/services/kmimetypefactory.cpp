@@ -53,8 +53,7 @@ int KMimeTypeFactory::entryOffset(const QString &mimeTypeName)
         return -1; // Error!
     }
     assert(!KSycoca::self()->isBuilding());
-    const int offset = sycocaDict()->find_string(mimeTypeName);
-    return offset;
+    return sycocaDict()->find_string(mimeTypeName);
 }
 
 int KMimeTypeFactory::serviceOffersOffset(const QString& mimeTypeName)
