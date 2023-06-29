@@ -261,10 +261,7 @@ KTipDialog::KTipDialog(KTipDatabase *database, QWidget *parent)
 
     d->tipText->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
-    QStringList paths;
-    paths << KGlobal::dirs()->resourceDirs("icon")
-          << KGlobal::dirs()->findResourceDir("data", "kdewizard/pics") + "kdewizard/pics/";
-
+    QStringList paths = KGlobal::dirs()->resourceDirs("icon");
     d->tipText->setSearchPaths(paths);
 
     d->tipText->setFrameStyle(QFrame::NoFrame);
