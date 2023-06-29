@@ -1072,8 +1072,8 @@ public:
 
 KDialogQueue* KDialogQueue::self()
 {
-  K_GLOBAL_STATIC(KDialogQueue, _self)
-  return _self;
+    K_GLOBAL_STATIC(KDialogQueue, _self)
+    return _self;
 }
 
 KDialogQueue::KDialogQueue()
@@ -1083,38 +1083,41 @@ KDialogQueue::KDialogQueue()
 
 KDialogQueue::~KDialogQueue()
 {
-  delete d;
+    delete d;
 }
 
 // static
-void KDialogQueue::queueDialog( QDialog *dialog )
+void KDialogQueue::queueDialog(QDialog *dialog)
 {
-  KDialogQueue *_this = self();
-  _this->d->queue.append( dialog );
+    KDialogQueue *_this = self();
+    _this->d->queue.append(dialog);
 
-  QTimer::singleShot( 0, _this, SLOT(slotShowQueuedDialog()) );
+    QTimer::singleShot(0, _this, SLOT(slotShowQueuedDialog()));
 }
 
 void KDialogQueue::Private::slotShowQueuedDialog()
 {
-  if ( busy )
-    return;
+    if (busy) {
+        return;
+    }
 
-  QDialog *dialog;
-  do {
-    if ( queue.isEmpty() )
-      return;
-    dialog = queue.first();
-    queue.pop_front();
-  } while( !dialog );
+    QDialog *dialog = nullptr;
+    do {
+        if (queue.isEmpty()) {
+            return;
+        }
+        dialog = queue.first();
+        queue.pop_front();
+    } while(!dialog);
 
-  busy = true;
-  dialog->exec();
-  busy = false;
-  delete dialog;
+    busy = true;
+    dialog->exec();
+    busy = false;
+    delete dialog;
 
-  if ( !queue.isEmpty() )
-    QTimer::singleShot( 20, q, SLOT(slotShowQueuedDialog()) );
+    if (!queue.isEmpty()) {
+        QTimer::singleShot(20, q, SLOT(slotShowQueuedDialog()));
+    }
 }
 
 #include "moc_kdialog.cpp"
