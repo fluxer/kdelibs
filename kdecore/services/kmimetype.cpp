@@ -522,8 +522,7 @@ bool KMimeType::is(const QString &mimeTypeName) const
     if (name() == mimeTypeName) {
         return true;
     }
-    const QString mime = KMimeTypeRepository::self()->canonicalName(mimeTypeName);
-    return d->inherits(mime);
+    return d->inherits(KMimeTypeRepository::self()->canonicalName(mimeTypeName));
 }
 
 QStringList KMimeType::parentMimeTypes() const
