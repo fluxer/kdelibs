@@ -31,10 +31,15 @@
 class KSycocaFactory::Private
 {
 public:
-    Private() : mOffset(0),
-                m_sycocaDictOffset(0),
-                m_beginEntryOffset(0),
-                m_endEntryOffset(0) {}
+    Private()
+        : mOffset(0),
+        m_sycocaDictOffset(0),
+        m_beginEntryOffset(0),
+        m_endEntryOffset(0),
+        m_sycocaDict(nullptr)
+    {
+    }
+
     ~Private()
     {
         delete m_sycocaDict;
@@ -48,7 +53,8 @@ public:
 };
 
 KSycocaFactory::KSycocaFactory(KSycocaFactoryId factory_id)
-    : m_resourceList(0), m_entryDict(0), m_str(0), d(new Private)
+    : m_resourceList(0), m_entryDict(0), m_str(0),
+    d(new Private())
 {
     if (!KSycoca::self()->isBuilding() && (m_str = KSycoca::self()->findFactory(factory_id))) {
         // Read position of index tables....
@@ -68,7 +74,7 @@ KSycocaFactory::KSycocaFactory(KSycocaFactoryId factory_id)
     } else {
         // We are in kbuildsycoca4 -- build new database!
         m_entryDict = new KSycocaEntryDict;
-        d->m_sycocaDict = new KSycocaDict;
+        d->m_sycocaDict = new KSycocaDict();
         d->m_beginEntryOffset = 0;
         d->m_endEntryOffset = 0;
 
