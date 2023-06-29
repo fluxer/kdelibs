@@ -766,50 +766,54 @@ QString KDialog::buttonToolTip(ButtonCode id) const
     return QString();
 }
 
-void KDialog::setButtonWhatsThis( ButtonCode id, const QString &text )
+void KDialog::setButtonWhatsThis(ButtonCode id, const QString &text)
 {
-  KPushButton *button = this->button( id );
-  if ( button ) {
-    if ( text.isEmpty() )
-      button->setWhatsThis( QString() );
-    else
-      button->setWhatsThis( text );
-  }
+    KPushButton *button = this->button(id);
+    if (button) {
+        if (text.isEmpty()) {
+            button->setWhatsThis(QString());
+        } else {
+            button->setWhatsThis(text);
+        }
+    }
 }
 
-QString KDialog::buttonWhatsThis( ButtonCode id ) const
+QString KDialog::buttonWhatsThis(ButtonCode id) const
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    return button->whatsThis();
-  else
+    KPushButton *button = this->button(id);
+    if (button) {
+        return button->whatsThis();
+    }
     return QString();
 }
 
-void KDialog::setButtonFocus( ButtonCode id )
+void KDialog::setButtonFocus(ButtonCode id)
 {
-  KPushButton *button = this->button( id );
-  if ( button ) {
-      button->setFocus();
-  }
+    KPushButton *button = this->button(id);
+    if (button) {
+        button->setFocus();
+    }
 }
 
-void KDialog::setDetailsWidget( QWidget *detailsWidget )
+void KDialog::setDetailsWidget(QWidget *detailsWidget)
 {
     Q_D(KDialog);
-  if ( d->mDetailsWidget == detailsWidget )
-    return;
-  delete d->mDetailsWidget;
-  d->mDetailsWidget = detailsWidget;
+    if (d->mDetailsWidget == detailsWidget) {
+        return;
+    }
+    delete d->mDetailsWidget;
+    d->mDetailsWidget = detailsWidget;
 
-  if ( d->mDetailsWidget->parentWidget() != this )
-    d->mDetailsWidget->setParent( this );
+    if (d->mDetailsWidget->parentWidget() != this) {
+        d->mDetailsWidget->setParent(this);
+    }
 
-  d->mDetailsWidget->hide();
-  d->setupLayout();
+    d->mDetailsWidget->hide();
+    d->setupLayout();
 
-  if ( !d->mSettingDetails )
-    setDetailsWidgetVisible( d->mDetailsVisible );
+    if (!d->mSettingDetails) {
+        setDetailsWidgetVisible(d->mDetailsVisible);
+    }
 }
 
 bool KDialog::isDetailsWidgetVisible() const
@@ -817,110 +821,127 @@ bool KDialog::isDetailsWidgetVisible() const
     return d_func()->mDetailsVisible;
 }
 
-void KDialog::setDetailsWidgetVisible( bool visible )
+void KDialog::setDetailsWidgetVisible(bool visible)
 {
     Q_D(KDialog);
-  if ( d->mDetailsButtonText.isEmpty() )
-    d->mDetailsButtonText = i18n( "&Details" );
-
-  d->mSettingDetails = true;
-  d->mDetailsVisible = visible;
-  if ( d->mDetailsVisible ) {
-    emit aboutToShowDetails();
-    setButtonText( Details, d->mDetailsButtonText + " <<" );
-    if ( d->mDetailsWidget ) {
-      if ( layout() )
-        layout()->setEnabled( false );
-
-      d->mDetailsWidget->show();
-
-      adjustSize();
-
-      if ( layout() ) {
-        layout()->activate();
-        layout()->setEnabled( true );
-      }
-    }
-  } else {
-    setButtonText( Details, d->mDetailsButtonText + " >>" );
-    if ( d->mDetailsWidget )
-      d->mDetailsWidget->hide();
-
-    if ( layout() ) {
-      layout()->activate();
-      adjustSize();
+    if (d->mDetailsButtonText.isEmpty()) {
+        d->mDetailsButtonText = i18n("&Details");
     }
 
-  }
+    d->mSettingDetails = true;
+    d->mDetailsVisible = visible;
+    if (d->mDetailsVisible) {
+        emit aboutToShowDetails();
+        setButtonText(KDialog::Details, d->mDetailsButtonText + " <<");
+        if (d->mDetailsWidget) {
+            if (layout()) {
+                layout()->setEnabled(false);
+            }
 
-  d->mSettingDetails = false;
+            d->mDetailsWidget->show();
+
+            adjustSize();
+
+            if (layout()) {
+                layout()->activate();
+                layout()->setEnabled(true);
+            }
+        }
+    } else {
+        setButtonText(KDialog::Details, d->mDetailsButtonText + " >>");
+        if (d->mDetailsWidget) {
+            d->mDetailsWidget->hide();
+        }
+
+        if (layout()) {
+            layout()->activate();
+            adjustSize();
+        }
+    }
+
+    d->mSettingDetails = false;
 }
 
 void KDialog::delayedDestruct()
 {
-  if ( isVisible() )
-    hide();
-
-  deleteLater();
+    if (isVisible()) {
+        hide();
+    }
+    deleteLater();
 }
 
 
-void KDialog::slotButtonClicked( int button )
+void KDialog::slotButtonClicked(int button)
 {
-  Q_D(KDialog);
-  emit buttonClicked( static_cast<KDialog::ButtonCode>(button) );
+    Q_D(KDialog);
+    emit buttonClicked(static_cast<KDialog::ButtonCode>(button));
 
-  switch( button ) {
-    case Ok:
-      emit okClicked();
-      accept();
-      break;
-    case Apply:
-      emit applyClicked();
-      break;
-    case Try:
-      emit tryClicked();
-      break;
-    case User3:
-      emit user3Clicked();
-      break;
-    case User2:
-      emit user2Clicked();
-      break;
-    case User1:
-      emit user1Clicked();
-      break;
-    case Yes:
-      emit yesClicked();
-      done( Yes );
-      break;
-    case No:
-      emit noClicked();
-      done( No );
-      break;
-    case Cancel:
-      emit cancelClicked();
-      reject();
-      break;
-    case Close:
-      emit closeClicked();
-      done(Close); // KDE5: call reject() instead; more QDialog-like.
-      break;
-    case Help:
-      emit helpClicked();
-      if ( !d->mAnchor.isEmpty() || !d->mHelpApp.isEmpty() )
-        KToolInvocation::invokeHelp( d->mAnchor, d->mHelpApp );
-      break;
-    case Default:
-      emit defaultClicked();
-      break;
-    case Reset:
-      emit resetClicked();
-      break;
-    case Details:
-      setDetailsWidgetVisible( !d->mDetailsVisible );
-      break;
-  }
+    switch(button) {
+        case KDialog::Ok: {
+            emit okClicked();
+            accept();
+            break;
+        }
+        case KDialog::Apply: {
+            emit applyClicked();
+            break;
+        }
+        case KDialog::Try: {
+            emit tryClicked();
+            break;
+        }
+        case KDialog::User3: {
+            emit user3Clicked();
+            break;
+        }
+        case KDialog::User2: {
+            emit user2Clicked();
+            break;
+        }
+        case KDialog::User1: {
+            emit user1Clicked();
+            break;
+        }
+        case KDialog::Yes: {
+            emit yesClicked();
+            done(KDialog::Yes);
+            break;
+        }
+        case KDialog::No: {
+            emit noClicked();
+            done(KDialog::No);
+            break;
+        }
+        case KDialog::Cancel: {
+            emit cancelClicked();
+            reject();
+            break;
+        }
+        case KDialog::Close: {
+            emit closeClicked();
+            done(KDialog::Close); // KDE5: call reject() instead; more QDialog-like.
+            break;
+        }
+        case KDialog::Help: {
+            emit helpClicked();
+            if (!d->mAnchor.isEmpty() || !d->mHelpApp.isEmpty()) {
+                KToolInvocation::invokeHelp( d->mAnchor, d->mHelpApp);
+            }
+            break;
+        }
+        case KDialog::Default: {
+            emit defaultClicked();
+            break;
+        }
+        case KDialog::Reset: {
+            emit resetClicked();
+            break;
+        }
+        case KDialog::Details: {
+            setDetailsWidgetVisible(!d->mDetailsVisible);
+            break;
+        }
+    }
 
     // If we're here from the closeEvent, and auto-delete is on, well, auto-delete now.
     if (d->mDeferredDelete) {
@@ -929,21 +950,23 @@ void KDialog::slotButtonClicked( int button )
     }
 }
 
-void KDialog::enableLinkedHelp( bool state )
+void KDialog::enableLinkedHelp(bool state)
 {
     Q_D(KDialog);
-    if ( ( d->mUrlHelp != 0 ) == state )
+    if ((d->mUrlHelp != 0) == state) {
         return;
-    if ( state ) {
-        if ( d->mUrlHelp )
+    }
+    if (state) {
+        if (d->mUrlHelp) {
             return;
+        }
 
-        d->mUrlHelp = new KUrlLabel( this );
-        d->mUrlHelp->setText( helpLinkText() );
-        d->mUrlHelp->setFloatEnabled( true );
-        d->mUrlHelp->setUnderline( true );
-        d->mUrlHelp->setMinimumHeight( fontMetrics().height() + marginHint() );
-        connect( d->mUrlHelp, SIGNAL(leftClickedUrl()), SLOT(helpLinkClicked()) );
+        d->mUrlHelp = new KUrlLabel(this);
+        d->mUrlHelp->setText(helpLinkText());
+        d->mUrlHelp->setFloatEnabled(true);
+        d->mUrlHelp->setUnderline(true);
+        d->mUrlHelp->setMinimumHeight( fontMetrics().height() + marginHint());
+        connect( d->mUrlHelp, SIGNAL(leftClickedUrl()), SLOT(helpLinkClicked()));
 
         d->mUrlHelp->show();
     } else {
@@ -955,37 +978,38 @@ void KDialog::enableLinkedHelp( bool state )
 }
 
 
-void KDialog::setHelp( const QString &anchor, const QString &appname )
+void KDialog::setHelp(const QString &anchor, const QString &appname)
 {
     Q_D(KDialog);
-  d->mAnchor  = anchor;
-  d->mHelpApp = appname;
+    d->mAnchor  = anchor;
+    d->mHelpApp = appname;
 }
 
 
-void KDialog::setHelpLinkText( const QString &text )
+void KDialog::setHelpLinkText(const QString &text)
 {
     Q_D(KDialog);
-  d->mHelpLinkText = text;
-  if ( d->mUrlHelp )
-    d->mUrlHelp->setText( helpLinkText() );
+    d->mHelpLinkText = text;
+    if (d->mUrlHelp) {
+        d->mUrlHelp->setText(helpLinkText());
+    }
 }
 
 QString KDialog::helpLinkText() const
 {
     Q_D(const KDialog);
-  return ( d->mHelpLinkText.isEmpty() ? i18n( "Get help..." ) : d->mHelpLinkText );
+    return (d->mHelpLinkText.isEmpty() ? i18n("Get help...") : d->mHelpLinkText);
 }
 
-void KDialog::hideEvent( QHideEvent *event )
+void KDialog::hideEvent(QHideEvent *event)
 {
-  emit hidden();
-
-  if ( !event->spontaneous() )
-    emit finished();
+    emit hidden();
+    if (!event->spontaneous()) {
+        emit finished();
+    }
 }
 
-void KDialog::closeEvent( QCloseEvent *event )
+void KDialog::closeEvent(QCloseEvent *event)
 {
     Q_D(KDialog);
     KPushButton *button = this->button(d->mEscapeButton);
@@ -1002,49 +1026,48 @@ void KDialog::closeEvent( QCloseEvent *event )
     }
 }
 
-void KDialog::restoreDialogSize( const KConfigGroup& cfg )
+void KDialog::restoreDialogSize(const KConfigGroup &cfg)
 {
-  int width, height;
-  int scnum = QApplication::desktop()->screenNumber( parentWidget() );
-  QRect desk = QApplication::desktop()->screenGeometry( scnum );
+    int width, height;
+    int scnum = QApplication::desktop()->screenNumber(parentWidget());
+    QRect desk = QApplication::desktop()->screenGeometry(scnum);
 
-  width = sizeHint().width();
-  height = sizeHint().height();
+    width = sizeHint().width();
+    height = sizeHint().height();
 
-  width = cfg.readEntry( QString::fromLatin1( "Width %1" ).arg( desk.width() ), width );
-  height = cfg.readEntry( QString::fromLatin1( "Height %1" ).arg( desk.height() ), height );
+    width = cfg.readEntry(QString::fromLatin1("Width %1").arg(desk.width()), width);
+    height = cfg.readEntry(QString::fromLatin1("Height %1").arg(desk.height()), height);
 
-  resize( width, height );
+    resize(width, height);
 }
 
-void KDialog::saveDialogSize( KConfigGroup& config, KConfigGroup::WriteConfigFlags options ) const
+void KDialog::saveDialogSize(KConfigGroup &config, KConfigGroup::WriteConfigFlags options) const
 {
-   int scnum = QApplication::desktop()->screenNumber( parentWidget() );
-   QRect desk = QApplication::desktop()->screenGeometry( scnum );
+    int scnum = QApplication::desktop()->screenNumber(parentWidget());
+    QRect desk = QApplication::desktop()->screenGeometry(scnum);
 
-   const QSize sizeToSave = size();
+    const QSize sizeToSave = size();
 
-   config.writeEntry( QString::fromLatin1("Width %1").arg( desk.width() ), sizeToSave.width(), options );
-   config.writeEntry( QString::fromLatin1("Height %1").arg( desk.height() ), sizeToSave.height(), options );
+    config.writeEntry(QString::fromLatin1("Width %1").arg(desk.width()), sizeToSave.width(), options);
+    config.writeEntry(QString::fromLatin1("Height %1").arg(desk.height()), sizeToSave.height(), options);
 }
 
-void KDialog::setAllowEmbeddingInGraphicsView( bool allowEmbedding )
+void KDialog::setAllowEmbeddingInGraphicsView(bool allowEmbedding)
 {
-  sAllowEmbeddingInGraphicsView = allowEmbedding;
+    sAllowEmbeddingInGraphicsView = allowEmbedding;
 }
 
 
 class KDialogQueue::Private
 {
-  public:
-    Private(KDialogQueue *q): q(q) {}
+public:
+    Private(KDialogQueue *q): q(q), busy(false) {}
 
     void slotShowQueuedDialog();
 
     KDialogQueue *q;
     QList< QPointer<QDialog> > queue;
     bool busy;
-
 };
 
 KDialogQueue* KDialogQueue::self()
@@ -1054,9 +1077,8 @@ KDialogQueue* KDialogQueue::self()
 }
 
 KDialogQueue::KDialogQueue()
-  : d( new Private(this) )
+    : d(new Private(this))
 {
-  d->busy = false;
 }
 
 KDialogQueue::~KDialogQueue()
