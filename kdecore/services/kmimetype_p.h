@@ -47,8 +47,8 @@ public:
     bool inherits(const QString &mime) const;
     void ensureXmlDataLoaded() const;
 
-    mutable QString m_path;
-    mutable QString m_strName;
+    const QString m_path;
+    QString m_strName;
     mutable QString m_strComment;
     mutable QStringList m_lstPatterns;
     mutable QString m_iconName; // user-specified
