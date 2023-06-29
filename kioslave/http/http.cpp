@@ -89,7 +89,8 @@ static inline KIO::Error HTTPToKIOError(const long httpcode)
         case 407: {
             return KIO::ERR_COULD_NOT_LOGIN;
         }
-        case 408: {
+        case 408:
+        case 504: {
             return KIO::ERR_SERVER_TIMEOUT;
         }
         case 500: {
