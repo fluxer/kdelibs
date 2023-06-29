@@ -44,13 +44,13 @@ KFindDialog::KFindDialog(QWidget *parent, long options, const QStringList &findS
     : KDialog(parent),
       d(new KFindDialogPrivate(this))
 {
-    setCaption( i18n("Find Text") );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
+    setCaption(i18n("Find Text"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    setDefaultButton(KDialog::Ok);
 
     d->init(replaceDialog, findStrings, hasSelection);
     setOptions(options);
-    setButtonGuiItem( KDialog::Cancel, KStandardGuiItem::close() );
+    setButtonGuiItem(KDialog::Cancel, KStandardGuiItem::close());
 }
 
 KFindDialog::~KFindDialog()
@@ -60,12 +60,10 @@ KFindDialog::~KFindDialog()
 
 QWidget *KFindDialog::findExtension() const
 {
-    if (!d->findExtension)
-    {
-      d->findExtension = new QWidget(d->findGrp);
-      d->findLayout->addWidget(d->findExtension, 3, 0, 1, 2);
+    if (!d->findExtension) {
+        d->findExtension = new QWidget(d->findGrp);
+        d->findLayout->addWidget(d->findExtension, 3, 0, 1, 2);
     }
-
     return d->findExtension;
 }
 
@@ -84,7 +82,7 @@ void KFindDialog::KFindDialogPrivate::init(bool forReplace, const QStringList &_
     q->setMainWidget(page);
 
     topLayout = new QVBoxLayout(page);
-    topLayout->setMargin( 0 );
+    topLayout->setMargin(0);
 
     findGrp = new QGroupBox(i18nc("@title:group", "Find"), page);
     findLayout = new QGridLayout(findGrp);
@@ -103,7 +101,7 @@ void KFindDialog::KFindDialogPrivate::init(bool forReplace, const QStringList &_
     findLayout->addWidget(regExpItem, 2, 1);
     topLayout->addWidget(findGrp);
 
-    replaceGrp = new QGroupBox( i18n("Replace With"), page);
+    replaceGrp = new QGroupBox(i18n("Replace With"), page);
     replaceLayout = new QGridLayout(replaceGrp);
 
     QLabel *replaceLabel = new QLabel(i18n("Replace&ment text:"), replaceGrp);
@@ -135,7 +133,7 @@ void KFindDialog::KFindDialogPrivate::init(bool forReplace, const QStringList &_
     _k_slotSelectedTextToggled( hasSelection );
 
     promptOnReplace = new QCheckBox(i18n("&Prompt on replace"), optionGrp);
-    promptOnReplace->setChecked( true );
+    promptOnReplace->setChecked(true);
 
     optionsLayout->addWidget(caseSensitive, 0, 0);
     optionsLayout->addWidget(wholeWordsOnly, 1, 0);
@@ -184,84 +182,130 @@ void KFindDialog::KFindDialogPrivate::init(bool forReplace, const QStringList &_
     findLabel->setBuddy(find);
     replaceLabel->setBuddy(replace);
 
-    if (!forReplace)
-    {
+    if (!forReplace) {
         promptOnReplace->hide();
         replaceGrp->hide();
     }
 
     findStrings = _findStrings;
     find->setFocus();
-    q->enableButtonOk( !q->pattern().isEmpty() );
-    if (forReplace)
-    {
-      q->setButtonGuiItem( KDialog::Ok, KGuiItem( i18n("&Replace"), QString(),
-                    i18n("Start replace"),
-                    i18n("<qt>If you press the <b>Replace</b> button, the text you entered "
-                         "above is searched for within the document and any occurrence is "
-                         "replaced with the replacement text.</qt>")));
-    }
-    else
-    {
-      q->setButtonGuiItem( KDialog::Ok, KGuiItem( i18n("&Find"), "edit-find",
-                    i18n("Start searching"),
-                    i18n("<qt>If you press the <b>Find</b> button, the text you entered "
-                         "above is searched for within the document.</qt>")));
+    q->enableButtonOk(!q->pattern().isEmpty());
+    if (forReplace) {
+        q->setButtonGuiItem(
+            KDialog::Ok,
+            KGuiItem(
+                i18n("&Replace"), QString(),
+                i18n("Start replace"),
+                i18n(
+                    "<qt>If you press the <b>Replace</b> button, the text you entered "
+                    "above is searched for within the document and any occurrence is "
+                    "replaced with the replacement text.</qt>"
+                )
+            )
+        );
+    } else {
+        q->setButtonGuiItem(
+            KDialog::Ok,
+            KGuiItem(
+                i18n("&Find"), "edit-find",
+                i18n("Start searching"),
+                i18n(
+                    "<qt>If you press the <b>Find</b> button, the text you entered "
+                    "above is searched for within the document.</qt>"
+                )
+            )
+        );
     }
 
     // QWhatsthis texts
-    find->setWhatsThis(i18n(
+    find->setWhatsThis(
+        i18n(
             "Enter a pattern to search for, or select a previous pattern from "
-            "the list.") );
-    regExp->setWhatsThis(i18n(
-            "If enabled, search for a regular expression.") );
-    regExpItem->setWhatsThis(i18n(
-            "Click here to edit your regular expression using a graphical editor.") );
-    replace->setWhatsThis(i18n(
-            "Enter a replacement string, or select a previous one from the list.") );
-    backRef->setWhatsThis(i18n(
+            "the list."
+        )
+    );
+    regExp->setWhatsThis(
+        i18n(
+            "If enabled, search for a regular expression."
+        )
+    );
+    regExpItem->setWhatsThis(
+        i18n(
+            "Click here to edit your regular expression using a graphical editor."
+        )
+    );
+    replace->setWhatsThis(
+        i18n(
+            "Enter a replacement string, or select a previous one from the list."
+        )
+    );
+    backRef->setWhatsThis(
+        i18n(
             "<qt>If enabled, any occurrence of <code><b>\\N</b></code>, where "
             "<code><b>N</b></code> is an integer number, will be replaced with "
             "the corresponding capture (\"parenthesized substring\") from the "
             "pattern.<p>To include (a literal <code><b>\\N</b></code> in your "
             "replacement, put an extra backslash in front of it, like "
-            "<code><b>\\\\N</b></code>.</p></qt>") );
-    backRefItem->setWhatsThis(i18n(
-            "Click for a menu of available captures.") );
-    wholeWordsOnly->setWhatsThis(i18n(
-            "Require word boundaries in both ends of a match to succeed.") );
-    fromCursor->setWhatsThis(i18n(
-            "Start searching at the current cursor location rather than at the top.") );
-    selectedText->setWhatsThis(i18n(
-            "Only search within the current selection.") );
-    caseSensitive->setWhatsThis(i18n(
+            "<code><b>\\\\N</b></code>.</p></qt>"
+        )
+    );
+    backRefItem->setWhatsThis(
+        i18n(
+            "Click for a menu of available captures."
+        )
+    );
+    wholeWordsOnly->setWhatsThis(
+        i18n(
+            "Require word boundaries in both ends of a match to succeed."
+        )
+    );
+    fromCursor->setWhatsThis(
+        i18n(
+            "Start searching at the current cursor location rather than at the top."
+        )
+    );
+    selectedText->setWhatsThis(
+        i18n(
+            "Only search within the current selection."
+        )
+    );
+    caseSensitive->setWhatsThis(
+        i18n(
             "Perform a case sensitive search: entering the pattern "
-            "'Joe' will not match 'joe' or 'JOE', only 'Joe'.") );
-    findBackwards->setWhatsThis(i18n(
-            "Search backwards.") );
-    promptOnReplace->setWhatsThis(i18n(
-            "Ask before replacing each match found.") );
+            "'Joe' will not match 'joe' or 'JOE', only 'Joe'."
+        )
+    );
+    findBackwards->setWhatsThis(
+        i18n(
+            "Search backwards."
+        )
+    );
+    promptOnReplace->setWhatsThis(
+        i18n(
+            "Ask before replacing each match found."
+        )
+    );
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOk()));
     _k_textSearchChanged(find->lineEdit()->text());
 }
 
-void KFindDialog::KFindDialogPrivate::_k_textSearchChanged( const QString & text)
+void KFindDialog::KFindDialogPrivate::_k_textSearchChanged(const QString &text)
 {
-    q->enableButtonOk( !text.isEmpty() );
+    q->enableButtonOk(!text.isEmpty());
 }
 
-void KFindDialog::showEvent( QShowEvent *e )
+void KFindDialog::showEvent(QShowEvent *e)
 {
-    if ( !d->initialShowDone )
-    {
+    if (!d->initialShowDone) {
         d->initialShowDone = true; // only once
         kDebug() << "showEvent\n";
-        if (!d->findStrings.isEmpty())
+        if (!d->findStrings.isEmpty()) {
             setFindHistory(d->findStrings);
+        }
         d->findStrings = QStringList();
         if (!d->pattern.isEmpty()) {
-            d->find->lineEdit()->setText( d->pattern );
+            d->find->lineEdit()->setText(d->pattern);
             d->find->lineEdit()->selectAll();
             d->pattern.clear();
         }
@@ -270,7 +314,7 @@ void KFindDialog::showEvent( QShowEvent *e )
             QWidget* prev=d->regExpItem;
             foreach(QWidget* child, d->findExtension->findChildren<QWidget*>()) {
                 setTabOrder(prev, child);
-                prev=child;
+                prev = child;
             }
             setTabOrder(prev, d->replace);
         }
@@ -281,19 +325,24 @@ void KFindDialog::showEvent( QShowEvent *e )
 long KFindDialog::options() const
 {
     long options = 0;
-
-    if (d->caseSensitive->isChecked())
+    if (d->caseSensitive->isChecked()) {
         options |= KFind::CaseSensitive;
-    if (d->wholeWordsOnly->isChecked())
+    }
+    if (d->wholeWordsOnly->isChecked()) {
         options |= KFind::WholeWordsOnly;
-    if (d->fromCursor->isChecked())
+    }
+    if (d->fromCursor->isChecked()) {
         options |= KFind::FromCursor;
-    if (d->findBackwards->isChecked())
+    }
+    if (d->findBackwards->isChecked()) {
         options |= KFind::FindBackwards;
-    if (d->selectedText->isChecked())
+    }
+    if (d->selectedText->isChecked()) {
         options |= KFind::SelectedText;
-    if (d->regExp->isChecked())
+    }
+    if (d->regExp->isChecked()) {
         options |= KFind::RegularExpression;
+    }
     return options;
 }
 
@@ -302,96 +351,111 @@ QString KFindDialog::pattern() const
     return d->find->currentText();
 }
 
-void KFindDialog::setPattern (const QString &pattern)
+void KFindDialog::setPattern(const QString &pattern)
 {
-    d->find->lineEdit()->setText( pattern );
+    d->find->lineEdit()->setText(pattern);
     d->find->lineEdit()->selectAll();
     d->pattern = pattern;
-    kDebug() << "setPattern " << pattern;
+    kDebug() << "setPattern" << pattern;
 }
 
 void KFindDialog::setFindHistory(const QStringList &strings)
 {
-    if (strings.count() > 0)
-    {
+    if (strings.count() > 0) {
         d->find->setHistoryItems(strings, true);
-        d->find->lineEdit()->setText( strings.first() );
+        d->find->lineEdit()->setText(strings.first());
         d->find->lineEdit()->selectAll();
-    }
-    else
+    } else {
         d->find->clearHistory();
+    }
 }
 
 void KFindDialog::setHasSelection(bool hasSelection)
 {
-    if (hasSelection) d->enabled |= KFind::SelectedText;
-    else d->enabled &= ~KFind::SelectedText;
-    d->selectedText->setEnabled( hasSelection );
-    if ( !hasSelection )
-    {
-        d->selectedText->setChecked( false );
-        d->_k_slotSelectedTextToggled( hasSelection );
+    if (hasSelection) {
+        d->enabled |= KFind::SelectedText;
+    } else {
+        d->enabled &= ~KFind::SelectedText;
+    }
+    d->selectedText->setEnabled(hasSelection);
+    if (!hasSelection) {
+        d->selectedText->setChecked(false);
+        d->_k_slotSelectedTextToggled(hasSelection);
     }
 }
 
 void KFindDialog::KFindDialogPrivate::_k_slotSelectedTextToggled(bool selec)
 {
     // From cursor doesn't make sense if we have a selection
-    fromCursor->setEnabled( !selec && (enabled & KFind::FromCursor) );
-    if ( selec ) // uncheck if disabled
-        fromCursor->setChecked( false );
+    fromCursor->setEnabled(!selec && (enabled & KFind::FromCursor));
+    if (selec) {
+        // uncheck if disabled
+        fromCursor->setChecked(false);
+    }
 }
 
 void KFindDialog::setHasCursor(bool hasCursor)
 {
-    if (hasCursor) d->enabled |= KFind::FromCursor;
-    else d->enabled &= ~KFind::FromCursor;
-    d->fromCursor->setEnabled( hasCursor );
-    d->fromCursor->setChecked( hasCursor && (options() & KFind::FromCursor) );
+    if (hasCursor) {
+        d->enabled |= KFind::FromCursor;
+    } else {
+        d->enabled &= ~KFind::FromCursor;
+    }
+    d->fromCursor->setEnabled(hasCursor);
+    d->fromCursor->setChecked(hasCursor && (options() & KFind::FromCursor));
 }
 
-void KFindDialog::setSupportsBackwardsFind( bool supports )
+void KFindDialog::setSupportsBackwardsFind(bool supports)
 {
     // ########## Shouldn't this hide the checkbox instead?
-    if (supports) d->enabled |= KFind::FindBackwards;
-    else d->enabled &= ~KFind::FindBackwards;
-    d->findBackwards->setEnabled( supports );
-    d->findBackwards->setChecked( supports && (options() & KFind::FindBackwards) );
-}
-
-void KFindDialog::setSupportsCaseSensitiveFind( bool supports )
-{
-    // ########## This should hide the checkbox instead
-    if (supports) d->enabled |= KFind::CaseSensitive;
-    else d->enabled &= ~KFind::CaseSensitive;
-    d->caseSensitive->setEnabled( supports );
-    d->caseSensitive->setChecked( supports && (options() & KFind::CaseSensitive) );
-}
-
-void KFindDialog::setSupportsWholeWordsFind( bool supports )
-{
-    // ########## This should hide the checkbox instead
-    if (supports) d->enabled |= KFind::WholeWordsOnly;
-    else d->enabled &= ~KFind::WholeWordsOnly;
-    d->wholeWordsOnly->setEnabled( supports );
-    d->wholeWordsOnly->setChecked( supports && (options() & KFind::WholeWordsOnly) );
-}
-
-void KFindDialog::setSupportsRegularExpressionFind( bool supports )
-{
-    if (supports) d->enabled |= KFind::RegularExpression;
-    else d->enabled &= ~KFind::RegularExpression;
-    d->regExp->setEnabled( supports );
-    d->regExp->setChecked( supports && (options() & KFind::RegularExpression) );
-    if( !supports)
-    {
-       d->regExpItem->hide();
-       d->regExp->hide();
+    if (supports) {
+        d->enabled |= KFind::FindBackwards;
+    } else {
+        d->enabled &= ~KFind::FindBackwards;
     }
-    else
-    {
-       d->regExpItem->show();
-       d->regExp->show();
+    d->findBackwards->setEnabled(supports);
+    d->findBackwards->setChecked(supports && (options() & KFind::FindBackwards));
+}
+
+void KFindDialog::setSupportsCaseSensitiveFind(bool supports)
+{
+    // ########## This should hide the checkbox instead
+    if (supports) {
+        d->enabled |= KFind::CaseSensitive;
+    } else {
+        d->enabled &= ~KFind::CaseSensitive;
+    }
+    d->caseSensitive->setEnabled(supports);
+    d->caseSensitive->setChecked(supports && (options() & KFind::CaseSensitive));
+}
+
+void KFindDialog::setSupportsWholeWordsFind(bool supports)
+{
+    // ########## This should hide the checkbox instead
+    if (supports) {
+        d->enabled |= KFind::WholeWordsOnly;
+    } else {
+        d->enabled &= ~KFind::WholeWordsOnly;
+    }
+    d->wholeWordsOnly->setEnabled(supports);
+    d->wholeWordsOnly->setChecked(supports && (options() & KFind::WholeWordsOnly));
+}
+
+void KFindDialog::setSupportsRegularExpressionFind(bool supports)
+{
+    if (supports) {
+        d->enabled |= KFind::RegularExpression;
+    } else {
+        d->enabled &= ~KFind::RegularExpression;
+    }
+    d->regExp->setEnabled(supports);
+    d->regExp->setChecked(supports && (options() & KFind::RegularExpression));
+    if(!supports) {
+        d->regExpItem->hide();
+        d->regExp->hide();
+    } else {
+        d->regExpItem->show();
+        d->regExp->show();
     }
 }
 
@@ -431,45 +495,41 @@ void KFindDialog::KFindDialogPrivate::_k_showPatterns()
         { I18N_NOOP("Digit"),                         "\\d",      0 },
     };
 
-
     class RegExpAction : public QAction
     {
         public:
-        RegExpAction( QObject *parent, const QString &text, const QString &regExp, int cursor )
-            : QAction( text, parent ), mText( text ), mRegExp( regExp ), mCursor( cursor )
+        RegExpAction(QObject *parent, const QString &text, const QString &regExp, int cursor)
+            : QAction(text, parent), mRegExp(regExp), mCursor(cursor)
         {
         }
 
-        QString text() const { return mText; }
         QString regExp() const { return mRegExp; }
         int cursor() const { return mCursor; }
 
-        private:
-        QString mText;
+    private:
         QString mRegExp;
         int mCursor;
     };
 
-    int i;
-
     // Populate the popup menu.
-    if (!patterns)
-    {
+    if (!patterns) {
         patterns = new QMenu(q);
-        for (i = 0; (unsigned)i < sizeof(items) / sizeof(items[0]); i++)
-        {
-            patterns->addAction(new RegExpAction(patterns, i18n(items[i].description),
-                                                 items[i].regExp,
-                                                 items[i].cursorAdjustment));
+        for (int i = 0; i < sizeof(items) / sizeof(items[0]); i++) {
+            patterns->addAction(
+                new RegExpAction(
+                    patterns, i18n(items[i].description),
+                    items[i].regExp,
+                    items[i].cursorAdjustment
+                )
+            );
         }
     }
 
     // Insert the selection into the edit control.
     QAction *action = patterns->exec(regExpItem->mapToGlobal(regExpItem->rect().bottomLeft()));
-    if (action)
-    {
-        RegExpAction *regExpAction = static_cast<RegExpAction*>( action );
-        if ( regExpAction ) {
+    if (action) {
+        RegExpAction *regExpAction = static_cast<RegExpAction*>(action);
+        if (regExpAction) {
             QLineEdit *editor = find->lineEdit();
 
             editor->insert(regExpAction->regExp());
@@ -481,16 +541,14 @@ void KFindDialog::KFindDialogPrivate::_k_showPatterns()
 class PlaceHolderAction : public QAction
 {
   public:
-    PlaceHolderAction( QObject *parent, const QString &text, int id )
-      : QAction( text, parent ), mText( text ), mId( id )
+    PlaceHolderAction(QObject *parent, const QString &text, int id)
+      : QAction(text, parent), mId(id)
     {
     }
 
-    QString text() const { return mText; }
     int id() const { return mId; }
 
-  private:
-    QString mText;
+private:
     int mId;
 };
 
@@ -499,20 +557,18 @@ class PlaceHolderAction : public QAction
 void KFindDialog::KFindDialogPrivate::_k_showPlaceholders()
 {
     // Populate the popup menu.
-    if (!placeholders)
-    {
+    if (!placeholders) {
         placeholders = new QMenu(q);
-        q->connect( placeholders, SIGNAL(aboutToShow()), q, SLOT(_k_slotPlaceholdersAboutToShow()) );
+        q->connect(placeholders, SIGNAL(aboutToShow()), q, SLOT(_k_slotPlaceholdersAboutToShow()));
     }
 
     // Insert the selection into the edit control.
     QAction *action = placeholders->exec(backRefItem->mapToGlobal(backRefItem->rect().bottomLeft()));
-    if (action)
-    {
+    if (action) {
         PlaceHolderAction *placeHolderAction = static_cast<PlaceHolderAction*>(action);
         if (placeHolderAction) {
-          QLineEdit *editor = replace->lineEdit();
-          editor->insert( QString("\\%1").arg( placeHolderAction->id() ) );
+            QLineEdit *editor = replace->lineEdit();
+            editor->insert(QString("\\%1").arg(placeHolderAction->id()));
         }
     }
 }
@@ -524,33 +580,36 @@ void KFindDialog::KFindDialogPrivate::_k_slotPlaceholdersAboutToShow()
 
     QRegExp r( q->pattern() );
     uint n = r.captureCount();
-    for ( uint i=0; i < n; i++ )
-        placeholders->addAction( new PlaceHolderAction(placeholders, i18n("Captured Text (%1)",  i+1 ), i+1 ) );
+    for (uint i = 0; i < n; i++) {
+        placeholders->addAction(
+            new PlaceHolderAction(
+                placeholders, i18n("Captured Text (%1)", i + 1), i + 1
+            )
+        );
+    }
 }
 
 void KFindDialog::KFindDialogPrivate::_k_slotOk()
 {
     // Nothing to find?
-    if (q->pattern().isEmpty())
-    {
+    if (q->pattern().isEmpty()) {
         KMessageBox::error(q, i18n("You must enter some text to search for."));
         return;
     }
 
-    if (regExp->isChecked())
-    {
+    if (regExp->isChecked()) {
         // Check for a valid regular expression.
         QRegExp _regExp(q->pattern());
 
-        if (!_regExp.isValid())
-        {
+        if (!_regExp.isValid()) {
             KMessageBox::error(q, i18n("Invalid regular expression."));
             return;
         }
     }
     find->addToHistory(q->pattern());
-    if ( q->windowModality() != Qt::NonModal )
+    if (q->windowModality() != Qt::NonModal) {
         q->accept();
+    }
 }
-// kate: space-indent on; indent-width 4; replace-tabs on;
+
 #include "moc_kfinddialog.cpp"

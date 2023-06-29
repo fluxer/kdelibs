@@ -24,15 +24,14 @@
 #include "kfinddialog.h"
 #include "kfind.h"
 
-#include <QtCore/QStringList>
-
-class KHistoryComboBox;
-
+#include <QStringList>
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QMenu>
 #include <QPushButton>
+
+class KHistoryComboBox;
 
 class KFindDialog::KFindDialogPrivate
 {
