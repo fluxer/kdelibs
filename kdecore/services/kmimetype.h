@@ -17,8 +17,8 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
-#ifndef __kmimetype_h__
-#define __kmimetype_h__
+#ifndef KMIMETYPE_H
+#define KMIMETYPE_H
 
 #include <kurl.h>
 #include <kservicetype.h>
@@ -38,7 +38,7 @@ class KMimeTypePrivate;
  */
 class KDECORE_EXPORT KMimeType : public KServiceType // TODO KDE5: drop kservicetype inheritance, inherit kshared
 {
-    Q_DECLARE_PRIVATE( KMimeType )
+    Q_DECLARE_PRIVATE(KMimeType)
 public:
     typedef KSharedPtr<KMimeType> Ptr;
     typedef QList<Ptr> List;
@@ -54,7 +54,7 @@ public:
      *
      * @return The name of the icon associated with this MIME type.
      */
-    QString iconName( const KUrl &url = KUrl()) const;
+    QString iconName(const KUrl &url = KUrl()) const;
 
     /**
      * Return the filename of the icon associated with the mimetype, for a given url.
@@ -66,7 +66,7 @@ public:
      * @return the name of the icon. The name of a default icon if there is no icon
      *         for the mime type
      */
-    static QString iconNameForUrl( const KUrl & url, mode_t mode = 0 );
+    static QString iconNameForUrl(const KUrl &url, mode_t mode = 0);
 
     /**
      * Return the "favicon" (see http://www.favicon.com) for the given @p url,
@@ -79,7 +79,7 @@ public:
      * @param url the URL of the favicon
      * @return the name of the favicon, or QString()
      */
-    static QString favIconForUrl( const KUrl& url, bool download = false );
+    static QString favIconForUrl(const KUrl &url, bool download = false);
 
     /**
      * Returns the descriptive comment associated with the MIME type.
@@ -88,7 +88,7 @@ public:
      *
      * @return The descriptive comment associated with the MIME type, if any.
      */
-    QString comment( const KUrl& url = KUrl() ) const;
+    QString comment(const KUrl &url = KUrl()) const;
 
     /**
      * Retrieve the list of patterns associated with the MIME Type.
@@ -97,7 +97,10 @@ public:
      */
     QStringList patterns() const;
 
-    enum FindByNameOption { DontResolveAlias, ResolveAliases = 1 };
+    enum FindByNameOption {
+        DontResolveAlias = 0,
+        ResolveAliases = 1
+    };
 
     /**
      * Retrieve a pointer to the mime type @p name
@@ -113,7 +116,7 @@ public:
      *         0 if not found
      * @see KServiceType::serviceType
      */
-    static Ptr mimeType( const QString& name, FindByNameOption options = ResolveAliases );
+    static Ptr mimeType(const QString &name, FindByNameOption options = ResolveAliases);
 
     /**
      * Finds a KMimeType with the given @p url.
@@ -154,9 +157,9 @@ public:
      * @return A pointer to the matching mimetype. 0 is never returned.
      * @em Very @em Important: Don't store the result in a KMimeType* !
      */
-    static Ptr findByUrl( const KUrl& url, mode_t mode = 0,
-                          bool is_local_file = false, bool fast_mode = false,
-                          int *accuracy = 0 );
+    static Ptr findByUrl(const KUrl& url, mode_t mode = 0,
+                         bool is_local_file = false, bool fast_mode = false,
+                         int *accuracy = 0);
     /**
      * Finds a KMimeType with the given @p url.
      * This function looks at mode_t first.
@@ -184,8 +187,8 @@ public:
      *          accuracy of the match (which is in the range 0..100)
      * @return A pointer to the matching mimetype. 0 is never returned.
      */
-    static Ptr findByPath( const QString& path, mode_t mode = 0,
-                           bool fast_mode = false, int* accuracy = 0 );
+    static Ptr findByPath(const QString &path, mode_t mode = 0,
+                          bool fast_mode = false, int* accuracy = 0);
 
     /**
      * Tries to find out the MIME type of a data chunk by looking for
@@ -197,7 +200,7 @@ public:
      * @return a pointer to the KMimeType. "application/octet-stream" is
      *          returned if the type can not be found this way.
      */
-    static Ptr findByContent( const QByteArray &data, int *accuracy=0 );
+    static Ptr findByContent(const QByteArray &data, int *accuracy=0);
 
     /**
      * Tries to find out the MIME type of filename/url and a data chunk.
@@ -214,8 +217,8 @@ public:
      * @param accuracy If not a null pointer, *accuracy is set to the
      *          accuracy of the match (which is in the range 0..100)
      */
-    static Ptr findByNameAndContent( const QString& name, const QByteArray& data,
-                                     mode_t mode = 0, int *accuracy=0 );
+    static Ptr findByNameAndContent(const QString &name, const QByteArray &data,
+                                    mode_t mode = 0, int *accuracy = 0);
 
     /**
      * Tries to find out the MIME type of a data chunk by looking for
@@ -228,7 +231,7 @@ public:
      *          returned if the type can not be found this way.
      * @since 4.4
      */
-    static Ptr findByContent( QIODevice* device, int* accuracy = 0 );
+    static Ptr findByContent(QIODevice* device, int* accuracy = 0);
 
     /**
      * Tries to find out the MIME type of filename/url and a data chunk.
@@ -248,8 +251,8 @@ public:
      *          returned if the type can not be found this way.
      * @since 4.4
      */
-    static Ptr findByNameAndContent( const QString& name, QIODevice* device,
-                                     mode_t mode = 0, int* accuracy = 0 );
+    static Ptr findByNameAndContent(const QString &name, QIODevice *device,
+                                    mode_t mode = 0, int* accuracy = 0);
 
     /**
      * Tries to find out the MIME type of a file by looking for
@@ -264,7 +267,7 @@ public:
      * @return a pointer to the KMimeType, or the default mimetype
      *         (application/octet-stream) if the file cannot be opened.
      */
-    static Ptr findByFileContent( const QString &fileName, int *accuracy=0 );
+    static Ptr findByFileContent(const QString &fileName, int *accuracy = 0);
 
     /**
      * Returns whether a file has an internal format that is not human readable.
@@ -272,7 +275,7 @@ public:
      * Many application file formats (like rtf and postscript) are based on text,
      * but text that the user should rarely ever see.
      */
-    static bool isBinaryData( const QString &fileName );
+    static bool isBinaryData(const QString &fileName);
 
     /**
      * Returns whether a buffer has an internal format that is not human readable.
@@ -280,7 +283,7 @@ public:
      * Many application file formats (like rtf and postscript) are based on text,
      * but text that the user should rarely ever see.
      */
-    static bool isBufferBinaryData( const QByteArray &data );
+    static bool isBufferBinaryData(const QByteArray &data);
 
     /**
      * Get all the mimetypes.
@@ -351,7 +354,7 @@ public:
      * Warning, do not use inherits(), that's the servicetype inheritance concept!
      * is() also supports mimetype aliases.
      */
-    bool is( const QString& mimeTypeName ) const;
+    bool is(const QString &mimeTypeName) const;
 
     /**
      * Returns the user-specified icon for this mimetype. This is empty most of the time,
@@ -378,13 +381,13 @@ public:
      * This allows to extract "tar.bz2" for foo.tar.bz2
      * but still return "txt" for my.doc.with.dots.txt
      */
-    static QString extractKnownExtension( const QString &fileName );
+    static QString extractKnownExtension(const QString &fileName);
 
     /**
      * Returns true if the given filename matches the given pattern.
      * @since 4.6.1
      */
-    static bool matchFileName( const QString &filename, const QString &pattern );
+    static bool matchFileName(const QString &filename, const QString &pattern);
 
     /**
      * Returns the version of the installed update-mime-database program
@@ -407,7 +410,7 @@ protected:
      *
      * The stream must already be positionned at the correct offset
      */
-    KMimeType( QDataStream& str, int offset );
+    KMimeType(QDataStream &str, int offset);
 
     /**
      * Construct a mimetype and take all information from an XML file.
@@ -415,14 +418,14 @@ protected:
      * @param name the name of the mimetype (usually the end of the path)
      * @param comment the comment associated with the mimetype
      */
-    KMimeType( const QString& fullpath, const QString& name, const QString& comment );
+    KMimeType(const QString &fullpath, const QString &name, const QString &comment);
 
     /**
      * Construct a mimetype from another mimetype's private object
      *
      * @param dd the private object
      */
-    KMimeType( KMimeTypePrivate &dd);
+    KMimeType(KMimeTypePrivate &dd);
 
     /**
      * Construct a mimetype based on another mimetype's private object
@@ -433,7 +436,7 @@ protected:
      * @param name the name of the mimetype
      * @param comment the comment associated with the mimetype
      */
-    KMimeType( KMimeTypePrivate &dd, const QString& name, const QString& comment );
+    KMimeType(KMimeTypePrivate &dd, const QString &name, const QString &comment);
 
 private:
     // Forbidden nowadays in KMimeType
@@ -441,8 +444,8 @@ private:
     void save(QDataStream &s);
 
     static void checkEssentialMimeTypes();
-    static KMimeType::Ptr findByUrlHelper( const KUrl& url, mode_t mode,
-                                           bool is_local_file, QIODevice* device, int* accuracy );
+    static KMimeType::Ptr findByUrlHelper(const KUrl& url, mode_t mode,
+                                          bool is_local_file, QIODevice* device, int* accuracy);
 };
 
-#endif
+#endif // KMIMETYPE_H

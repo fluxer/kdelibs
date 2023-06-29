@@ -26,20 +26,25 @@ class KMimeTypePrivate: public KServiceTypePrivate
 public:
   K_SYCOCATYPE( KST_KMimeType, KServiceTypePrivate )
 
-  KMimeTypePrivate(const QString &path) : KServiceTypePrivate(path), m_xmlDataLoaded(false)
-    {}
-  KMimeTypePrivate(QDataStream &_str, int offset)
-      : KServiceTypePrivate(_str, offset), m_xmlDataLoaded(false)
-  {
-  }
+    KMimeTypePrivate(const QString &path)
+        : KServiceTypePrivate(path),
+        m_xmlDataLoaded(false)
+    {
+    }
 
-  virtual void save(QDataStream &s);
+    KMimeTypePrivate(QDataStream &str, int offset)
+        : KServiceTypePrivate(str, offset),
+        m_xmlDataLoaded(false)
+    {
+    }
 
-  virtual QVariant property(const QString &name ) const;
+    virtual void save(QDataStream &s);
 
-  virtual QStringList propertyNames() const;
+    virtual QVariant property(const QString &name) const;
 
-    virtual QString comment(const KUrl & = KUrl()) const
+    virtual QStringList propertyNames() const;
+
+    virtual QString comment(const KUrl &url = KUrl()) const
     {
         ensureXmlDataLoaded();
         return m_strComment;
@@ -52,7 +57,7 @@ public:
     }
 
     // virtual because reimplemented in KFolderMimeType
-    virtual QString iconName(const KUrl &) const;
+    virtual QString iconName(const KUrl &url) const;
 
     bool inherits(const QString& mime) const;
     void ensureXmlDataLoaded() const;
