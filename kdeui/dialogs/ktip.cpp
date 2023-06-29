@@ -46,18 +46,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class KTipDatabase::Private
 {
-  public:
-    void loadTips( const QString &tipFile );
-    void addTips( const QString &tipFile );
+public:
+    Private()
+        : currentTip(0)
+    {
+    }
+
+    void loadTips(const QString &tipFile);
+    void addTips(const QString &tipFile);
 
     QStringList tips;
     int currentTip;
 };
 
-void KTipDatabase::Private::loadTips( const QString &tipFile )
+void KTipDatabase::Private::loadTips(const QString &tipFile)
 {
-  tips.clear();
-  addTips( tipFile );
+    tips.clear();
+    addTips(tipFile);
 }
 
 /**
@@ -65,79 +70,84 @@ void KTipDatabase::Private::loadTips( const QString &tipFile )
  * preparetips, which depends on extracting exactly the same
  * text as done here.
  */
-void KTipDatabase::Private::addTips( const QString &tipFile )
+void KTipDatabase::Private::addTips(const QString &tipFile)
 {
-  QString fileName = KStandardDirs::locate( "data", tipFile );
-
-  if ( fileName.isEmpty() ) {
-    kDebug() << "KTipDatabase::addTips: can't find '" << tipFile << "' in standard dirs";
-    return;
-  }
-
-  QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    kDebug() << "KTipDatabase::addTips: can't open '" << fileName << "' for reading";
-    return;
-  }
-
-  QByteArray data = file.readAll();
-  QString content = QString::fromUtf8( data.constData(), data.size() );
-  const QRegExp rx( "\\n+" );
-
-  int pos = -1;
-  while ( ( pos = content.indexOf( "<html>", pos + 1, Qt::CaseInsensitive ) ) != -1 ) {
-    /**
-     * To make translations work, tip extraction here must exactly
-     * match what is done by the preparetips script.
-     */
-    QString tip = content
-           .mid( pos + 6, content.indexOf( "</html>", pos, Qt::CaseInsensitive ) - pos - 6 )
-           .replace( rx, "\n" );
-
-    if ( !tip.endsWith( '\n' ) )
-      tip += '\n';
-
-    if ( tip.startsWith( '\n' ) )
-      tip = tip.mid( 1 );
-
-    if ( tip.isEmpty() ) {
-      kDebug() << "Empty tip found! Skipping! " << pos;
-      continue;
+    QString fileName = KStandardDirs::locate("data", tipFile);
+    if (fileName.isEmpty()) {
+        kDebug() << "KTipDatabase::addTips: can't find '" << tipFile << "' in standard dirs";
+        return;
     }
 
-    tips.append( tip );
-  }
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        kDebug() << "KTipDatabase::addTips: can't open '" << fileName << "' for reading";
+        return;
+    }
 
-  file.close();
+    QByteArray data = file.readAll();
+    QString content = QString::fromUtf8(data.constData(), data.size());
+    const QRegExp rx("\\n+");
+
+    int pos = -1;
+    while ((pos = content.indexOf("<html>", pos + 1, Qt::CaseInsensitive)) != -1) {
+        /**
+         * To make translations work, tip extraction here must exactly
+         * match what is done by the preparetips script.
+         */
+        QString tip = content
+            .mid(pos + 6, content.indexOf("</html>", pos, Qt::CaseInsensitive) - pos - 6)
+            .replace(rx, "\n");
+
+        if (!tip.endsWith('\n')) {
+            tip += '\n';
+        }
+
+        if (tip.startsWith('\n')) {
+            tip = tip.mid(1);
+        }
+
+        if (tip.isEmpty()) {
+            kDebug() << "Empty tip found! Skipping! " << pos;
+            continue;
+        }
+
+        tips.append(tip);
+    }
+
+    file.close();
 }
 
 
-KTipDatabase::KTipDatabase( const QString &_tipFile )
-  : d( new Private )
+KTipDatabase::KTipDatabase(const QString &_tipFile)
+    : d(new Private())
 {
-  QString tipFile = _tipFile;
+    QString tipFile = _tipFile;
 
-  if ( tipFile.isEmpty() )
-    tipFile = KGlobal::mainComponent().aboutData()->appName() + "/tips";
+    if (tipFile.isEmpty()) {
+        tipFile = KGlobal::mainComponent().aboutData()->appName() + "/tips";
+    }
 
-  d->loadTips( tipFile );
+    d->loadTips(tipFile);
 
-  if ( !d->tips.isEmpty() )
-    d->currentTip = KRandom::randomMax(d->tips.count());
+    if (!d->tips.isEmpty()) {
+        d->currentTip = KRandom::randomMax(d->tips.count());
+    }
 }
 
-KTipDatabase::KTipDatabase( const QStringList& tipsFiles )
-  : d( new Private )
+KTipDatabase::KTipDatabase(const QStringList &tipsFiles)
+    : d(new Private())
 {
-  if ( tipsFiles.isEmpty() || ( ( tipsFiles.count() == 1 ) && tipsFiles.first().isEmpty() ) ) {
-    d->addTips( KGlobal::mainComponent().aboutData()->appName() + "/tips" );
-  } else {
-    for ( QStringList::ConstIterator it = tipsFiles.begin(); it != tipsFiles.end(); ++it )
-      d->addTips( *it );
-  }
+    if (tipsFiles.isEmpty() || (tipsFiles.count() == 1 && tipsFiles.first().isEmpty())) {
+        d->addTips(KGlobal::mainComponent().aboutData()->appName() + "/tips");
+    } else {
+        foreach (const QString &it, tipsFiles) {
+            d->addTips(it);
+        }
+    }
 
-  if ( !d->tips.isEmpty() )
-    d->currentTip = KRandom::randomMax(d->tips.count());
+    if (!d->tips.isEmpty()) {
+        d->currentTip = KRandom::randomMax(d->tips.count());
+    }
 }
 
 KTipDatabase::~KTipDatabase()
@@ -147,50 +157,55 @@ KTipDatabase::~KTipDatabase()
 
 void KTipDatabase::nextTip()
 {
-  if ( d->tips.isEmpty() )
-    return;
+    if (d->tips.isEmpty()) {
+        return;
+    }
 
-  d->currentTip += 1;
+    d->currentTip += 1;
 
-  if ( d->currentTip >= (int) d->tips.count() )
-    d->currentTip = 0;
+    if (d->currentTip >= d->tips.count()) {
+        d->currentTip = 0;
+    }
 }
 
 void KTipDatabase::prevTip()
 {
-  if ( d->tips.isEmpty() )
-    return;
+    if (d->tips.isEmpty()) {
+        return;
+    }
 
-  d->currentTip -= 1;
+    d->currentTip -= 1;
 
-  if ( d->currentTip < 0 )
-    d->currentTip = d->tips.count() - 1;
+    if (d->currentTip < 0) {
+        d->currentTip = d->tips.count() - 1;
+    }
 }
 
 QString KTipDatabase::tip() const
 {
-  if ( d->tips.isEmpty() )
-    return QString();
+    if (d->tips.isEmpty()) {
+        return QString();
+    }
 
-  return d->tips[ d->currentTip ];
+    return d->tips[d->currentTip];
 }
 
 
 class KTipDialog::Private
 {
-  public:
-    Private( KTipDialog *_parent )
-      : parent( _parent )
+public:
+    Private(KTipDialog *_parent)
+        : parent(_parent)
     {
     }
     ~Private()
     {
-      delete database;
+        delete database;
     }
 
     void _k_nextTip();
     void _k_prevTip();
-    void _k_showOnStart( bool );
+    void _k_showOnStart(bool);
 
     KTipDialog *parent;
     KTipDatabase *database;
@@ -204,16 +219,16 @@ KTipDialog *KTipDialog::Private::mInstance = nullptr;
 
 void KTipDialog::Private::_k_prevTip()
 {
-  database->prevTip();
-  tipText->setHtml( QString::fromLatin1( "<html><body>%1</body></html>" )
-                  .arg( i18n( database->tip().toUtf8() ) ) );
+    database->prevTip();
+    tipText->setHtml(QString::fromLatin1("<html><body>%1</body></html>")
+                     .arg(i18n(database->tip().toUtf8())));
 }
 
 void KTipDialog::Private::_k_nextTip()
 {
-  database->nextTip();
-  tipText->setHtml( QString::fromLatin1( "<html><body>%1</body></html>" )
-                  .arg( i18n( database->tip().toUtf8() ) ) );
+    database->nextTip();
+    tipText->setHtml(QString::fromLatin1("<html><body>%1</body></html>")
+                     .arg(i18n(database->tip().toUtf8())));
 }
 
 void KTipDialog::Private::_k_showOnStart(bool on)
@@ -221,13 +236,12 @@ void KTipDialog::Private::_k_showOnStart(bool on)
     parent->setShowOnStart(on);
 }
 
-
 KTipDialog::KTipDialog(KTipDatabase *database, QWidget *parent)
     : KDialog(parent),
     d(new Private(this))
 {
-  setButtons(KDialog::None);
-  setCaption(i18n("Tip of the Day"));
+    setButtons(KDialog::None);
+    setCaption(i18n("Tip of the Day"));
 
     /**
      * Parent is 0L when TipDialog is used as a mainWidget. This should
