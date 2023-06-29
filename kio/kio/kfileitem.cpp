@@ -885,9 +885,6 @@ QString KFileItem::iconName() const
         }
     }
 
-    // KDE5: handle .directory files here too, and get rid of
-    // KFolderMimeType and the url argument in KMimeType::iconName().
-
     if (delaySlowOperations)
         d->m_iconName = mime->iconName();
     else

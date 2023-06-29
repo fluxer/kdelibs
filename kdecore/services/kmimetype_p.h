@@ -30,20 +30,6 @@ public:
     {
     }
 
-    // virtual because reimplemented in KFolderMimeType
-    virtual QString iconName(const KUrl &url) const;
-    virtual QString comment(const KUrl &url = KUrl()) const
-    {
-        ensureXmlDataLoaded();
-        return m_strComment;
-    }
-
-    QStringList patterns() const
-    {
-        ensureXmlDataLoaded();
-        return m_lstPatterns;
-    }
-
     bool inherits(const QString &mime) const;
     void ensureXmlDataLoaded() const;
 

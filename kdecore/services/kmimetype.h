@@ -38,7 +38,7 @@ public:
     typedef KSharedPtr<KMimeType> Ptr;
     typedef QList<Ptr> List;
 
-    virtual ~KMimeType();
+    ~KMimeType();
 
     /**
      * Return the name of the mimetype, e.g. "text/plain".
@@ -414,26 +414,7 @@ protected:
      */
     KMimeType(const QString &fullpath, const QString &name, const QString &comment);
 
-    /**
-     * Construct a mimetype from another mimetype's private object
-     *
-     * @param dd the private object
-     */
-    KMimeType(KMimeTypePrivate &dd);
-
-    /**
-     * Construct a mimetype based on another mimetype's private object
-     *
-     * Allows the name and comment to be overridden.
-     *
-     * @param dd the private object
-     * @param name the name of the mimetype
-     * @param comment the comment associated with the mimetype
-     */
-    KMimeType(KMimeTypePrivate &dd, const QString &name, const QString &comment);
-
 private:
-    friend class KFolderMimeType;
     KMimeTypePrivate* d_ptr;
 
     static void checkEssentialMimeTypes();

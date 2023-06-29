@@ -32,18 +32,95 @@
 #include <kprotocolinfofactory.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
+#include <kdesktopfile.h>
+#include <kconfiggroup.h>
 
-#include <QtCore/qfile.h>
-#include <QtCore/qhash.h>
-#include <QtCore/qbuffer.h>
-#include <QtCore/qstack.h>
+#include <QFile>
+#include <QHash>
+#include <QBuffer>
+#include <QStack>
 #include <QXmlStreamReader>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QDirIterator>
 
 extern int servicesDebugArea();
 
 template class KSharedPtr<KMimeType>;
+
+static QString kFolderComment(const KUrl &_url)
+{
+    if (_url.isEmpty() || !_url.isLocalFile()) {
+        return QString();
+    }
+
+    KUrl u(_url);
+    u.addPath(QString::fromLatin1(".directory"));
+    const KDesktopFile cfg(u.toLocalFile());
+    return cfg.readComment();
+}
+
+static QString kFolderIconName(const KUrl &_url)
+{
+    if (_url.isEmpty() || !_url.isLocalFile()) {
+        return QString();
+    }
+
+    // Stating .directory files can cause long freezes when e.g. /home
+    // uses autofs for every user's home directory, i.e. opening /home
+    // in a file dialog will mount every single home directory.
+    // These non-mounted directories can be identified by having 0 size.
+    // There are also other directories with 0 size, such as /proc, that may
+    // be mounted, but those are unlikely to contain .directory (and checking
+    // this would require KMountPoint from kio).
+    KDE_struct_stat buff;
+    if (KDE_stat(QFile::encodeName(_url.toLocalFile()), &buff) == 0
+        && S_ISDIR(buff.st_mode) && buff.st_size == 0) {
+        return QString();
+    }
+
+    KUrl u(_url);
+    u.addPath(QString::fromLatin1(".directory"));
+
+    QString icon;
+    // using KStandardDirs as this one checks for path being
+    // a file instead of a directory
+    if (KGlobal::dirs()->exists(u.toLocalFile())) {
+        KDesktopFile cfg(u.toLocalFile());
+        KConfigGroup group = cfg.desktopGroup();
+        icon = group.readEntry("Icon");
+        QString empty_icon = group.readEntry("EmptyIcon");
+
+        if (!empty_icon.isEmpty()) {
+            bool isempty = true;
+            QDirIterator dirIt(_url.toLocalFile(), QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+            while (dirIt.hasNext() ) {
+                dirIt.next();
+                if (dirIt.fileName() != QLatin1String(".directory")) {
+                    isempty = false;
+                    break;
+                }
+            }
+            if (isempty) {
+                return empty_icon;
+            }
+        }
+    }
+
+    if (icon.isEmpty()) {
+        return QString();
+    }
+
+    if (icon.startsWith(QLatin1String("./"))) {
+        // path is relative with respect to the location
+        // of the .directory file (#73463)
+        KUrl v(_url);
+        v.addPath(icon.mid(2));
+        icon = v.toLocalFile();
+    }
+
+    return icon;
+}
 
 KMimeType::Ptr KMimeType::defaultMimeTypePtr()
 {
@@ -381,14 +458,6 @@ bool KMimeType::isBinaryData(const QString &fileName)
     return isBufferBinaryData(file.read(32));
 }
 
-KMimeType::KMimeType(KMimeTypePrivate &dd, const QString &name,
-                     const QString &comment)
-    : d_ptr(&dd)
-{
-    d_ptr->m_strName = name;
-    d_ptr->m_strComment = comment;
-}
-
 KMimeType::KMimeType(const QString &fullpath, const QString &name,
                      const QString &comment)
     : QSharedData(),
@@ -398,11 +467,6 @@ KMimeType::KMimeType(const QString &fullpath, const QString &name,
     d_ptr->m_strComment = comment;
 }
 
-KMimeType::KMimeType(KMimeTypePrivate &dd)
-    : QSharedData(),
-    d_ptr(&dd)
-{
-}
 
 KMimeType::~KMimeType()
 {
@@ -464,12 +528,6 @@ QString KMimeType::favIconForUrl(const KUrl &url, bool download)
         return iconfile;
     }
     return QString();
-}
-
-QString KMimeType::comment(const KUrl &url) const
-{
-    Q_D(const KMimeType);
-    return d->comment(url);
 }
 
 bool KMimeTypePrivate::inherits(const QString &mime) const
@@ -545,13 +603,56 @@ QString KMimeType::name() const
 QString KMimeType::iconName(const KUrl &url) const
 {
     Q_D(const KMimeType);
-    return d->iconName(url);
+
+    if (d->m_strName == QLatin1String("inode/directory")) {
+        const QString folderIconName = kFolderIconName(url);
+        if (!folderIconName.isEmpty()) {
+            return folderIconName;
+        }
+    }
+
+    static QHash<QUrl, QString> iconNameCache;
+    QString iconNameFromCache = iconNameCache.value(d->m_strName);
+    if (!iconNameFromCache.isEmpty()) {
+        return iconNameFromCache;
+    }
+    d->ensureXmlDataLoaded();
+    QString result;
+    if (!d->m_iconName.isEmpty()) {
+        result = d->m_iconName;
+    } else {
+        // Make default icon name from the mimetype name
+        // Don't store this in m_iconName, it would make the filetype editor
+        // write out icon names in every local mimetype definition file.
+        QString icon = d->m_strName;
+        const int slashindex = icon.indexOf(QLatin1Char('/'));
+        if (slashindex != -1) {
+            icon[slashindex] = QLatin1Char('-');
+        }
+        result = icon;
+    }
+    iconNameCache.insert(d->m_strName, result);
+    return result;
+}
+
+QString KMimeType::comment(const KUrl &url) const
+{
+    Q_D(const KMimeType);
+    if (d->m_strName == QLatin1String("inode/directory")) {
+        const QString folderComment = kFolderComment(url);
+        if (!folderComment.isEmpty()) {
+            return folderComment;
+        }
+    }
+    d->ensureXmlDataLoaded();
+    return d->m_strComment;
 }
 
 QStringList KMimeType::patterns() const
 {
     Q_D(const KMimeType);
-    return d->patterns();
+    d->ensureXmlDataLoaded();
+    return d->m_lstPatterns;
 }
 
 // loads comment, icon, mainPattern, m_lstPatterns
@@ -669,7 +770,7 @@ int KMimeType::sharedMimeInfoVersion()
 QString KMimeType::mainExtension() const
 {
     Q_D(const KMimeType);
-    Q_FOREACH(const QString &pattern, d->patterns()) {
+    Q_FOREACH(const QString &pattern, patterns()) {
         // Skip if if looks like: README or *. or *.*
         // or *.JP*G or *.JP?
         if (pattern.startsWith(QLatin1String("*.")) &&
@@ -685,33 +786,4 @@ QString KMimeType::mainExtension() const
 bool KMimeType::matchFileName(const QString &filename, const QString &pattern)
 {
     return KMimeTypeRepository::matchFileName(filename, pattern);
-}
-
-QString KMimeTypePrivate::iconName(const KUrl &url) const
-{
-    Q_UNUSED(url);
-
-    static QHash<QUrl, QString> iconNameCache;
-    QString iconNameFromCache = iconNameCache.value(m_strName);
-    if (!iconNameFromCache.isEmpty()) {
-        return iconNameFromCache;
-    }
-
-    ensureXmlDataLoaded();
-    QString result;
-    if (!m_iconName.isEmpty()) {
-        result = m_iconName;
-    } else {
-        // Make default icon name from the mimetype name
-        // Don't store this in m_iconName, it would make the filetype editor
-        // write out icon names in every local mimetype definition file.
-        QString icon = m_strName;
-        const int slashindex = icon.indexOf(QLatin1Char('/'));
-        if (slashindex != -1) {
-            icon[slashindex] = QLatin1Char('-');
-        }
-        result = icon;
-    }
-    iconNameCache.insert(m_strName, result);
-    return result;
 }

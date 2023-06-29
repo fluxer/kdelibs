@@ -18,7 +18,6 @@
  */
 
 #include "kmimetype.h"
-#include "kfoldermimetype.h"
 #include "kmimetyperepository_p.h"
 #include <kstandarddirs.h>
 #include <ksharedconfig.h>
@@ -87,9 +86,6 @@ KMimeType::Ptr KMimeTypeRepository::findMimeTypeByName(const QString &_name, KMi
         return KMimeType::Ptr(); // Not found
     }
 
-    if (name == QLatin1String("inode/directory")) {
-        return KMimeType::Ptr(new KFolderMimeType(filename, name, QString() /*comment*/));
-    }
     return KMimeType::Ptr(new KMimeType(filename, name, QString() /*comment*/));
 }
 
