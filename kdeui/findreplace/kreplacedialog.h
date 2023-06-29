@@ -37,29 +37,12 @@ class KReplaceDialogPrivate;
  * the following additional functionalities:  a replacement string
  * object and an area for a user-defined widget to extend the dialog.
  *
- * \b Example:
- *
- * To use the basic replace dialog:
- *
- * \code
- * \endcode
- *
- * To use your own extensions:
- *
- * \code
- * \endcode
- *
  * \image html kreplacedialog.png "KDE Replace Dialog"
  */
-class KDEUI_EXPORT KReplaceDialog:
-    public KFindDialog
+class KDEUI_EXPORT KReplaceDialog : public KFindDialog
 {
     Q_OBJECT
-
 public:
-
-    // Options.
-
     enum Options
     {
         // Should the user be prompted before the replace operation?
@@ -78,10 +61,10 @@ public:
      *        replace with
      * @param hasSelection Whether a selection exists
      */
-    explicit KReplaceDialog( QWidget *parent = 0, long options = 0,
-                             const QStringList &findStrings = QStringList(),
-                             const QStringList &replaceStrings = QStringList(),
-                             bool hasSelection = true );
+    explicit KReplaceDialog(QWidget *parent = 0, long options = 0,
+                            const QStringList &findStrings = QStringList(),
+                            const QStringList &replaceStrings = QStringList(),
+                            bool hasSelection = true);
 
     /**
      * Destructor.
@@ -96,7 +79,7 @@ public:
      * @param history The replacement history.
      * @see replacementHistory
      */
-    void setReplacementHistory( const QStringList &history );
+    void setReplacementHistory(const QStringList &history);
 
     /**
      * Returns the list of history items.
@@ -110,7 +93,7 @@ public:
      *
      * @param options The setting of the Options.
      */
-    void setOptions( long options );
+    void setOptions(long options);
 
     /**
      * Returns the state of the options. Disabled options may be returned in
@@ -134,13 +117,11 @@ public:
     QWidget *replaceExtension() const;
 
 protected:
-    virtual void showEvent( QShowEvent * );
+    virtual void showEvent(QShowEvent *e);
 
 private:
-
     KReplaceDialogPrivate* const d;
-
-    Q_PRIVATE_SLOT( d, void _k_slotOk() )
+    Q_PRIVATE_SLOT(d, void _k_slotOk())
 };
 
 #endif // KREPLACEDIALOG_H
