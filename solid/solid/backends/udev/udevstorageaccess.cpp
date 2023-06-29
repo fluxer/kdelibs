@@ -65,10 +65,8 @@ QString StorageAccess::filePath() const
     const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
     const QString devname(m_device->deviceProperty("DEVNAME"));
-    const QString devlabel(m_device->deviceProperty("ID_FS_LABEL"));
     foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
-        if (mountpoint->mountedFrom() == devname || mountpoint->realDeviceName() == devname
-            || mountpoint->mountedFrom() == devlabel) {
+        if (mountpoint->mountedFrom() == devname || mountpoint->realDeviceName() == devname) {
             return mountpoint->mountPoint();
         }
     }
