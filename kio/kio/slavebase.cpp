@@ -782,8 +782,6 @@ bool SlaveBase::canResume(KIO::filesize_t offset)
     return true;
 }
 
-
-
 int SlaveBase::waitForAnswer(int expected1, int expected2, QByteArray &data, int *pCmd)
 {
     int cmd = 0;
@@ -794,7 +792,7 @@ int SlaveBase::waitForAnswer(int expected1, int expected2, QByteArray &data, int
         }
         if (result == -1) {
             kDebug(7019) << "read error.";
-            return -1;
+            return result;
         }
 
         if (cmd == expected1 || cmd == expected2) {
@@ -809,8 +807,8 @@ int SlaveBase::waitForAnswer(int expected1, int expected2, QByteArray &data, int
             kFatal(7019) << "Got cmd " << cmd << " while waiting for an answer!";
         }
     }
+    return result;
 }
-
 
 int SlaveBase::readData(QByteArray &buffer)
 {
