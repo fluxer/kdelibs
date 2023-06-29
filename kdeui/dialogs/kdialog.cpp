@@ -221,15 +221,15 @@ void KDialog::setButtons(ButtonCodes buttonMask)
         d->mButtonBox = 0;
     }
 
-    if (buttonMask & KDialog::Cancel)
+    if (buttonMask & KDialog::Cancel) {
         buttonMask &= ~KDialog::Close;
-
-    if (buttonMask & KDialog::Apply)
+    }
+    if (buttonMask & KDialog::Apply) {
         buttonMask &= ~KDialog::Try;
-
-    if (buttonMask & KDialog::Details)
+    }
+    if (buttonMask & KDialog::Details) {
         buttonMask &= ~KDialog::Default;
-
+    }
     if (buttonMask == KDialog::None) {
         d->setupLayout();
         return; // When we want no button box
@@ -501,63 +501,69 @@ void KDialog::setCaption(const QString &caption, bool modified)
     setWindowTitle(makeStandardCaption(caption, this, flags));
 }
 
-static QRect screenRect( QWidget *widget, int screen )
+static QRect screenRect(QWidget *widget, int screen)
 {
-  QDesktopWidget *desktop = QApplication::desktop();
-  KConfig gc( "kdeglobals", KConfig::NoGlobals );
-  KConfigGroup cg(&gc, "Windows" );
-  if ( desktop->isVirtualDesktop() &&
-       cg.readEntry( "XineramaEnabled", true ) &&
-       cg.readEntry( "XineramaPlacementEnabled", true ) ) {
+    QDesktopWidget *desktop = QApplication::desktop();
+    KConfig gc("kdeglobals", KConfig::NoGlobals);
+    KConfigGroup cg(&gc, "Windows");
+    if (desktop->isVirtualDesktop() &&
+        cg.readEntry("XineramaEnabled", true) &&
+        cg.readEntry("XineramaPlacementEnabled", true))
+    {
 
-    if ( screen < 0 || screen >= desktop->screenCount() ) {
-      if ( screen == -1 )
-        screen = desktop->primaryScreen();
-      else if ( screen == -3 )
-        screen = desktop->screenNumber( QCursor::pos() );
-      else
-        screen = desktop->screenNumber( widget );
+        if (screen < 0 || screen >= desktop->screenCount()) {
+            if (screen == -1) {
+                screen = desktop->primaryScreen();
+            } else if (screen == -3) {
+                screen = desktop->screenNumber(QCursor::pos());
+            } else {
+                screen = desktop->screenNumber(widget);
+            }
+        }
+
+        return desktop->availableGeometry(screen);
     }
-
-    return desktop->availableGeometry( screen );
-  } else
     return desktop->geometry();
 }
 
 void KDialog::centerOnScreen( QWidget *widget, int screen )
 {
-  if ( !widget )
-    return;
+    if (!widget) {
+        return;
+    }
 
 #ifdef Q_WS_X11
-  if( !( widget->windowFlags() & Qt::X11BypassWindowManagerHint ) && widget->windowType() != Qt::Popup
-      && NETRootInfo( QX11Info::display(), NET::Supported ).isSupported( NET::WM2FullPlacement )) {
-      return; // the WM can handle placement much better
-  }
+    if( !(widget->windowFlags() & Qt::X11BypassWindowManagerHint ) && widget->windowType() != Qt::Popup
+        && NETRootInfo(QX11Info::display(), NET::Supported).isSupported(NET::WM2FullPlacement)) {
+        return; // the WM can handle placement much better
+    }
 #endif
 
-  QRect rect = screenRect( widget, screen );
-
-  widget->move( rect.center().x() - widget->width() / 2,
-                rect.center().y() - widget->height() / 2 );
+    const QRect rect = screenRect(widget, screen);
+    widget->move(
+        rect.center().x() - widget->width() / 2,
+        rect.center().y() - widget->height() / 2
+    );
 }
 
-bool KDialog::avoidArea( QWidget *widget, const QRect& area, int screen )
+bool KDialog::avoidArea(QWidget *widget, const QRect &area, int screen)
 {
-  if ( !widget )
-    return false;
+    if (!widget) {
+        return false;
+    }
 
-  QRect fg = widget->frameGeometry();
-  if ( !fg.intersects( area ) )
-    return true; // nothing to do.
+    QRect fg = widget->frameGeometry();
+    if (!fg.intersects(area)) {
+        return true; // nothing to do.
+    }
 
-  const QRect scr = screenRect( widget, screen );
-  QRect avoid( area ); // let's add some margin
-  avoid.translate( -5, -5 );
-  avoid.setRight( avoid.right() + 10 );
-  avoid.setBottom( avoid.bottom() + 10 );
+    const QRect scr = screenRect(widget, screen);
+    QRect avoid(area); // let's add some margin
+    avoid.translate(-5, -5);
+    avoid.setRight(avoid.right() + 10);
+    avoid.setBottom(avoid.bottom() + 10);
 
-  if ( qMax( fg.top(), avoid.top() ) <= qMin( fg.bottom(), avoid.bottom() ) ) {
+  if (qMax(fg.top(), avoid.top()) <= qMin(fg.bottom(), avoid.bottom())) {
     // We need to move the widget up or down
     int spaceAbove = qMax( 0, avoid.top() - scr.top() );
     int spaceBelow = qMax( 0, scr.bottom() - avoid.bottom() );
@@ -573,178 +579,190 @@ bool KDialog::avoidArea( QWidget *widget, const QRect& area, int screen )
         return false;
   }
 
-  if ( qMax( fg.left(), avoid.left() ) <= qMin( fg.right(), avoid.right() ) ) {
-    // We need to move the widget left or right
-    const int spaceLeft = qMax( 0, avoid.left() - scr.left() );
-    const int spaceRight = qMax( 0, scr.right() - avoid.right() );
-    if ( spaceLeft > spaceRight ) // where's the biggest side?
-      if ( fg.width() <= spaceLeft ) // big enough?
-        fg.setX( avoid.left() - fg.width() );
-      else
-        return false;
-    else
-      if ( fg.width() <= spaceRight ) // big enough?
-        fg.setX( avoid.right() );
-      else
-        return false;
-  }
+    if (qMax(fg.left(), avoid.left()) <= qMin(fg.right(), avoid.right())) {
+        // We need to move the widget left or right
+        const int spaceLeft = qMax(0, avoid.left() - scr.left());
+        const int spaceRight = qMax(0, scr.right() - avoid.right());
+        if (spaceLeft > spaceRight) {
+            // where's the biggest side?
+            if (fg.width() <= spaceLeft) { // big enough?
+                fg.setX(avoid.left() - fg.width());
+            } else {
+                return false;
+            }
+        } else {
+            if (fg.width() <= spaceRight) { // big enough?
+                fg.setX( avoid.right());
+            } else {
+                return false;
+            }
+        }
+    }
 
-  widget->move( fg.x(), fg.y() );
+    widget->move(fg.x(), fg.y());
 
-  return true;
+    return true;
 }
 
-void KDialog::showButtonSeparator( bool state )
+void KDialog::showButtonSeparator(bool state)
 {
     Q_D(KDialog);
-  if ( ( d->mActionSeparator != 0 ) == state )
-    return;
-  if ( state ) {
-    if ( d->mActionSeparator )
-      return;
+    if ((d->mActionSeparator != 0) == state) {
+        return;
+    }
+    if (state) {
+        if (d->mActionSeparator) {
+            return;
+        }
 
-     d->mActionSeparator = new KSeparator( this );
-     d->mActionSeparator->setOrientation( d->mButtonOrientation );
-  } else {
-    delete d->mActionSeparator;
-    d->mActionSeparator = 0;
-  }
+        d->mActionSeparator = new KSeparator(this);
+        d->mActionSeparator->setOrientation(d->mButtonOrientation);
+    } else {
+        delete d->mActionSeparator;
+        d->mActionSeparator = 0;
+    }
 
-  d->setupLayout();
+    d->setupLayout();
 }
 
-void KDialog::setInitialSize( const QSize &size )
+void KDialog::setInitialSize(const QSize &size)
 {
     d_func()->mMinSize = size;
-  adjustSize();
+    adjustSize();
 }
 
-void KDialog::incrementInitialSize( const QSize &size )
+void KDialog::incrementInitialSize(const QSize &size)
 {
     d_func()->mIncSize = size;
-  adjustSize();
+    adjustSize();
 }
 
-KPushButton *KDialog::button( ButtonCode id ) const
+KPushButton* KDialog::button(ButtonCode id) const
 {
     Q_D(const KDialog);
-  return d->mButtonList.value( id, 0 );
+    return d->mButtonList.value(id, 0);
 }
 
-void KDialog::enableButton( ButtonCode id, bool state )
+void KDialog::enableButton(ButtonCode id, bool state)
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    button->setEnabled( state );
+    KPushButton *button = this->button(id);
+    if (button) {
+        button->setEnabled(state);
+    }
 }
 
-bool KDialog::isButtonEnabled( ButtonCode id ) const
+bool KDialog::isButtonEnabled(ButtonCode id) const
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    return button->isEnabled();
-
-  return false;
+    KPushButton *button = this->button(id);
+    if (button) {
+        return button->isEnabled();
+    }
+    return false;
 }
 
-void KDialog::enableButtonOk( bool state )
+void KDialog::enableButtonOk(bool state)
 {
-  enableButton( Ok, state );
+    enableButton(KDialog::Ok, state);
 }
 
-void KDialog::enableButtonApply( bool state )
+void KDialog::enableButtonApply(bool state)
 {
-  enableButton( Apply, state );
+    enableButton(KDialog::Apply, state);
 }
 
-void KDialog::enableButtonCancel( bool state )
+void KDialog::enableButtonCancel(bool state)
 {
-  enableButton( Cancel, state );
+    enableButton(KDialog::Cancel, state);
 }
 
-void KDialog::showButton( ButtonCode id, bool state )
+void KDialog::showButton(ButtonCode id, bool state)
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    state ? button->show() : button->hide();
+    KPushButton *button = this->button(id);
+    if (button) {
+        state ? button->show() : button->hide();
+    }
 }
 
-void KDialog::setButtonGuiItem( ButtonCode id, const KGuiItem &item )
+void KDialog::setButtonGuiItem(ButtonCode id, const KGuiItem &item)
 {
-  KPushButton *button = this->button( id );
-  if ( !button )
-    return;
-
-  button->setGuiItem( item );
+    KPushButton *button = this->button(id);
+    if (!button) {
+        return;
+    }
+    button->setGuiItem(item);
 }
 
-void KDialog::setButtonMenu( ButtonCode id, QMenu *menu, ButtonPopupMode popupmode)
+void KDialog::setButtonMenu(ButtonCode id, QMenu *menu, ButtonPopupMode popupmode)
 {
-  KPushButton *button = this->button( id );
-  if ( button ) {
-    if (popupmode==InstantPopup)
-      button->setMenu( menu );
-    else
-      button->setDelayedMenu(menu);
-  }
+    KPushButton *button = this->button(id);
+    if (button) {
+        if (popupmode == KDialog::InstantPopup) {
+            button->setMenu(menu);
+        } else {
+            button->setDelayedMenu(menu);
+        }
+    }
 }
 
-void KDialog::setButtonText( ButtonCode id, const QString &text )
+void KDialog::setButtonText(ButtonCode id, const QString &text)
 {
     Q_D(KDialog);
-  if ( !d->mSettingDetails && (id == Details) ) {
-    d->mDetailsButtonText = text;
-    setDetailsWidgetVisible( d->mDetailsVisible );
-    return;
-  }
+    if (!d->mSettingDetails && (id == KDialog::Details)) {
+        d->mDetailsButtonText = text;
+        setDetailsWidgetVisible(d->mDetailsVisible);
+        return;
+    }
 
-  KPushButton *button = this->button( id );
-  if ( button )
-    button->setText( text );
+    KPushButton *button = this->button(id);
+    if (button) {
+        button->setText(text);
+    }
 }
 
-QString KDialog::buttonText( ButtonCode id ) const
+QString KDialog::buttonText(ButtonCode id) const
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    return button->text();
-  else
+    KPushButton *button = this->button(id);
+    if (button) {
+        return button->text();
+    }
     return QString();
 }
 
-void KDialog::setButtonIcon( ButtonCode id, const KIcon &icon )
+void KDialog::setButtonIcon(ButtonCode id, const KIcon &icon)
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    button->setIcon( icon );
+    KPushButton *button = this->button(id);
+    if (button) {
+        button->setIcon(icon);
+    }
 }
 
-KIcon KDialog::buttonIcon( ButtonCode id ) const
+KIcon KDialog::buttonIcon(ButtonCode id) const
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    return KIcon(button->icon());
-  else
+    KPushButton *button = this->button(id);
+    if (button) {
+        return KIcon(button->icon());
+    }
     return KIcon();
 }
 
-void KDialog::setButtonToolTip( ButtonCode id, const QString &text )
+void KDialog::setButtonToolTip( ButtonCode id, const QString &text)
 {
-  KPushButton *button = this->button( id );
-  if ( button ) {
-    if ( text.isEmpty() )
-      button->setToolTip( QString() );
-    else
-      button->setToolTip( text );
-  }
+    KPushButton *button = this->button(id);
+    if (button) {
+        if (text.isEmpty()) {
+            button->setToolTip(QString());
+        } else {
+            button->setToolTip(text);
+        }
+    }
 }
 
-QString KDialog::buttonToolTip( ButtonCode id ) const
+QString KDialog::buttonToolTip(ButtonCode id) const
 {
-  KPushButton *button = this->button( id );
-  if ( button )
-    return button->toolTip();
-  else
+    KPushButton *button = this->button(id);
+    if (button) {
+        return button->toolTip();
+    }
     return QString();
 }
 
