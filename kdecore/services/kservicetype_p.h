@@ -67,7 +67,7 @@ public:
 
     KServiceType::Ptr parentType;
     QString m_strName;
-    mutable /*remove mutable when kmimetype doesn't use this anymore*/ QString m_strComment;
+    QString m_strComment;
     int m_serviceOffersOffset;
     QMap<QString, QVariant::Type> m_mapPropDefs;
     QMap<QString,QVariant> m_mapProps;
