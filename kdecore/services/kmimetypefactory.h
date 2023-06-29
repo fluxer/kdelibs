@@ -38,7 +38,7 @@ class KSycoca;
  */
 class KDECORE_EXPORT KMimeTypeFactory : public KSycocaFactory
 {
-    K_SYCOCAFACTORY( KST_KMimeTypeFactory )
+    K_SYCOCAFACTORY(KST_KMimeTypeFactory)
 public:
     /**
      * Create factory
@@ -51,17 +51,17 @@ public:
      * Not meant to be called at this level
      */
     virtual KSycocaEntry *createEntry(const QString &, const char *) const
-    { assert(0); return 0; }
+    { assert(false); return nullptr; }
 
     /**
      * Returns the possible offset for a given mimetype entry.
      */
-    int entryOffset(const QString& mimeTypeName);
+    int entryOffset(const QString &mimeTypeName);
 
     /**
      * Returns the offset into the service offers for a given mimetype.
      */
-    int serviceOffersOffset(const QString& mimeTypeName);
+    int serviceOffersOffset(const QString &mimeTypeName);
 
 public:
     /**
@@ -73,19 +73,19 @@ public:
     /**
      * @return the unique mimetype factory, creating it if necessary
      */
-    static KMimeTypeFactory * self();
+    static KMimeTypeFactory* self();
 
 public: // public for KBuildServiceFactory
     // A small entry for each mimetype with name and offset into the services-offer-list.
     class MimeTypeEntryPrivate;
     class KDECORE_EXPORT MimeTypeEntry : public KSycocaEntry
     {
-        Q_DECLARE_PRIVATE( MimeTypeEntry )
+        Q_DECLARE_PRIVATE(MimeTypeEntry)
     public:
         typedef KSharedPtr<MimeTypeEntry> Ptr;
 
-        MimeTypeEntry(const QString& file, const QString& name);
-        MimeTypeEntry(QDataStream& s, int offset);
+        MimeTypeEntry(const QString &file, const QString &name);
+        MimeTypeEntry(QDataStream &s, int offset);
 
         int serviceOffersOffset() const;
         void setServiceOffersOffset(int off);

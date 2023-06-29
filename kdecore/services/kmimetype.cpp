@@ -122,7 +122,6 @@ static KMimeType::Ptr findFromMode(const QString &path,
 }
 
 /*
-
 As agreed on the XDG list (and unlike the current shared-mime spec):
 
 Glob-matching should prefer derived mimetype over base mimetype, and longer matches
@@ -150,7 +149,6 @@ So there's also a fast mode which is:
  if no glob matches, or if more than one glob matches, use default mimetype and mark as "can be refined".
 
 */
-
 KMimeType::Ptr KMimeType::findByUrlHelper(const KUrl &_url, mode_t mode,
                                           bool is_local_file,
                                           QIODevice *device,

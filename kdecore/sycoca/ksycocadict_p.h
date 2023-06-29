@@ -73,7 +73,7 @@ public:
     * indeed matches the search key. If it doesn't
     * then no matching entry exists.
     */
-   int find_string(const QString &key ) const;
+   int find_string(const QString &key) const;
 
    /**
     * Looks up all entries identified by 'key'.
@@ -87,7 +87,7 @@ public:
     * After loading each entry you should check that it
     * indeed matches the search key.
     */
-   QList<int> findMultiString(const QString &key ) const;
+   QList<int> findMultiString(const QString &key) const;
 
     /**
     * The number of entries in the dictionary.

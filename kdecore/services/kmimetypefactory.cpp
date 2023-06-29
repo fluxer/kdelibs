@@ -24,10 +24,10 @@
 
 extern int servicesDebugArea();
 
-thread_local KMimeTypeFactory* kMimeTypeFactoryInstance = 0;
+thread_local KMimeTypeFactory* kMimeTypeFactoryInstance = nullptr;
 
 KMimeTypeFactory::KMimeTypeFactory()
-    : KSycocaFactory( KST_KMimeTypeFactory )
+    : KSycocaFactory(KST_KMimeTypeFactory)
 {
     kMimeTypeFactoryInstance = this;
 }
@@ -39,18 +39,20 @@ KMimeTypeFactory::~KMimeTypeFactory()
     }
 }
 
-KMimeTypeFactory * KMimeTypeFactory::self()
+KMimeTypeFactory* KMimeTypeFactory::self()
 {
-    if (!kMimeTypeFactoryInstance)
+    if (!kMimeTypeFactoryInstance) {
         kMimeTypeFactoryInstance = new KMimeTypeFactory();
+    }
     return kMimeTypeFactoryInstance;
 }
 
-int KMimeTypeFactory::entryOffset(const QString& mimeTypeName)
+int KMimeTypeFactory::entryOffset(const QString &mimeTypeName)
 {
-    if (!sycocaDict())
+    if (!sycocaDict()) {
         return -1; // Error!
-    assert (!KSycoca::self()->isBuilding());
+    }
+    assert(!KSycoca::self()->isBuilding());
     const int offset = sycocaDict()->find_string(mimeTypeName);
     return offset;
 }
