@@ -375,7 +375,8 @@ bool KMimeType::isBinaryData(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
-        return false; // err, whatever
+         // err, whatever
+        return false;
     }
     return isBufferBinaryData(file.read(32));
 }
@@ -523,8 +524,9 @@ QStringList KMimeType::allParentMimeTypes() const
     Q_D(const KMimeType);
     QStringList allParents;
     const QString canonical = KMimeTypeRepository::self()->resolveAlias(name());
-    if (!canonical.isEmpty())
+    if (!canonical.isEmpty()) {
         allParents.append(canonical);
+    }
     collectParentMimeTypes(d->m_strName, allParents);
     return allParents;
 }

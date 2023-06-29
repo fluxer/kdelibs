@@ -40,7 +40,7 @@ public:
     /**
      * @return the unique mimetype factory, creating it if necessary
      */
-    static KMimeTypeRepository * self();
+    static KMimeTypeRepository* self();
 
     /**
      * Creates a KMimeType
@@ -50,17 +50,17 @@ public:
     /**
      * Check if mime is an alias, and return the canonical name for it if it is, otherwise empty.
      */
-    QString resolveAlias(const QString& mime);
+    QString resolveAlias(const QString &mime);
 
     /**
      * Resolve mime if it's an alias, and return it otherwise.
      */
-    QString canonicalName(const QString& mime);
+    QString canonicalName(const QString &mime);
 
     /**
      * Returns the list of parents for a given mimetype
      */
-    QStringList parents(const QString& mime);
+    QStringList parents(const QString &mime);
 
     /**
      * This function makes sure that vital mime types are installed.
@@ -79,7 +79,7 @@ public:
     /**
      * @internal
      */
-    static bool matchFileName( const QString &filename, const QString &pattern );
+    static bool matchFileName(const QString &filename, const QString &pattern);
 
 private: // only for KMimeType and unittests
     friend class KMimeType;
@@ -93,7 +93,7 @@ private: // only for KMimeType and unittests
      *
      * This is internal API, use KMimeType::findByUrl instead.
      */
-    QStringList findFromFileName(const QString &filename, QString *matchingExtension = 0);
+    QStringList findFromFileName(const QString &filename, QString *matchingExtension = nullptr);
 
     /**
      * Find a mimetype from the content of a file or buffer
@@ -102,7 +102,7 @@ private: // only for KMimeType and unittests
      *
      * This is internal API, use KMimeType::findByUrl instead.
      */
-    KMimeType::Ptr findFromContent(QIODevice* device, int* accuracy);
+    KMimeType::Ptr findFromContent(QIODevice *device, int *accuracy);
 
     /**
      * @return true if at least one mimetype is present
@@ -120,7 +120,7 @@ private:
     /**
      * @internal (public for unit tests only)
      */
-    QList<KMimeMagicRule> parseMagicFile(QIODevice* file, const QString& fileName) const;
+    QList<KMimeMagicRule> parseMagicFile(QIODevice *file, const QString &fileName) const;
 
     // Read magic files
     void parseMagic();
@@ -136,9 +136,9 @@ private:
      * @param foundExt in/out parameter, the recognized extension of the match
      * @param highWeight whether to look into >50 or <=50 patterns.
      */
-    void findFromOtherPatternList(QStringList& matchingMimeTypes,
+    void findFromOtherPatternList(QStringList &matchingMimeTypes,
                                   const QString &filename,
-                                  QString& foundExt,
+                                  QString &foundExt,
                                   bool highWeight);
 
     AliasesMap m_aliases; // alias -> canonicalName
@@ -160,5 +160,4 @@ private:
     std::recursive_mutex m_mutex;
 };
 
-#endif /* KMIMETYPEREPOSITORY_H */
-
+#endif // KMIMETYPEREPOSITORY_H

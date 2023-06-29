@@ -61,13 +61,13 @@ KMimeTypeRepository * KMimeTypeRepository::self()
 
 KMimeTypeRepository::KMimeTypeRepository()
     : m_parentsMapLoaded(false),
-      m_magicFilesParsed(false),
-      m_aliasFilesParsed(false),
-      m_globsFilesParsed(false),
-      m_mimeTypesChecked(false),
-      m_useFavIcons(true),
-      m_useFavIconsChecked(false),
-      m_sharedMimeInfoVersion(0)
+    m_magicFilesParsed(false),
+    m_aliasFilesParsed(false),
+    m_globsFilesParsed(false),
+    m_mimeTypesChecked(false),
+    m_useFavIcons(true),
+    m_useFavIconsChecked(false),
+    m_sharedMimeInfoVersion(0)
 {
 }
 
@@ -108,50 +108,59 @@ QString KMimeTypeRepository::resolveAlias(const QString& mime)
 QString KMimeTypeRepository::canonicalName(const QString& mime)
 {
     QString c = resolveAlias(mime);
-    if (c.isEmpty())
+    if (c.isEmpty()) {
         return mime;
+    }
     return c;
 }
 
-bool KMimeTypeRepository::matchFileName( const QString &filename, const QString &pattern )
+bool KMimeTypeRepository::matchFileName(const QString &filename, const QString &pattern)
 {
     const int pattern_len = pattern.length();
-    if (!pattern_len)
+    if (!pattern_len) {
         return false;
-    const int len = filename.length();
+    }
 
+    const int len = filename.length();
     const int starCount = pattern.count(QLatin1Char('*'));
 
     // Patterns like "*~", "*.extension"
-    if (pattern[0] == QLatin1Char('*')  && pattern.indexOf(QLatin1Char('[')) == -1 && starCount == 1)
-    {
-        if ( len + 1 < pattern_len ) return false;
+    if (pattern[0] == QLatin1Char('*')  && pattern.indexOf(QLatin1Char('[')) == -1 && starCount == 1) {
+        if (len + 1 < pattern_len) {
+            return false;
+        }
 
         const QChar *c1 = pattern.unicode() + pattern_len - 1;
         const QChar *c2 = filename.unicode() + len - 1;
         int cnt = 1;
-        while (cnt < pattern_len && *c1-- == *c2--)
+        while (cnt < pattern_len && *c1-- == *c2--) {
             ++cnt;
+        }
         return cnt == pattern_len;
     }
 
     // Patterns like "README*" (well this is currently the only one like that...)
     if (starCount == 1 && pattern[pattern_len - 1] == QLatin1Char('*')) {
-        if ( len + 1 < pattern_len ) return false;
-        if (pattern[0] == QLatin1Char('*'))
+        if (len + 1 < pattern_len) {
+            return false;
+        }
+        if (pattern[0] == QLatin1Char('*')) {
             return filename.indexOf(pattern.mid(1, pattern_len - 2)) != -1;
+        }
 
         const QChar *c1 = pattern.unicode();
         const QChar *c2 = filename.unicode();
         int cnt = 1;
-        while (cnt < pattern_len && *c1++ == *c2++)
+        while (cnt < pattern_len && *c1++ == *c2++) {
            ++cnt;
+        }
         return cnt == pattern_len;
     }
 
     // Names without any wildcards like "README"
-    if (pattern.indexOf(QLatin1Char('[')) == -1 && starCount == 0 && pattern.indexOf(QLatin1Char('?')))
+    if (pattern.indexOf(QLatin1Char('[')) == -1 && starCount == 0 && pattern.indexOf(QLatin1Char('?'))) {
         return (pattern == filename);
+    }
 
     // Other (quite rare) patterns, like "*.anim[1-9j]": use slow but correct method
     QRegExp rx(pattern);
@@ -160,9 +169,9 @@ bool KMimeTypeRepository::matchFileName( const QString &filename, const QString 
 }
 
 // Helper for findFromFileName
-void KMimeTypeRepository::findFromOtherPatternList(QStringList& matchingMimeTypes,
+void KMimeTypeRepository::findFromOtherPatternList(QStringList &matchingMimeTypes,
                                                    const QString &fileName,
-                                                   QString& foundExt,
+                                                   QString &foundExt,
                                                    bool highWeight)
 {
     KMimeGlobsFileParser::GlobList& patternList = highWeight ? m_globs.m_highWeightGlobs : m_globs.m_lowWeightGlobs;
@@ -184,16 +193,20 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList& matchingMimeType
     const KMimeGlobsFileParser::GlobList::const_iterator end = patternList.constEnd();
     for ( ; it != end; ++it ) {
         const KMimeGlobsFileParser::Glob& glob = *it;
-        if ( matchFileName( glob.casesensitive ? fileName : lowerCaseFileName, glob.pattern ) ) {
+        if (matchFileName(glob.casesensitive ? fileName : lowerCaseFileName, glob.pattern)) {
             // Is this a lower-weight pattern than the last match? Stop here then.
-            if (glob.weight < lastMatchedWeight)
+            if (glob.weight < lastMatchedWeight) {
                 break;
-            if (lastMatchedWeight > 0 && glob.weight > lastMatchedWeight) // can't happen
+            }
+            if (lastMatchedWeight > 0 && glob.weight > lastMatchedWeight) {
+                // can't happen
                 kWarning(servicesDebugArea()) << "Assumption failed; globs2 weights not sorted correctly"
-                               << glob.weight << ">" << lastMatchedWeight;
+                                              << glob.weight << ">" << lastMatchedWeight;
+            }
             // Is this a shorter or a longer match than an existing one, or same length?
             if (glob.pattern.length() < matchingPatternLength) {
-                continue; // too short, ignore
+                // too short, ignore
+                continue;
             } else if (glob.pattern.length() > matchingPatternLength) {
                 // longer: clear any previous match (like *.bz2, when pattern is *.tar.bz2)
                 matchingMimeTypes.clear();
@@ -201,8 +214,9 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList& matchingMimeType
                 matchingPatternLength = glob.pattern.length();
             }
             matchingMimeTypes.push_back(glob.mimeType);
-            if (glob.pattern.startsWith(QLatin1String("*.")))
+            if (glob.pattern.startsWith(QLatin1String("*."))) {
                 foundExt = glob.pattern.mid(2);
+            }
         }
     }
 }
@@ -222,8 +236,9 @@ QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QStri
         findFromOtherPatternList(matchingMimeTypes, fileName, foundExt, false);
     }
 
-    if (pMatchingExtension)
+    if (pMatchingExtension) {
         *pMatchingExtension = foundExt;
+    }
     return matchingMimeTypes;
 }
 
@@ -232,8 +247,9 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
     Q_ASSERT(device->isOpen());
     const qint64 deviceSize = device->size();
     if (deviceSize == 0) {
-        if (accuracy)
+        if (accuracy) {
             *accuracy = 100;
+        }
         return findMimeTypeByName(QLatin1String("application/x-zerosize"));
     }
     // check if we can really read the data; also provide enough data for most rules
@@ -250,8 +266,9 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
         std::lock_guard<std::recursive_mutex> lock(m_mutex);
         Q_FOREACH ( const KMimeMagicRule& rule, m_magicRules ) {
             if (rule.match(device, deviceSize, beginning)) {
-                if (accuracy)
+                if (accuracy) {
                     *accuracy = rule.priority();
+                }
                 return findMimeTypeByName(rule.mimetype());
             }
         }
@@ -260,12 +277,14 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
     // Do fallback code so that we never return 0
     // Nothing worked, check if the file contents looks like binary or text
     if (!KMimeType::isBufferBinaryData(beginning)) {
-        if (accuracy)
+        if (accuracy) {
             *accuracy = 5;
+        }
         return findMimeTypeByName(QLatin1String("text/plain"));
     }
-    if (accuracy)
+    if (accuracy) {
         *accuracy = 0;
+    }
     return defaultMimeTypePtr();
 }
 
@@ -273,13 +292,16 @@ static QString fallbackParent(const QString& mimeTypeName)
 {
     const QString myGroup = mimeTypeName.left(mimeTypeName.indexOf(QLatin1Char('/')));
     // All text/* types are subclasses of text/plain.
-    if (myGroup == QLatin1String("text") && mimeTypeName != QLatin1String("text/plain"))
+    if (myGroup == QLatin1String("text") && mimeTypeName != QLatin1String("text/plain")) {
         return QLatin1String("text/plain");
+    }
     // All real-file mimetypes implicitly derive from application/octet-stream
     if (myGroup != QLatin1String("inode") &&
         // kde extensions
-        myGroup != QLatin1String("all") && myGroup != QLatin1String("fonts") && myGroup != QLatin1String("print") && myGroup != QLatin1String("uri")
-        && mimeTypeName != QLatin1String("application/octet-stream")) {
+        myGroup != QLatin1String("all") && myGroup != QLatin1String("fonts")
+        && myGroup != QLatin1String("print") && myGroup != QLatin1String("uri")
+        && mimeTypeName != QLatin1String("application/octet-stream"))
+    {
         return QLatin1String("application/octet-stream");
     }
     return QString();
@@ -293,25 +315,27 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
         Q_ASSERT(m_parents.isEmpty());
 
         const QStringList subclassFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("subclasses"));
-        //kDebug() << subclassFiles;
-        Q_FOREACH(const QString& fileName, subclassFiles) {
-
-            QFile qfile( fileName );
-            //kDebug(7021) << "Now parsing" << fileName;
+        // kDebug() << subclassFiles;
+        Q_FOREACH(const QString &fileName, subclassFiles) {
+            QFile qfile(fileName);
+            // kDebug(7021) << "Now parsing" << fileName;
             if (qfile.open(QIODevice::ReadOnly)) {
                 while (!qfile.atEnd()) {
                     const QByteArray line = qfile.readLine().trimmed();
-                    if (line.isEmpty() || line[0] == '#')
+                    if (line.isEmpty() || line[0] == '#') {
                         continue;
+                    }
                     const int pos = line.indexOf(' ');
-                    if (pos == -1) // syntax error
+                    if (pos == -1) {
+                        // syntax error
                         continue;
+                    }
                     const QByteArray derivedTypeName = line.left(pos);
                     const QString derivedTypeNameStr = QString::fromLatin1(derivedTypeName.constData(), derivedTypeName.size());
                     KMimeType::Ptr derivedType = findMimeTypeByName(derivedTypeNameStr, KMimeType::ResolveAliases);
-                    if (!derivedType)
+                    if (!derivedType) {
                         kWarning(7021) << fileName << " refers to unknown mimetype " << derivedTypeNameStr;
-                    else {
+                    } else {
                         const QByteArray parentTypeName = line.mid(pos+1);
                         const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
                         Q_ASSERT(!parentTypeName.isEmpty());
@@ -322,19 +346,21 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
             }
         }
     }
-    QStringList parents = m_parents.value(mime);
 
+    QStringList parents = m_parents.value(mime);
     if (parents.isEmpty()) {
         const QString myParent = fallbackParent(mime);
-        if (!myParent.isEmpty())
+        if (!myParent.isEmpty()) {
             parents.append(myParent);
+        }
     }
 
     return parents;
 }
 
 // Sort them in descending order of priority
-static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule& rhs) {
+static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule& rhs)
+{
     return lhs.priority() > rhs.priority();
 }
 
@@ -347,26 +373,29 @@ void KMimeTypeRepository::parseMagic()
     m_magicFilesParsed = true;
 
     const QStringList magicFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("magic"));
-    //kDebug() << magicFiles;
+    // kDebug() << magicFiles;
     QListIterator<QString> magicIter( magicFiles );
+    // global first, then local. Turns out it doesn't matter though.
     magicIter.toBack();
-    while (magicIter.hasPrevious()) { // global first, then local. Turns out it doesn't matter though.
+    while (magicIter.hasPrevious()) {
         const QString fileName = magicIter.previous();
         QFile magicFile(fileName);
-        //kDebug(servicesDebugArea()) << "Now parsing " << fileName;
-        if (magicFile.open(QIODevice::ReadOnly))
+        // kDebug(servicesDebugArea()) << "Now parsing " << fileName;
+        if (magicFile.open(QIODevice::ReadOnly)) {
             m_magicRules += parseMagicFile(&magicFile, fileName);
+        }
     }
     qSort(m_magicRules.begin(), m_magicRules.end(), mimeMagicRuleCompare);
 }
 
-static char readNumber(qint64& value, QIODevice* file)
+static char readNumber(qint64 &value, QIODevice *file)
 {
     char ch;
     while (file->getChar(&ch)) {
-        if (ch < '0' || ch > '9')
+        if (ch < '0' || ch > '9') {
             return ch;
-        value = 10 * value + ch - '0';
+        }
+        value = (10 * value + ch - '0');
     }
     // eof
     return '\0';
@@ -381,7 +410,7 @@ static char readNumber(qint64& value, QIODevice* file)
          (((quint32)(val) & 0x0000FF00U) << 8) | \
          (((quint32)(val) & 0x000000FFU) << 24)
 
-QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const QString& fileName) const
+QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice *file, const QString &fileName) const
 {
     QList<KMimeMagicRule> rules;
     QByteArray header = file->read(12);
@@ -420,16 +449,17 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
             // Parse new section
             const QByteArray line = file->readLine();
             const int pos = line.indexOf(':');
-            if (pos == -1) { // syntax error
+            if (pos == -1) {
+                // syntax error
                 kWarning(servicesDebugArea()) << "Syntax error in " << mimeTypeName
-                               << " ':' not present in section name";
+                                              << " ':' not present in section name";
                 break;
             }
             priority = line.left(pos).toInt();
             mimeTypeName = line.mid(pos+1);
             mimeTypeName = mimeTypeName.left(mimeTypeName.length()-2); // remove ']\n'
-            //kDebug(servicesDebugArea()) << "New rule for " << mimeTypeName
-            //             << " with priority " << priority;
+            // kDebug(servicesDebugArea()) << "New rule for " << mimeTypeName
+            //                             << " with priority " << priority;
         } else {
             // Parse line in the section
             // [ indent ] ">" start-offset "=" value
@@ -453,85 +483,98 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
             }
 
             qint16 lengthBuffer;
-            if (file->read(reinterpret_cast<char*>(&lengthBuffer), 2) != 2)
+            if (file->read(reinterpret_cast<char*>(&lengthBuffer), 2) != 2) {
                 break;
+            }
             const qint16 valueLength = qFromBigEndian(lengthBuffer);
-            //kDebug() << "indent=" << indent << " rangeStart=" << match.m_rangeStart
-            //         << " valueLength=" << valueLength;
+            // kDebug() << "indent=" << indent << " rangeStart=" << match.m_rangeStart
+            //          << " valueLength=" << valueLength;
 
             match.m_data.resize(valueLength);
-            if (file->read(match.m_data.data(), valueLength) != valueLength)
+            if (file->read(match.m_data.data(), valueLength) != valueLength) {
                 break;
+            }
 
             match.m_rangeLength = 1;
             bool invalidLine = false;
 
-            if (!file->getChar(&ch))
+            if (!file->getChar(&ch)) {
                 break;
-            qint64 wordSize = 1;
+            }
 
+            qint64 wordSize = 1;
             Q_FOREVER {
                 // We get 'ch' before coming here, or as part of the parsing in each case below.
                 switch (ch) {
-                case '\n':
-                    break;
-                case '&':
-                    match.m_mask.resize(valueLength);
-                    if (file->read(match.m_mask.data(), valueLength) != valueLength)
-                        invalidLine = true;
-                    if (!file->getChar(&ch))
-                        invalidLine = true;
-                    break;
-                case '~': {
-                    wordSize = 0;
-                    ch = readNumber(wordSize, file);
-                    //kDebug() << "wordSize=" << wordSize;
-                    break;
-                }
-                case '+':
-                    // Parse range length
-                    match.m_rangeLength = 0;
-                    ch = readNumber(match.m_rangeLength, file);
-                    if (ch == '\n')
+                    case '\n': {
                         break;
-                    // fall-through intended
-                default:
-                    // "If an unknown character is found where a newline is expected
-                    // then the whole line should be ignored (there will be no binary
-                    // data after the new character, so the next line starts after the
-                    // next "\n" character). This is for future extensions.", says spec
-                    while (ch != '\n' && !file->atEnd()) {
-                        file->getChar(&ch);
                     }
-                    invalidLine = true;
-                    kDebug(servicesDebugArea()) << "invalid line - garbage found - ch=" << ch;
+                    case '&': {
+                        match.m_mask.resize(valueLength);
+                        if (file->read(match.m_mask.data(), valueLength) != valueLength)
+                            invalidLine = true;
+                        if (!file->getChar(&ch))
+                            invalidLine = true;
+                        break;
+                    }
+                    case '~': {
+                        wordSize = 0;
+                        ch = readNumber(wordSize, file);
+                        // kDebug() << "wordSize=" << wordSize;
+                        break;
+                    }
+                    case '+': {
+                        // Parse range length
+                        match.m_rangeLength = 0;
+                        ch = readNumber(match.m_rangeLength, file);
+                        if (ch == '\n') {
+                            break;
+                        }
+                        // fall-through intended
+                    }
+                    default: {
+                        // "If an unknown character is found where a newline is expected
+                        // then the whole line should be ignored (there will be no binary
+                        // data after the new character, so the next line starts after the
+                        // next "\n" character). This is for future extensions.", says spec
+                        while (ch != '\n' && !file->atEnd()) {
+                            file->getChar(&ch);
+                        }
+                        invalidLine = true;
+                        kDebug(servicesDebugArea()) << "invalid line - garbage found - ch=" << ch;
+                        break;
+                    }
+                }
+                if (ch == '\n' || invalidLine) {
                     break;
                 }
-                if (ch == '\n' || invalidLine)
-                    break;
             }
             if (!invalidLine) {
                 // Finish match, doing byte-swapping on little endian hosts
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
                 if (wordSize > 1) {
-                    //kDebug() << "data before swapping: " << match.m_data;;
-                    if ((wordSize != 2 && wordSize != 4) || (valueLength % wordSize != 0))
-                        continue; // invalid word size
+                    // kDebug() << "data before swapping: " << match.m_data;;
+                    if ((wordSize != 2 && wordSize != 4) || (valueLength % wordSize != 0)) {
+                         // invalid word size
+                        continue;
+                    }
                     char* data = match.m_data.data();
                     char* mask = match.m_mask.data();
                     for (int i = 0; i < valueLength; i += wordSize) {
-                        if (wordSize == 2)
-                            MAKE_LITTLE_ENDIAN16( *((quint16 *) data + i) );
-                        else if (wordSize == 4)
-                            MAKE_LITTLE_ENDIAN32( *((quint32 *) data + i) );
+                        if (wordSize == 2) {
+                            MAKE_LITTLE_ENDIAN16(*((quint16 *)data + i));
+                        } else if (wordSize == 4) {
+                            MAKE_LITTLE_ENDIAN32(*((quint32 *)data + i));
+                        }
                         if (!match.m_mask.isEmpty()) {
-                            if (wordSize == 2)
-                                MAKE_LITTLE_ENDIAN16( *((quint16 *) mask + i) );
-                            else if (wordSize == 4)
-                                MAKE_LITTLE_ENDIAN32( *((quint32 *) mask + i) );
+                            if (wordSize == 2) {
+                                MAKE_LITTLE_ENDIAN16( *((quint16 *) mask + i));
+                            } else if (wordSize == 4) {
+                                MAKE_LITTLE_ENDIAN32(*((quint32 *)mask + i));
+                            }
                         }
                     }
-                    //kDebug() << "data after swapping: " << match.m_data;
+                    // kDebug() << "data after swapping: " << match.m_data;
                 }
 #endif
                 // Append match at the right place depending on indent:
@@ -567,11 +610,14 @@ const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
         if (qfile.open(QIODevice::ReadOnly)) {
             while (!qfile.atEnd()) {
                 const QByteArray line = qfile.readLine().trimmed();
-                if (line.isEmpty() || line[0] == '#')
+                if (line.isEmpty() || line[0] == '#') {
                     continue;
+                }
                 const int pos = line.indexOf(' ');
-                if (pos == -1) // syntax error
+                if (pos == -1) {
+                    // syntax error
                     continue;
+                }
                 const QByteArray aliasTypeName = line.left(pos);
                 const QByteArray parentTypeName = line.mid(pos+1);
                 Q_ASSERT(!aliasTypeName.isEmpty());
@@ -579,10 +625,9 @@ const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
                 const QString aliasTypeNameStr = QString::fromLatin1(aliasTypeName.constData(), aliasTypeName.size());
                 const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
 
-                const KMimeType::Ptr realMimeType =
-                    findMimeTypeByName(aliasTypeNameStr, KMimeType::DontResolveAlias);
+                const KMimeType::Ptr realMimeType = findMimeTypeByName(aliasTypeNameStr, KMimeType::DontResolveAlias);
                 if (realMimeType) {
-                    //kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeNameStr << "because also defined as a real mimetype";
+                    // kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeNameStr << "because also defined as a real mimetype";
                 } else {
                     m_aliases.insert(aliasTypeNameStr, parentTypeNameStr);
                 }
@@ -604,10 +649,16 @@ void KMimeTypeRepository::parseGlobs()
     m_globs = parser.parseGlobs();
 }
 
-static void errorMissingMimeTypes( const QStringList& _types )
+static void errorMissingMimeTypes(const QStringList &types)
 {
-    KMessage::message( KMessage::Error, i18np( "Could not find mime type <resource>%2</resource>",
-                "Could not find mime types:\n<resource>%2</resource>", _types.count(), _types.join(QLatin1String("</resource>\n<resource>")) ) );
+    KMessage::message(
+        KMessage::Error,
+        i18np(
+            "Could not find mime type <resource>%2</resource>",
+            "Could not find mime types:\n<resource>%2</resource>", types.count(),
+            types.join(QLatin1String("</resource>\n<resource>"))
+        )
+    );
 }
 
 void KMimeTypeRepository::checkEssentialMimeTypes()
@@ -624,32 +675,45 @@ void KMimeTypeRepository::checkEssentialMimeTypes()
         // Note that this messagebox is queued, so it will only be shown once getting back to the event loop
 
         // No mimetypes installed? Are you setting XDG_DATA_DIRS without including /usr/share in it?
-        KMessage::message(KMessage::Error, i18n("No mime types installed. "
-            "Check that shared-mime-info is installed, and that XDG_DATA_DIRS is not set, or includes /usr/share."));
+        KMessage::message(
+            KMessage::Error,
+            i18n(
+                "No mime types installed. "
+                "Check that shared-mime-info is installed, and that XDG_DATA_DIRS is not set, or includes /usr/share."
+            )
+        );
         return; // no point in going any further
     }
 
     QStringList missingMimeTypes;
-
-    if (!KMimeType::mimeType(QLatin1String("inode/directory")))
+    if (!KMimeType::mimeType(QLatin1String("inode/directory"))) {
         missingMimeTypes.append(QLatin1String("inode/directory"));
-    if (!KMimeType::mimeType(QLatin1String("inode/blockdevice")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("inode/blockdevice"))) {
         missingMimeTypes.append(QLatin1String("inode/blockdevice"));
-    if (!KMimeType::mimeType(QLatin1String("inode/chardevice")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("inode/chardevice"))) {
         missingMimeTypes.append(QLatin1String("inode/chardevice"));
-    if (!KMimeType::mimeType(QLatin1String("inode/socket")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("inode/socket"))) {
         missingMimeTypes.append(QLatin1String("inode/socket"));
-    if (!KMimeType::mimeType(QLatin1String("inode/fifo")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("inode/fifo"))) {
         missingMimeTypes.append(QLatin1String("inode/fifo"));
-    if (!KMimeType::mimeType(QLatin1String("application/x-shellscript")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("application/x-shellscript"))) {
         missingMimeTypes.append(QLatin1String("application/x-shellscript"));
-    if (!KMimeType::mimeType(QLatin1String("application/x-executable")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("application/x-executable"))) {
         missingMimeTypes.append(QLatin1String("application/x-executable"));
-    if (!KMimeType::mimeType(QLatin1String("application/x-desktop")))
+    }
+    if (!KMimeType::mimeType(QLatin1String("application/x-desktop"))) {
         missingMimeTypes.append(QLatin1String("application/x-desktop"));
+    }
 
-    if (!missingMimeTypes.isEmpty())
+    if (!missingMimeTypes.isEmpty()) {
         errorMissingMimeTypes(missingMimeTypes);
+    }
 }
 
 KMimeType::Ptr KMimeTypeRepository::defaultMimeTypePtr()
@@ -678,7 +742,7 @@ bool KMimeTypeRepository::useFavIcons()
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_useFavIconsChecked) {
         m_useFavIconsChecked = true;
-        KConfigGroup cg( KGlobal::config(), "HTML Settings" );
+        KConfigGroup cg(KGlobal::config(), "HTML Settings");
         m_useFavIcons = cg.readEntry("EnableFavicon", true);
     }
     return m_useFavIcons;
@@ -687,7 +751,8 @@ bool KMimeTypeRepository::useFavIcons()
 int KMimeTypeRepository::sharedMimeInfoVersion()
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    if (m_sharedMimeInfoVersion == 0)
+    if (m_sharedMimeInfoVersion == 0) {
         m_sharedMimeInfoVersion = mimeDataBaseVersion();
+    }
     return m_sharedMimeInfoVersion;
 }

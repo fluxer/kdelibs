@@ -30,8 +30,6 @@ class KMimeTypePrivate;
  * with it.
  *
  * The starting point you need is often the static methods.
- *
- * @see KServiceType
  */
 class KDECORE_EXPORT KMimeType : public QSharedData
 {
@@ -156,7 +154,7 @@ public:
      * @return A pointer to the matching mimetype. 0 is never returned.
      * @em Very @em Important: Don't store the result in a KMimeType* !
      */
-    static Ptr findByUrl(const KUrl& url, mode_t mode = 0,
+    static Ptr findByUrl(const KUrl &url, mode_t mode = 0,
                          bool is_local_file = false, bool fast_mode = false,
                          int *accuracy = 0);
     /**
@@ -434,7 +432,7 @@ private:
     KMimeTypePrivate* d_ptr;
 
     static void checkEssentialMimeTypes();
-    static KMimeType::Ptr findByUrlHelper(const KUrl& url, mode_t mode,
+    static KMimeType::Ptr findByUrlHelper(const KUrl &url, mode_t mode,
                                           bool is_local_file, QIODevice* device, int* accuracy);
 };
 
