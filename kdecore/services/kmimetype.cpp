@@ -379,8 +379,7 @@ bool KMimeType::isBinaryData(const QString &fileName)
     if (!file.open(QIODevice::ReadOnly)) {
         return false; // err, whatever
     }
-    const QByteArray data = file.read(32);
-    return isBufferBinaryData(data);
+    return isBufferBinaryData(file.read(32));
 }
 
 KMimeType::KMimeType( KMimeTypePrivate &dd, const QString& name,
