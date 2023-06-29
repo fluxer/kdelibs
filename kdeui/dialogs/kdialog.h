@@ -125,7 +125,7 @@ class KDialogPrivate;
  * @author Olivier Goffart <ogoffart at kde.org>
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class KDEUI_EXPORT KDialog : public QDialog //krazy:exclude=qclasses
+class KDEUI_EXPORT KDialog : public QDialog
 {
   Q_OBJECT
   Q_ENUMS(ButtonCode)
@@ -471,32 +471,6 @@ class KDEUI_EXPORT KDialog : public QDialog //krazy:exclude=qclasses
                                         CaptionFlags flags = HIGCompliantCaption );
 
     /**
-     * Resize every layout manager used in @p widget and its nested children.
-     *
-     * @param widget The widget used.
-     * @param margin The new layout margin.
-     * @param spacing The new layout spacing.
-     *
-     * @deprecated Use QLayout functions where necessary. Setting margin and spacing
-     * values recursively for all children prevents QLayout from creating platform native
-     * layouts.
-     */
-    static void resizeLayout( QWidget *widget, int margin, int spacing );
-
-    /**
-     * Resize every layout associated with @p lay and its children.
-     *
-     * @param lay layout to be resized
-     * @param margin The new layout margin
-     * @param spacing The new layout spacing
-     *
-     * @deprecated Use QLayout functions where necessary. Setting margin and spacing
-     * values recursively for all children prevents QLayout from creating platform native
-     * layouts.
-     */
-    static void resizeLayout( QLayout *lay, int margin, int spacing );
-
-    /**
      * Centers @p widget on the desktop, taking multi-head setups into
      * account. If @p screen is -1, @p widget will be centered on its
      * current screen (if it was shown already) or on the primary screen.
@@ -541,13 +515,13 @@ class KDEUI_EXPORT KDialog : public QDialog //krazy:exclude=qclasses
      * Reimplemented from QDialog.
      */
     virtual QSize minimumSizeHint() const;
-	
-	/**
-	 * Allow embedding the dialogs based on KDialog into a graphics view. By default embedding is not allowed, dialogs
-	 * will appear as separate windows.
-	 * @since 4.6
-	*/
-	static void setAllowEmbeddingInGraphicsView( bool allowEmbedding );
+
+    /**
+     * Allow embedding the dialogs based on KDialog into a graphics view. By default embedding is not allowed, dialogs
+     * will appear as separate windows.
+     * @since 4.6
+     */
+    static void setAllowEmbeddingInGraphicsView( bool allowEmbedding );
 
   public Q_SLOTS:
     /**
@@ -822,14 +796,6 @@ class KDEUI_EXPORT KDialog : public QDialog //krazy:exclude=qclasses
      * @param button is the type @a KDialog::ButtonCode
      */
     virtual void slotButtonClicked(int button);
-
-    /**
-     * Updates the margins and spacings.
-     *
-     * @deprecated KDialog respects the style's margins and spacings automatically. Calling
-     * this function has no effect.
-     */
-    void updateGeometry();
 
     protected:
         KDialog(KDialogPrivate &dd, QWidget *parent, Qt::WindowFlags flags = 0);

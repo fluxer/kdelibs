@@ -484,38 +484,6 @@ void KDialog::setCaption( const QString &caption, bool modified )
     setWindowTitle( makeStandardCaption(caption, this, flags) );
 }
 
-void KDialog::resizeLayout( QWidget *widget, int margin, int spacing ) //static
-{
-  if ( widget->layout() )
-    resizeLayout( widget->layout(), margin, spacing );
-
-  if ( widget->children().count() > 0 ) {
-    const QList<QObject*> list = widget->children();
-    foreach ( QObject *object, list ) {
-      if ( object->isWidgetType() )
-        resizeLayout( (QWidget*)object, margin, spacing );
-    }
-  }
-}
-
-void KDialog::resizeLayout( QLayout *layout, int margin, int spacing ) //static
-{
-  QLayoutItem *child;
-  int pos = 0;
-
-  while ( (child = layout->itemAt( pos ) ) ) {
-    if ( child->layout() )
-      resizeLayout( child->layout(), margin, spacing );
-
-    ++pos;
-  }
-
-  if ( layout->layout() ) {
-    layout->layout()->setMargin( margin );
-    layout->layout()->setSpacing( spacing );
-  }
-}
-
 static QRect screenRect( QWidget *widget, int screen )
 {
   QDesktopWidget *desktop = QApplication::desktop();
@@ -972,10 +940,6 @@ QString KDialog::helpLinkText() const
 {
     Q_D(const KDialog);
   return ( d->mHelpLinkText.isEmpty() ? i18n( "Get help..." ) : d->mHelpLinkText );
-}
-
-void KDialog::updateGeometry()
-{
 }
 
 void KDialog::hideEvent( QHideEvent *event )
