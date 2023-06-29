@@ -382,53 +382,53 @@ bool KMimeType::isBinaryData(const QString &fileName)
     return isBufferBinaryData(file.read(32));
 }
 
-KMimeType::KMimeType( KMimeTypePrivate &dd, const QString& name,
-                      const QString& comment )
-    : KServiceType( dd, name, comment )
+KMimeType::KMimeType(KMimeTypePrivate &dd, const QString &name,
+                     const QString &comment)
+    : KServiceType(dd, name, comment)
 {
 }
 
-KMimeType::KMimeType( const QString & fullpath, const QString& name,
-                      const QString& comment )
-    : KServiceType( *new KMimeTypePrivate(fullpath), name, comment )
+KMimeType::KMimeType(const QString &fullpath, const QString &name,
+                     const QString &comment)
+    : KServiceType(*new KMimeTypePrivate(fullpath), name, comment)
 {
 }
 
-KMimeType::KMimeType( KMimeTypePrivate &dd)
+KMimeType::KMimeType(KMimeTypePrivate &dd)
     : KServiceType(dd)
 {
 }
 
-KMimeType::KMimeType( QDataStream& _str, int offset )
-    : KServiceType( *new KMimeTypePrivate(_str, offset ))
+KMimeType::KMimeType(QDataStream &str, int offset)
+    : KServiceType(*new KMimeTypePrivate(str, offset))
 {
 }
 
-void KMimeTypePrivate::save( QDataStream& _str )
+void KMimeTypePrivate::save(QDataStream &str)
 {
-    KServiceTypePrivate::save( _str );
+    KServiceTypePrivate::save(str);
     // Warning adding fields here involves a binary incompatible change - update version
     // number in ksycoca.h. Never remove fields.
-    _str << m_lstPatterns << QString() << QStringList() << m_iconName;
+    str << m_lstPatterns << QString() << QStringList() << m_iconName;
 }
 
-QVariant KMimeTypePrivate::property( const QString& _name ) const
+QVariant KMimeTypePrivate::property(const QString &name) const
 {
-    if ( _name == QLatin1String("Patterns") )
+    if (name == QLatin1String("Patterns")) {
         return patterns();
-    if ( _name == QLatin1String("Comment") )
+    } else if (name == QLatin1String("Comment")) {
         return comment();
-    if ( _name == QLatin1String("Icon") )
-        return QVariant( iconName(KUrl()) );
-
-    return KServiceTypePrivate::property( _name );
+    } else if (name == QLatin1String("Icon")) {
+        return QVariant(iconName(KUrl()));
+    }
+    return KServiceTypePrivate::property(name);
 }
 
 QStringList KMimeTypePrivate::propertyNames() const
 {
     QStringList res = KServiceTypePrivate::propertyNames();
-    res.append( QString::fromLatin1("Patterns") );
-    res.append( QString::fromLatin1("Icon") );
+    res.append(QString::fromLatin1("Patterns"));
+    res.append(QString::fromLatin1("Icon"));
     return res;
 }
 
@@ -436,35 +436,37 @@ KMimeType::~KMimeType()
 {
 }
 
-QString KMimeType::iconNameForUrl( const KUrl & _url, mode_t mode )
+QString KMimeType::iconNameForUrl(const KUrl &_url, mode_t mode)
 {
-    const KMimeType::Ptr mt = findByUrl( _url, mode, _url.isLocalFile(),
-                                         false /*HACK*/);
+    const KMimeType::Ptr mt = findByUrl(_url, mode, _url.isLocalFile(),
+                                        false /*HACK*/);
     if (!mt) {
         return QString();
     }
     static const QString unknown = QString::fromLatin1("unknown");
-    const QString mimeTypeIcon = mt->iconName( _url );
+    const QString mimeTypeIcon = mt->iconName(_url);
     QString i = mimeTypeIcon;
 
     // if we don't find an icon, maybe we can use the one for the protocol
-    if ( i == unknown || i.isEmpty() || mt->name() == defaultMimeType()
+    if (i == unknown || i.isEmpty() || mt->name() == defaultMimeType()
         // and for the root of the protocol (e.g. trash:/) the protocol icon has priority over the mimetype icon
-        || _url.path().length() <= 1 )
+        || _url.path().length() <= 1)
     {
-        i = favIconForUrl( _url ); // maybe there is a favicon?
+        i = favIconForUrl(_url); // maybe there is a favicon?
 
-        if ( i.isEmpty() )
-            i = KProtocolInfo::icon( _url.protocol() );
+        if (i.isEmpty()) {
+            i = KProtocolInfo::icon(_url.protocol());
+        }
 
         // root of protocol: if we found nothing, revert to mimeTypeIcon (which is usually "folder")
-        if ( _url.path().length() <= 1 && ( i == unknown || i.isEmpty() ) )
+        if (_url.path().length() <= 1 && (i == unknown || i.isEmpty())) {
             i = mimeTypeIcon;
+        }
     }
-    return !i.isEmpty() ? i : unknown;
+    return (!i.isEmpty() ? i : unknown);
 }
 
-QString KMimeType::favIconForUrl( const KUrl& url, bool download )
+QString KMimeType::favIconForUrl(const KUrl &url, bool download)
 {
     if (url.isLocalFile()
         || !url.protocol().startsWith(QLatin1String("http"))
@@ -472,15 +474,17 @@ QString KMimeType::favIconForUrl( const KUrl& url, bool download )
         return QString();
     }
 
-    QDBusInterface kded( QString::fromLatin1("org.kde.kded"),
-                         QString::fromLatin1("/modules/favicons"),
-                         QString::fromLatin1("org.kde.FavIcon") );
-    QDBusReply<QString> iconreply = kded.call( QString::fromLatin1("iconForUrl"), url.url() );
+    QDBusInterface kded(
+        QString::fromLatin1("org.kde.kded"),
+        QString::fromLatin1("/modules/favicons"),
+        QString::fromLatin1("org.kde.FavIcon")
+    );
+    QDBusReply<QString> iconreply = kded.call(QString::fromLatin1("iconForUrl"), url.url());
     if (iconreply.isValid()) {
         const QString iconfile = iconreply.value();
         if (iconfile.isEmpty() && download) {
             kDebug() << "Downloading icon for" << url.prettyUrl();
-            const QDBusReply<void> downloadreply = kded.call(QString::fromLatin1("downloadUrlIcon"), url.url() );
+            const QDBusReply<void> downloadreply = kded.call(QString::fromLatin1("downloadUrlIcon"), url.url());
             if (!downloadreply.isValid()) {
                 kWarning() << "Could not start downloading icon for" << url.prettyUrl();
             }
@@ -490,20 +494,21 @@ QString KMimeType::favIconForUrl( const KUrl& url, bool download )
     return QString();
 }
 
-QString KMimeType::comment( const KUrl &url) const
+QString KMimeType::comment(const KUrl &url) const
 {
     Q_D(const KMimeType);
     return d->comment(url);
 }
 
-bool KMimeTypePrivate::inherits(const QString& mime) const
+bool KMimeTypePrivate::inherits(const QString &mime) const
 {
     QStack<QString> toCheck;
     toCheck.push(m_strName);
     while (!toCheck.isEmpty()) {
         const QString current = toCheck.pop();
-        if (current == mime)
+        if (current == mime) {
             return true;
+        }
         Q_FOREACH(const QString& parent, KMimeTypeRepository::self()->parents(current)) {
             toCheck.push(parent);
         }
@@ -511,11 +516,12 @@ bool KMimeTypePrivate::inherits(const QString& mime) const
     return false;
 }
 
-bool KMimeType::is( const QString& mimeTypeName ) const
+bool KMimeType::is(const QString &mimeTypeName) const
 {
     Q_D(const KMimeType);
-    if (name() == mimeTypeName)
+    if (name() == mimeTypeName) {
         return true;
+    }
     const QString mime = KMimeTypeRepository::self()->canonicalName(mimeTypeName);
     return d->inherits(mime);
 }
@@ -526,7 +532,7 @@ QStringList KMimeType::parentMimeTypes() const
     return KMimeTypeRepository::self()->parents(d->m_strName);
 }
 
-static void collectParentMimeTypes(const QString& mime, QStringList& allParents)
+static void collectParentMimeTypes(const QString &mime, QStringList &allParents)
 {
     QStringList parents = KMimeTypeRepository::self()->parents(mime);
     Q_FOREACH(const QString& parent, parents) {

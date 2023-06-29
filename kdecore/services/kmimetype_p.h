@@ -38,7 +38,7 @@ public:
     {
     }
 
-    virtual void save(QDataStream &s);
+    virtual void save(QDataStream &str);
 
     virtual QVariant property(const QString &name) const;
 
@@ -59,7 +59,7 @@ public:
     // virtual because reimplemented in KFolderMimeType
     virtual QString iconName(const KUrl &url) const;
 
-    bool inherits(const QString& mime) const;
+    bool inherits(const QString &mime) const;
     void ensureXmlDataLoaded() const;
     virtual int serviceOffersOffset() const;
 
