@@ -353,8 +353,7 @@ public:
     /**
      * Do not use name()=="somename" anymore, to check for a given mimetype.
      * For mimetype inheritance to work, use is("somename") instead.
-     * Warning, do not use inherits(), that's the servicetype inheritance concept!
-     * is() also supports mimetype aliases.
+     * @note this method also checks mimetype aliases.
      */
     bool is(const QString &mimeTypeName) const;
 
