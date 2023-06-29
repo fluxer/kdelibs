@@ -71,8 +71,8 @@ public:
     int m_serviceOffersOffset;
     QMap<QString, QVariant::Type> m_mapPropDefs;
     QMap<QString,QVariant> m_mapProps;
-    unsigned m_bDerived: 1;
-    unsigned m_parentTypeLoaded: 1;
+    bool m_bDerived;
+    bool m_parentTypeLoaded;
 };
 
 #endif // __kservicetype_p_h__
