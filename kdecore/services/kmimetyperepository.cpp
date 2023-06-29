@@ -26,8 +26,8 @@
 #include <kmessage.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+
 #include <QFile>
-#include <QProcess>
 #include <QtCore/qendian.h>
 
 #include "config-prefix.h"
