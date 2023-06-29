@@ -200,7 +200,7 @@ class KTipDialog::Private
     static KTipDialog *mInstance;
 };
 
-KTipDialog *KTipDialog::Private::mInstance = 0;
+KTipDialog *KTipDialog::Private::mInstance = nullptr;
 
 void KTipDialog::Private::_k_prevTip()
 {
@@ -216,200 +216,209 @@ void KTipDialog::Private::_k_nextTip()
                   .arg( i18n( database->tip().toUtf8() ) ) );
 }
 
-void KTipDialog::Private::_k_showOnStart( bool on )
+void KTipDialog::Private::_k_showOnStart(bool on)
 {
-  parent->setShowOnStart( on );
+    parent->setShowOnStart(on);
 }
 
 
-KTipDialog::KTipDialog( KTipDatabase *database, QWidget *parent )
-  : KDialog( parent ),
-    d( new Private( this ) )
+KTipDialog::KTipDialog(KTipDatabase *database, QWidget *parent)
+    : KDialog(parent),
+    d(new Private(this))
 {
-  setButtons( KDialog::None );
-  setCaption( i18n( "Tip of the Day" ) );
+  setButtons(KDialog::None);
+  setCaption(i18n("Tip of the Day"));
 
-  /**
-   * Parent is 0L when TipDialog is used as a mainWidget. This should
-   * be the case only in ktip, so let's use the ktip layout.
-   */
-  bool isTipDialog = (parent != 0);
+    /**
+     * Parent is 0L when TipDialog is used as a mainWidget. This should
+     * be the case only in ktip, so let's use the ktip layout.
+     */
+    bool isTipDialog = (parent != nullptr);
 
-  d->database = database;
+    d->database = database;
 
-  setWindowIcon(KIcon("ktip"));
+    setWindowIcon(KIcon("ktip"));
 
-  QWidget *widget = new QWidget( this );
-  setMainWidget( widget );
-  QVBoxLayout *mainLayout = new QVBoxLayout( widget );
-  mainLayout->setMargin( 0 );
+    QWidget *widget = new QWidget(this);
+    setMainWidget(widget);
+    QVBoxLayout *mainLayout = new QVBoxLayout(widget);
+    mainLayout->setMargin(0);
 
-  if ( isTipDialog ) {
-    QLabel *titleLabel = new QLabel( this );
-    titleLabel->setText( i18n( "Did you know...?\n" ) );
-    titleLabel->setFont( QFont( KGlobalSettings::generalFont().family(), 20, QFont::Bold ) );
-    titleLabel->setAlignment( Qt::AlignCenter );
-    mainLayout->addWidget( titleLabel );
-  }
+    if (isTipDialog) {
+        QLabel *titleLabel = new QLabel(this);
+        titleLabel->setText(i18n("Did you know...?\n" ) );
+        titleLabel->setFont(QFont(KGlobalSettings::generalFont().family(), 20, QFont::Bold));
+        titleLabel->setAlignment(Qt::AlignCenter);
+        mainLayout->addWidget(titleLabel);
+    }
 
-  QHBoxLayout *browserLayout = new QHBoxLayout();
-  mainLayout->addLayout( browserLayout );
+    QHBoxLayout *browserLayout = new QHBoxLayout();
+    mainLayout->addLayout(browserLayout);
 
-  d->tipText = new QTextBrowser( this );
+    d->tipText = new QTextBrowser(this);
 
-  d->tipText->setOpenExternalLinks( true );
+    d->tipText->setOpenExternalLinks(true);
 
-  d->tipText->setWordWrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere );
+    d->tipText->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
-  QStringList paths;
-  paths << KGlobal::dirs()->resourceDirs( "icon" )
-        << KGlobal::dirs()->findResourceDir( "data", "kdewizard/pics" ) + "kdewizard/pics/";
+    QStringList paths;
+    paths << KGlobal::dirs()->resourceDirs("icon")
+          << KGlobal::dirs()->findResourceDir("data", "kdewizard/pics") + "kdewizard/pics/";
 
-  d->tipText->setSearchPaths( paths );
+    d->tipText->setSearchPaths(paths);
 
-  d->tipText->setFrameStyle( QFrame::NoFrame );
-  d->tipText->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  QPalette tipPal(d->tipText->palette());
-  tipPal.setColor(QPalette::Base, Qt::transparent);
-  tipPal.setColor(QPalette::Text, tipPal.color(QPalette::WindowText));
-  d->tipText->setPalette(tipPal);
+    d->tipText->setFrameStyle(QFrame::NoFrame);
+    d->tipText->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QPalette tipPal(d->tipText->palette());
+    tipPal.setColor(QPalette::Base, Qt::transparent);
+    tipPal.setColor(QPalette::Text, tipPal.color(QPalette::WindowText));
+    d->tipText->setPalette(tipPal);
 
-  browserLayout->addWidget( d->tipText );
+    browserLayout->addWidget(d->tipText);
 
-  QLabel *label = new QLabel( this );
-  label->setPixmap( KStandardDirs::locate( "data", "kdeui/pics/ktip-bulb.png" ) );
-  label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
-  browserLayout->addWidget( label );
+    QLabel *label = new QLabel(this);
+    label->setPixmap(KStandardDirs::locate("data", "kdeui/pics/ktip-bulb.png"));
+    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    browserLayout->addWidget(label);
 
-  if ( !isTipDialog ) {
-    resize( 520, 280 );
-    QSize sh = size();
+    if (!isTipDialog) {
+        resize(520, 280);
 
-    QRect rect = KGlobalSettings::splashScreenDesktopGeometry();
+        QSize sh = size();
+        QRect rect = KGlobalSettings::splashScreenDesktopGeometry();
+        move(
+            rect.x() + (rect.width() - sh.width()) / 2,
+            rect.y() + (rect.height() - sh.height()) / 2
+        );
+    }
 
-    move( rect.x() + ( rect.width() - sh.width() ) / 2,
-          rect.y() + ( rect.height() - sh.height() ) / 2 );
-  }
+    KSeparator* sep = new KSeparator(Qt::Horizontal);
+    mainLayout->addWidget(sep);
 
-  KSeparator* sep = new KSeparator( Qt::Horizontal );
-  mainLayout->addWidget( sep );
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
 
-  QHBoxLayout *buttonLayout = new QHBoxLayout();
+    mainLayout->addLayout(buttonLayout);
 
-  mainLayout->addLayout( buttonLayout );
+    d->tipOnStart = new QCheckBox(i18n("&Show tips on startup"));
+    buttonLayout->addWidget(d->tipOnStart, 1);
 
-  d->tipOnStart = new QCheckBox( i18n( "&Show tips on startup" ) );
-  buttonLayout->addWidget( d->tipOnStart, 1 );
+    KPushButton *prev = new KPushButton(KStandardGuiItem::back(KStandardGuiItem::UseRTL));
+    prev->setText(i18n("&Previous"));
+    buttonLayout->addWidget( prev );
 
-  KPushButton *prev = new KPushButton( KStandardGuiItem::back( KStandardGuiItem::UseRTL ) );
-  prev->setText( i18n( "&Previous" ) );
-  buttonLayout->addWidget( prev );
+    KPushButton *next = new KPushButton(KStandardGuiItem::forward(KStandardGuiItem::UseRTL));
+    next->setText(i18nc("Opposite to Previous", "&Next"));
+    buttonLayout->addWidget(next);
 
-  KPushButton *next = new KPushButton( KStandardGuiItem::forward( KStandardGuiItem::UseRTL ));
-  next->setText( i18nc( "Opposite to Previous", "&Next" ) );
-  buttonLayout->addWidget( next );
+    KPushButton *ok = new KPushButton(KStandardGuiItem::close());
+    ok->setDefault(true);
+    buttonLayout->addWidget(ok);
 
-  KPushButton *ok = new KPushButton( KStandardGuiItem::close());
-  ok->setDefault( true );
-  buttonLayout->addWidget( ok );
+    KConfigGroup config(KGlobal::config(), "TipOfDay");
+    d->tipOnStart->setChecked(config.readEntry("RunOnStart", true));
 
-  KConfigGroup config( KGlobal::config(), "TipOfDay" );
-  d->tipOnStart->setChecked( config.readEntry( "RunOnStart", true ) );
+    connect(next, SIGNAL(clicked()), this, SLOT(_k_nextTip()));
+    connect(prev, SIGNAL(clicked()), this, SLOT(_k_prevTip()));
+    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(d->tipOnStart, SIGNAL(toggled(bool)), this, SLOT(_k_showOnStart(bool)));
 
-  connect( next, SIGNAL(clicked()), this, SLOT(_k_nextTip()) );
-  connect( prev, SIGNAL(clicked()), this, SLOT(_k_prevTip()) );
-  connect( ok, SIGNAL(clicked()), this, SLOT(accept()) );
-  connect( d->tipOnStart, SIGNAL(toggled(bool)), this, SLOT(_k_showOnStart(bool)) );
+    ok->setFocus();
 
-  ok->setFocus();
-
-  d->_k_nextTip();
+    d->_k_nextTip();
 }
 
 KTipDialog::~KTipDialog()
 {
-  if ( Private::mInstance == this )
-    Private::mInstance = 0L;
-  delete d;
+    if (Private::mInstance == this) {
+        Private::mInstance = nullptr;
+    }
+    delete d;
 }
 
 /**
  * use the one with a parent window as parameter instead of this one
  * or you will get focus problems
  */
-void KTipDialog::showTip( const QString &tipFile, bool force )
+void KTipDialog::showTip(const QString &tipFile, bool force)
 {
-  showTip( 0, tipFile, force );
+    showTip(nullptr, tipFile, force);
 }
 
-void KTipDialog::showTip( QWidget *parent, const QString &tipFile, bool force )
+void KTipDialog::showTip(QWidget *parent, const QString &tipFile, bool force)
 {
-  showMultiTip( parent, QStringList( tipFile ), force );
+    showMultiTip(parent, QStringList(tipFile), force);
 }
 
-void KTipDialog::showMultiTip( QWidget *parent, const QStringList &tipFiles, bool force )
+void KTipDialog::showMultiTip(QWidget *parent, const QStringList &tipFiles, bool force)
 {
-  KConfigGroup configGroup( KGlobal::config(), "TipOfDay" );
+    KConfigGroup configGroup( KGlobal::config(), "TipOfDay");
 
-  const bool runOnStart = configGroup.readEntry( "RunOnStart", true );
+    const bool runOnStart = configGroup.readEntry("RunOnStart", true);
 
-  if ( !force ) {
-    if ( !runOnStart )
-      return;
+    if (!force) {
+        if (!runOnStart) {
+            return;
+        }
 
-    // showing the tooltips on startup suggests the tooltip
-    // will be shown *each time* on startup, not $random days later
-    // TODO either remove or uncomment this code, but make the situation clear
-    /*bool hasLastShown = configGroup.hasKey( "TipLastShown" );
-    if ( hasLastShown ) {
-      const int oneDay = 24 * 60 * 60;
-      QDateTime lastShown = configGroup.readEntry( "TipLastShown", QDateTime() );
+        // showing the tooltips on startup suggests the tooltip
+        // will be shown *each time* on startup, not $random days later
+        // TODO either remove or uncomment this code, but make the situation clear
+#if 0
+        bool hasLastShown = configGroup.hasKey("TipLastShown");
+        if (hasLastShown) {
+            const int oneDay = 24 * 60 * 60;
+            QDateTime lastShown = configGroup.readEntry("TipLastShown", QDateTime());
 
-      // Show tip roughly once a week
-      if ( lastShown.secsTo( QDateTime::currentDateTime() ) < (oneDay + (KRandom::randomMax(10 * oneDay))) )
-        return;
+            // Show tip roughly once a week
+            if (lastShown.secsTo(QDateTime::currentDateTime()) < (oneDay + (KRandom::randomMax(10 * oneDay)))) {
+                return;
+            }
+        }
+
+        configGroup.writeEntry( "TipLastShown", QDateTime::currentDateTime() );
+
+        if (!hasLastShown) {
+            return; // Don't show tip on first start
+        }
+#endif
     }
 
-    configGroup.writeEntry( "TipLastShown", QDateTime::currentDateTime() );
+    if (!Private::mInstance) {
+        Private::mInstance = new KTipDialog(new KTipDatabase(tipFiles), parent);
+    } else {
+        // The application might have changed the RunOnStart option in its own
+        // configuration dialog, so we should update the checkbox.
+        Private::mInstance->d->tipOnStart->setChecked(runOnStart);
+    }
 
-    if ( !hasLastShown )
-      return; // Don't show tip on first start*/
-  }
-
-  if ( !Private::mInstance )
-    Private::mInstance = new KTipDialog( new KTipDatabase( tipFiles ), parent );
-  else
-      // The application might have changed the RunOnStart option in its own
-      // configuration dialog, so we should update the checkbox.
-      Private::mInstance->d->tipOnStart->setChecked( runOnStart );
-
-  Private::mInstance->show();
-  Private::mInstance->raise();
+    Private::mInstance->show();
+    Private::mInstance->raise();
 }
 
-void KTipDialog::setShowOnStart( bool on )
+void KTipDialog::setShowOnStart(bool on)
 {
-  KConfigGroup config( KGlobal::config(), "TipOfDay" );
-  config.writeEntry( "RunOnStart", on );
+    KConfigGroup config(KGlobal::config(), "TipOfDay");
+    config.writeEntry("RunOnStart", on);
 }
 
-bool KTipDialog::eventFilter( QObject *object, QEvent *event )
+bool KTipDialog::eventFilter(QObject *object, QEvent *event)
 {
-  if ( object == d->tipText && event->type() == QEvent::KeyPress &&
-       (((QKeyEvent *)event)->key() == Qt::Key_Return ||
-       ((QKeyEvent *)event)->key() == Qt::Key_Space ))
-    accept();
+    if (object == d->tipText && event->type() == QEvent::KeyPress &&
+        (((QKeyEvent *)event)->key() == Qt::Key_Return ||
+        ((QKeyEvent *)event)->key() == Qt::Key_Space))
+    {
+        accept();
+    }
 
-  /**
-   * If the user presses Return or Space, we close the dialog as if the
-   * default button was pressed even if the QTextBrowser has the keyboard
-   * focus. This could have the bad side-effect that the user cannot use the
-   * keyboard to open urls in the QTextBrowser, so we just let it handle
-   * the key event _additionally_. (Antonio)
-   */
+    /**
+     * If the user presses Return or Space, we close the dialog as if the
+     * default button was pressed even if the QTextBrowser has the keyboard
+     * focus. This could have the bad side-effect that the user cannot use the
+     * keyboard to open urls in the QTextBrowser, so we just let it handle
+     * the key event _additionally_. (Antonio)
+     */
 
-  return QWidget::eventFilter( object, event );
+    return QWidget::eventFilter(object, event);
 }
-
 
 #include "moc_ktip.cpp"

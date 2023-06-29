@@ -52,14 +52,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 class KDEUI_EXPORT KTipDatabase
 {
-  public:
+public:
     /**
      * This constructor reads in the tips from a file with the given name. If
      * no name is given, a file called 'application-name/tips' will be loaded.
      *
      * @param tipFile The absolute path to the tips file.
      */
-    explicit KTipDatabase( const QString &tipFile = QString() );
+    explicit KTipDatabase(const QString &tipFile = QString());
 
     /**
      * This constructor takes a list of files that will be merged. This constructor
@@ -67,7 +67,7 @@ class KDEUI_EXPORT KTipDatabase
      *
      * @param tipFiles A list of absolute paths to the tips file
      */ 
-    explicit KTipDatabase( const QStringList &tipFiles );
+    explicit KTipDatabase(const QStringList &tipFiles);
 
     ~KTipDatabase();
 
@@ -86,11 +86,11 @@ class KDEUI_EXPORT KTipDatabase
      */
     void prevTip();
 
-  private:
+private:
     class Private;
     Private* const d;
 
-    Q_DISABLE_COPY( KTipDatabase )
+    Q_DISABLE_COPY(KTipDatabase)
 };
 
 /**
@@ -102,9 +102,8 @@ class KDEUI_EXPORT KTipDatabase
  */
 class KDEUI_EXPORT KTipDialog : public KDialog
 {
-  Q_OBJECT
-
-  public:
+    Q_OBJECT
+public:
     /**
      * Construct a tip dialog.
      *
@@ -112,7 +111,7 @@ class KDEUI_EXPORT KTipDialog : public KDialog
      *                 will take ownership of the database, including deleting it.
      * @param parent Parent widget of TipDialog.
      */
-    explicit KTipDialog( KTipDatabase *database, QWidget *parent = 0 );
+    explicit KTipDialog(KTipDatabase *database, QWidget *parent = nullptr);
 
     /**
      * Destroys the tip dialog.
@@ -135,7 +134,7 @@ class KDEUI_EXPORT KTipDialog : public KDialog
      * @param force If true, the dialog is show, even when the users
      *              disabled it.
      */
-    static void showTip( QWidget *parent, const QString &tipFile = QString(), bool force = false );
+    static void showTip(QWidget *parent, const QString &tipFile = QString(), bool force = false);
 
     /**
      * Shows a tip
@@ -148,7 +147,7 @@ class KDEUI_EXPORT KTipDialog : public KDialog
      * @param force If true, the dialog is show, even when the users
      *              disabled it.
      */
-    static void showMultiTip( QWidget *parent, const QStringList &tipFiles, bool force = false );
+    static void showMultiTip(QWidget *parent, const QStringList &tipFiles, bool force = false);
 
     /**
      * Shows a tip.
@@ -156,7 +155,7 @@ class KDEUI_EXPORT KTipDialog : public KDialog
      * This methods calls showTip() with the applications main window as parent.
      *
      */
-    static void showTip( const QString &tipFile = QString(), bool force = false );
+    static void showTip(const QString &tipFile = QString(), bool force = false);
 
     /**
      * Toggles the start behavior.
@@ -164,18 +163,18 @@ class KDEUI_EXPORT KTipDialog : public KDialog
      * Normally, the user can disable the display of the tip in the dialog.
      * This is just a way to change this setting from outside.
      */
-    static void setShowOnStart( bool show );
+    static void setShowOnStart(bool show);
 
-  protected:
-    bool eventFilter( QObject*, QEvent* );
+protected:
+    bool eventFilter(QObject *object, QEvent *event);
 
-  private:
+private:
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void _k_nextTip() )
-    Q_PRIVATE_SLOT( d, void _k_prevTip() )
-    Q_PRIVATE_SLOT( d, void _k_showOnStart( bool ) )
+    Q_PRIVATE_SLOT(d, void _k_nextTip())
+    Q_PRIVATE_SLOT(d, void _k_prevTip())
+    Q_PRIVATE_SLOT(d, void _k_showOnStart(bool))
     Q_DISABLE_COPY(KTipDialog)
 };
 
