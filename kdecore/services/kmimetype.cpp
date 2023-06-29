@@ -132,11 +132,6 @@ bool KMimeType::isDefault() const
     return name() == defaultMimeType();
 }
 
-void KMimeType::checkEssentialMimeTypes()
-{
-    KMimeTypeRepository::self()->checkEssentialMimeTypes();
-}
-
 KMimeType::Ptr KMimeType::mimeType(const QString& name, FindByNameOption options)
 {
     return KMimeTypeRepository::self()->findMimeTypeByName(name, options);
@@ -231,7 +226,7 @@ KMimeType::Ptr KMimeType::findByUrlHelper(const KUrl &_url, mode_t mode,
                                           QIODevice *device,
                                           int* accuracy)
 {
-    checkEssentialMimeTypes();
+    KMimeTypeRepository::self()->checkEssentialMimeTypes();
     const QString path = is_local_file ? _url.toLocalFile() : _url.path();
 
     if (accuracy) {
@@ -427,7 +422,7 @@ KMimeType::Ptr KMimeType::findByContent(QIODevice *device, int *accuracy)
 
 KMimeType::Ptr KMimeType::findByFileContent(const QString &fileName, int *accuracy)
 {
-    checkEssentialMimeTypes();
+    KMimeTypeRepository::self()->checkEssentialMimeTypes();
 
     QFile device(fileName);
     // Look at mode first
