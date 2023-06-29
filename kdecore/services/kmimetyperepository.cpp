@@ -82,9 +82,8 @@ KMimeType::Ptr KMimeTypeRepository::findMimeTypeByName(const QString &_name, KMi
         name = canonicalName(name);
     }
 
-    const QString filename = name.toLower() + QLatin1String(".xml");
-
-    if (KStandardDirs::locate("xdgdata-mime", filename).isEmpty()) {
+    const QString filename = KGlobal::dirs()->findResource("xdgdata-mime", name.toLower() + QLatin1String(".xml"));
+    if (filename.isEmpty()) {
         return KMimeType::Ptr(); // Not found
     }
 
@@ -664,7 +663,7 @@ KMimeType::Ptr KMimeTypeRepository::defaultMimeTypePtr()
         } else {
             const QString defaultMimeType = KMimeType::defaultMimeType();
             errorMissingMimeTypes(QStringList(defaultMimeType));
-            const QString pathDefaultMimeType = KGlobal::dirs()->locateLocal("xdgdata-mime", defaultMimeType+QLatin1String(".xml"));
+            const QString pathDefaultMimeType = KGlobal::dirs()->findResource("xdgdata-mime", defaultMimeType + QLatin1String(".xml"));
             m_defaultMimeType = new KMimeType(pathDefaultMimeType, defaultMimeType, QLatin1String("mime"));
         }
     }

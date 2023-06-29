@@ -176,7 +176,7 @@ KMimeType::Ptr KMimeType::findByUrlHelper(const KUrl &_url, mode_t mode,
     QStringList mimeList;
     // Try to find out by looking at the filename (if there's one)
     const QString fileName(_url.fileName());
-    if (!fileName.isEmpty() && !path.endsWith( QLatin1Char('/'))) {
+    if (!fileName.isEmpty() && !path.endsWith(QLatin1Char('/'))) {
         // and if we can trust it (e.g. don't trust *.pl over HTTP, could be anything)
         if ( is_local_file || KProtocolInfo::determineMimetypeFromExtension(_url.protocol())) {
             mimeList = KMimeTypeRepository::self()->findFromFileName(fileName);
@@ -557,15 +557,15 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
     if (m_xmlDataLoaded) {
         return;
     }
-
     m_xmlDataLoaded = true;
 
-    const QString file = m_strName + QLatin1String(".xml");
-    const QStringList mimeFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", file);
-    if (mimeFiles.isEmpty()) {
-        kWarning() << "No file found for" << file << ", even though the file appeared in a directory listing.";
-        kWarning() << "Either it was just removed, or the directory doesn't have executable permission...";
-        kWarning() << KGlobal::dirs()->resourceDirs("xdgdata-mime");
+    if (m_path.isEmpty()) {
+        kWarning() << "No MIME file found for" << m_strName;
+        return;
+    }
+
+    QFile qfile(m_path);
+    if (!qfile.open(QFile::ReadOnly)) {
         return;
     }
 
@@ -575,69 +575,53 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
     QString preferredLanguage = languageList.first();
     QMap<QString, QString> commentsByLanguage;
 
-    QListIterator<QString> mimeFilesIter(mimeFiles);
-    mimeFilesIter.toBack();
-    while (mimeFilesIter.hasPrevious()) { // global first, then local.
-        const QString fullPath = mimeFilesIter.previous();
-        QFile qfile(fullPath);
-        if (!qfile.open(QFile::ReadOnly)) {
-            continue;
+    QXmlStreamReader xml(&qfile);
+    if (xml.readNextStartElement()) {
+        if (xml.name() != "mime-type") {
+            return;
+        }
+        const QString name = xml.attributes().value(QLatin1String("type")).toString();
+        if (name.isEmpty()) {
+            return;
+        }
+        if (name.toLower() != m_strName) {
+            kWarning() << "Got name" << name << "in file" << m_path << "expected" << m_strName;
         }
 
-        QXmlStreamReader xml(&qfile);
-        if (xml.readNextStartElement()) {
-            if (xml.name() != "mime-type") {
-                continue;
-            }
-            const QString name = xml.attributes().value(QLatin1String("type")).toString();
-            if (name.isEmpty())
-                continue;
-            if (name.toLower() != m_strName) {
-                kWarning() << "Got name" << name << "in file" << file << "expected" << m_strName;
-            }
-
-            while (xml.readNextStartElement()) {
-                const QStringRef tag = xml.name();
-                if (tag == "comment") {
-                    QString lang = xml.attributes().value(QLatin1String("xml:lang")).toString();
-                    const QString text = xml.readElementText();
-                    if (lang.isEmpty()) {
-                        lang = QLatin1String("en_US");
-                    }
-                    if (lang == preferredLanguage) {
-                        comment = text;
-                    } else {
-                        commentsByLanguage.insert(lang, text);
-                    }
-                    continue; // we called readElementText, so we're at the EndElement already.
-                } else if (tag == "icon") { // as written out by shared-mime-info >= 0.40
-                    m_iconName = xml.attributes().value(QLatin1String("name")).toString();
-                } else if (tag == "glob-deleteall") { // as written out by shared-mime-info >= 0.70
-                    mainPattern.clear();
-                    m_lstPatterns.clear();
-                } else if (tag == "glob") { // as written out by shared-mime-info >= 0.70
-                    const QString pattern = xml.attributes().value(QLatin1String("pattern")).toString();
-                    if (mainPattern.isEmpty() && pattern.startsWith(QLatin1Char('*'))) {
-                        mainPattern = pattern;
-                    }
-                    if (!m_lstPatterns.contains(pattern)) {
-                        m_lstPatterns.append(pattern);
-                    }
+        while (xml.readNextStartElement()) {
+            const QStringRef tag = xml.name();
+            if (tag == "comment") {
+                QString lang = xml.attributes().value(QLatin1String("xml:lang")).toString();
+                const QString text = xml.readElementText();
+                if (lang.isEmpty()) {
+                    lang = QLatin1String("en_US");
                 }
-                xml.skipCurrentElement();
+                if (lang == preferredLanguage) {
+                    comment = text;
+                } else {
+                    commentsByLanguage.insert(lang, text);
+                }
+                continue; // we called readElementText, so we're at the EndElement already.
+            } else if (tag == "icon") { // as written out by shared-mime-info >= 0.40
+                m_iconName = xml.attributes().value(QLatin1String("name")).toString();
+            } else if (tag == "glob-deleteall") { // as written out by shared-mime-info >= 0.70
+                mainPattern.clear();
+                m_lstPatterns.clear();
+            } else if (tag == "glob") { // as written out by shared-mime-info >= 0.70
+                const QString pattern = xml.attributes().value(QLatin1String("pattern")).toString();
+                if (mainPattern.isEmpty() && pattern.startsWith(QLatin1Char('*'))) {
+                    mainPattern = pattern;
+                }
+                if (!m_lstPatterns.contains(pattern)) {
+                    m_lstPatterns.append(pattern);
+                }
             }
-#warning FIXME: non-glibc crash workaround, investigate
-#ifdef __GLIBC__
-            if (xml.name() != "mime-type") {
-                kFatal() << "Programming error in KMimeType XML loading, please create a bug report on"
-                    << KDE_BUG_REPORT_URL << "including the file" << fullPath;
-            }
-#endif
+            xml.skipCurrentElement();
         }
     }
 
     if (comment.isEmpty()) {
-        Q_FOREACH(const QString& lang, languageList) {
+        Q_FOREACH(const QString &lang, languageList) {
             const QString comm = commentsByLanguage.value(lang);
             if (!comm.isEmpty()) {
                 comment = comm;
@@ -655,7 +639,7 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
             }
         }
         if (comment.isEmpty()) {
-            kWarning() << "Missing <comment> field in" << file;
+            kWarning() << "Missing <comment> field in" << m_path;
         }
     }
     m_strComment = comment;
