@@ -533,15 +533,16 @@ QStringList KMimeType::parentMimeTypes() const
 
 static void collectParentMimeTypes(const QString &mime, QStringList &allParents)
 {
-    QStringList parents = KMimeTypeRepository::self()->parents(mime);
-    Q_FOREACH(const QString& parent, parents) {
+    const QStringList parents = KMimeTypeRepository::self()->parents(mime);
+    Q_FOREACH(const QString &parent, parents) {
         // I would use QSet, but since order matters I better not
-        if (!allParents.contains(parent))
+        if (!allParents.contains(parent)) {
             allParents.append(parent);
+        }
     }
     // We want a breadth-first search, so that the least-specific parent (octet-stream) is last
     // This means iterating twice, unfortunately.
-    Q_FOREACH(const QString& parent, parents) {
+    Q_FOREACH(const QString &parent, parents) {
         collectParentMimeTypes(parent, allParents);
     }
 }
@@ -577,8 +578,9 @@ QStringList KMimeType::patterns() const
 // loads comment, icon, mainPattern, m_lstPatterns
 void KMimeTypePrivate::ensureXmlDataLoaded() const
 {
-    if (m_xmlDataLoaded)
+    if (m_xmlDataLoaded) {
         return;
+    }
 
     m_xmlDataLoaded = true;
 
@@ -602,8 +604,9 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
     while (mimeFilesIter.hasPrevious()) { // global first, then local.
         const QString fullPath = mimeFilesIter.previous();
         QFile qfile(fullPath);
-        if (!qfile.open(QFile::ReadOnly))
+        if (!qfile.open(QFile::ReadOnly)) {
             continue;
+        }
 
         QXmlStreamReader xml(&qfile);
         if (xml.readNextStartElement()) {
@@ -641,8 +644,9 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
                     if (mainPattern.isEmpty() && pattern.startsWith(QLatin1Char('*'))) {
                         mainPattern = pattern;
                     }
-                    if (!m_lstPatterns.contains(pattern))
+                    if (!m_lstPatterns.contains(pattern)) {
                         m_lstPatterns.append(pattern);
+                    }
                 }
                 xml.skipCurrentElement();
             }
@@ -702,8 +706,7 @@ int KMimeType::sharedMimeInfoVersion()
 QString KMimeType::mainExtension() const
 {
     Q_D(const KMimeType);
-
-    Q_FOREACH(const QString& pattern, d->patterns()) {
+    Q_FOREACH(const QString &pattern, d->patterns()) {
         // Skip if if looks like: README or *. or *.*
         // or *.JP*G or *.JP?
         if (pattern.startsWith(QLatin1String("*.")) &&
@@ -716,9 +719,9 @@ QString KMimeType::mainExtension() const
     return QString();
 }
 
-bool KMimeType::matchFileName( const QString &filename, const QString &pattern )
+bool KMimeType::matchFileName(const QString &filename, const QString &pattern)
 {
-    return KMimeTypeRepository::matchFileName( filename, pattern );
+    return KMimeTypeRepository::matchFileName(filename, pattern);
 }
 
 int KMimeTypePrivate::serviceOffersOffset() const
@@ -726,12 +729,15 @@ int KMimeTypePrivate::serviceOffersOffset() const
     return KMimeTypeFactory::self()->serviceOffersOffset(name());
 }
 
-QString KMimeTypePrivate::iconName(const KUrl &) const
+QString KMimeTypePrivate::iconName(const KUrl &url) const
 {
+    Q_UNUSED(url);
+
     static QHash<QUrl, QString> iconNameCache;
     QString iconNameFromCache = iconNameCache.value(m_strName);
-    if (!iconNameFromCache.isEmpty())
+    if (!iconNameFromCache.isEmpty()) {
         return iconNameFromCache;
+    }
 
     ensureXmlDataLoaded();
     QString result;
