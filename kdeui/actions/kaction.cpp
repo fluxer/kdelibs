@@ -29,15 +29,13 @@
 #include "kglobalaccel_p.h"
 #include "klocale.h"
 #include "kmessagebox.h"
+#include "kdebug.h"
+#include "kicon.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/qevent.h>
 #include <QtGui/QToolBar>
-
-#include <kdebug.h>
-
-#include "kicon.h"
 
 //---------------------------------------------------------------------
 // KActionPrivate
@@ -45,13 +43,11 @@
 
 void KActionPrivate::init(KAction *q_ptr)
 {
-  q = q_ptr;
-  globalShortcutEnabled = false;
-  neverSetGlobalShortcut = true;
-
-  QObject::connect(q, SIGNAL(triggered(bool)), q, SLOT(slotTriggered()));
-
-  q->setProperty("isShortcutConfigurable", true);
+    q = q_ptr;
+    globalShortcutEnabled = false;
+    neverSetGlobalShortcut = true;
+    QObject::connect(q, SIGNAL(triggered(bool)), q, SLOT(slotTriggered()));
+    q->setProperty("isShortcutConfigurable", true);
 }
 
 void KActionPrivate::setActiveGlobalShortcutNoEnable(const KShortcut &cut)
@@ -63,7 +59,7 @@ void KActionPrivate::setActiveGlobalShortcutNoEnable(const KShortcut &cut)
 
 void KActionPrivate::slotTriggered()
 {
-  emit q->triggered(QApplication::mouseButtons(), QApplication::keyboardModifiers());
+    emit q->triggered(QApplication::mouseButtons(), QApplication::keyboardModifiers());
 }
 
 bool KAction::event(QEvent *event)
@@ -72,16 +68,17 @@ bool KAction::event(QEvent *event)
         QShortcutEvent *se = static_cast<QShortcutEvent*>(event);
         if(se->isAmbiguous()) {
             KMessageBox::information(
-                    NULL,  // No widget to be seen around here
-                    i18n( "The key sequence '%1' is ambiguous. Use 'Configure Shortcuts'\n"
-                          "from the 'Settings' menu to solve the ambiguity.\n"
-                          "No action will be triggered.",
-                                se->key().toString(QKeySequence::NativeText)),
-                    i18n("Ambiguous shortcut detected"));
+                NULL,  // No widget to be seen around here
+                i18n(
+                    "The key sequence '%1' is ambiguous. Use 'Configure Shortcuts'\n"
+                    "from the 'Settings' menu to solve the ambiguity.\n"
+                    "No action will be triggered.", se->key().toString(QKeySequence::NativeText)
+                ),
+                i18n("Ambiguous shortcut detected")
+            );
             return true;
         }
     }
-
     return QAction::event(event);
 }
 
@@ -89,26 +86,28 @@ bool KAction::event(QEvent *event)
 //---------------------------------------------------------------------
 // KAction
 //---------------------------------------------------------------------
-
 KAction::KAction(QObject *parent)
-  : QWidgetAction(parent), d(new KActionPrivate)
+    : QWidgetAction(parent),
+    d(new KActionPrivate())
 {
-  d->init(this);
+    d->init(this);
 }
 
 KAction::KAction(const QString &text, QObject *parent)
-  : QWidgetAction(parent), d(new KActionPrivate)
+    : QWidgetAction(parent),
+    d(new KActionPrivate())
 {
-  d->init(this);
-  setText(text);
+    d->init(this);
+    setText(text);
 }
 
 KAction::KAction(const KIcon &icon, const QString &text, QObject *parent)
-  : QWidgetAction(parent), d(new KActionPrivate)
+    : QWidgetAction(parent),
+    d(new KActionPrivate)
 {
-  d->init(this);
-  setIcon(icon);
-  setText(text);
+    d->init(this);
+    setIcon(icon);
+    setText(text);
 }
 
 KAction::~KAction()
@@ -118,7 +117,6 @@ KAction::~KAction()
         d->globalShortcutEnabled = false;
         KGlobalAccel::self()->d->remove(this, KGlobalAccelPrivate::SetInactive);
     }
-
     delete d;
 }
 
@@ -127,121 +125,115 @@ bool KAction::isShortcutConfigurable() const
     return property("isShortcutConfigurable").toBool();
 }
 
-void KAction::setShortcutConfigurable( bool b )
+void KAction::setShortcutConfigurable(bool b)
 {
     setProperty("isShortcutConfigurable", b);
 }
 
 KShortcut KAction::shortcut(ShortcutTypes type) const
 {
-  Q_ASSERT(type);
-
-  if (type == DefaultShortcut) {
-      QKeySequence primary = property("defaultPrimaryShortcut").value<QKeySequence>();
-      QKeySequence secondary = property("defaultAlternateShortcut").value<QKeySequence>();
-      return KShortcut(primary, secondary);
-  }
-
-  QKeySequence primary = shortcuts().value(0);
-  QKeySequence secondary = shortcuts().value(1);
-  return KShortcut(primary, secondary);
-}
-
-void KAction::setShortcut( const KShortcut & shortcut, ShortcutTypes type )
-{
-  Q_ASSERT(type);
-
-  if (type & DefaultShortcut) {
-      setProperty("defaultPrimaryShortcut", shortcut.primary());
-      setProperty("defaultAlternateShortcut", shortcut.alternate());
-  }
-
-  if (type & ActiveShortcut) {
-      QAction::setShortcuts(shortcut);
-  }
-}
-
-void KAction::setShortcut( const QKeySequence & keySeq, ShortcutTypes type )
-{
-  Q_ASSERT(type);
-
-  if (type & DefaultShortcut)
-      setProperty("defaultPrimaryShortcut", keySeq);
-
-  if (type & ActiveShortcut) {
-      QAction::setShortcut(keySeq);
-  }
-}
-
-void KAction::setShortcuts(const QList<QKeySequence>& shortcuts, ShortcutTypes type)
-{
-  setShortcut(KShortcut(shortcuts), type);
-}
-
-const KShortcut & KAction::globalShortcut(ShortcutTypes type) const
-{
-  Q_ASSERT(type);
-
-  if (type == DefaultShortcut)
-    return d->defaultGlobalShortcut;
-
-  return d->globalShortcut;
-}
-
-void KAction::setGlobalShortcut( const KShortcut & shortcut, ShortcutTypes type,
-                                 GlobalShortcutLoading load )
-{
-  Q_ASSERT(type);
-  bool changed = false;
-
-  // protect against garbage keycode -1 that Qt sometimes produces for exotic keys;
-  // at the moment (~mid 2008) Multimedia PlayPause is one of those keys.
-  int shortcutKeys[8];
-  for (int i = 0; i < 4; i++) {
-    shortcutKeys[i] = shortcut.primary()[i];
-    shortcutKeys[i + 4] = shortcut.alternate()[i];
-  }
-  for (int i = 0; i < 8; i++) {
-    if (shortcutKeys[i] == -1) {
-      kWarning(283) << "Encountered garbage keycode (keycode = -1) in input, not doing anything.";
-      return;
+    Q_ASSERT(type);
+    if (type == DefaultShortcut) {
+        QKeySequence primary = property("defaultPrimaryShortcut").value<QKeySequence>();
+        QKeySequence secondary = property("defaultAlternateShortcut").value<QKeySequence>();
+        return KShortcut(primary, secondary);
     }
-  }
+    QKeySequence primary = shortcuts().value(0);
+    QKeySequence secondary = shortcuts().value(1);
+    return KShortcut(primary, secondary);
+}
 
-  if (!d->globalShortcutEnabled) {
-    changed = true;
-    if (objectName().isEmpty() || objectName().startsWith(QLatin1String("unnamed-"))) {
-      kWarning(283) << "Attempt to set global shortcut for action without objectName()."
-                       " Read the setGlobalShortcut() documentation.";
-      return;
+void KAction::setShortcut(const KShortcut &shortcut, ShortcutTypes type)
+{
+    Q_ASSERT(type);
+    if (type & KAction::DefaultShortcut) {
+        setProperty("defaultPrimaryShortcut", shortcut.primary());
+        setProperty("defaultAlternateShortcut", shortcut.alternate());
     }
-    d->globalShortcutEnabled = true;
-    KGlobalAccel::self()->d->doRegister(this);
-  }
+    if (type & ActiveShortcut) {
+        QAction::setShortcuts(shortcut);
+    }
+}
 
-  if ((type & DefaultShortcut) && d->defaultGlobalShortcut != shortcut) {
-    d->defaultGlobalShortcut = shortcut;
-    changed = true;
-  }
+void KAction::setShortcut(const QKeySequence &keySeq, ShortcutTypes type)
+{
+    Q_ASSERT(type);
+    if (type & KAction::DefaultShortcut) {
+        setProperty("defaultPrimaryShortcut", keySeq);
+    }
+    if (type & KAction::ActiveShortcut) {
+        QAction::setShortcut(keySeq);
+    }
+}
 
-  if ((type & ActiveShortcut) && d->globalShortcut != shortcut) {
-    d->globalShortcut = shortcut;
-    changed = true;
-  }
+void KAction::setShortcuts(const QList<QKeySequence> &shortcuts, ShortcutTypes type)
+{
+    setShortcut(KShortcut(shortcuts), type);
+}
 
-  //We want to have updateGlobalShortcuts called on a new action in any case so that
-  //it will be registered properly. In the case of the first setShortcut() call getting an
-  //empty shortcut parameter this would not happen...
-  if (changed || d->neverSetGlobalShortcut) {
-    KGlobalAccel::self()->d->updateGlobalShortcut(this, type | load);
-    d->neverSetGlobalShortcut = false;
-  }
+const KShortcut& KAction::globalShortcut(ShortcutTypes type) const
+{
+    Q_ASSERT(type);
+    if (type == KAction::DefaultShortcut) {
+        return d->defaultGlobalShortcut;
+    }
+    return d->globalShortcut;
+}
+
+void KAction::setGlobalShortcut(const KShortcut &shortcut, ShortcutTypes type,
+                                GlobalShortcutLoading load)
+{
+    Q_ASSERT(type);
+    bool changed = false;
+
+    // protect against garbage keycode -1 that Qt sometimes produces for exotic keys;
+    // at the moment (~mid 2008) Multimedia PlayPause is one of those keys.
+    int shortcutKeys[8];
+    for (int i = 0; i < 4; i++) {
+        shortcutKeys[i] = shortcut.primary()[i];
+        shortcutKeys[i + 4] = shortcut.alternate()[i];
+    }
+    for (int i = 0; i < 8; i++) {
+        if (shortcutKeys[i] == -1) {
+            kWarning(283) << "Encountered garbage keycode (keycode = -1) in input, not doing anything.";
+            return;
+        }
+    }
+
+    if (!d->globalShortcutEnabled) {
+        changed = true;
+        if (objectName().isEmpty() || objectName().startsWith(QLatin1String("unnamed-"))) {
+            kWarning(283) << "Attempt to set global shortcut for action without objectName()."
+                             " Read the setGlobalShortcut() documentation.";
+            return;
+        }
+        d->globalShortcutEnabled = true;
+        KGlobalAccel::self()->d->doRegister(this);
+    }
+
+    if ((type & KAction::DefaultShortcut) && d->defaultGlobalShortcut != shortcut) {
+        d->defaultGlobalShortcut = shortcut;
+        changed = true;
+    }
+
+    if ((type & KAction::ActiveShortcut) && d->globalShortcut != shortcut) {
+        d->globalShortcut = shortcut;
+        changed = true;
+    }
+
+    //We want to have updateGlobalShortcuts called on a new action in any case so that
+    //it will be registered properly. In the case of the first setShortcut() call getting an
+    //empty shortcut parameter this would not happen...
+    if (changed || d->neverSetGlobalShortcut) {
+        KGlobalAccel::self()->d->updateGlobalShortcut(this, type | load);
+        d->neverSetGlobalShortcut = false;
+    }
 }
 
 
 bool KAction::isGlobalShortcutEnabled() const
 {
-  return d->globalShortcutEnabled;
+    return d->globalShortcutEnabled;
 }
 
 
@@ -256,15 +248,13 @@ void KAction::forgetGlobalShortcut()
     }
 }
 
-void KAction::setHelpText(const QString& text)
+void KAction::setHelpText(const QString &text)
 {
     setStatusTip(text);
     setToolTip(text);
-    if (whatsThis().isEmpty())
+    if (whatsThis().isEmpty()) {
         setWhatsThis(text);
+    }
 }
-
-/* vim: et sw=2 ts=2
- */
 
 #include "moc_kaction.cpp"

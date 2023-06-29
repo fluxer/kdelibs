@@ -21,9 +21,10 @@
 #ifndef KACTIONCATEGORY_H
 #define KACTIONCATEGORY_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QList>
+#include <QObject>
+#include <QString>
+#include <QList>
+#include <QAction>
 
 #include "kstandardaction.h"
 #include "kactioncollection.h"
@@ -31,10 +32,6 @@
 
 class KAction;
 struct KActionCategoryPrivate;
-
-#include <QAction>
-
-
 
 /**
  * Categorize actions for KShortcutsEditor.
@@ -93,17 +90,16 @@ struct KActionCategoryPrivate;
  * \endcode
  */
 class KDEUI_EXPORT KActionCategory : public QObject
-    {
+{
     Q_OBJECT
-
-    Q_PROPERTY( QString text READ text WRITE setText )
+    Q_PROPERTY(QString text READ text WRITE setText)
 
 public:
 
     /**
      * Default constructor
      */
-    explicit KActionCategory(const QString &text, KActionCollection *parent=NULL);
+    explicit KActionCategory(const QString &text, KActionCollection *parent = nullptr);
 
     /**
      * Destructor
@@ -119,36 +115,32 @@ public:
      * corresponding method of KActionCollection.
      */
     //@{
-    QAction * addAction(const QString &name, QAction *action);
+    QAction* addAction(const QString &name, QAction *action);
 
-    KAction * addAction(const QString &name, KAction *action);
+    KAction* addAction(const QString &name, KAction *action);
 
-    KAction * addAction(
-            KStandardAction::StandardAction actionType,
-            const QObject *receiver = NULL,
-            const char *member = NULL);
+    KAction* addAction(KStandardAction::StandardAction actionType,
+                       const QObject *receiver = nullptr,
+                       const char *member = nullptr);
 
-    KAction * addAction(
-            KStandardAction::StandardAction actionType,
-            const QString &name,
-            const QObject *receiver = NULL,
-            const char *member = NULL);
+    KAction* addAction(KStandardAction::StandardAction actionType,
+                       const QString &name,
+                       const QObject *receiver = nullptr,
+                       const char *member = nullptr);
 
-    KAction *addAction(
-            const QString &name,
-            const QObject *receiver = NULL,
-            const char *member = NULL);
+    KAction* addAction(const QString &name,
+                       const QObject *receiver = nullptr,
+                       const char *member = nullptr);
 
     template<class ActionType>
-    ActionType *add(
-            const QString &name,
-            const QObject *receiver = NULL,
-            const char *member = NULL)
-        {
+    ActionType* add(const QString &name,
+                    const QObject *receiver = nullptr,
+                    const char *member = nullptr)
+    {
         ActionType *action = collection()->add<ActionType>(name, receiver, member);
         addAction(action);
         return action;
-        }
+    }
 
     //@}
 
@@ -160,7 +152,7 @@ public:
     /**
      * The action collection this category is associated with.
      */
-    KActionCollection * collection() const;
+    KActionCollection* collection() const;
 
     /**
      * The action categorys descriptive text
@@ -170,10 +162,9 @@ public:
     /**
      * Set the action categorys descriptive text.
      */
-    void setText(const QString& text);
+    void setText(const QString &text);
 
 private:
-
     /**
      * Remove \action from this category if found.
      */
@@ -192,4 +183,4 @@ private:
 };
 
 
-#endif /* #ifndef KACTIONCATEGORY_H */
+#endif // KACTIONCATEGORY_H

@@ -299,7 +299,7 @@ void KFindDialog::showEvent(QShowEvent *e)
 {
     if (!d->initialShowDone) {
         d->initialShowDone = true; // only once
-        kDebug() << "showEvent\n";
+        kDebug() << "showEvent";
         if (!d->findStrings.isEmpty()) {
             setFindHistory(d->findStrings);
         }
@@ -497,7 +497,7 @@ void KFindDialog::KFindDialogPrivate::_k_showPatterns()
 
     class RegExpAction : public QAction
     {
-        public:
+    public:
         RegExpAction(QObject *parent, const QString &text, const QString &regExp, int cursor)
             : QAction(text, parent), mRegExp(regExp), mCursor(cursor)
         {
@@ -576,9 +576,9 @@ void KFindDialog::KFindDialogPrivate::_k_showPlaceholders()
 void KFindDialog::KFindDialogPrivate::_k_slotPlaceholdersAboutToShow()
 {
     placeholders->clear();
-    placeholders->addAction( new PlaceHolderAction(placeholders, i18n("Complete Match"), 0));
+    placeholders->addAction(new PlaceHolderAction(placeholders, i18n("Complete Match"), 0));
 
-    QRegExp r( q->pattern() );
+    QRegExp r(q->pattern());
     uint n = r.captureCount();
     for (uint i = 0; i < n; i++) {
         placeholders->addAction(
