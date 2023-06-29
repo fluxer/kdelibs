@@ -38,4 +38,4 @@ public:
     Q_DECLARE_PUBLIC(KCompositeJob)
 };
 
-#endif
+#endif // KCOMPOSITEJOB_P_H

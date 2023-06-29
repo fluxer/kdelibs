@@ -23,6 +23,7 @@
 #include <kjob.h>
 
 class KCompositeJobPrivate;
+
 /**
  * The base class for all jobs able to be composed of one
  * or more subjobs.
@@ -30,14 +31,13 @@ class KCompositeJobPrivate;
 class KDECORE_EXPORT KCompositeJob : public KJob
 {
     Q_OBJECT
-
 public:
     /**
      * Creates a new KCompositeJob object.
      *
      * @param parent the parent QObject
      */
-    explicit KCompositeJob( QObject *parent = 0 );
+    explicit KCompositeJob(QObject *parent = nullptr);
 
     /**
      * Destroys a KCompositeJob object.
@@ -55,7 +55,7 @@ protected:
      * @param job the subjob to add
      * @return true if the job has been added correctly, false otherwise
      */
-    virtual bool addSubjob( KJob *job );
+    virtual bool addSubjob(KJob *job);
 
     /**
      * Mark a sub job as being done.
@@ -65,7 +65,7 @@ protected:
      * @param job the subjob to remove
      * @return true if the job has been removed correctly, false otherwise
      */
-    virtual bool removeSubjob( KJob *job );
+    virtual bool removeSubjob(KJob *job);
 
     /**
      * Checks if this job has subjobs running.
@@ -79,7 +79,7 @@ protected:
      *
      * @return the full list of sub jobs
      */
-    const QList<KJob*> &subjobs() const;
+    const QList<KJob*>& subjobs() const;
 
     /**
      * Clears the list of subjobs.
@@ -96,18 +96,9 @@ protected Q_SLOTS:
      * to parent job, and in all cases it calls removeSubjob.
      *
      * @param job the subjob
+     * @todo make it private
      */
-    virtual void slotResult( KJob *job );
-
-    /**
-     * Forward signal from subjob.
-     *
-     * @param job the subjob
-     * @param plain the info message in plain text version
-     * @param rich the info message in rich text version
-     * @see infoMessage()
-     */
-    virtual void slotInfoMessage( KJob *job, const QString &plain, const QString &rich );
+    virtual void slotResult(KJob *job);
 
 protected:
     KCompositeJob(KCompositeJobPrivate &dd, QObject *parent);
@@ -115,4 +106,4 @@ private:
     Q_DECLARE_PRIVATE(KCompositeJob)
 };
 
-#endif
+#endif // KCOMPOSITEJOB_H
