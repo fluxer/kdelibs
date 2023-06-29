@@ -382,52 +382,25 @@ bool KMimeType::isBinaryData(const QString &fileName)
 
 KMimeType::KMimeType(KMimeTypePrivate &dd, const QString &name,
                      const QString &comment)
-    : KServiceType(dd, name, comment)
+    : d_ptr(&dd)
 {
+    d_ptr->m_strName = name;
+    d_ptr->m_strComment = comment;
 }
 
 KMimeType::KMimeType(const QString &fullpath, const QString &name,
                      const QString &comment)
-    : KServiceType(*new KMimeTypePrivate(fullpath), name, comment)
+    : QSharedData(),
+    d_ptr(new KMimeTypePrivate(fullpath))
 {
+    d_ptr->m_strName = name;
+    d_ptr->m_strComment = comment;
 }
 
 KMimeType::KMimeType(KMimeTypePrivate &dd)
-    : KServiceType(dd)
+    : QSharedData(),
+    d_ptr(&dd)
 {
-}
-
-KMimeType::KMimeType(QDataStream &str, int offset)
-    : KServiceType(*new KMimeTypePrivate(str, offset))
-{
-}
-
-void KMimeTypePrivate::save(QDataStream &str)
-{
-    KServiceTypePrivate::save(str);
-    // Warning adding fields here involves a binary incompatible change - update version
-    // number in ksycoca.h. Never remove fields.
-    str << m_lstPatterns << QString() << QStringList() << m_iconName;
-}
-
-QVariant KMimeTypePrivate::property(const QString &name) const
-{
-    if (name == QLatin1String("Patterns")) {
-        return patterns();
-    } else if (name == QLatin1String("Comment")) {
-        return comment();
-    } else if (name == QLatin1String("Icon")) {
-        return QVariant(iconName(KUrl()));
-    }
-    return KServiceTypePrivate::property(name);
-}
-
-QStringList KMimeTypePrivate::propertyNames() const
-{
-    QStringList res = KServiceTypePrivate::propertyNames();
-    res.append(QString::fromLatin1("Patterns"));
-    res.append(QString::fromLatin1("Icon"));
-    return res;
 }
 
 KMimeType::~KMimeType()
@@ -436,8 +409,7 @@ KMimeType::~KMimeType()
 
 QString KMimeType::iconNameForUrl(const KUrl &_url, mode_t mode)
 {
-    const KMimeType::Ptr mt = findByUrl(_url, mode, _url.isLocalFile(),
-                                        false /*HACK*/);
+    const KMimeType::Ptr mt = findByUrl(_url, mode, _url.isLocalFile(), false /*HACK*/);
     if (!mt) {
         return QString();
     }
@@ -561,7 +533,13 @@ QString KMimeType::defaultMimeType()
     return QString::fromLatin1("application/octet-stream");
 }
 
-QString KMimeType::iconName( const KUrl& url) const
+QString KMimeType::name() const
+{
+    Q_D(const KMimeType);
+    return d->m_strName;
+}
+
+QString KMimeType::iconName(const KUrl &url) const
 {
     Q_D(const KMimeType);
     return d->iconName(url);
@@ -720,11 +698,6 @@ QString KMimeType::mainExtension() const
 bool KMimeType::matchFileName(const QString &filename, const QString &pattern)
 {
     return KMimeTypeRepository::matchFileName(filename, pattern);
-}
-
-int KMimeTypePrivate::serviceOffersOffset() const
-{
-    return KMimeTypeFactory::self()->serviceOffersOffset(name());
 }
 
 QString KMimeTypePrivate::iconName(const KUrl &url) const

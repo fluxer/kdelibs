@@ -25,13 +25,14 @@
 #include "ksycocadict_p.h"
 #include "ksycocaresourcelist.h"
 #include "kdesktopfile.h"
-
+#include "kservicetype.h"
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <assert.h>
 #include <kmimetypefactory.h>
+
+#include <assert.h>
 
 KBuildServiceFactory::KBuildServiceFactory( KSycocaFactory *serviceTypeFactory,
                                             KBuildMimeTypeFactory *mimeTypeFactory,

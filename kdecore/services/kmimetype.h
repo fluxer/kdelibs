@@ -21,7 +21,7 @@
 #define KMIMETYPE_H
 
 #include <kurl.h>
-#include <kservicetype.h>
+#include <ksharedptr.h>
 
 class KMimeTypePrivate;
 
@@ -31,12 +31,9 @@ class KMimeTypePrivate;
  *
  * The starting point you need is often the static methods.
  *
- * KMimeType inherits KServiceType because "text/plain" can be used to find
- * services (apps and components) "which can open text/plain".
- *
  * @see KServiceType
  */
-class KDECORE_EXPORT KMimeType : public KServiceType // TODO KDE5: drop kservicetype inheritance, inherit kshared
+class KDECORE_EXPORT KMimeType : public QSharedData
 {
     Q_DECLARE_PRIVATE(KMimeType)
 public:
@@ -44,6 +41,8 @@ public:
     typedef QList<Ptr> List;
 
     virtual ~KMimeType();
+
+    QString name() const;
 
     /**
      * Return the filename of the icon associated with the mimetype.
@@ -402,15 +401,7 @@ public:
     static int sharedMimeInfoVersion();
 
 protected:
-
     friend class KMimeTypeRepository; // for KMimeType(QString,QString,QString)
-
-    /**
-     * @internal Construct a service from a stream.
-     *
-     * The stream must already be positionned at the correct offset
-     */
-    KMimeType(QDataStream &str, int offset);
 
     /**
      * Construct a mimetype and take all information from an XML file.
@@ -439,9 +430,8 @@ protected:
     KMimeType(KMimeTypePrivate &dd, const QString &name, const QString &comment);
 
 private:
-    // Forbidden nowadays in KMimeType
-    int offset() const;
-    void save(QDataStream &s);
+    friend class KFolderMimeType;
+    KMimeTypePrivate* d_ptr;
 
     static void checkEssentialMimeTypes();
     static KMimeType::Ptr findByUrlHelper(const KUrl& url, mode_t mode,

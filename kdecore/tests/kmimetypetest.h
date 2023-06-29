@@ -61,7 +61,6 @@ private Q_SLOTS:
     void testHelperProtocols();
     void testFromThread();
     void testThreads();
-    void testProperties();
 private:
     QList<KMimeMagicRule> m_rules;
     QString m_nonKdeApp;

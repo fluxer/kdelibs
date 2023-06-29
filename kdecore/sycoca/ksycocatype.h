@@ -28,9 +28,9 @@
  * To use it, call the macro K_SYCOCATYPE( your_typecode, parent_class )
  * at the top of your class definition.
  */
-enum KSycocaType { KST_KSycocaEntry = 0, KST_KService = 1, KST_KServiceType = 2, KST_KMimeType = 3,
-                   KST_KFolderMimeType = 4, KST_KMimeTypeEntry = 5 /*internal*/,
-                   KST_KServiceGroup = 6, KST_KProtocolInfo = 7, KST_KServiceSeparator = 8,
+enum KSycocaType { KST_KSycocaEntry = 0, KST_KService = 1, KST_KServiceType = 2,
+                   KST_KMimeTypeEntry = 3 /*internal*/,
+                   KST_KServiceGroup = 4, KST_KProtocolInfo = 5, KST_KServiceSeparator = 6,
                    KST_KCustom = 1000 };
 
 /**

@@ -495,7 +495,6 @@ void KMimeTypeTest::testAllMimeTypes()
         //qDebug( "%s", qPrintable( name ) );
         QVERIFY( !name.isEmpty() );
         QCOMPARE( name.count( '/' ), 1 );
-        QVERIFY( mime->isType( KST_KMimeType ) );
 
         const KMimeType::Ptr lookedupMime = KMimeType::mimeType( name );
         QVERIFY( lookedupMime ); // not null
@@ -975,16 +974,6 @@ void KMimeTypeTest::testThreads()
     future8.wait();
     future9.wait();
     future10.wait();
-}
-
-void KMimeTypeTest::testProperties()
-{
-    KMimeType::Ptr pngMimeType = KMimeType::mimeType("image/png");
-    QVariant comment = pngMimeType->property("Comment");
-    QVariant patterns = pngMimeType->property("Patterns");
-
-    QCOMPARE(comment.toString(), pngMimeType->comment());
-    QCOMPARE(patterns.toStringList(), pngMimeType->patterns());
 }
 
 #include "moc_kmimetypetest.cpp"

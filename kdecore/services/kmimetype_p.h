@@ -16,33 +16,19 @@
  *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *  Boston, MA 02110-1301, USA.
  **/
-#ifndef __kmimetype_p_h__
-#define __kmimetype_p_h__
+#ifndef KMIMETYPE_P_H
+#define KMIMETYPE_P_H
 
-#include "kservicetype_p.h"
+#include <QStringList>
 
-class KMimeTypePrivate: public KServiceTypePrivate
+class KMimeTypePrivate
 {
 public:
-  K_SYCOCATYPE( KST_KMimeType, KServiceTypePrivate )
-
     KMimeTypePrivate(const QString &path)
-        : KServiceTypePrivate(path),
+        : m_path(path),
         m_xmlDataLoaded(false)
     {
     }
-
-    KMimeTypePrivate(QDataStream &str, int offset)
-        : KServiceTypePrivate(str, offset),
-        m_xmlDataLoaded(false)
-    {
-    }
-
-    virtual void save(QDataStream &str);
-
-    virtual QVariant property(const QString &name) const;
-
-    virtual QStringList propertyNames() const;
 
     virtual QString comment(const KUrl &url = KUrl()) const
     {
@@ -61,11 +47,13 @@ public:
 
     bool inherits(const QString &mime) const;
     void ensureXmlDataLoaded() const;
-    virtual int serviceOffersOffset() const;
 
+    mutable QString m_path;
+    mutable QString m_strName;
+    mutable QString m_strComment;
     mutable QStringList m_lstPatterns;
     mutable QString m_iconName; // user-specified
     mutable bool m_xmlDataLoaded;
 };
 
-#endif // __kmimetype_p_h__
+#endif // KMIMETYPE_P_H

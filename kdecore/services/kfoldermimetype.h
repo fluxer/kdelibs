@@ -30,17 +30,15 @@ class KFolderMimeTypePrivate;
  * Folder mime type. Handles the .directory file inside a folder, which modifies
  * the comment and icon for this folder.
  * @short Mimetype for a folder (inode/directory)
+ * @todo merge into KMimeType
  */
 class KDECORE_EXPORT KFolderMimeType : public KMimeType
 {
-    Q_DECLARE_PRIVATE( KFolderMimeType )
+    Q_DECLARE_PRIVATE(KFolderMimeType)
 
 public:
     /** \internal */
-    KFolderMimeType( const QString& fullpath, const QString& name, const QString& comment );
-
-    /** \internal */
-    KFolderMimeType( QDataStream& str, int offset );
+    KFolderMimeType(const QString &fullpath, const QString &name, const QString &comment);
 
     /** Destructor. */
     ~KFolderMimeType();

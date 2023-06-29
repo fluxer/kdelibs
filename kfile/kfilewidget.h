@@ -32,6 +32,7 @@
 
 #include "kfile_export.h"
 #include "kabstractfilewidget.h"
+#include "kconfiggroup.h"
 
 class KJob;
 class KFileItem;

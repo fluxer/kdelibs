@@ -75,28 +75,22 @@ int KMimeTypeFactory::serviceOffersOffset(const QString& mimeTypeName)
 
 KMimeTypeFactory::MimeTypeEntry * KMimeTypeFactory::createEntry(int offset) const
 {
-   MimeTypeEntry *newEntry = 0;
+   MimeTypeEntry *newEntry = nullptr;
    KSycocaType type;
    QDataStream *str = KSycoca::self()->findEntry(offset, type);
    if (!str) return 0;
 
-   switch(type)
-   {
-     case KST_KMimeTypeEntry:
-         newEntry = new MimeTypeEntry(*str, offset);
-         break;
-
-      // Old, now unused
-     case KST_KMimeType:
-     case KST_KFolderMimeType:
-         return 0;
-
-     default:
-        kError(7011) << "KMimeTypeFactory: unexpected object entry in KSycoca database (type=" << int(type) << ")";
-        break;
+   switch(type) {
+        case KST_KMimeTypeEntry: {
+            newEntry = new MimeTypeEntry(*str, offset);
+            break;
+        }
+        default: {
+            kError(7011) << "KMimeTypeFactory: unexpected object entry in KSycoca database (type=" << int(type) << ")";
+            break;
+        }
    }
-   if (newEntry && !newEntry->isValid())
-   {
+   if (newEntry && !newEntry->isValid()) {
       kError(7011) << "KMimeTypeFactory: corrupt object in KSycoca database!\n";
       delete newEntry;
       newEntry = 0;
