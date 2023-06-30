@@ -52,14 +52,14 @@ public:
     /**
      * @param parent parent qobject
      */
-    explicit KDirModel( QObject* parent = 0 );
+    explicit KDirModel(QObject *parent = nullptr);
     ~KDirModel();
 
     /**
      * Set the directory lister to use by this model, instead of the default KDirLister created internally.
      * The model takes ownership.
      */
-    void setDirLister( KDirLister* dirLister );
+    void setDirLister(KDirLister* dirLister);
 
     /**
      * Return the directory lister used by this model.
@@ -69,17 +69,17 @@ public:
     /**
      * Return the fileitem for a given index. This is O(1), i.e. fast.
      */
-    KFileItem itemForIndex( const QModelIndex& index ) const;
+    KFileItem itemForIndex(const QModelIndex &index) const;
 
     /**
      * Return the index for a given kfileitem. This can be slow.
      */
-    QModelIndex indexForItem( const KFileItem& ) const;
+    QModelIndex indexForItem(const KFileItem &item) const;
 
     /**
      * Return the index for a given url. This can be slow.
      */
-    QModelIndex indexForUrl(const KUrl& url) const;
+    QModelIndex indexForUrl(const KUrl &url) const;
 
     /**
      * @short Lists subdirectories using fetchMore() as needed until the given @p url exists in the model.
@@ -94,7 +94,7 @@ public:
      * to the treeview in order to let it open that index.
      * @param url the url of a subdirectory of the directory model (or a file in a subdirectory)
      */
-    void expandToUrl(const KUrl& url);
+    void expandToUrl(const KUrl &url);
 
     /**
      * Notify the model that the item at this index has changed.
@@ -102,7 +102,7 @@ public:
      * This makes the model emit its dataChanged signal at this index, so that views repaint.
      * Note that for most things (renaming, changing size etc.), KDirLister's signals tell the model already.
      */
-    void itemChanged( const QModelIndex& index );
+    void itemChanged(const QModelIndex &index);
 
     /***
      * Useful "default" columns. Views can use a proxy to have more control over this.
@@ -170,7 +170,7 @@ public:
     virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
     /// Reimplemented from QAbstractItemModel.
     /// Call this to set a new icon, e.g. a preview
-    virtual bool setData ( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole );
+    virtual bool setData ( const QModelIndex &index, const QVariant & value, int role = Qt::EditRole );
     /// Reimplemented from QAbstractItemModel. Not implemented. @see KDirSortFilterProxyModel
     virtual void sort ( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
@@ -185,7 +185,7 @@ public:
      * @return the list @p urls without parented urls inside.
      * @since 4.2
      */
-    static KUrl::List simplifiedUrlList( const KUrl::List & urls );
+    static KUrl::List simplifiedUrlList( const KUrl::List &urls);
 
     /**
      * This emits the needSequenceIcon signal, requesting another sequence icon
@@ -198,7 +198,7 @@ public:
      *                                        For higher indices, arbitrary different meaningful icons will be generated.
      * @since 4.3
      */
-    void requestSequenceIcon(const QModelIndex& index, int sequenceIndex);
+    void requestSequenceIcon(const QModelIndex &index, int sequenceIndex);
 
     /**
      * Enable/Disable the displaying of an animated overlay that is shown for any destination
@@ -231,7 +231,7 @@ Q_SIGNALS:
      * Also emitted for the final file, if expandToUrl is called with a file
      * (for instance so that it can be selected).
      */
-    void expand(const QModelIndex& index);
+    void expand(const QModelIndex &index);
     /**
      * Emitted when another icon sequence index is requested
      * @param index Index of the item that should get another icon
@@ -241,18 +241,18 @@ Q_SIGNALS:
      *                                        If no meaningful alternative icons can be generated, this should be ignored.
      * @since 4.3
      */
-    void needSequenceIcon(const QModelIndex& index, int sequenceIndex);
+    void needSequenceIcon(const QModelIndex &index, int sequenceIndex);
 
 private:
     friend class KDirModelPrivate;
     KDirModelPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void _k_slotNewItems(const KUrl&, const KFileItemList&) )
-    Q_PRIVATE_SLOT( d, void _k_slotDeleteItems(const KFileItemList&) )
-    Q_PRIVATE_SLOT( d, void _k_slotRefreshItems(const QList<QPair<KFileItem, KFileItem> >&) )
-    Q_PRIVATE_SLOT( d, void _k_slotClear() )
-    Q_PRIVATE_SLOT( d, void _k_slotRedirection(const KUrl&, const KUrl&) )
-    Q_PRIVATE_SLOT( d, void _k_slotJobUrlsChanged(const QStringList&))
+    Q_PRIVATE_SLOT(d, void _k_slotAddedItems(const KFileItemList &))
+    Q_PRIVATE_SLOT(d, void _k_slotDeleteItems(const KFileItemList &))
+    Q_PRIVATE_SLOT(d, void _k_slotRefreshItems(const QList<QPair<KFileItem, KFileItem> > &))
+    Q_PRIVATE_SLOT(d, void _k_slotClear())
+    Q_PRIVATE_SLOT(d, void _k_slotRedirection(const KUrl &))
+    Q_PRIVATE_SLOT(d, void _k_slotJobUrlsChanged(const QStringList &))
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDirModel::DropsAllowed)

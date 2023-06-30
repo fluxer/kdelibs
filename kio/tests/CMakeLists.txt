@@ -40,14 +40,12 @@ KIO_EXECUTABLE_TESTS(
     kruntest
     kioslavetest
     speed
-    kdirlistertest_gui
     previewtest
     kionetrctest
     kpropsdlgtest
     kmfitest
     ksycocaupdatetest
     netaccesstest
-    kdirmodeltest_gui
     kmimetypechoosertest_gui
     kurlrequestertest
     kopenwithtest

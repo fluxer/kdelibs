@@ -211,17 +211,6 @@ void DeleteJobPrivate::statNextSrc()
         // Stat it
         state = DELETEJOB_STATE_STATING;
 
-        // Fast path for KFileItems in directory views
-        while(m_currentStat != m_srcList.end()) {
-            m_currentURL = (*m_currentStat);
-            const KFileItem cachedItem = KDirLister::cachedItemForUrl(m_currentURL);
-            if (cachedItem.isNull())
-                break;
-            //kDebug(7007) << "Found cached info about" << m_currentURL << "isDir=" << cachedItem.isDir() << "isLink=" << cachedItem.isLink();
-            currentSourceStated(cachedItem.isDir(), cachedItem.isLink());
-            ++m_currentStat;
-        }
-
         // Hook for unit test to disable the fast path.
         if (!kio_resolve_local_urls) {
 

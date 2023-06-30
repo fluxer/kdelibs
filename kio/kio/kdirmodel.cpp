@@ -143,11 +143,11 @@ public:
         delete m_rootNode;
     }
 
-    void _k_slotNewItems(const KUrl& directoryUrl, const KFileItemList&);
+    void _k_slotAddedItems(const KFileItemList&);
     void _k_slotDeleteItems(const KFileItemList&);
     void _k_slotRefreshItems(const QList<QPair<KFileItem, KFileItem> >&);
     void _k_slotClear();
-    void _k_slotRedirection(const KUrl& oldUrl, const KUrl& newUrl);
+    void _k_slotRedirection(const KUrl& newUrl);
     void _k_slotJobUrlsChanged(const QStringList& urlList);
 
     void clear() {
@@ -348,16 +348,16 @@ void KDirModel::setDirLister(KDirLister* dirLister)
     }
     d->m_dirLister = dirLister;
     d->m_dirLister->setParent(this);
-    connect( d->m_dirLister, SIGNAL(itemsAdded(KUrl,KFileItemList)),
-             this, SLOT(_k_slotNewItems(KUrl,KFileItemList)) );
+    connect( d->m_dirLister, SIGNAL(itemsAdded(KFileItemList)),
+             this, SLOT(_k_slotAddedItems(KFileItemList)) );
     connect( d->m_dirLister, SIGNAL(itemsDeleted(KFileItemList)),
              this, SLOT(_k_slotDeleteItems(KFileItemList)) );
     connect( d->m_dirLister, SIGNAL(refreshItems(QList<QPair<KFileItem,KFileItem> >)),
              this, SLOT(_k_slotRefreshItems(QList<QPair<KFileItem,KFileItem> >)) );
     connect( d->m_dirLister, SIGNAL(clear()),
              this, SLOT(_k_slotClear()) );
-    connect(d->m_dirLister, SIGNAL(redirection(KUrl,KUrl)),
-            this, SLOT(_k_slotRedirection(KUrl,KUrl)));
+    connect(d->m_dirLister, SIGNAL(redirection(KUrl)),
+            this, SLOT(_k_slotRedirection(KUrl)));
 }
 
 KDirLister* KDirModel::dirLister() const
@@ -365,8 +365,9 @@ KDirLister* KDirModel::dirLister() const
     return d->m_dirLister;
 }
 
-void KDirModelPrivate::_k_slotNewItems(const KUrl& directoryUrl, const KFileItemList& items)
+void KDirModelPrivate::_k_slotAddedItems(const KFileItemList& items)
 {
+    const KUrl directoryUrl = m_dirLister->url();
     //kDebug(7008) << "directoryUrl=" << directoryUrl;
 
     KDirModelNode* result = nodeForUrl(directoryUrl); // O(depth)
@@ -589,8 +590,9 @@ void KDirModelPrivate::_k_slotRefreshItems(const QList<QPair<KFileItem, KFileIte
 
 // Called when a kioslave redirects (e.g. smb:/Workgroup -> smb://workgroup)
 // and when renaming a directory.
-void KDirModelPrivate::_k_slotRedirection(const KUrl& oldUrl, const KUrl& newUrl)
+void KDirModelPrivate::_k_slotRedirection(const KUrl& newUrl)
 {
+    const KUrl oldUrl = m_dirLister->url();
     KDirModelNode* node = nodeForUrl(oldUrl);
     if (!node)
         return;

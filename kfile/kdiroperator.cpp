@@ -220,7 +220,7 @@ public:
     void _k_slotToggleDirsFirst();
     void _k_slotToggleIgnoreCase();
     void _k_slotStarted();
-    void _k_slotProgress(int);
+    void _k_slotProgress(ulong);
     void _k_slotShowProgress();
     void _k_slotIOFinished();
     void _k_slotCanceled();
@@ -553,7 +553,7 @@ bool KDirOperator::isSelected(const KFileItem &item) const
 
 int KDirOperator::numDirs() const
 {
-    return (d->dirLister == 0) ? 0 : d->dirLister->directories().count();
+    return (d->dirLister == 0) ? 0 : 1;
 }
 
 int KDirOperator::numFiles() const
@@ -1016,7 +1016,7 @@ void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
 void KDirOperator::updateDir()
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    d->dirLister->emitChanges();
+    d->dirLister->updateDirectory();
     QApplication::restoreOverrideCursor();
 }
 
@@ -1576,16 +1576,15 @@ void KDirOperator::setDirLister(KDirLister *lister)
     d->dirLister->setMainWindow(mainWidget);
     kDebug(kfile_area) << "mainWidget=" << mainWidget;
 
-    connect(d->dirLister, SIGNAL(percent(int)),
-            SLOT(_k_slotProgress(int)));
-    connect(d->dirLister, SIGNAL(started(KUrl)), SLOT(_k_slotStarted()));
+    connect(d->dirLister, SIGNAL(percent(ulong)),
+            SLOT(_k_slotProgress(ulong)));
+    connect(d->dirLister, SIGNAL(started()), SLOT(_k_slotStarted()));
     connect(d->dirLister, SIGNAL(completed()), SLOT(_k_slotIOFinished()));
     connect(d->dirLister, SIGNAL(canceled()), SLOT(_k_slotCanceled()));
     connect(d->dirLister, SIGNAL(redirection(KUrl)),
             SLOT(_k_slotRedirected(KUrl)));
-    connect(d->dirLister, SIGNAL(newItems(KFileItemList)), SLOT(_k_slotItemsChanged()));
+    connect(d->dirLister, SIGNAL(itemsAdded(KFileItemList)), SLOT(_k_slotItemsChanged()));
     connect(d->dirLister, SIGNAL(itemsDeleted(KFileItemList)), SLOT(_k_slotItemsChanged()));
-    connect(d->dirLister, SIGNAL(itemsFilteredByMime(KFileItemList)), SLOT(_k_slotItemsChanged()));
     connect(d->dirLister, SIGNAL(clear()), SLOT(_k_slotItemsChanged()));
 }
 
@@ -2168,7 +2167,7 @@ void KDirOperator::Private::_k_slotShowProgress()
     QApplication::flush();
 }
 
-void KDirOperator::Private::_k_slotProgress(int percent)
+void KDirOperator::Private::_k_slotProgress(ulong percent)
 {
     progressBar->setValue(percent);
     // we have to redraw this as fast as possible

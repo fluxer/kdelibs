@@ -724,17 +724,6 @@ void CopyJobPrivate::statCurrentSrc()
             return;
         }
 
-        // Let's see if we can skip stat'ing, for the case where a directory view has the info already
-        const KFileItem cachedItem = KDirLister::cachedItemForUrl(m_currentSrcURL);
-        KIO::UDSEntry entry;
-        if (!cachedItem.isNull()) {
-            entry = cachedItem.entry();
-            if (destinationState != DEST_DOESNT_EXIST) { // only resolve src if we could resolve dest (#218719)
-                bool dummyIsLocal;
-                m_currentSrcURL = cachedItem.mostLocalUrl(dummyIsLocal); // #183585
-            }
-        }
-
         if (m_mode == CopyJob::Move && (
                 // Don't go renaming right away if we need a stat() to find out the destination filename
                 KProtocolManager::fileNameUsedForCopying(m_currentSrcURL) == KProtocolInfo::FromUrl ||
@@ -773,15 +762,6 @@ void CopyJobPrivate::statCurrentSrc()
         }
 
         m_bOnlyRenames = false;
-
-        // Testing for entry.count()>0 here is not good enough; KFileItem inserts
-        // entries for UDS_USER and UDS_GROUP even on initially empty UDSEntries (#192185)
-        if (entry.contains(KIO::UDSEntry::UDS_NAME)) {
-            kDebug(7007) << "fast path! found info about" << m_currentSrcURL << "in KDirLister";
-            // sourceStated(entry, m_currentSrcURL); // don't recurse, see #319747, use queued invokeMethod instead
-            QMetaObject::invokeMethod(q, "sourceStated", Qt::QueuedConnection, Q_ARG(KIO::UDSEntry, entry), Q_ARG(KUrl, m_currentSrcURL));
-            return;
-        }
 
         // Stat the next src url
         Job * job = KIO::stat( m_currentSrcURL, StatJob::SourceSide, 2, KIO::HideProgressInfo );

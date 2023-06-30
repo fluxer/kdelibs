@@ -438,7 +438,7 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
         m_previewShown = false;
     } else {
         KDirModel* dirModel = m_dirModel.data();
-        connect(dirModel->dirLister(), SIGNAL(newItems(KFileItemList)),
+        connect(dirModel->dirLister(), SIGNAL(itemsAdded(KFileItemList)),
                 q, SLOT(updateIcons(KFileItemList)));
         connect(dirModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 q, SLOT(updateIcons(QModelIndex,QModelIndex)));
@@ -619,11 +619,9 @@ void KFilePreviewGenerator::Private::addToPreviewQueue(const KFileItem& item, co
     KUrl itemParentDir(item.url());
     itemParentDir.setPath(itemParentDir.directory());
 
-    foreach (const KUrl& dir, dirModel->dirLister()->directories()) {
-        if (dir == itemParentDir || !dir.hasPath()) {
-            isOldPreview = false;
-            break;
-        }
+    const KUrl dirUrl = dirModel->dirLister()->url();
+    if (dirUrl == itemParentDir || !dirUrl.hasPath()) {
+        isOldPreview = false;
     }
     if (isOldPreview) {
         return;
@@ -683,13 +681,8 @@ void KFilePreviewGenerator::Private::updateCutItems()
     DataChangeObtainer obt(this);
     clearCutItemsCache();
 
-    KFileItemList items;
     KDirLister* dirLister = dirModel->dirLister();
-    const KUrl::List dirs = dirLister->directories();
-    foreach (const KUrl& url, dirs) {
-        items << dirLister->itemsForDir(url);
-    }
-    applyCutItemEffect(items);
+    applyCutItemEffect(dirLister->items());
 }
 
 void KFilePreviewGenerator::Private::clearCutItemsCache()

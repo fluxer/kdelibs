@@ -22,12 +22,12 @@
 #define KDIRLISTER_H
 
 #include "kfileitem.h"
-#include "kdirnotify.h"
-
 #include <kurl.h>
 
 class KJob;
 namespace KIO { class Job; class ListJob; }
+
+class KDirListerPrivate;
 
 /**
  * @short Helper class for the kiojob used to list and update a directory.
@@ -117,17 +117,6 @@ public:
     virtual void stop();
 
     /**
-     * Stop listing the given directory.
-     *
-     * Emits canceled() if the killed job was the last running one.
-     * Emits canceled( const KUrl& ) for the killed job if
-     * there are at least two directories being watched by KDirLister.
-     * No signal is emitted if there was no job running for @p url.
-     * @param url the directory URL
-     */
-    virtual void stop(const KUrl &url);
-
-    /**
      * @return true if the "delayed mimetypes" feature was enabled
      * @see setDelayedMimeTypes
      */
@@ -143,7 +132,6 @@ public:
      */
     void setDelayedMimeTypes(bool delayedMimeTypes);
 
-
     /**
      * Checks whether KDirWatch will automatically update directories. This is
      * enabled by default.
@@ -155,6 +143,7 @@ public:
      * Enable/disable automatic directory updating, when a directory changes
      * (using KDirWatch).
      * @param enable true to enable, false to disable
+     * @note Call updateDirectory() afterwards for the changes to take effect.
      */
     virtual void setAutoUpdate(bool enable);
 
@@ -176,7 +165,7 @@ public:
      *               top-level
      * @see autoErrorHandlingEnabled()
      */
-    void setAutoErrorHandlingEnabled( bool enable, QWidget *parent );
+    void setAutoErrorHandlingEnabled(bool enable, QWidget *parent);
 
     /**
      * Checks whether hidden files (files beginning with a dot) will be
@@ -189,10 +178,10 @@ public:
 
     /**
      * Changes the "is viewing dot files" setting.
-     * You need to call emitChanges() afterwards.
      * By default this option is disabled (hidden files will not be shown).
      * @param showDotFiles true to enable showing hidden files, false to
      *        disable
+     * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see showingDotFiles()
      */
     virtual void setShowingDotFiles(bool showDotFiles);
@@ -207,9 +196,9 @@ public:
 
     /**
      * Call this to list only directories.
-     * You need to call emitChanges() afterwards.
      * By default this option is disabled (all files will be shown).
      * @param dirsOnly true to list only directories
+     * @note Call updateDirectory() afterwards for the changes to take effect.
      */
     virtual void setDirOnlyMode(bool dirsOnly);
 
@@ -224,33 +213,15 @@ public:
     KUrl url() const;
 
     /**
-     * Returns all URLs that are listed by this KDirLister. This is only
-     * useful if you called openUrl() with OpenUrlFlag::Keep, as it happens in a
-     * treeview, for example. (Note that the base url is included in the list
-     * as well, of course.)
-     *
-     * @return the list of all listed URLs
-     */
-    KUrl::List directories() const;
-
-    /**
-     * Actually emit the changes made with setShowingDotFiles, setDirOnlyMode,
-     * setNameFilter and setMimeFilter.
-     */
-    virtual void emitChanges();
-
-    /**
-     * Update the directory @p url. This method causes KDirLister to _only_ emit
+     * Update the directory. This method causes KDirLister to _only_ emit
      * the items of @p url that actually changed compared to the current state in the
      * cache and updates the cache.
      *
      * The current implementation calls updateDirectory automatically for
      * local files, using KDirWatch (if autoUpdate() is true), but it might be
      * useful to force an update manually.
-     *
-     * @param url the directory URL
      */
-    virtual void updateDirectory(const KUrl &url);
+    virtual void updateDirectory();
 
     /**
      * Returns true if no io operation is currently in progress.
@@ -285,10 +256,9 @@ public:
      *
      * You can set more than one filter by separating them with whitespace, e.g
      * "*.cpp *.h".
-     * Note: the directory is not automatically reloaded.
-     * You need to call emitChanges() afterwards.
      *
      * @param filter the new filter, QString() to disable filtering
+     * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see matchesFilter
      */
     virtual void setNameFilter(const QString &filter);
@@ -306,36 +276,18 @@ public:
      * NOTE: setting the filter does not automatically reload directory.
      * Also calling this function will not affect any named filter already set.
      *
-     * You need to call emitChanges() afterwards.
-     *
      * @param mimeList a list of mime-types.
      *
+     * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see clearMimeFilter
      * @see matchesMimeFilter
      */
     virtual void setMimeFilter(const QStringList &mimeList);
 
     /**
-     * Filtering should be done with KFileFilter. This will be implemented in a later
-     * revision of KDirLister. This method may be removed then.
-     *
-     * Set mime-based exclude filter to only list items not matching the given mimetypes
-     *
-     * NOTE: setting the filter does not automatically reload directory.
-     * Also calling this function will not affect any named filter already set.
-     *
-     * @param mimeList a list of mime-types.
-     * @see clearMimeFilter
-     * @see matchesMimeFilter
-     * @internal
-     */
-    void setMimeExcludeFilter(const QStringList &mimeList);
-
-    /**
      * Clears the mime based filter.
      *
-     * You need to call emitChanges() afterwards.
-     *
+     * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see setMimeFilter
      */
     virtual void clearMimeFilter();
@@ -377,8 +329,8 @@ public:
     QWidget* mainWindow();
 
     /**
-     * Used by items() and itemsForDir() to specify whether you want
-     * all items for a directory or just the filtered ones.
+     * Used by items() to specify whether you want all items for a directory
+     * or just the filtered ones.
      */
     enum WhichItems
     {
@@ -403,49 +355,13 @@ public:
      */
     KFileItemList items(WhichItems which = FilteredItems) const;
 
-    /**
-     * Returns the items listed for the given @p dir.
-     * This method will NOT start listing @p dir, you should only call
-     * this when receiving the finished() signal.
-     *
-     * The items in the KFileItemList are copies of the items used
-     * by KDirLister.
-     *
-     * @param dir specifies the url for which the items should be returned. This
-     *            is only useful if you use KDirLister with multiple URLs
-     *            i.e. using bool OpenUrlFlag::Keep in openUrl().
-     * @param which specifies whether the returned list will contain all entries
-     *              or only the ones that passed the nameFilter, mimeFilter, etc.
-     *              Note that the latter causes iteration over all the items,
-     *              filtering them. If this is too slow for you, use the
-     * newItems() signal, sending out filtered items in chunks.
-     * @return the items listed for @p dir.
-     */
-    KFileItemList itemsForDir(const KUrl& dir, WhichItems which = FilteredItems ) const;
-
-    /**
-     * Return the KFileItem for the given URL, if we listed it recently
-     * and it's still in the cache - which is always the case if a directory
-     * view is currently showing this item. If not, then it might be in the
-     * cache, or it might not, in which case you get a null KFileItem.
-     * If you really need a KFileItem for this URL in all cases, then use
-     * KIO::stat() instead.
-     *
-     * @since 4.2
-     */
-    static KFileItem cachedItemForUrl(const KUrl &url);
-
 Q_SIGNALS:
     /**
-     * Tell the view that we started to list @p url. NOTE: this does _not_ imply that there
+     * Tell the view that we started to list the url. NOTE: this does _not_ imply that there
      * is really a job running! I.e. KDirLister::jobs() may return an empty list. In this case
      * the items are taken from the cache.
-     *
-     * The view knows that openUrl should start it, so it might seem useless,
-     * but the view also needs to know when an automatic update happens.
-     * @param url the URL to list
      */
-    void started(const KUrl & url);
+    void started();
 
     /**
      * Tell the view that listing is finished. There are no jobs running anymore.
@@ -453,23 +369,9 @@ Q_SIGNALS:
     void completed();
 
     /**
-     * Tell the view that the listing of the directory @p url is finished.
-     * There might be other running jobs left.
-     * @param url the directory URL
-     */
-    void completed(const KUrl &url);
-
-    /**
      * Tell the view that the user canceled the listing. No running jobs are left.
      */
     void canceled();
-
-    /**
-     * Tell the view that the listing of the directory @p url was canceled.
-     * There might be other running jobs left.
-     * @param url the directory URL
-     */
-    void canceled(const KUrl &url);
 
     /**
      * Signal a redirection.
@@ -480,31 +382,10 @@ Q_SIGNALS:
     void redirection(const KUrl &url);
 
     /**
-     * Signal a redirection.
-     * @param oldUrl the original URL
-     * @param newUrl the new URL
-     */
-    void redirection(const KUrl &oldUrl, const KUrl &newUrl);
-
-    /**
      * Signal to clear all items.
      * Make sure to connect to this signal to avoid doubled items.
      */
     void clear();
-
-    /**
-     * Signal to empty the directory @p url.
-     * It is only emitted if the lister is holding more than one directory.
-     * @param url the directory that will be emptied
-     */
-    void clear(const KUrl &url);
-
-    /**
-    * Signal new items.
-     *
-     * @param items a list of new items
-     */
-    void newItems(const KFileItemList &items);
 
     /**
      * Signal that new items were found during directory listing.
@@ -514,13 +395,7 @@ Q_SIGNALS:
      * @param items a list of new items
      * @since 4.2
      */
-    void itemsAdded(const KUrl &directoryUrl, const KFileItemList &items);
-
-    /**
-     * Send a list of items filtered-out by mime-type.
-     * @param items the list of filtered items
-     */
-    void itemsFilteredByMime(const KFileItemList &items);
+    void itemsAdded(const KFileItemList &items);
 
     /**
      * Signal that items have been deleted.
@@ -552,25 +427,25 @@ Q_SIGNALS:
      * This allows using a progress bar very easily. (see QProgressBar)
      * @param percent the progress in percent
      */
-    void percent(int percent);
+    void percent(ulong percent);
 
     /**
      * Emitted when we know the size of the jobs.
      * @param size the total size in bytes
      */
-    void totalSize(KIO::filesize_t size);
+    void totalSize(qulonglong size);
 
     /**
      * Regularly emitted to show the progress of this KDirLister.
      * @param size the processed size in bytes
      */
-    void processedSize(KIO::filesize_t size);
+    void processedSize(qulonglong size);
 
     /**
      * Emitted to display information about the speed of the jobs.
      * @param bytes_per_second the speed in bytes/s
      */
-    void speed(int bytes_per_second);
+    void speed(ulong bytes_per_second);
 
 protected:
    /**
@@ -623,21 +498,26 @@ protected:
     virtual void handleError(KIO::Job *job);
 
 private:
-    class Private;
-    Private* const d;
-    friend class Private;
-
-    friend class KDirListerCache;
-    friend struct KDirListerCacheDirectoryData;
+    KDirListerPrivate* const d;
+    friend KDirListerPrivate;
 
     Q_PRIVATE_SLOT(d, void _k_slotInfoMessage(KJob *job, const QString &msg))
-    Q_PRIVATE_SLOT(d, void _k_slotPercent(KJob *job, unsigned long value))
+    Q_PRIVATE_SLOT(d, void _k_slotPercent(KJob *job, ulong value))
     Q_PRIVATE_SLOT(d, void _k_slotTotalSize(KJob *job, qulonglong value))
     Q_PRIVATE_SLOT(d, void _k_slotProcessedSize(KJob *job, qulonglong value))
-    Q_PRIVATE_SLOT(d, void _k_slotSpeed(KJob *job, unsigned long value))
+    Q_PRIVATE_SLOT(d, void _k_slotSpeed(KJob *job, ulong value))
+
+    Q_PRIVATE_SLOT(d, void _k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &entries));
+    Q_PRIVATE_SLOT(d, void _k_slotRedirection(KIO::Job *job, const KUrl &url));
+    Q_PRIVATE_SLOT(d, void _k_slotResult(KJob *job));
+
+    Q_PRIVATE_SLOT(d, void _k_slotDirty(const QString &path));
+    Q_PRIVATE_SLOT(d, void _k_slotFileRenamed(const QString &path, const QString &path2));
+    Q_PRIVATE_SLOT(d, void _k_slotFilesAdded(const QString &path));
+    Q_PRIVATE_SLOT(d, void _k_slotFilesChanged(const QStringList &paths));
+    Q_PRIVATE_SLOT(d, void _k_slotFilesRemoved(const QStringList &paths));
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDirLister::OpenUrlFlags)
 
-#endif
-
+#endif // KDIRLISTER_H

@@ -49,7 +49,6 @@
 7001        kio (KDirWatch)
 7002        kio (Slave)
 7003        kio (KDirLister)
-7004        kio (KDirListerCache)
 7006        kio (Scheduler)
 7007        kio (KIOJob)
 7008        kio (KDirModel)

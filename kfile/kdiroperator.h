@@ -895,7 +895,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotToggleDirsFirst() )
     Q_PRIVATE_SLOT( d, void _k_slotToggleIgnoreCase() )
     Q_PRIVATE_SLOT( d, void _k_slotStarted() )
-    Q_PRIVATE_SLOT( d, void _k_slotProgress(int) )
+    Q_PRIVATE_SLOT( d, void _k_slotProgress(ulong) )
     Q_PRIVATE_SLOT( d, void _k_slotShowProgress() )
     Q_PRIVATE_SLOT( d, void _k_slotIOFinished() )
     Q_PRIVATE_SLOT( d, void _k_slotCanceled() )
