@@ -230,12 +230,10 @@ KDirLister::~KDirLister()
 bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
 {
     Q_UNUSED(flags);
-    kDebug(7003) << "opening" << url << flags;
-    if (!url.isValid()) {
-        // this happens a lot, invalid starting directory as URL
-        return false;
-    }
+
     stop();
+
+    kDebug(7003) << "opening" << url << flags;
     d->url = url;
     d->allItems.clear();
     if (!d->filteredItems.isEmpty()) {
@@ -244,6 +242,10 @@ bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
     }
     emit clear();
     if (d->autoErrorHandling) {
+        if (!url.isValid()) {
+            KMessageBox::error(d->window, i18n("Malformed URL\n%1", url.prettyUrl()));
+            return false;
+        }
         if (!KProtocolManager::supportsListing(url)) {
             KMessageBox::error(d->window, i18n("URL cannot be listed\n%1", url.prettyUrl()));
             return false;
