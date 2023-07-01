@@ -19,12 +19,14 @@
 #include "kdirlister.h"
 #include "kdirlister_p.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kio/jobuidelegate.h>
-#include <kmessagebox.h>
+#include "klocale.h"
+#include "kio/jobuidelegate.h"
+#include "kmessagebox.h"
 #include "kprotocolmanager.h"
-#include <QDirIterator>
+#include "kdesktopfile.h"
+#include "kdebug.h"
+
+#include <QFileInfo>
 
 KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     : autoUpdate(true),
@@ -98,6 +100,15 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
             kDebug(7003) << "filtered entry" << item;
             filteredItems.append(item);
         }
+
+        const QString itempath = item.localPath();
+        if (KDesktopFile::isDesktopFile(itempath)) {
+            KDesktopFile desktopfile(itempath);
+            const KUrl desktopurl = desktopfile.readUrl();
+            if (desktopurl.isValid()) {
+                m_desktopUrls.append(desktopurl);
+            }
+        }
     }
 }
 
@@ -118,34 +129,49 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     emit m_parent->completed();
 
     if (autoUpdate) {
-        if (url.isLocalFile()) {
-            kDebug(7003) << "watching" << url.toLocalFile();
-            dirWatch = new KDirWatch(m_parent);
-            dirWatch->addDir(url.toLocalFile());
-            m_parent->connect(
-                dirWatch, SIGNAL(dirty(QString)),
-                m_parent, SLOT(_k_slotDirty(QString))
-            );
-        } else {
-            kDebug(7003) << "watching remote" << url;
-            dirNotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), m_parent);
-            m_parent->connect(
-                dirNotify, SIGNAL(FileRenamed(QString,QString)),
-                m_parent, SLOT(_k_slotFileRenamed(QString,QString))
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FilesAdded(QString)),
-                m_parent, SLOT(_k_slotFilesAdded(QString))
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FilesChanged(QStringList)),
-                m_parent, SLOT(_k_slotFilesChanged(QStringList))
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FilesRemoved(QStringList)),
-                m_parent, SLOT(_k_slotFilesRemoved(QStringList))
-            );
-            org::kde::KDirNotify::emitEnteredDirectory(url.url());
+        const KUrl::List towatch = KUrl::List()
+            << url
+            << m_desktopUrls;
+        foreach (const KUrl &it, towatch) {
+            if (it.isLocalFile()) {
+                const QString localfile = it.toLocalFile();
+                kDebug(7003) << "watching" << localfile;
+                if (!dirWatch) {
+                    dirWatch = new KDirWatch(m_parent);
+                    m_parent->connect(
+                        dirWatch, SIGNAL(dirty(QString)),
+                        m_parent, SLOT(_k_slotDirty(QString))
+                    );
+                }
+                const QFileInfo localinfo(localfile);
+                if (localinfo.isDir()) {
+                    dirWatch->addDir(localfile);
+                } else {
+                    dirWatch->addFile(localfile);
+                }
+            } else {
+                kDebug(7003) << "watching remote" << it;
+                if (!dirNotify) {
+                    dirNotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), m_parent);
+                    m_parent->connect(
+                        dirNotify, SIGNAL(FileRenamed(QString,QString)),
+                        m_parent, SLOT(_k_slotFileRenamed(QString,QString))
+                    );
+                    m_parent->connect(
+                        dirNotify, SIGNAL(FilesAdded(QString)),
+                        m_parent, SLOT(_k_slotFilesAdded(QString))
+                    );
+                    m_parent->connect(
+                        dirNotify, SIGNAL(FilesChanged(QStringList)),
+                        m_parent, SLOT(_k_slotFilesChanged(QStringList))
+                    );
+                    m_parent->connect(
+                        dirNotify, SIGNAL(FilesRemoved(QStringList)),
+                        m_parent, SLOT(_k_slotFilesRemoved(QStringList))
+                    );
+                    org::kde::KDirNotify::emitEnteredDirectory(url.url());
+                }
+            }
         }
     }
 }
@@ -165,8 +191,17 @@ void KDirListerPrivate::_k_slotDirty(const QString &path)
 void KDirListerPrivate::_k_slotFileRenamed(const QString &path, const QString &path2)
 {
     kDebug(7003) << "file renamed" << path << path2;
+    const KUrl pathurl(path);
+
     foreach (const KFileItem &it, filteredItems) {
-        if (it.url() == KUrl(path)) {
+        if (it.url() == pathurl) {
+            _k_slotUpdateDirectory();
+            return;
+        }
+    }
+
+    foreach (const KUrl &it, m_desktopUrls) {
+        if (it == pathurl) {
             _k_slotUpdateDirectory();
             break;
         }
@@ -177,9 +212,18 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
 {
     kDebug(7003) << "file added" << path;
     const KUrl pathurl(path);
+
     const KUrl pathdirectory = pathurl.directory();
     if (pathdirectory == url || pathurl == url) {
         _k_slotUpdateDirectory();
+        return;
+    }
+
+    foreach (const KUrl &it, m_desktopUrls) {
+        if (it == pathdirectory || it == pathurl) {
+            _k_slotUpdateDirectory();
+            break;
+        }
     }
 }
 
@@ -187,8 +231,17 @@ void KDirListerPrivate::_k_slotFilesChanged(const QStringList &paths)
 {
     kDebug(7003) << "files changed" << paths;
     foreach (const QString &it, paths) {
+        const KUrl pathurl(it);
+
         foreach (const KFileItem &it2, filteredItems) {
-            if (it2.url() == KUrl(it)) {
+            if (it2.url() == pathurl) {
+                _k_slotUpdateDirectory();
+                return;
+            }
+        }
+
+        foreach (const KUrl &it2, m_desktopUrls) {
+            if (it2 == pathurl) {
                 _k_slotUpdateDirectory();
                 break;
             }

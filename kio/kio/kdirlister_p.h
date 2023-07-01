@@ -73,6 +73,7 @@ public:
 
 private:
     KDirLister *m_parent;
+    KUrl::List m_desktopUrls;
 };
 
 #endif // KDIRLISTER_P_H
