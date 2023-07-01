@@ -28,24 +28,16 @@ namespace KIO { class Job; class ListJob; }
 class KDirListerPrivate;
 
 /**
- * @short Helper class for the kiojob used to list and update a directory.
+ * This clas lists and emits updates for directory. It is independent from the
+ * graphical representation of the dir (icon container, tree view, ...), it
+ * stores and emits the items as KFileItems.
  *
- * The dir lister deals with the kiojob used to list and update a directory
- * and has signals for the user of this class (e.g. konqueror view or
- * kdesktop) to create/destroy its items when asked.
- *
- * This class is independent from the graphical representation of the dir
- * (icon container, tree view, ...) and it stores the items (as KFileItems).
- *
- * Typical usage :
+ * Typical usage:
  * @li Create an instance.
- * @li Connect to at least update, clear, itemsAdded, and itemsDeleted.
- * @li Call openUrl - the signals will be called.
- * @li Reuse the instance when opening a new url (openUrl).
+ * @li Connect to at least clear, itemsAdded, and itemsDeleted.
+ * @li Call openUrl, signals will be emitted.
+ * @li Reuse the instance when opening a new URL (see openUrl).
  * @li Destroy the instance when not needed anymore (usually destructor).
- *
- * Advanced usage : call openUrl with OpenUrlFlag::Keep to list directories
- * without forgetting the ones previously read (e.g. for a tree view)
  *
  * @author Ivailo Monev <xakepa10@gmail.com>
  * @author Michael Brade <brade@kde.org>
@@ -66,15 +58,9 @@ public:
     {
         NoFlags = 0x0, ///< No additional flags specified.
 
-        Keep = 0x1,    ///< Previous directories aren't forgotten
-                       ///< (they are still watched by kdirwatch and their items
-                       ///< are kept for this KDirLister). This is useful for e.g.
-                       ///< a treeview.
+        Keep = 0x1,    ///< Deprecated, non-operational.
 
-        Reload = 0x2   ///< Indicates whether to use the cache or to reread
-                       ///< the directory from the disk.
-                       ///< Use only when opening a dir not yet listed by this lister
-                       ///< without using the cache. Otherwise use updateDirectory.
+        Reload = 0x2   ///< Deprecated, non-operational.
     };
     Q_DECLARE_FLAGS(OpenUrlFlags, OpenUrlFlag)
 
@@ -89,29 +75,25 @@ public:
     virtual ~KDirLister();
 
     /**
-     * Run the directory lister on the given url.
+     * Run the directory lister on the given URL.
      *
-     * This method causes KDirLister to emit _all_ the items of @p url, in any case.
-     * Depending on @p flags, either clear() or clear(const KUrl &) will be
-     * emitted first.
+     * This method causes KDirLister to emit _all_ the items of @p url, in any
+     * case. clear() will be emitted first for view models to remove all of
+     * their indexes for example.
      *
-     * The newItems() signal may be emitted more than once to supply you
-     * with KFileItems, up until the signal completed() is emitted
-     * (and isFinished() returns true).
+     * The itemsAdded() signal may be emitted once listing is done and then the
+     * completed() signal is emitted (and isFinished() returns true).
      *
      * @param url     the directory URL.
-     * @param flags   whether to keep previous directories, and whether to reload, see OpenUrlFlags
-     * @return true    if successful,
-     *         false   otherwise (e.g. invalid @p url)
+     * @param flags   see OpenUrlFlags
+     * @return true   if successful, false otherwise (e.g. if invalid @p url)
+     *                was passed.
      */
     virtual bool openUrl(const KUrl &url, OpenUrlFlags flags = NoFlags);
 
     /**
-     * Stop listing all directories currently being listed.
-     *
-     * Emits canceled() if there was at least one job running.
-     * Emits canceled( const KUrl& ) for each stopped job if
-     * there are at least two directories being watched by KDirLister.
+     * Stop listing the current directory URL. Emits canceled() if there was
+     * job running.
      */
     virtual void stop();
 
@@ -122,62 +104,56 @@ public:
     bool delayedMimeTypes() const;
 
     /**
-     * Delayed mimetypes feature:
      * If enabled, mime types will be fetched on demand, which leads to a
      * faster initial directory listing, where icons get progressively replaced
-     * with the correct one while KMimeTypeResolver is going through the items
-     * with unknown or imprecise mimetype (e.g. files with no extension or an
+     * with the correct one while KMimeType is going through the items with
+     * unknown or imprecise mimetype (e.g. files with no extension or an
      * unknown extension).
      */
     void setDelayedMimeTypes(bool delayedMimeTypes);
 
     /**
-     * Checks whether KDirWatch will automatically update directories. This is
-     * enabled by default.
      * @return true if KDirWatch is used to automatically update directories.
      */
     bool autoUpdate() const;
 
     /**
-     * Enable/disable automatic directory updating, when a directory changes
-     * (using KDirWatch).
+     * Enable/disable automatic directory updating, when a directory changes.
+     * This is enabled by default and even the URLs of .desktop files are being
+     * watched.
+     *
      * @param enable true to enable, false to disable
      * @note Call updateDirectory() afterwards for the changes to take effect.
      */
     virtual void setAutoUpdate(bool enable);
 
     /**
-     * Check whether auto error handling is enabled.
-     * If enabled, it will show an error dialog to the user when an
-     * error occurs. It is turned on by default.
      * @return true if auto error handling is enabled, false otherwise
      * @see setAutoErrorHandlingEnabled()
      */
     bool autoErrorHandlingEnabled() const;
 
     /**
-     * Enable or disable auto error handling is enabled.
-     * If enabled, it will show an error dialog to the user when an
-     * error occurs. It is turned on by default.
+     * Enable or disable auto error handling is enabled. If enabled, it will
+     * show an error dialog to the user when an error occurs. It is turned on
+     * by default.
+     *
      * @param enable true to enable auto error handling, false to disable
-     * @param parent the parent widget for the error dialogs, can be 0 for
-     *               top-level
+     * @param parent the parent widget for the error dialogs, can be null
      * @see autoErrorHandlingEnabled()
      */
     void setAutoErrorHandlingEnabled(bool enable, QWidget *parent);
 
     /**
-     * Checks whether hidden files (files beginning with a dot) will be
-     * shown.
-     * By default this option is disabled (hidden files will be not shown).
      * @return true if dot files are shown, false otherwise
      * @see setShowingDotFiles()
      */
     bool showingDotFiles() const;
 
     /**
-     * Changes the "is viewing dot files" setting.
-     * By default this option is disabled (hidden files will not be shown).
+     * Changes the "is viewing dot files" setting. By default this option is
+     * disabled (hidden files will not be shown).
+     *
      * @param showDotFiles true to enable showing hidden files, false to
      *        disable
      * @note Call updateDirectory() afterwards for the changes to take effect.
@@ -186,52 +162,40 @@ public:
     virtual void setShowingDotFiles(bool showDotFiles);
 
     /**
-     * Checks whether the KDirLister only lists directories or all
-     * files.
-     * By default this option is disabled (all files will be shown).
      * @return true if setDirOnlyMode(true) was called
      */
     bool dirOnlyMode() const;
 
     /**
-     * Call this to list only directories.
-     * By default this option is disabled (all files will be shown).
+     * Call this to list only directories. By default this option is disabled
+     * (both files and directories will be shown).
+     *
      * @param dirsOnly true to list only directories
      * @note Call updateDirectory() afterwards for the changes to take effect.
      */
     virtual void setDirOnlyMode(bool dirsOnly);
 
     /**
-     * Returns the top level URL that is listed by this KDirLister.
-     * It might be different from the one given with openUrl() if there was a
-     * redirection. If you called openUrl() with OpenUrlFlag::Keep this is the
-     * first url opened (e.g. in a treeview this is the root).
-     *
-     * @return the url used by this instance to list the files.
+     * @return the URL used by this instance to list the directory.
      */
     KUrl url() const;
 
     /**
-     * Update the directory. This method causes KDirLister to _only_ emit
-     * the items of @p url that actually changed compared to the current state in the
-     * cache and updates the cache.
-     *
-     * The current implementation calls updateDirectory automatically for
-     * local files, using KDirWatch (if autoUpdate() is true), but it might be
-     * useful to force an update manually.
+     * This method causes KDirLister to re-list the directory. It might be
+     * useful to force an update manually or in case automatic updates are
+     * disabled.
      */
     virtual void updateDirectory();
 
     /**
-     * Returns true if no io operation is currently in progress.
+     * Returns true if no listing operation is currently in progress.
      * @return true if finished, false otherwise
      */
     bool isFinished() const;
 
     /**
-     * Returns the file item of the URL.
+     * Returns the root item of the URL.
      *
-     * Can return an empty KFileItem.
      * @return the file item for url() itself (".")
      */
     KFileItem rootItem() const;
@@ -252,11 +216,10 @@ public:
 
     /**
      * Set a name filter to only list items matching this name, e.g. "*.cpp".
+     * More than one filter by separating them with whitespace, e.g
+     * "*.cpp *.h". By default the filter is empty.
      *
-     * You can set more than one filter by separating them with whitespace, e.g
-     * "*.cpp *.h".
-     *
-     * @param filter the new filter, QString() to disable filtering
+     * @param filter the new filter, empty QString() to disable filtering
      * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see matchesFilter
      */
@@ -264,18 +227,15 @@ public:
 
     /**
      * Returns the current name filter, as set via setNameFilter()
-     * @return the current name filter, can be QString() if filtering
-     *         is turned off
+     * @return the current name filter
      */
     QString nameFilter() const;
 
     /**
-     * Set mime-based filter to only list items matching the given mimetypes.
+     * Set MIME-based filter to only list items matching the given mimetypes.
+     * Calling this function will not affect any named filter already set.
      *
-     * NOTE: setting the filter does not automatically reload directory.
-     * Also calling this function will not affect any named filter already set.
-     *
-     * @param mimeList a list of mime-types.
+     * @param mimeList a list of MIME-types.
      *
      * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see clearMimeFilter
@@ -298,31 +258,27 @@ public:
     QStringList mimeFilters() const;
 
     /**
-     * Checks whether @p name matches a filter in the list of name filters.
-     * @return true if @p name matches a filter in the list,
-     * otherwise false.
+     * @return true if @p name matches a filter in the list, otherwise false.
      * @see setNameFilter
      */
     bool matchesFilter(const QString &name) const;
 
     /**
-     * Checks whether @p mime matches a filter in the list of mime types
      * @param mime the mimetype to find in the filter list.
-     * @return true if @p name matches a filter in the list,
-     * otherwise false.
+     * @return true if @p name matches a filter in the list, otherwise false.
      * @see setMimeFilter.
      */
     bool matchesMimeFilter(const QString &mime) const;
 
     /**
-     * Pass the main window this object is associated with
-     * this is used for caching authentication data
+     * Pass the main window this object is associated with, the window is used
+     * for caching authentication data.
+     *
      * @param window the window to associate with, 0 to disassociate
      */
     void setMainWindow(QWidget *window);
 
     /**
-     * Returns the main window associated with this object.
      * @return the associated main window, or 0 if there is none
      */
     QWidget* mainWindow();
@@ -338,58 +294,47 @@ public:
     };
 
     /**
-     * Returns the items listed for the current url().
-     * This method will NOT start listing a directory, you should only call
-     * this when receiving the finished() signal.
+     * Returns the items listed for the current url(). This method will NOT
+     * start listing a directory, only call this when listing is finished.
      *
-     * The items in the KFileItemList are copies of the items used
-     * by KDirLister.
-     *
-     * @param which specifies whether the returned list will contain all entries
-     *              or only the ones that passed the nameFilter(), mimeFilter(),
-     *              etc. Note that the latter causes iteration over all the
-     *              items, filtering them. If this is too slow for you, use the
-     *              newItems() signal, sending out filtered items in chunks.
+     * @param which specifies whether the returned list will contain all
+     *              entries or only the ones that passed the nameFilter() and
+     *              mimeFilter().
      * @return the items listed for the current url().
      */
     KFileItemList items(WhichItems which = FilteredItems) const;
 
 Q_SIGNALS:
     /**
-     * Tell the view that we started to list the url. NOTE: this does _not_ imply that there
-     * is really a job running! I.e. KDirLister::jobs() may return an empty list. In this case
-     * the items are taken from the cache.
+     * Signals that listing has started.
      */
     void started();
 
     /**
-     * Tell the view that listing is finished. There are no jobs running anymore.
+     * Signals that listing has finished.
      */
     void completed();
 
     /**
-     * Tell the view that the user canceled the listing. No running jobs are left.
+     * Signals that listing has been canceled, either by a call to stop() or
+     * openUrl() while listing was in progress.
      */
     void canceled();
 
     /**
-     * Signal a redirection.
-     * Only emitted if there's just one directory to list, i.e. most
-     * probably openUrl() has been called without OpenUrlFlag::Keep.
+     * Signals that redirection has occurred.
      * @param url the new URL
      */
     void redirection(const KUrl &url);
 
     /**
-     * Signal to clear all items.
-     * Make sure to connect to this signal to avoid doubled items.
+     * Signals to clear all items. Make sure to connect to this signal to avoid
+     * doubled items, or just clear the items yourself.
      */
     void clear();
 
     /**
-     * Signal that new items were found during directory listing.
-     * Alternative signal emitted at the same time as newItems(),
-     * but itemsAdded also passes the url of the parent directory.
+     * Signals that new items were found during directory listing .
      *
      * @param items a list of new items
      * @since 4.2
@@ -397,7 +342,7 @@ Q_SIGNALS:
     void itemsAdded(const KFileItemList &items);
 
     /**
-     * Signal that items have been deleted.
+     * Signals that items have been deleted.
      *
      * @since 4.1.2
      * @param items the list of deleted items
@@ -405,95 +350,100 @@ Q_SIGNALS:
     void itemsDeleted(const KFileItemList &items);
 
     /**
-     * Signal an item to refresh (its mimetype/icon/name has changed).
+     * Signals an item to refresh (its mimetype/icon/name has changed).
      * Note: KFileItem::refresh has already been called on those items.
+     *
      * @param items the items to refresh. This is a list of pairs, where
-     * the first item in the pair is the OLD item, and the second item is the
-     * NEW item. This allows to track which item has changed, especially after
-     * a renaming.
+     *              the first item in the pair is the OLD item, and the second
+     *              item is the NEW item. This allows to track which item has
+     *              changed, especially after a renaming.
      */
     void refreshItems(const QList<QPair<KFileItem, KFileItem>> &items);
 
     /**
-     * Emitted to display information about running jobs.
-     * Examples of message are "Resolving host", "Connecting to host...", etc.
+     * Signals to display information about running list job. Examples of
+     * message are "Resolving host", "Connecting to host...", etc.
+     *
      * @param msg the info message
      */
     void infoMessage(const QString &msg);
 
     /**
-     * Progress signal showing the overall progress of the KDirLister.
-     * This allows using a progress bar very easily. (see QProgressBar)
+     * Signals the overall progress of the KDirLister. This allows can be
+     * connected to progress bar very easily. (see QProgressBar)
+     *
      * @param percent the progress in percent
      */
     void percent(ulong percent);
 
     /**
-     * Emitted when we know the size of the jobs.
+     * Signals the size of the job.
+     *
      * @param size the total size in bytes
      */
     void totalSize(qulonglong size);
 
     /**
-     * Regularly emitted to show the progress of this KDirLister.
+     * Signals the processed size of the running job, emitted regularly.
+     *
      * @param size the processed size in bytes
      */
     void processedSize(qulonglong size);
 
     /**
-     * Emitted to display information about the speed of the jobs.
+     * Signals to display information about the speed of the job.
+     *
      * @param bytes_per_second the speed in bytes/s
      */
     void speed(ulong bytes_per_second);
 
 protected:
    /**
-    * Called for every new item before emitting newItems().
-    * You may reimplement this method in a subclass to implement your own
-    * filtering.
+    * Called for every new item to decide if it shall be filtered or not.
+    * Reimplement this method in a subclass to implement your own filtering.
     * The default implementation filters out ".." and everything not matching
     * the name filter(s)
-    * @return true if the item is "ok".
-    *         false if the item shall not be shown in a view, e.g.
-    * files not matching a pattern *.cpp ( KFileItem::isHidden())
+    *
+    * @return true if the item is "ok". false if the item shall not be shown in
+    *         a view, e.g. files not matching a pattern *.cpp
     * @see matchesFilter
     * @see setNameFilter
     */
    virtual bool matchesFilter(const KFileItem &item) const;
 
    /**
-    * Called for every new item before emitting newItems().
-    * You may reimplement this method in a subclass to implement your own
-    * filtering.
-    * The default implementation filters out ".." and everything not matching
-    * the name filter(s)
-    * @return true if the item is "ok".
-    *         false if the item shall not be shown in a view, e.g.
-    * files not matching a pattern *.cpp ( KFileItem::isHidden())
+    * Called for every new item to decide if it shall be filtered or not.
+    * Reimplement this method in a subclass to implement your own filtering.
+    * The default implementation filters out everything not matching the MIME
+    * filter(s)
+    *
+    * @return true if the item is "ok". false if the item shall not be shown in
+    *         a view, e.g. files not matching a text/plain
     * @see matchesMimeFilter
     * @see setMimeFilter
     */
    virtual bool matchesMimeFilter(const KFileItem &item) const;
 
    /**
-    * Called by the public matchesFilter() to do the
-    * actual filtering. Those methods may be reimplemented to customize
-    * filtering.
+    * Called by the protected matchesFilter() to do the actual filtering.
+    *
     * @param name the name to filter
     * @param filters a list of regular expressions for filtering
     */
    virtual bool doNameFilter(const QString &name, const QList<QRegExp> &filters) const;
 
    /**
-    * Called by the public matchesMimeFilter() to do the
-    * actual filtering. Those methods may be reimplemented to customize
-    * filtering.
+    * Called by the protected matchesMimeFilter() to do the actual filtering.
+    *
     * @param mime the mime type to filter
     * @param filters the list of mime types to filter
      */
     virtual bool doMimeFilter(const QString &mime, const QStringList &filters) const;
 
-    /** Reimplement to customize error handling */
+    /**
+     * Called whenever list job error occurs. Reimplement to customize error
+     * handling. The default implementation uses the job UI delegate.
+     */
     virtual void handleError(KIO::Job *job);
 
 private:
