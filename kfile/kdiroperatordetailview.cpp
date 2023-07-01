@@ -45,10 +45,6 @@ KDirOperatorDetailView::KDirOperatorDetailView(QWidget *parent) :
     setHorizontalScrollMode(QListView::ScrollPerPixel);
 }
 
-KDirOperatorDetailView::~KDirOperatorDetailView()
-{
-}
-
 void KDirOperatorDetailView::setModel(QAbstractItemModel *model)
 {
     if (model->rowCount() == 0) {

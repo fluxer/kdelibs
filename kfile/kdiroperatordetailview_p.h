@@ -35,7 +35,7 @@ class KDirOperatorDetailView : public QTreeView
 
 public:
     KDirOperatorDetailView(QWidget *parent = 0);
-    virtual ~KDirOperatorDetailView();
+
     virtual void setModel(QAbstractItemModel *model);
 
     /**
