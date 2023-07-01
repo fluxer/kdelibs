@@ -216,7 +216,7 @@ public:
 
     /**
      * Set a name filter to only list items matching this name, e.g. "*.cpp".
-     * More than one filter by separating them with whitespace, e.g
+     * More than one filter may be set by separating them with whitespace, e.g
      * "*.cpp *.h". By default the filter is empty.
      *
      * @param filter the new filter, empty QString() to disable filtering
