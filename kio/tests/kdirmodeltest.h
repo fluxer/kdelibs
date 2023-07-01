@@ -34,8 +34,8 @@ private Q_SLOTS:
     void testIndexForItem();
 
 private:
-    KDirModel* m_dirModel;
     KTempDir* m_tempDir;
+    KDirModel* m_dirModel;
 };
 
 #endif // KDIRMODELTEST_H

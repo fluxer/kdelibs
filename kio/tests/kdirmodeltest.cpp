@@ -35,12 +35,9 @@
 
 QTEST_KDEMAIN(KDirModelTest, NoGUI)
 
-Q_DECLARE_METATYPE(KFileItemList)
-
 void KDirModelTest::initTestCase()
 {
     qRegisterMetaType<QModelIndex>("QModelIndex");
-    qRegisterMetaType<KFileItemList>("KFileItemList");
 
     m_tempDir = new KTempDir();
     m_dirModel = new KDirModel();
