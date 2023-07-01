@@ -105,7 +105,6 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
 {
     Q_ASSERT(listJob == qobject_cast<KIO::ListJob*>(job));
     kDebug(7003) << "done listing" << listJob->url();
-    complete = true;
     if (job->error() != KJob::KilledJobError && job->error() != KJob::NoError) {
         m_parent->handleError(listJob);
     }
@@ -115,6 +114,7 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     if (!filteredItems.isEmpty()) {
         emit m_parent->itemsAdded(filteredItems);
     }
+    complete = true;
     emit m_parent->completed();
 
     if (autoUpdate) {
