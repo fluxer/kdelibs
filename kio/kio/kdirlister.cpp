@@ -103,6 +103,7 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
 
         const QString itempath = item.localPath();
         if (KDesktopFile::isDesktopFile(itempath)) {
+            kDebug(7003) << "desktop file entry" << itempath;
             KDesktopFile desktopfile(itempath);
             const KUrl desktopurl = desktopfile.readUrl();
             if (desktopurl.isValid()) {
@@ -172,8 +173,8 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
                         dirNotify, SIGNAL(FilesRemoved(QStringList)),
                         m_parent, SLOT(_k_slotFilesRemoved(QStringList))
                     );
-                    org::kde::KDirNotify::emitEnteredDirectory(it.url());
                 }
+                org::kde::KDirNotify::emitEnteredDirectory(it.url());
             }
         }
     }
