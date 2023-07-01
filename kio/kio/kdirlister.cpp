@@ -152,7 +152,10 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
             } else {
                 kDebug(7003) << "watching remote" << it;
                 if (!dirNotify) {
-                    dirNotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), m_parent);
+                    dirNotify = new org::kde::KDirNotify(
+                        QString(), QString(), QDBusConnection::sessionBus(),
+                        m_parent
+                    );
                     m_parent->connect(
                         dirNotify, SIGNAL(FileRenamed(QString,QString)),
                         m_parent, SLOT(_k_slotFileRenamed(QString,QString))
@@ -169,7 +172,7 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
                         dirNotify, SIGNAL(FilesRemoved(QStringList)),
                         m_parent, SLOT(_k_slotFilesRemoved(QStringList))
                     );
-                    org::kde::KDirNotify::emitEnteredDirectory(url.url());
+                    org::kde::KDirNotify::emitEnteredDirectory(it.url());
                 }
             }
         }
