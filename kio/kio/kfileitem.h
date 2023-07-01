@@ -563,6 +563,8 @@ public:
   // TODO KDE-5 add d pointer here so that we can merge KFileItemListProperties into KFileItemList
 };
 
+Q_DECLARE_METATYPE(KFileItemList)
+
 KIO_EXPORT QDataStream & operator<< ( QDataStream & s, const KFileItem & a );
 KIO_EXPORT QDataStream & operator>> ( QDataStream & s, KFileItem & a );
 
