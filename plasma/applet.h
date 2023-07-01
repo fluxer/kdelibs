@@ -1092,7 +1092,6 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
         friend class AppletScript;
         friend class AppletHandle;
         friend class AppletPrivate;
-        friend class AccessAppletJobPrivate;
         friend class PluginLoader;
         friend class PopupApplet;
         friend class PopupAppletPrivate;

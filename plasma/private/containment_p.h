@@ -39,7 +39,6 @@ namespace KIO
 namespace Plasma
 {
 
-class AccessAppletJob;
 class Containment;
 class AbstractToolBox;
 class Animation;

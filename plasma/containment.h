@@ -36,7 +36,6 @@
 namespace Plasma
 {
 
-class AccessAppletJob;
 class AppletHandle;
 class DataEngine;
 class Package;
