@@ -40,6 +40,7 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     pendingUpdateTimer(new QTimer(parent)),
     m_parent(parent)
 {
+    pendingUpdateTimer->setSingleShot(true);
     m_parent->connect(
         pendingUpdateTimer, SIGNAL(timeout()),
         m_parent, SLOT(_k_slotUpdateDirectory())
