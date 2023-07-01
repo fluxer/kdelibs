@@ -182,7 +182,15 @@ void KDirListerPrivate::_k_slotFileRenamed(const QString &path, const QString &p
     QMutableListIterator<KFileItem> it(filteredItems);
     while (it.hasNext()) {
         const KFileItem item = it.next();
-        if (item.url() == KUrl(path)) {
+        const KUrl itemurl = item.url();
+        if (itemurl == KUrl(path)) {
+            // NOTE: no partial updates for non-local directories because the signals are bogus for
+            // some KIO slaves (such as trash:/)
+            if (!itemurl.isLocalFile()) {
+                m_parent->updateDirectory();
+                break;
+            }
+
             KFileItemList itemlist;
             itemlist.append(item);
             emit m_parent->itemsDeleted(itemlist);
@@ -196,7 +204,13 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
 {
     kDebug(7003) << "file added" << path;
     const KUrl pathurl(path);
-    if (KUrl(pathurl.directory()) == url) {
+    const KUrl pathdirectory = pathurl.directory();
+    if (pathdirectory == url || pathurl == url) {
+        if (!pathdirectory.isLocalFile() || !pathurl.isLocalFile()) {
+            m_parent->updateDirectory();
+            return;
+        }
+
         const KFileItem item(pathurl, QString(), KFileItem::Unknown);
         allItems.append(item);
         if (m_parent->matchesFilter(item) && m_parent->matchesMimeFilter(item)) {
@@ -214,7 +228,13 @@ void KDirListerPrivate::_k_slotFilesChanged(const QStringList &paths)
     QList<QPair<KFileItem, KFileItem>> changed;
     foreach (const QString &it, paths) {
         foreach (const KFileItem &it2, filteredItems) {
-            if (it2.url() == KUrl(it)) {
+            const KUrl itemurl = it2.url();
+            if (itemurl == KUrl(it)) {
+                if (!itemurl.isLocalFile()) {
+                    m_parent->updateDirectory();
+                    return;
+                }
+
                 KFileItem newitem(it2);
                 newitem.refresh();
                 changed.append(qMakePair(it2, newitem));
