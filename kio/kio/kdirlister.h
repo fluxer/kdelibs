@@ -89,13 +89,13 @@ public:
      * @return true   if successful, false otherwise (e.g. if invalid @p url)
      *                was passed.
      */
-    virtual bool openUrl(const KUrl &url, OpenUrlFlags flags = NoFlags);
+    bool openUrl(const KUrl &url, OpenUrlFlags flags = NoFlags);
 
     /**
      * Stop listing the current directory URL. Emits canceled() if there was
      * job running.
      */
-    virtual void stop();
+    void stop();
 
     /**
      * @return true if the "delayed mimetypes" feature was enabled
@@ -125,7 +125,7 @@ public:
      * @param enable true to enable, false to disable
      * @note Call updateDirectory() afterwards for the changes to take effect.
      */
-    virtual void setAutoUpdate(bool enable);
+    void setAutoUpdate(bool enable);
 
     /**
      * @return true if auto error handling is enabled, false otherwise
@@ -159,7 +159,7 @@ public:
      * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see showingDotFiles()
      */
-    virtual void setShowingDotFiles(bool showDotFiles);
+    void setShowingDotFiles(bool showDotFiles);
 
     /**
      * @return true if setDirOnlyMode(true) was called
@@ -173,7 +173,7 @@ public:
      * @param dirsOnly true to list only directories
      * @note Call updateDirectory() afterwards for the changes to take effect.
      */
-    virtual void setDirOnlyMode(bool dirsOnly);
+    void setDirOnlyMode(bool dirsOnly);
 
     /**
      * @return the URL used by this instance to list the directory.
@@ -185,7 +185,7 @@ public:
      * useful to force an update manually or in case automatic updates are
      * disabled.
      */
-    virtual void updateDirectory();
+    void updateDirectory();
 
     /**
      * Returns true if no listing operation is currently in progress.
@@ -205,14 +205,14 @@ public:
      * @param url the item URL
      * @return the KFileItem
      */
-    virtual KFileItem findByUrl(const KUrl &url) const;
+    KFileItem findByUrl(const KUrl &url) const;
 
     /**
      * Find an item by its name.
      * @param name the item name
      * @return the KFileItem
      */
-    virtual KFileItem findByName(const QString &name) const;
+    KFileItem findByName(const QString &name) const;
 
     /**
      * Set a name filter to only list items matching this name, e.g. "*.cpp".
@@ -223,7 +223,7 @@ public:
      * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see matchesFilter
      */
-    virtual void setNameFilter(const QString &filter);
+    void setNameFilter(const QString &filter);
 
     /**
      * Returns the current name filter, as set via setNameFilter()
@@ -241,7 +241,7 @@ public:
      * @see clearMimeFilter
      * @see matchesMimeFilter
      */
-    virtual void setMimeFilter(const QStringList &mimeList);
+    void setMimeFilter(const QStringList &mimeList);
 
     /**
      * Clears the mime based filter.
@@ -249,7 +249,7 @@ public:
      * @note Call updateDirectory() afterwards for the changes to take effect.
      * @see setMimeFilter
      */
-    virtual void clearMimeFilter();
+    void clearMimeFilter();
 
     /**
      * Returns the list of mime based filters, as set via setMimeFilter().
