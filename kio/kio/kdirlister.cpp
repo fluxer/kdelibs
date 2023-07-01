@@ -39,8 +39,8 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     window(nullptr),
     listJob(nullptr),
     m_parent(parent),
-    m_dirwatch(nullptr),
-    m_dirnotify(nullptr)
+    dirwatch(nullptr),
+    dirnotify(nullptr)
 {
 }
 
@@ -109,19 +109,6 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     listJob = nullptr;
     job->deleteLater();
 
-    if (m_dirwatch) {
-        m_dirwatch->disconnect(m_parent);
-        delete m_dirwatch;
-        m_dirwatch = nullptr;
-    }
-    if (m_dirnotify) {
-        // TODO: this has to be done when opening new directory
-        org::kde::KDirNotify::emitLeftDirectory(url.url());
-        // m_dirnotify->disconnect(m_parent);
-        delete m_dirnotify;
-        m_dirnotify = nullptr;
-    }
-
     if (!filteredItems.isEmpty()) {
         emit m_parent->itemsAdded(filteredItems);
     }
@@ -130,29 +117,29 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     if (autoUpdate) {
         if (url.isLocalFile()) {
             kDebug(7003) << "watching" << url.toLocalFile();
-            m_dirwatch = new KDirWatch(m_parent);
-            m_dirwatch->addDir(url.toLocalFile());
+            dirwatch = new KDirWatch(m_parent);
+            dirwatch->addDir(url.toLocalFile());
             m_parent->connect(
-                m_dirwatch, SIGNAL(dirty(QString)),
+                dirwatch, SIGNAL(dirty(QString)),
                 m_parent, SLOT(_k_slotDirty(QString))
             );
         } else {
             kDebug(7003) << "watching remote" << url;
-            m_dirnotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), m_parent);
+            dirnotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), m_parent);
             m_parent->connect(
-                m_dirnotify, SIGNAL(FileRenamed(QString,QString)),
+                dirnotify, SIGNAL(FileRenamed(QString,QString)),
                 m_parent, SLOT(_k_slotFileRenamed(QString,QString))
             );
             m_parent->connect(
-                m_dirnotify, SIGNAL(FilesAdded(QString)),
+                dirnotify, SIGNAL(FilesAdded(QString)),
                 m_parent, SLOT(_k_slotFilesAdded(QString))
             );
             m_parent->connect(
-                m_dirnotify, SIGNAL(FilesChanged(QStringList)),
+                dirnotify, SIGNAL(FilesChanged(QStringList)),
                 m_parent, SLOT(_k_slotFilesChanged(QStringList))
             );
             m_parent->connect(
-                m_dirnotify, SIGNAL(FilesRemoved(QStringList)),
+                dirnotify, SIGNAL(FilesRemoved(QStringList)),
                 m_parent, SLOT(_k_slotFilesRemoved(QStringList))
             );
             org::kde::KDirNotify::emitEnteredDirectory(url.url());
@@ -230,6 +217,18 @@ bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
     Q_UNUSED(flags);
 
     stop();
+
+    if (d->dirwatch) {
+        d->dirwatch->disconnect(this);
+        delete d->dirwatch;
+        d->dirwatch = nullptr;
+    }
+    if (d->dirnotify) {
+        org::kde::KDirNotify::emitLeftDirectory(d->url.url());
+        // d->dirnotify->disconnect(this);
+        delete d->dirnotify;
+        d->dirnotify = nullptr;
+    }
 
     kDebug(7003) << "opening" << url << flags;
     d->url = url;

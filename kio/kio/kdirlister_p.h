@@ -49,6 +49,9 @@ public:
     QStringList mimeFilter;
     QList<QRegExp> nameFilters;
 
+    KDirWatch* dirwatch;
+    OrgKdeKDirNotifyInterface* dirnotify;
+
     void _k_slotInfoMessage(KJob *job, const QString &msg);
     void _k_slotPercent(KJob *job, ulong value);
     void _k_slotTotalSize(KJob *job, qulonglong value);
@@ -67,8 +70,6 @@ public:
 
 private:
     KDirLister *m_parent;
-    KDirWatch* m_dirwatch;
-    OrgKdeKDirNotifyInterface* m_dirnotify;
 };
 
 #endif // KDIRLISTER_P_H
