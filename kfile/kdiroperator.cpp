@@ -1316,13 +1316,13 @@ bool KDirOperator::Private::checkPreviewInternal() const
     const QStringList mimeTypes = dirLister->mimeFilters();
     const QStringList nameFilter = dirLister->nameFilter().split(' ', QString::SkipEmptyParts);
 
-    if (mimeTypes.isEmpty() && nameFilter.isEmpty() && !supported.isEmpty())
+    if (mimeTypes.isEmpty() && nameFilter.isEmpty() && !supported.isEmpty()) {
         return true;
-    else {
+    } else {
         QRegExp r;
         r.setPatternSyntax(QRegExp::Wildcard);   // the "mimetype" can be "image/*"
 
-        foreach(const QString it, supported) {
+        foreach(const QString &it, supported) {
             r.setPattern(it);
 
             const QStringList result = mimeTypes.filter(r);
@@ -1332,7 +1332,7 @@ bool KDirOperator::Private::checkPreviewInternal() const
         }
 
         // find the mimetypes of all the filter-patterns
-        foreach(const QString it1, nameFilter) {
+        foreach(const QString &it1, nameFilter) {
             if (it1 == "*") {
                 return true;
             }
@@ -1344,7 +1344,7 @@ bool KDirOperator::Private::checkPreviewInternal() const
 
             // the "mimetypes" we get from the PreviewJob can be "image/*"
             // so we need to check in wildcard mode
-            foreach(const QString it2, supported) {
+            foreach(const QString &it2, supported) {
                 r.setPattern(it2);
                 if (r.indexIn(mime) != -1) {
                     return true;
