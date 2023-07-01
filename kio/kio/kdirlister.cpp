@@ -107,7 +107,7 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
             KDesktopFile desktopfile(itempath);
             const KUrl desktopurl = desktopfile.readUrl();
             if (desktopurl.isValid()) {
-                m_desktopUrls.append(desktopurl);
+                desktopUrls.append(desktopurl);
             }
         }
     }
@@ -132,7 +132,7 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     if (autoUpdate) {
         const KUrl::List towatch = KUrl::List()
             << url
-            << m_desktopUrls;
+            << desktopUrls;
         foreach (const KUrl &it, towatch) {
             if (it.isLocalFile()) {
                 const QString localfile = it.toLocalFile();
@@ -204,7 +204,7 @@ void KDirListerPrivate::_k_slotFileRenamed(const QString &path, const QString &p
         }
     }
 
-    foreach (const KUrl &it, m_desktopUrls) {
+    foreach (const KUrl &it, desktopUrls) {
         if (it == pathurl) {
             _k_slotUpdateDirectory();
             break;
@@ -223,7 +223,7 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
         return;
     }
 
-    foreach (const KUrl &it, m_desktopUrls) {
+    foreach (const KUrl &it, desktopUrls) {
         if (it == pathdirectory || it == pathurl) {
             _k_slotUpdateDirectory();
             break;
@@ -244,7 +244,7 @@ void KDirListerPrivate::_k_slotFilesChanged(const QStringList &paths)
             }
         }
 
-        foreach (const KUrl &it2, m_desktopUrls) {
+        foreach (const KUrl &it2, desktopUrls) {
             if (it2 == pathurl) {
                 _k_slotUpdateDirectory();
                 break;
@@ -296,6 +296,11 @@ bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
     }
     if (d->dirNotify) {
         org::kde::KDirNotify::emitLeftDirectory(d->url.url());
+        foreach (const KUrl &it, d->desktopUrls) {
+            if (!it.isLocalFile()) {
+                org::kde::KDirNotify::emitLeftDirectory(it.url());
+            }
+        }
         // d->dirNotify->disconnect(this);
         delete d->dirNotify;
         d->dirNotify = nullptr;
