@@ -175,10 +175,8 @@ void KDirListerPrivate::_k_slotDirty(const QString &path)
 void KDirListerPrivate::_k_slotFileRenamed(const QString &path, const QString &path2)
 {
     kDebug(7003) << "file renamed" << path << path2;
-    QMutableListIterator<KFileItem> it(filteredItems);
-    while (it.hasNext()) {
-        const KFileItem item = it.next();
-        if (item.url() == KUrl(path)) {
+    foreach (const KFileItem &it, filteredItems) {
+        if (it.url() == KUrl(path)) {
             m_parent->updateDirectory();
             break;
         }
