@@ -20,11 +20,12 @@
 #define KDIRLISTER_P_H
 
 #include "kfileitem.h"
-#include <kdirwatch.h>
-#include <kdirnotify.h>
-#include <kio/job.h>
+#include "kdirwatch.h"
+#include "kdirnotify.h"
+#include "kio/job.h"
 
 #include <QRegExp>
+#include <QTimer>
 
 class KDirListerPrivate
 {
@@ -49,8 +50,9 @@ public:
     QStringList mimeFilter;
     QList<QRegExp> nameFilters;
 
-    KDirWatch* dirwatch;
-    OrgKdeKDirNotifyInterface* dirnotify;
+    KDirWatch* dirWatch;
+    OrgKdeKDirNotifyInterface* dirNotify;
+    QTimer* pendingUpdateTimer;
 
     void _k_slotInfoMessage(KJob *job, const QString &msg);
     void _k_slotPercent(KJob *job, ulong value);
@@ -67,6 +69,7 @@ public:
     void _k_slotFilesAdded(const QString &path);
     void _k_slotFilesChanged(const QStringList &paths);
     void _k_slotFilesRemoved(const QStringList &paths);
+    void _k_slotUpdateDirectory();
 
 private:
     KDirLister *m_parent;

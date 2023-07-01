@@ -515,6 +515,7 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotFilesAdded(const QString &path));
     Q_PRIVATE_SLOT(d, void _k_slotFilesChanged(const QStringList &paths));
     Q_PRIVATE_SLOT(d, void _k_slotFilesRemoved(const QStringList &paths));
+    Q_PRIVATE_SLOT(d, void _k_slotUpdateDirectory());
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDirLister::OpenUrlFlags)
