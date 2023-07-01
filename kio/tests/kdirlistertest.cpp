@@ -45,4 +45,17 @@ void KDirListerTest::testOpenUrl()
     QTest::kWaitForSignal(m_dirLister, SIGNAL(completed()), 5000);
 }
 
+void KDirListerTest::testItems()
+{
+    const QString testfile = QString::fromLatin1("%1/foo.bar").arg(m_tempDir->name());
+    createTestFile(testfile);
+
+    m_dirLister->openUrl(KUrl(m_tempDir->name()));
+    QTest::kWaitForSignal(m_dirLister, SIGNAL(completed()), 5000);
+    const KFileItemList diritems = m_dirLister->items();
+    QVERIFY(!diritems.isEmpty());
+    const KFileItem foobaritem = diritems.findByName("foo.bar");
+    QVERIFY(!foobaritem.isNull());
+}
+
 #include "moc_kdirlistertest.cpp"
