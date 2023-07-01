@@ -22,6 +22,9 @@
 #include <kdebug.h>
 #include <kde_file.h>
 
+#include <QDir>
+#include <QFileInfo>
+
 #include <utime.h>
 #include <errno.h>
 
