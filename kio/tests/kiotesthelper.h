@@ -20,13 +20,9 @@
 // This file can only be included once in a given binary
 
 #include <kdebug.h>
-#include <QtCore/qglobal.h>
 #include <kde_file.h>
-#ifdef Q_OS_UNIX
+
 #include <utime.h>
-#else
-#include <sys/utime.h>
-#endif
 #include <errno.h>
 
 QString homeTmpDir()
