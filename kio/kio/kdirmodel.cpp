@@ -753,12 +753,6 @@ QVariant KDirModel::data( const QModelIndex & index, int role ) const
     return QVariant();
 }
 
-void KDirModel::sort( int column, Qt::SortOrder order )
-{
-    // Not implemented - we should probably use QSortFilterProxyModel instead.
-    return QAbstractItemModel::sort(column, order);
-}
-
 bool KDirModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
     switch (role) {

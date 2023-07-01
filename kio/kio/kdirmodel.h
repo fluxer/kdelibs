@@ -171,8 +171,6 @@ public:
     /// Reimplemented from QAbstractItemModel.
     /// Call this to set a new icon, e.g. a preview
     virtual bool setData ( const QModelIndex &index, const QVariant & value, int role = Qt::EditRole );
-    /// Reimplemented from QAbstractItemModel. Not implemented. @see KDirSortFilterProxyModel
-    virtual void sort ( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
 
     /**
