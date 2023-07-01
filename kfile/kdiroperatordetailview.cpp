@@ -146,11 +146,6 @@ void KDirOperatorDetailView::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void KDirOperatorDetailView::currentChanged(const QModelIndex& current, const QModelIndex& previous)
-{
-    QTreeView::currentChanged(current, previous);
-}
-
 void KDirOperatorDetailView::resetResizing()
 {
     QTimer::singleShot(300, this, SLOT(disableColumnResizing()));
