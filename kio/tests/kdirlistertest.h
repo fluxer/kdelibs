@@ -31,6 +31,7 @@ private Q_SLOTS:
 
     void testOpenUrl();
     void testItems();
+    void testIsFinished();
 
 private:
     KTempDir* m_tempDir;

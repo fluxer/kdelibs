@@ -58,4 +58,13 @@ void KDirListerTest::testItems()
     QVERIFY(!foobaritem.isNull());
 }
 
+
+void KDirListerTest::testIsFinished()
+{
+    QCOMPARE(m_dirLister->isFinished(), true);
+    m_dirLister->openUrl(KUrl(m_tempDir->name()));
+    QTest::kWaitForSignal(m_dirLister, SIGNAL(completed()), 5000);
+    QCOMPARE(m_dirLister->isFinished(), true);
+}
+
 #include "moc_kdirlistertest.cpp"

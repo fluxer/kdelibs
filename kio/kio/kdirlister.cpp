@@ -34,7 +34,7 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     autoErrorHandling(true),
     showingDotFiles(false),
     dirOnlyMode(false),
-    complete(false),
+    complete(true),
     window(nullptr),
     listJob(nullptr),
     dirWatch(nullptr),
@@ -382,6 +382,7 @@ void KDirLister::stop()
         d->listJob->kill();
         d->listJob->deleteLater();
         d->listJob = nullptr;
+        d->complete = true;
         emit canceled();
     }
 }
