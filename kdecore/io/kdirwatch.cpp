@@ -66,7 +66,7 @@ void KDirWatch::addDir(const QString &path, bool recurse)
     kDebug(7001) << "watching directory" << path;
     QString dirpath = path;
     // watching non-existing directory requires a trailing slash
-    if (!dirpath.endsWith(QDir::separator())) {
+    if (dirpath != QDir::rootPath() && !dirpath.endsWith(QDir::separator())) {
         dirpath.append(QDir::separator());
     }
     d->watcheddirs.append(dirpath);
