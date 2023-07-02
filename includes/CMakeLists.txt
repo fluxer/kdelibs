@@ -101,7 +101,6 @@ install(
     KDirNotify
     KDirOperator
     KDirSortFilterProxyModel
-    KDirSelectDialog
     KDirWatch
     KDualAction
     KFilePreviewGenerator
@@ -129,7 +128,6 @@ install(
     KFileMetaInfo
     KFileMetaInfoItem
     KFilePlacesModel
-    KFileTreeView
     KCompressor
     KDecompressor
     KFind

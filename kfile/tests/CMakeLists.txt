@@ -21,11 +21,6 @@ ENDMACRO(KFILE_EXECUTABLE_TESTS)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-KFILE_EXECUTABLE_TESTS(
-    kdirselectdialogtest
-    kfiletreeviewtest
-)
-
 add_definitions(
     -DTEST_DATA="${CMAKE_SOURCE_DIR}/solid/solid/backends/fakehw/fakecomputer.xml"
 )

@@ -343,8 +343,6 @@ void KUrlRequester::KUrlRequesterPrivate::_k_slotOpenDialog()
         const KUrl openUrl = (!m_parent->url().isEmpty() && !m_parent->url().isRelative() )
           ? m_parent->url() : m_startDir;
 
-        /* FIXME We need a new abstract interface for using KDirSelectDialog in a non-modal way */
-
         KUrl newurl;
         if (fileDialogMode & KFile::LocalOnly)
             newurl = KFileDialog::getExistingDirectory( openUrl, m_parent);

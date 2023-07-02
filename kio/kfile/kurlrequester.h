@@ -141,9 +141,6 @@ public:
      * or other things which are not accessible in the KUrlRequester API.
      *
      * Never returns 0. This method creates the file dialog on demand.
-     *
-     * Important: in "Directory only" mode, a KDirSelectDialog is used
-     * instead, so calling this method is useless.
      */
     virtual KFileDialog * fileDialog() const;
 

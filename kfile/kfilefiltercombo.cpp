@@ -77,24 +77,23 @@ void KFileFilterCombo::setFilter(const QString& filter)
     d->hasAllSupportedFiles = false;
 
     if (!filter.isEmpty()) {
-	QString tmp = filter;
-	int index = tmp.indexOf('\n');
-	while (index > 0) {
-	    d->m_filters.append(tmp.left(index));
-	    tmp = tmp.mid(index + 1);
-	    index = tmp.indexOf('\n');
-	}
-	d->m_filters.append(tmp);
+        QString tmp = filter;
+        int index = tmp.indexOf('\n');
+        while (index > 0) {
+            d->m_filters.append(tmp.left(index));
+            tmp = tmp.mid(index + 1);
+            index = tmp.indexOf('\n');
+        }
+        d->m_filters.append(tmp);
+    } else {
+        d->m_filters.append( d->defaultFilter );
     }
-    else
-	d->m_filters.append( d->defaultFilter );
 
     QStringList::ConstIterator it;
     QStringList::ConstIterator end(d->m_filters.constEnd());
     for (it = d->m_filters.constBegin(); it != end; ++it) {
-	int tab = (*it).indexOf('|');
-	addItem((tab < 0) ? *it :
-		   (*it).mid(tab + 1));
+        int tab = (*it).indexOf('|');
+        addItem((tab < 0) ? *it : (*it).mid(tab + 1));
     }
 
     d->lastFilter = currentText();
@@ -217,6 +216,7 @@ bool KFileFilterCombo::eventFilter( QObject *o, QEvent *e )
 void KFileFilterCombo::setDefaultFilter( const QString& filter )
 {
     d->defaultFilter = filter;
+    // TODO: reset filter?
 }
 
 QString KFileFilterCombo::defaultFilter() const

@@ -19,7 +19,6 @@
 
 #include "kfilemodule.h"
 #include "kfilewidget.h"
-#include "kdirselectdialog.h"
 #include "kpluginfactory.h"
 
 K_PLUGIN_FACTORY(KFileModuleFactory, registerPlugin<KFileModule>();)
@@ -43,13 +42,6 @@ KUrl KFileModule::getStartUrl( const KUrl& startDir, QString& recentDirClass )
 void KFileModule::setStartDir( const KUrl& directory )
 {
     KFileWidget::setStartDir(directory);
-}
-
-KUrl KFileModule::selectDirectory( const KUrl& startDir,
-                                   bool localOnly, QWidget *parent,
-                                   const QString& caption )
-{
-    return KDirSelectDialog::selectDirectory(startDir, localOnly, parent, caption);
 }
 
 #include "moc_kfilemodule.cpp"

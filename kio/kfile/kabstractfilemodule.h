@@ -45,14 +45,6 @@ public:
 
     virtual void setStartDir( const KUrl& directory ) = 0;
 
-    /**
-     * Creates a modal file dialog and returns the selected
-     * directory or an empty string if none was chosen.
-     */
-    virtual KUrl selectDirectory( const KUrl& startDir,
-                                  bool localOnly, QWidget *parent,
-                                  const QString& caption ) = 0;
-
     // TODO QFileDialog-like methods
 };
 

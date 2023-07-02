@@ -674,8 +674,7 @@ public:
      * @param recentDirClass If the @c kfiledialog:/// syntax is used, this
      *        will return the string to be passed to KRecentDirs::dir() and
      *        KRecentDirs::add().
-     * @return The URL that should be listed by default (e.g. by KFileDialog or
-     *         KDirSelectDialog).
+     * @return The URL that should be listed by default (e.g. by KFileDialog).
      *
      * @see KFileWidget::KFileWidget()
      * @see KFileWidget::getStartUrl( const KUrl& startDir, QString& recentDirClass );
@@ -684,7 +683,7 @@ public:
 
     /**
      * @internal
-     * Used by KDirSelectDialog to share the dialog's start directory.
+     * Used by KFileDialog to share the dialog's start directory.
      */
     static void setStartDir( const KUrl& directory );
 

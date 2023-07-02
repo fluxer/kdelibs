@@ -312,18 +312,21 @@ KUrl KFileDialog::getExistingDirectoryUrl(const KUrl &startDir,
                                           QWidget *parent,
                                           const QString &caption)
 {
-    return fileModule()->selectDirectory(startDir, false, parent, caption);
+    KFileDialog dlg(startDir, QString(), parent);
+
+    dlg.setOperationMode(KFileDialog::Opening);
+    dlg.setMode(KFile::Directory | KFile::LocalOnly | KFile::ExistingOnly);
+    dlg.setCaption(caption.isEmpty() ? i18n("Directory") : caption);
+
+    dlg.exec();
+    return dlg.selectedUrl();
 }
 
 QString KFileDialog::getExistingDirectory(const KUrl &startDir,
                                           QWidget *parent,
                                           const QString &caption)
 {
-    KUrl url = fileModule()->selectDirectory(startDir, true, parent, caption);
-    if (url.isValid()) {
-        return url.toLocalFile();
-    }
-    return QString();
+    return getExistingDirectoryUrl(startDir, parent, caption).toLocalFile();
 }
 
 KUrl KFileDialog::getImageOpenUrl(const KUrl &startDir, QWidget *parent,

@@ -36,7 +36,6 @@
 
 #include <kactioncollection.h>
 #include <kdiroperator.h>
-#include <kdirselectdialog.h>
 #include <kfilefiltercombo.h>
 #include <kimagefilepreview.h>
 #include <kmenu.h>
@@ -1767,7 +1766,7 @@ void KFileWidget::setMode( KFile::Modes m )
 
     d->ops->setMode(m);
     if ( d->ops->dirOnlyMode() ) {
-        d->filterWidget->setDefaultFilter( i18n("*|All Folders") );
+        d->filterWidget->setFilter( i18n("*|All Folders") );
     }
     else {
         d->filterWidget->setDefaultFilter( i18n("*|All Files") );

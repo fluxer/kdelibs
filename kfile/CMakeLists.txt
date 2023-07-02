@@ -16,12 +16,10 @@ endif()
 set(kfile_LIB_SRCS
     kdiroperator.cpp
     kdiroperatordetailview.cpp
-    kdirselectdialog.cpp
     # used in combination with kio/kio/kdirmodel.cpp
     kdirsortfilterproxymodel.cpp
     kfilebookmarkhandler.cpp
     kfilefiltercombo.cpp
-    kfiletreeview.cpp
     kfilewidget.cpp
     kfileplacesitem.cpp
     kfileplacesmodel.cpp
@@ -66,13 +64,11 @@ generate_export_header(kfile)
 install(
     FILES
     kdiroperator.h
-    kdirselectdialog.h
     kdirsortfilterproxymodel.h
     kfilefiltercombo.h
     kfileplacesmodel.h
     kfileplacesview.h
     kfilepreviewgenerator.h
-    kfiletreeview.h
     kfilewidget.h
     kurlnavigator.h
     knewfilemenu.h

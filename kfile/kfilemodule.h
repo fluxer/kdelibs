@@ -33,10 +33,6 @@ public:
     virtual KUrl getStartUrl( const KUrl& startDir, QString& recentDirClass );
 
     virtual void setStartDir( const KUrl& directory );
-
-    virtual KUrl selectDirectory( const KUrl& startDir,
-                                  bool localOnly, QWidget *parent,
-                                  const QString& caption );
 };
 
 #endif /* KFILEMODULE_H */

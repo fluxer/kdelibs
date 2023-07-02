@@ -263,7 +263,6 @@ public:
      * Sets a new view to be used for showing and browsing files.
      * Note: this will read the current url() to fill the view.
      *
-     * @see KFileTreeView
      * @see view
      */
     virtual void setView(QAbstractItemView *view);
