@@ -167,11 +167,11 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
                     );
                     m_parent->connect(
                         dirNotify, SIGNAL(FilesChanged(QStringList)),
-                        m_parent, SLOT(_k_slotFilesChanged(QStringList))
+                        m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
                     );
                     m_parent->connect(
                         dirNotify, SIGNAL(FilesRemoved(QStringList)),
-                        m_parent, SLOT(_k_slotFilesRemoved(QStringList))
+                        m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
                     );
                 }
                 org::kde::KDirNotify::emitEnteredDirectory(it.url());
@@ -195,21 +195,8 @@ void KDirListerPrivate::_k_slotDirty(const QString &path)
 void KDirListerPrivate::_k_slotFileRenamed(const QString &path, const QString &path2)
 {
     kDebug(7003) << "file renamed" << path << path2;
-    const KUrl pathurl(path);
-
-    foreach (const KFileItem &it, filteredItems) {
-        if (it.url() == pathurl) {
-            _k_slotUpdateDirectory();
-            return;
-        }
-    }
-
-    foreach (const KUrl &it, desktopUrls) {
-        if (it == pathurl) {
-            _k_slotUpdateDirectory();
-            break;
-        }
-    }
+    _k_slotFilesChangedOrRemoved(QStringList() << path);
+    _k_slotFilesAdded(path2);
 }
 
 void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
@@ -217,8 +204,13 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
     kDebug(7003) << "file added" << path;
     const KUrl pathurl(path);
 
+    if (pathurl == url) {
+        _k_slotUpdateDirectory();
+        return;
+    }
+
     const KUrl pathdirectory = pathurl.directory();
-    if (pathdirectory == url || pathurl == url) {
+    if (pathdirectory == url) {
         _k_slotUpdateDirectory();
         return;
     }
@@ -231,11 +223,16 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
     }
 }
 
-void KDirListerPrivate::_k_slotFilesChanged(const QStringList &paths)
+void KDirListerPrivate::_k_slotFilesChangedOrRemoved(const QStringList &paths)
 {
     kDebug(7003) << "files changed" << paths;
     foreach (const QString &it, paths) {
         const KUrl pathurl(it);
+
+        if (pathurl == url) {
+            _k_slotUpdateDirectory();
+            return;
+        }
 
         foreach (const KFileItem &it2, filteredItems) {
             if (it2.url() == pathurl) {
@@ -250,14 +247,6 @@ void KDirListerPrivate::_k_slotFilesChanged(const QStringList &paths)
                 break;
             }
         }
-    }
-}
-
-void KDirListerPrivate::_k_slotFilesRemoved(const QStringList &paths)
-{
-    kDebug(7003) << "files removed" << paths;
-    foreach (const QString &it, paths) {
-        _k_slotFileRenamed(it, QString());
     }
 }
 

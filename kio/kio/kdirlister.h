@@ -463,8 +463,7 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotDirty(const QString &path));
     Q_PRIVATE_SLOT(d, void _k_slotFileRenamed(const QString &path, const QString &path2));
     Q_PRIVATE_SLOT(d, void _k_slotFilesAdded(const QString &path));
-    Q_PRIVATE_SLOT(d, void _k_slotFilesChanged(const QStringList &paths));
-    Q_PRIVATE_SLOT(d, void _k_slotFilesRemoved(const QStringList &paths));
+    Q_PRIVATE_SLOT(d, void _k_slotFilesChangedOrRemoved(const QStringList &paths));
     Q_PRIVATE_SLOT(d, void _k_slotUpdateDirectory());
 };
 
