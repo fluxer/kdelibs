@@ -83,11 +83,6 @@ qt4_add_dbus_adaptor(kiocore_STAT_SRCS
     KIOFileUndoManagerAdaptor
 )
 
-qt4_add_dbus_interface(kiocore_STAT_SRCS
-    kio/org.kde.kuiserver.xml
-    kuiserver_interface
-)
-
 set(kbookmarks_STAT_SRCS
     bookmarks/kbookmark.cc
     bookmarks/kbookmarkmanager.cc

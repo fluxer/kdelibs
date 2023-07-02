@@ -126,8 +126,7 @@ public:
         // Note: use   printf "0x%08X\n" $(($RANDOM*$RANDOM))
         // to define additional roles.
         FileItemRole = 0x07A263FF,  ///< returns the KFileItem for a given index
-        ChildCountRole = 0x2C4D0A40, ///< returns the number of items in a directory, or ChildCountUnknown
-        HasJobRole = 0x01E555A5  ///< returns whether or not there is a job on an item (file/directory)
+        ChildCountRole = 0x2C4D0A40 ///< returns the number of items in a directory, or ChildCountUnknown
     };
 
     enum DropsAllowedFlag {
@@ -198,30 +197,6 @@ public:
      */
     void requestSequenceIcon(const QModelIndex &index, int sequenceIndex);
 
-    /**
-     * Enable/Disable the displaying of an animated overlay that is shown for any destination
-     * urls (in the view). When enabled, the animations (if any) will be drawn automatically.
-     *
-     * Only the files/folders that are visible and have jobs associated with them
-     * will display the animation.
-     * You would likely not want this enabled if you perform some kind of custom painting
-     * that takes up a whole item, and will just make this(and what you paint) look funky.
-     *
-     * Default is disabled.
-     *
-     * Note: KFileItemDelegate needs to have it's method called with the same
-     * value, when you make the call to this method.
-     *
-     * @since 4.5
-     */
-    void setJobTransfersVisible(bool value);
-
-    /**
-     * Returns whether or not displaying job transfers has been enabled.
-     * @since 4.5
-     */
-    bool jobTransfersVisible() const;
-
 Q_SIGNALS:
     /**
      * Emitted for each subdirectory that is a parent of a url passed to expandToUrl
@@ -250,7 +225,6 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotRefreshItems(const QList<QPair<KFileItem, KFileItem> > &))
     Q_PRIVATE_SLOT(d, void _k_slotClear())
     Q_PRIVATE_SLOT(d, void _k_slotRedirection(const KUrl &))
-    Q_PRIVATE_SLOT(d, void _k_slotJobUrlsChanged(const QStringList &))
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDirModel::DropsAllowed)

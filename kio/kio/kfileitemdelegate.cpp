@@ -105,8 +105,6 @@ class KFileItemDelegate::Private
         QSize maximumSize;
         bool showToolTipWhenElided;
         QTextOption::WrapMode wrapMode;
-        bool jobTransfersVisible;
-        KIcon downArrowIcon;
 
     private:
         Margin verticalMargin[NMargins];
@@ -117,7 +115,7 @@ class KFileItemDelegate::Private
 
 KFileItemDelegate::Private::Private()
      : shadowColor(Qt::transparent), shadowOffset(1, 1), shadowBlur(2), maximumSize(0, 0),
-       showToolTipWhenElided(true), wrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere ), jobTransfersVisible(false),
+       showToolTipWhenElided(true), wrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere ),
        activeMargins(0)
 {
 }
@@ -958,19 +956,6 @@ QRect KFileItemDelegate::iconRect(const QStyleOptionViewItem &option, const QMod
     QStyleOptionViewItemV4 opt(option);
     d->initStyleOption(&opt, index);
     return QRect(d->iconPosition(opt), opt.icon.actualSize(opt.decorationSize));
-}
-
-
-void KFileItemDelegate::setJobTransfersVisible(bool jobTransfersVisible)
-{
-    d->downArrowIcon = KIcon("go-down");
-    d->jobTransfersVisible = jobTransfersVisible;
-}
-
-
-bool KFileItemDelegate::jobTransfersVisible() const
-{
-    return d->jobTransfersVisible;
 }
 
 
