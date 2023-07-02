@@ -60,9 +60,9 @@ public:
     void _k_slotTotalSize(KJob *job, qulonglong value);
     void _k_slotProcessedSize(KJob *job, qulonglong value);
     void _k_slotSpeed(KJob *job, ulong value);
+    void _k_slotRedirection(KIO::Job *job, const KUrl &url);
 
     void _k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &entries);
-    void _k_slotRedirection(KIO::Job *job, const KUrl &url);
     void _k_slotResult(KJob *job);
 
     void _k_slotDirty(const QString &path);

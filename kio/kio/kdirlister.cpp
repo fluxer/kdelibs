@@ -79,6 +79,12 @@ void KDirListerPrivate::_k_slotSpeed(KJob *job, ulong value)
     emit m_parent->speed(value);
 }
 
+void KDirListerPrivate::_k_slotRedirection(KIO::Job *job, const KUrl &url)
+{
+    Q_UNUSED(job);
+    emit m_parent->redirection(url);
+}
+
 void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &entries)
 {
     Q_ASSERT(listJob == qobject_cast<KIO::ListJob*>(job));
@@ -178,12 +184,6 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
             }
         }
     }
-}
-
-void KDirListerPrivate::_k_slotRedirection(KIO::Job *job, const KUrl &url)
-{
-    Q_UNUSED(job);
-    emit m_parent->redirection(url);
 }
 
 void KDirListerPrivate::_k_slotDirty(const QString &path)
@@ -341,6 +341,10 @@ bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
         d->listJob, SIGNAL(speed(KJob*, ulong)),
         this, SLOT(_k_slotSpeed(KJob*, ulong))
     );
+    connect(
+        d->listJob, SIGNAL(redirection(KIO::Job*,KUrl)),
+        this, SLOT(_k_slotRedirection(KIO::Job*,KUrl))
+    );
 
     // private slots
     connect(
@@ -350,10 +354,6 @@ bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
     connect(
         d->listJob, SIGNAL(result(KJob*)),
         this, SLOT(_k_slotResult(KJob*))
-    );
-    connect(
-        d->listJob, SIGNAL(redirection(KIO::Job*,KUrl)),
-        this, SLOT(_k_slotRedirection(KIO::Job*,KUrl))
     );
 
     emit started();

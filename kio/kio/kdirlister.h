@@ -84,10 +84,10 @@ public:
      * The itemsAdded() signal may be emitted once listing is done and then the
      * completed() signal is emitted (and isFinished() returns true).
      *
-     * @param url     the directory URL.
-     * @param flags   see OpenUrlFlags
-     * @return true   if successful, false otherwise (e.g. if invalid @p url)
-     *                was passed.
+     * @param url the directory URL.
+     * @param flags see OpenUrlFlags
+     * @return true if successful, false otherwise (e.g. if invalid @p url) was
+     *         passed.
      */
     bool openUrl(const KUrl &url, OpenUrlFlags flags = NoFlags);
 
@@ -227,7 +227,7 @@ public:
 
     /**
      * Returns the current name filter, as set via setNameFilter()
-     * @return the current name filter
+     * @return the current name filter. Empty, when no mime filter is set
      */
     QString nameFilter() const;
 
@@ -253,7 +253,7 @@ public:
 
     /**
      * Returns the list of mime based filters, as set via setMimeFilter().
-     * @return the list of mime based filters. Empty, when no mime filter is set.
+     * @return the list of mime based filters. Empty, when no mime filter is set
      */
     QStringList mimeFilters() const;
 
@@ -274,12 +274,12 @@ public:
      * Pass the main window this object is associated with, the window is used
      * for caching authentication data.
      *
-     * @param window the window to associate with, 0 to disassociate
+     * @param window the window to associate with, null to disassociate
      */
     void setMainWindow(QWidget *window);
 
     /**
-     * @return the associated main window, or 0 if there is none
+     * @return the associated main window, or null if there is none
      */
     QWidget* mainWindow();
 
@@ -300,7 +300,7 @@ public:
      * @param which specifies whether the returned list will contain all
      *              entries or only the ones that passed the nameFilter() and
      *              mimeFilter().
-     * @return the items listed for the current url().
+     * @return the items listed for the current url()
      */
     KFileItemList items(WhichItems which = FilteredItems) const;
 
@@ -334,7 +334,7 @@ Q_SIGNALS:
     void clear();
 
     /**
-     * Signals that new items were found during directory listing .
+     * Signals that new items were found during directory listing.
      *
      * @param items a list of new items
      * @since 4.2
@@ -351,12 +351,12 @@ Q_SIGNALS:
 
     /**
      * Signals an item to refresh (its mimetype/icon/name has changed).
-     * Note: KFileItem::refresh has already been called on those items.
      *
      * @param items the items to refresh. This is a list of pairs, where
      *              the first item in the pair is the OLD item, and the second
      *              item is the NEW item. This allows to track which item has
      *              changed, especially after a renaming.
+     * @note KFileItem::refresh has already been called on those items.
      */
     void refreshItems(const QList<QPair<KFileItem, KFileItem>> &items);
 
@@ -369,15 +369,15 @@ Q_SIGNALS:
     void infoMessage(const QString &msg);
 
     /**
-     * Signals the overall progress of the KDirLister. This allows can be
-     * connected to progress bar very easily. (see QProgressBar)
+     * Signals the overall progress of the KDirLister. This can be connected
+     * to progress bar very easily. (see QProgressBar)
      *
      * @param percent the progress in percent
      */
     void percent(ulong percent);
 
     /**
-     * Signals the size of the job.
+     * Signals the total size of the job.
      *
      * @param size the total size in bytes
      */
@@ -405,7 +405,7 @@ protected:
     * the name filter(s)
     *
     * @return true if the item is "ok". false if the item shall not be shown in
-    *         a view, e.g. files not matching a pattern *.cpp
+    *         a view, e.g. files not matching a *.cpp pattern
     * @see matchesFilter
     * @see setNameFilter
     */
@@ -418,7 +418,7 @@ protected:
     * filter(s)
     *
     * @return true if the item is "ok". false if the item shall not be shown in
-    *         a view, e.g. files not matching a text/plain
+    *         a view, e.g. files not matching a text/plain MIME
     * @see matchesMimeFilter
     * @see setMimeFilter
     */
@@ -450,14 +450,14 @@ private:
     KDirListerPrivate* const d;
     friend KDirListerPrivate;
 
-    Q_PRIVATE_SLOT(d, void _k_slotInfoMessage(KJob *job, const QString &msg))
-    Q_PRIVATE_SLOT(d, void _k_slotPercent(KJob *job, ulong value))
-    Q_PRIVATE_SLOT(d, void _k_slotTotalSize(KJob *job, qulonglong value))
-    Q_PRIVATE_SLOT(d, void _k_slotProcessedSize(KJob *job, qulonglong value))
-    Q_PRIVATE_SLOT(d, void _k_slotSpeed(KJob *job, ulong value))
+    Q_PRIVATE_SLOT(d, void _k_slotInfoMessage(KJob *job, const QString &msg));
+    Q_PRIVATE_SLOT(d, void _k_slotPercent(KJob *job, ulong value));
+    Q_PRIVATE_SLOT(d, void _k_slotTotalSize(KJob *job, qulonglong value));
+    Q_PRIVATE_SLOT(d, void _k_slotProcessedSize(KJob *job, qulonglong value));
+    Q_PRIVATE_SLOT(d, void _k_slotSpeed(KJob *job, ulong value));
+    Q_PRIVATE_SLOT(d, void _k_slotRedirection(KIO::Job *job, const KUrl &url));
 
     Q_PRIVATE_SLOT(d, void _k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &entries));
-    Q_PRIVATE_SLOT(d, void _k_slotRedirection(KIO::Job *job, const KUrl &url));
     Q_PRIVATE_SLOT(d, void _k_slotResult(KJob *job));
 
     Q_PRIVATE_SLOT(d, void _k_slotDirty(const QString &path));
