@@ -31,19 +31,23 @@
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
-#include <kdebug.h>
 #include <kmimetype.h>
 #include <kdesktopfile.h>
 #include <kde_file.h>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QTextStream>
-#include <QtCore/qstringlist.h>
-#include <QtCore/QRegExp>
-
-#include <sys/types.h>
 #include <kconfiggroup.h>
 #include <ksharedconfig.h>
+#include <kdebug.h>
+
+#include <QDir>
+#include <QFileInfo>
+#include <QTextStream>
+#include <QStringList>
+#include <QRegExp>
+
+#include <sys/types.h>
+
+// see kdebug.areas
+static const int s_krecentdocumentarea = 7005;
 
 QString KRecentDocument::recentDocumentDirectory()
 {
@@ -94,22 +98,25 @@ void KRecentDocument::add(const KUrl& url)
     // ### componentName might not match the service filename...
 }
 
-void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
+void KRecentDocument::add(const KUrl &url, const QString &desktopEntryName)
 {
-    if (url.isLocalFile() && KGlobal::dirs()->relativeLocation("tmp", url.toLocalFile() ) != url.toLocalFile()) {
-        return; // inside tmp resource, do not save
+    if (url.isLocalFile() && KGlobal::dirs()->relativeLocation("tmp", url.toLocalFile()) != url.toLocalFile()) {
+        // inside tmp resource, do not save
+        kDebug(s_krecentdocumentarea) << "temporary resource" << url << "for" << desktopEntryName;
+        return;
     }
 
     QString openStr = url.url();
     openStr.replace( QRegExp("\\$"), "$$" ); // Desktop files with type "Link" are $-variable expanded
 
-    kDebug(250) << "KRecentDocument::add for " << openStr;
     KConfigGroup config = KGlobal::config()->group(QByteArray("RecentDocuments"));
     bool useRecent = config.readEntry(QLatin1String("UseRecent"), true);
     int maxEntries = config.readEntry(QLatin1String("MaxEntries"), 10);
 
-    if(!useRecent || maxEntries <= 0)
+    if (!useRecent || maxEntries <= 0) {
+        kDebug(s_krecentdocumentarea) << "disabled" << url;
         return;
+    }
 
     const QString path = recentDocumentDirectory();
     const QString fileName = url.fileName();
@@ -120,17 +127,19 @@ void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
 
     int i=1;
     // check for duplicates
-    while(QFile::exists(ddesktop)){
+    while (QFile::exists(ddesktop)){
         // see if it points to the same file and application
         KDesktopFile tmp(ddesktop);
         if (tmp.desktopGroup().readEntry("X-KDE-LastOpenedWith") == desktopEntryName) {
             KDE::utime(ddesktop, NULL);
+            kDebug(s_krecentdocumentarea) << "duplicate" << url << "for" << desktopEntryName;
             return;
         }
         // if not append a (num) to it
         ++i;
-        if ( i > maxEntries )
+        if (i > maxEntries) {
             break;
+        }
         ddesktop = dStr + QString::fromLatin1("[%1].desktop").arg(i);
     }
 
@@ -147,6 +156,7 @@ void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
         }
     }
 
+    kDebug(s_krecentdocumentarea) << "adding URL" << url;
     // create the applnk
     KDesktopFile configFile(ddesktop);
     KConfigGroup conf = configFile.desktopGroup();
@@ -163,6 +173,7 @@ void KRecentDocument::clear()
     const QStringList list = recentDocuments();
     QDir dir;
     foreach(const QString &it, list) {
+        kDebug(s_krecentdocumentarea) << "clearing" << it;
         dir.remove(it);
     }
 }

@@ -33,7 +33,7 @@
 #define KAUTHORIZATION_SLEEPTIME 50
 
 // see kdebug.areas
-static const int s_kauthorization_area = 185;
+static const int s_kauthorizationarea = 185;
 
 void kAuthMessageHandler(QtMsgType type, const char *msg)
 {
@@ -62,12 +62,12 @@ static bool isDBusServiceRegistered(const QString &helper)
 {
     QDBusConnectionInterface* dbusinterface = QDBusConnection::systemBus().interface();
     if (!dbusinterface) {
-        kDebug(s_kauthorization_area) << "Null D-Bus interface" << helper;
+        kDebug(s_kauthorizationarea) << "Null D-Bus interface" << helper;
         return false;
     }
     QDBusReply<bool> reply = dbusinterface->isServiceRegistered(helper);
     if (reply.value() == false) {
-        kDebug(s_kauthorization_area) << "Service not registered" << helper;
+        kDebug(s_kauthorizationarea) << "Service not registered" << helper;
         return false;
     }
     return true;
@@ -102,7 +102,7 @@ int KAuthorizationAdaptor::execute(const QString &method, const QVariantMap &arg
         Q_RETURN_ARG(int, result), Q_ARG(QVariantMap, arguments)
     );
     if (!success) {
-        kWarning(s_kauthorization_area) << "Invalid method" << method;
+        kWarning(s_kauthorizationarea) << "Invalid method" << method;
         delayedStop();
         return KAuthorization::MethodError;
     }
@@ -148,19 +148,19 @@ bool KAuthorization::isAuthorized(const QString &helper)
     QDBusReply<void> reply = kauthorizationinterface.call(QString::fromLatin1("stop"));
     bool result = true;
     if (!reply.isValid()) {
-        kWarning(s_kauthorization_area) << reply.error().message();
+        kWarning(s_kauthorizationarea) << reply.error().message();
         result = false;
     }
-    kDebug(s_kauthorization_area) << "Result is" << result;
+    kDebug(s_kauthorizationarea) << "Result is" << result;
     return result;
 }
 
 int KAuthorization::execute(const QString &helper, const QString &method, const QVariantMap &arguments)
 {
-    kDebug(s_kauthorization_area) << "Executing" << helper << "method" << method;
+    kDebug(s_kauthorizationarea) << "Executing" << helper << "method" << method;
 
     while (isDBusServiceRegistered(helper)) {
-        kDebug(s_kauthorization_area) << "Waiting for service to unregister" << helper;
+        kDebug(s_kauthorizationarea) << "Waiting for service to unregister" << helper;
         QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
         QThread::msleep(KAUTHORIZATION_SLEEPTIME);
     }
@@ -171,21 +171,21 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
     );
     QDBusPendingReply<int> reply = kauthorizationinterface.asyncCall(QString::fromLatin1("execute"), method, arguments);
     while (!reply.isFinished()) {
-        kDebug(s_kauthorization_area) << "Waiting for service call to finish" << helper;
+        kDebug(s_kauthorizationarea) << "Waiting for service call to finish" << helper;
         QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
         QThread::msleep(KAUTHORIZATION_SLEEPTIME);
     }
     int result = KAuthorization::NoError;
     if (!reply.isValid()) {
         result = KAuthorization::DBusError;
-        kWarning(s_kauthorization_area) << reply.error().message();
+        kWarning(s_kauthorizationarea) << reply.error().message();
         if (reply.error().type() == QDBusError::AccessDenied) {
             result = KAuthorization::AuthorizationError;
         }
     } else {
         result = reply.value();
     }
-    kDebug(s_kauthorization_area) << "Result is" << result;
+    kDebug(s_kauthorizationarea) << "Result is" << result;
     return result;
 }
 

@@ -32,8 +32,12 @@
 #include <ksharedconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
+#include <kdebug.h>
 
 #define MAX_DIR_HISTORY 3
+
+// see kdebug.areas
+static const int s_krecentdirsarea = 7004;
 
 static KConfigGroup recentdirs_readList(QString &key, QStringList &result)
 {
@@ -66,6 +70,7 @@ QStringList KRecentDirs::list(const QString &fileClass)
 QString KRecentDirs::dir(const QString &fileClass)
 {
     const QStringList result = list(fileClass);
+    kDebug(s_krecentdirsarea) << "dir for class" << fileClass << "is" << result[0];
     return result[0];
 }
 
@@ -80,6 +85,7 @@ void KRecentDirs::add(const QString &fileClass, const QString &directory)
     while(result.count() > MAX_DIR_HISTORY) {
         result.removeLast();
     }
+    kDebug(s_krecentdirsarea) << "adding" << directory << "for" << fileClass;
     config.writePathEntry(key, result);
     config.sync();
 }

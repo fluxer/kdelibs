@@ -36,13 +36,14 @@ static const char s_kdeUriListMime[] = "application/x-kde4-urilist";
 // sure they are not a thing
 // #define KURL_COMPAT_CHECK
 #ifdef KURL_COMPAT_CHECK
-static const int kurlDebugArea = 181; // see kdebug.areas
+// see kdebug.areas
+static const int s_kurlarea = 181;
 
 void kCheckLocalFile(const KUrl *kurl)
 {
     if (kurl->isLocalFile()) {
         if (kurl->hasQuery() || kurl->hasFragment()) {
-            kFatal(kurlDebugArea) << "Query or fragment detected in" << kurl->prettyUrl();
+            kFatal(s_kurlarea) << "Query or fragment detected in" << kurl->prettyUrl();
         }
     }
 }

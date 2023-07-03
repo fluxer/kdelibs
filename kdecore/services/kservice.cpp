@@ -44,7 +44,8 @@
 #include "kservicetypefactory.h"
 
 // see kdebug.areas
-int servicesDebugArea() {
+int servicesDebugArea()
+{
     return 183;
 }
 

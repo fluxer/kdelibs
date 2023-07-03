@@ -26,6 +26,9 @@
 #include "kglobal.h"
 #include "kdebug.h"
 
+// see kdebug.areas
+static const int s_kcoreconfigskeletonarea = 184;
+
 KConfigSkeletonItem::KConfigSkeletonItem(const QString & _group,
                                          const QString & _key)
     : mGroup(_group)
@@ -937,14 +940,11 @@ QVariant KCoreConfigSkeleton::ItemIntList::property() const
     return qVariantFromValue< QList<int> >(mReference);
 }
 
-// see kdebug.areas
-static int kCoreConfigSkeletionDebugArea() { return 184; }
-
 KCoreConfigSkeleton::KCoreConfigSkeleton(const QString &configname, QObject* parent)
   : QObject(parent),
     d( new Private )
 {
-    //kDebug(kCoreConfigSkeletionDebugArea()) << "Creating KCoreConfigSkeleton (" << (void *)this << ")";
+    //kDebug(s_kcoreconfigskeletonarea) << "Creating KCoreConfigSkeleton (" << (void *)this << ")";
 
   if ( !configname.isEmpty() )
   {
@@ -960,7 +960,7 @@ KCoreConfigSkeleton::KCoreConfigSkeleton(KSharedConfig::Ptr pConfig, QObject* pa
   : QObject(parent),
     d( new Private )
 {
-    //kDebug(kCoreConfigSkeletionDebugArea()) << "Creating KCoreConfigSkeleton (" << (void *)this << ")";
+    //kDebug(s_kcoreconfigskeletonarea) << "Creating KCoreConfigSkeleton (" << (void *)this << ")";
     d->mConfig = pConfig;
 }
 
@@ -1026,7 +1026,7 @@ void KCoreConfigSkeleton::setDefaults()
 
 void KCoreConfigSkeleton::readConfig()
 {
-    // kDebug(kCoreConfigSkeletionDebugArea());
+    // kDebug(s_kcoreconfigskeletonarea);
   d->mConfig->reparseConfiguration();
   KConfigSkeletonItem::List::ConstIterator it;
   for( it = d->mItems.constBegin(); it != d->mItems.constEnd(); ++it )
@@ -1038,7 +1038,7 @@ void KCoreConfigSkeleton::readConfig()
 
 void KCoreConfigSkeleton::writeConfig()
 {
-    kDebug(kCoreConfigSkeletionDebugArea());
+    kDebug(s_kcoreconfigskeletonarea);
   KConfigSkeletonItem::List::ConstIterator it;
   for( it = d->mItems.constBegin(); it != d->mItems.constEnd(); ++it )
   {
