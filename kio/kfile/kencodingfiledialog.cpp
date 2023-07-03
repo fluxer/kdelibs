@@ -28,8 +28,8 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kcharsets.h>
-#include <QtCore/QTextCodec>
-#include <krecentdocument.h>
+
+#include <QTextCodec>
 
 struct KEncodingFileDialogPrivate
 {
@@ -182,13 +182,8 @@ KEncodingFileDialog::Result KEncodingFileDialog::getSaveFileNameAndEncoding(cons
     dlg.setMode(KFile::File);
     dlg.exec();
 
-    QString filename = dlg.selectedFile();
-    if (!filename.isEmpty()) {
-        KRecentDocument::add(filename);
-    }
-
     Result res;
-    res.fileNames << filename;
+    res.fileNames << dlg.selectedFile();
     res.encoding = dlg.selectedEncoding();
     return res;
 }
@@ -207,11 +202,7 @@ KEncodingFileDialog::Result KEncodingFileDialog::getSaveUrlAndEncoding(const QSt
 
     Result res;
     if (dlg.exec() == QDialog::Accepted) {
-        KUrl url = dlg.selectedUrl();
-        if (url.isValid()) {
-            KRecentDocument::add(url);
-        }
-        res.URLs << url;
+        res.URLs << dlg.selectedUrl();
         res.encoding = dlg.selectedEncoding();
     }
     return res;
