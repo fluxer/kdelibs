@@ -6,10 +6,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-if(ENABLE_TESTING)
-    add_subdirectory(tests)
-endif()
-
 ########### next target ###############
 
 set(knotifyconfig_LIB_SRCS

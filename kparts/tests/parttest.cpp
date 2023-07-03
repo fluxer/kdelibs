@@ -127,8 +127,8 @@ void PartTest::testAutomaticMimeType()
     QVERIFY(part->closeUrl()); // nothing to do, no error
     QVERIFY(part->arguments().mimeType().isEmpty());
     // open a file, and test the detected mimetype
-    part->openUrl(KUrl(KDESRCDIR "/notepad.desktop"));
-    QCOMPARE(part->arguments().mimeType(), QString::fromLatin1("application/x-desktop"));
+    part->openUrl(KUrl(KDESRCDIR "/parttest.h"));
+    QCOMPARE(part->arguments().mimeType(), QString::fromLatin1("text/x-chdr"));
 
     // manually closing, no mimetype should be stored now
     part->closeUrl();
@@ -139,9 +139,9 @@ void PartTest::testAutomaticMimeType()
     QCOMPARE(part->arguments().mimeType(), QString("text/x-c++src"));
 
     // open a new file, but without explicitely close the first
-    part->openUrl(KUrl(KDESRCDIR "/notepad.desktop"));
+    part->openUrl(KUrl(KDESRCDIR "/parttest.h"));
     // test again its (autdetected) mimetype
-    QCOMPARE(part->arguments().mimeType(), QString::fromLatin1("application/x-desktop"));
+    QCOMPARE(part->arguments().mimeType(), QString::fromLatin1("text/x-chdr"));
 
     // open a new file, but manually forcing a mimetype
     KParts::OpenUrlArguments args;
@@ -153,9 +153,9 @@ void PartTest::testAutomaticMimeType()
 
     // clear the args and open a new file, reactivating the automatic mimetype detection again
     part->setArguments(KParts::OpenUrlArguments());
-    part->openUrl(KUrl(KDESRCDIR "/notepad.desktop"));
+    part->openUrl(KUrl(KDESRCDIR "/parttest.h"));
     // test again its (autdetected) mimetype
-    QCOMPARE(part->arguments().mimeType(), QString::fromLatin1("application/x-desktop"));
+    QCOMPARE(part->arguments().mimeType(), QString::fromLatin1("text/x-chdr"));
 
     delete part;
 }

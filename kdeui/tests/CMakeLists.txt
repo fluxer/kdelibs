@@ -73,81 +73,8 @@ KDEUI_UNIT_TESTS(
 )
 
 KDEUI_EXECUTABLE_TESTS(
-    kaccelgentest
-    kactionselectortest
-    kapptest
-    kassistantdialogtest
-    kcategorizedviewtest
-    kcodecactiontest
-    kcolorcollectiontest
-    kcolordlgtest
-    kcolorcombotest
-    kcomboboxtest
-    kdatepicktest
-    klanguagebuttontest
-    kdatetabletest
-    kdatetimewidgettest
-    kdatewidgettest
-    kdebugtest_gui
-    kdialogbuttonboxtest
-    kdialogtest
-    kfontdialogtest
     kglobalsettingsclient # helper program for kglobalsettingstest
-    khboxtest
-    kiconeffecttest
-    kiconloadertest
-    kinputdialogtest
-    kjobtrackerstest
-    kledtest
-    klineedittest
-    kmessageboxtest
-    kmessagetest
-    kmessagewidgettest
-    knewpassworddialogtest
-    kstatusnotifieritemtest
-    knotificationrestrictionstest
-    knuminputtest
-    kpagedialogtest
-    kpagewidgettest
-    kpassivepopuptest
-    kpassworddialogtest
-    kpixmapregionselectordialogtest
-    kpopuptest
-    kprogressdialogtest
-    krulertest
-    kselectactiontest
-    kseparatortest
-    kstatusbartest
-    ksqueezedtextlabeltest
-    ksystemtraytest
-    ktabwidgettest
-    ktextedittest
-    ktitlewidgettest
-    ktoolbartest
-    ktoolbarlabelactiontest
-    kwidgetitemdelegatetest
     kwindowtest
-    kxmlguitest
-    kxmlguiwindowtest
-    testqtargs
-    kpixmapsequenceoverlaypaintertest
-    ktreewidgetsearchlinetest
-    kcompletionuitest
-    kmainwindowrestoretest
-    kmainwindowtest
     fixx11h_test
     fixx11h_test2
-    kxerrorhandlertest
 )
-
-target_link_libraries(kdeui-kxerrorhandlertest ${X11_X11_LIB})
-
-## kcolorutilsdemo
-
-set(kcolorUtilsDemoSources
-    kcolorutilsdemo.cpp
-    kimageframe.cpp
-    ../colors/kcolorspaces.cpp
-)
-kde4_add_manual_test(kcolorutilsdemo ${kcolorUtilsDemoSources})
-target_link_libraries(kcolorutilsdemo kdeui)

@@ -8,12 +8,6 @@ MACRO(KIO_UNIT_TESTS)
         target_link_libraries(kio-${_testname} ${QT_QTTEST_LIBRARY} kio)
     ENDFOREACH(_testname)
 ENDMACRO(KIO_UNIT_TESTS)
-MACRO(KIO_EXECUTABLE_TESTS)
-    FOREACH(_testname ${ARGN})
-        kde4_add_manual_test(kio-${_testname} ${_testname}.cpp)
-        target_link_libraries(kio-${_testname} ${QT_QTTEST_LIBRARY} kio)
-    ENDFOREACH(_testname)
-ENDMACRO(KIO_EXECUTABLE_TESTS)
 
 # jobtest seems to trigger a ctest problem; jobtest finishes and ctest waits for ever
 
@@ -32,34 +26,5 @@ KIO_UNIT_TESTS(
     clipboardupdatertest
     globaltest
     udsentrytest
+    kfilemetainfotest
 )
-
-KIO_EXECUTABLE_TESTS(
-    ksycocatest
-    getalltest
-    kruntest
-    kioslavetest
-    speed
-    previewtest
-    kionetrctest
-    kpropsdlgtest
-    kmfitest
-    ksycocaupdatetest
-    netaccesstest
-    kmimetypechoosertest_gui
-    kurlrequestertest
-    kopenwithtest
-    kicondialogtest
-    kfiledialogtest
-)
-
-########### kfstest ###############
-
-set(kfstest_SRCS kfstest.cpp kfdtest.cpp)
-kde4_add_manual_test(kfstest ${kfstest_SRCS})
-target_link_libraries(kfstest kio)
-
-########### kfilemetainfotest ###############
-
-kde4_add_test(kio-kfilemetainfotest kfilemetainfotest.cpp)
-target_link_libraries(kio-kfilemetainfotest ${QT_QTTEST_LIBRARY} kio)

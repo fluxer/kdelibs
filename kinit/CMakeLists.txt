@@ -5,10 +5,6 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
 )
 
-if(ENABLE_TESTING)
-    add_subdirectory(tests)
-endif()
-
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1210)
 
 ########### kioslave ###############

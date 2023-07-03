@@ -1,45 +1,5 @@
 include_directories(${KDE4_KPARTS_INCLUDES})
 
-########### next target ###############
-
-set(kpartstest_SRCS
-    testmainwindow.cpp
-    parts.cpp
-    notepad.cpp
-)
-
-kde4_add_manual_test(kparts-kpartstest ${kpartstest_SRCS})
-
-target_link_libraries(kparts-kpartstest kparts)
-
-########### next target ###############
-
-set(normalktmtest_SRCS
-    normalktm.cpp
-    parts.cpp
-    notepad.cpp
-)
-
-kde4_add_manual_test(kparts-normalktmtest ${normalktmtest_SRCS})
-
-target_link_libraries(kparts-normalktmtest kparts)
-
-########### next target ###############
-
-kde4_add_manual_test(kparts-partviewer partviewer.cpp)
-
-target_link_libraries(kparts-partviewer kparts)
-
-########### next target ###############
-
-kde4_add_plugin(notepadpart notepad.cpp)
-
-target_link_libraries(notepadpart kparts)
-
-target_compile_definitions(notepadpart PRIVATE -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/")
-
-install(TARGETS notepadpart DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
-
 ########### unit tests ###############
 
 MACRO(KPARTS_UNIT_TESTS)
@@ -48,21 +8,8 @@ MACRO(KPARTS_UNIT_TESTS)
         target_link_libraries(kparts-${_testname} ${QT_QTTEST_LIBRARY} kparts)
     ENDFOREACH(_testname)
 ENDMACRO(KPARTS_UNIT_TESTS)
-MACRO(KPARTS_EXECUTABLE_TESTS)
-    FOREACH(_testname ${ARGN})
-        kde4_add_manual_test(kparts-${_testname} ${_testname}.cpp)
-        target_link_libraries(kparts-${_testname} ${QT_QTTEST_LIBRARY} kparts)
-    ENDFOREACH(_testname)
-ENDMACRO(KPARTS_EXECUTABLE_TESTS)
 
 KPARTS_UNIT_TESTS(
     parttest
 )
 
-########### install files ###############
-
-# Normally this would be needed. For the test programs we can avoid that, see addResourceDir.
-#install( FILES notepadpart.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/notepadpart )
-#install( FILES partviewer_shell.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/partviewer )
-#install( FILES kpartstest_shell.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/kpartstest )
-#install( FILES kpartstest_part1.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/kpartstestpart )

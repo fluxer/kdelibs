@@ -60,9 +60,6 @@ KDECORE_UNIT_TESTS(
 )
 
 KDECORE_EXECUTABLE_TESTS(
-    kcmdlineargstest
-    dbuscalltest
-    startserviceby
     klockfile_testlock # helper for klockfiletest
 )
 

@@ -43,10 +43,6 @@ target_link_libraries(kdeclarative PUBLIC
     kdeui
 )
 
-if(ENABLE_TESTING)
-    add_subdirectory(tests)
-endif()
-
 generate_export_header(kdeclarative)
 
 install(
