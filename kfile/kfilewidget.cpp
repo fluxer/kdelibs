@@ -954,8 +954,12 @@ void KFileWidget::slotOk()
             }
             filesInList = true;
         } else {
+            if (directoryMode) {
+                KMessageBox::sorry(this, i18n("The directory \"%1\" could not be found", url.pathOrUrl()), i18n("Cannot open directory"));
+                return; // do not emit accepted() if we had ExistingOnly flag and stat failed
+            }
             KMessageBox::sorry(this, i18n("The file \"%1\" could not be found", url.pathOrUrl()), i18n("Cannot open file"));
-            return; // do not emit accepted() if we had ExistingOnly flag and stat failed
+            return;
         }
         ++it;
     }
