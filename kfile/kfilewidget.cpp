@@ -186,7 +186,7 @@ public:
     void _k_slotIconSizeSliderMoved(int);
     void _k_slotIconSizeChanged(int);
 
-    void addToRecentDocuments();
+    void addToRecent();
 
     QString locationEditCurrentText() const;
 
@@ -970,8 +970,6 @@ void KFileWidget::accept()
     d->inAccept = true; // parseSelectedUrls() checks that
 
     *lastDirectory = d->ops->url();
-    if (!d->fileClass.isEmpty())
-       KRecentDirs::add(d->fileClass, d->ops->url().url());
 
     // clear the topmost item, we insert it as full path later on as item 1
     d->locationEdit->setItemText( 0, QString() );
@@ -1003,7 +1001,7 @@ void KFileWidget::accept()
     d->writeViewConfig();
     d->saveRecentFiles();
 
-    d->addToRecentDocuments();
+    d->addToRecent();
 
     if (!(mode() & KFile::Files)) { // single selection
         emit fileSelected(d->url);
@@ -2365,22 +2363,31 @@ void KFileWidgetPrivate::appendExtension (KUrl &url)
 
 
 // adds the selected files/urls to 'recent documents'
-void KFileWidgetPrivate::addToRecentDocuments()
+void KFileWidgetPrivate::addToRecent()
 {
     int m = ops->mode();
-    int atmost = KRecentDocument::maximumItems();
     //don't add more than we need. KRecentDocument::add() is pretty slow
+    int atmost = KRecentDocument::maximumItems();
 
-    if (m & KFile::LocalOnly) {
+    if (m & KFile::Directory) {
+        if (!fileClass.isEmpty()) {
+            const KUrl::List urls = q->selectedUrls();
+            KUrl::List::ConstIterator it = urls.begin();
+            for ( ; it != urls.end(); ++it ) {
+                if ( (*it).isValid() ) {
+                    KRecentDirs::add(fileClass, it->url());
+                }
+            }
+        }
+    } else if (m & KFile::LocalOnly) {
         const QStringList files = q->selectedFiles();
         QStringList::ConstIterator it = files.begin();
         for ( ; it != files.end() && atmost > 0; ++it ) {
             KRecentDocument::add( *it );
             atmost--;
         }
-    }
-
-    else { // urls
+    } else {
+        // urls
         const KUrl::List urls = q->selectedUrls();
         KUrl::List::ConstIterator it = urls.begin();
         for ( ; it != urls.end() && atmost > 0; ++it ) {
