@@ -407,10 +407,7 @@ install(
     KParts/MainWindow
     KParts/OpenUrlEvent
     KParts/Part
-    KParts/PartActivateEvent
     KParts/PartBase
-    KParts/PartManager
-    KParts/PartSelectEvent
     KParts/ReadOnlyPart
     KParts/ReadWritePart
     KParts/StatusBarExtension

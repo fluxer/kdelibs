@@ -14,7 +14,6 @@ include_directories(${KDE4_KIO_INCLUDES} ${kparts_BINARY_DIR})
 
 set(kparts_LIB_SRCS
     part.cpp
-    partmanager.cpp
     mainwindow.cpp
     event.cpp
     browserextension.cpp
@@ -57,7 +56,6 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kparts_export.h
     part.h
-    partmanager.h
     mainwindow.h
     event.h
     browserextension.h

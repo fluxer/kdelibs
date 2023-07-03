@@ -60,10 +60,6 @@ protected Q_SLOTS:
    * Create the GUI (by merging the host's and the active part's)
    * You _must_ call this in order to see any GUI being created.
    *
-   * In a main window with multiple parts being shown (e.g. as in Konqueror)
-   * you need to connect this slot to the
-   * KPartManager::activePartChanged() signal
-   *
    * @param part The active part (set to 0L if no part).
    */
   void createGUI( KParts::Part * part );

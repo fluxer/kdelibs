@@ -48,10 +48,7 @@ namespace KIO {
 namespace KParts
 {
 
-class PartManager;
 class PartPrivate;
-class PartActivateEvent;
-class PartSelectEvent;
 class GUIActivateEvent;
 class PartBasePrivate;
 
@@ -156,17 +153,6 @@ public:
     virtual QWidget *widget();
 
     /**
-     * @internal
-     * Used by the part manager.
-     */
-    virtual void setManager( PartManager * manager );
-
-    /**
-     * Returns the part manager handling this part, if any (0L otherwise).
-     */
-    PartManager * manager() const;
-
-    /**
      * By default, the widget is deleted by the part when the part is deleted.
      * The hosting application can call setAutoDeleteWidget(false) to
      * disable this behavior, given that the widget is usually deleted by
@@ -239,21 +225,6 @@ protected:
      * @internal
      */
     virtual void customEvent( QEvent *event );
-
-    /**
-     * Convenience method which is called when the Part received a PartActivateEvent .
-     * Reimplement this if you don't want to reimplement event and test for the event yourself
-     * or even install an event filter.
-     */
-    virtual void partActivateEvent( PartActivateEvent *event );
-
-    /**
-     * Convenience method which is called when the Part received a
-     * PartSelectEvent .
-     * Reimplement this if you don't want to reimplement event and
-     * test for the event yourself or even install an event filter.
-     */
-    virtual void partSelectEvent( PartSelectEvent *event );
 
     /**
      * Convenience method which is called when the Part received a
@@ -571,10 +542,6 @@ protected:
      * the current url (decoded) when the part is activated
      * This is the usual behavior in 99% of the apps
      * Reimplement if you don't like it - test for event->activated() !
-     *
-     * Technical note : this is done with GUIActivateEvent and not with
-     * PartActivateEvent because it's handled by the mainwindow
-     * (which gets the even after the PartActivateEvent events have been sent)
      */
     virtual void guiActivateEvent( GUIActivateEvent *event );
 

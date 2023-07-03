@@ -21,7 +21,6 @@
 #include "part.h"
 #include "event.h"
 #include "mainwindow.h"
-#include "partmanager.h"
 #include "browserextension.h"
 
 #include <QtGui/QApplication>
@@ -75,8 +74,7 @@ public:
           m_iconLoader(0),
           m_bSelectable(true),
           m_autoDeleteWidget(true),
-          m_autoDeletePart(true),
-          m_manager(0)
+          m_autoDeletePart(true)
     {
     }
 
@@ -88,7 +86,6 @@ public:
     bool m_bSelectable;
     bool m_autoDeleteWidget;
     bool m_autoDeletePart;
-    PartManager * m_manager;
     QPointer<QWidget> m_widget;
 };
 
@@ -139,9 +136,6 @@ Part::~Part()
         // We need to disconnect first to avoid calling slotWidgetDestroyed() !
         disconnect( d->m_widget, 0, this, 0 );
     }
-
-    if ( d->m_manager )
-        d->m_manager->removePart(this);
 
     if ( d->m_widget && d->m_autoDeleteWidget )
     {
@@ -199,20 +193,6 @@ KIconLoader* Part::iconLoader()
     return d->m_iconLoader;
 }
 
-void Part::setManager( PartManager *manager )
-{
-    Q_D(Part);
-
-    d->m_manager = manager;
-}
-
-PartManager *Part::manager() const
-{
-    Q_D(const Part);
-
-    return d->m_manager;
-}
-
 Part *Part::hitTest( QWidget *widget, const QPoint & )
 {
     Q_D(Part);
@@ -246,18 +226,6 @@ bool Part::isSelectable() const
 
 void Part::customEvent( QEvent *ev )
 {
-    if ( PartActivateEvent::test( ev ) )
-    {
-        partActivateEvent( static_cast<PartActivateEvent *>(ev) );
-        return;
-    }
-
-    if ( PartSelectEvent::test( ev ) )
-    {
-        partSelectEvent( static_cast<PartSelectEvent *>(ev) );
-        return;
-    }
-
     if ( GUIActivateEvent::test( ev ) )
     {
         guiActivateEvent( static_cast<GUIActivateEvent *>(ev) );
@@ -265,14 +233,6 @@ void Part::customEvent( QEvent *ev )
     }
 
     QObject::customEvent( ev );
-}
-
-void Part::partActivateEvent( PartActivateEvent * )
-{
-}
-
-void Part::partSelectEvent( PartSelectEvent * )
-{
 }
 
 void Part::guiActivateEvent( GUIActivateEvent * )
