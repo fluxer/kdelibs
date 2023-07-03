@@ -452,15 +452,7 @@ void Kded::updateDirWatch()
     connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
 
     foreach(const QString &it, m_allResourceDirs) {
-        QString path(it);
-        if (!path.endsWith('/')) {
-            path += '/';
-        }
-        // Already seen this one?
-        if (m_pDirWatch->contains(path)) {
-            continue;
-        }
-        m_pDirWatch->addDir(path, true);
+        m_pDirWatch->addDir(it, true);
     }
 }
 
