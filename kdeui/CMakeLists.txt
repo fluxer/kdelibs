@@ -95,7 +95,6 @@ set(kdeui_LIB_SRCS
     dialogs/kaboutapplicationpersonlistview_p.cpp
     dialogs/knewpassworddialog.cpp
     dialogs/kpassworddialog.cpp
-    dialogs/kpixmapregionselectordialog.cpp
     dialogs/kprogressdialog.cpp
     dialogs/kshortcuteditwidget.cpp
     dialogs/kshortcutseditordelegate.cpp
@@ -230,7 +229,6 @@ set(kdeui_LIB_SRCS
     widgets/kmessagewidget.cpp
     widgets/kmultitabbar.cpp
     widgets/knuminput.cpp
-    widgets/kpixmapregionselectorwidget.cpp
     widgets/kpushbutton.cpp
     widgets/kratingpainter.cpp
     widgets/kratingwidget.cpp
@@ -433,7 +431,6 @@ install(
     dialogs/kmessageboxmessagehandler.h
     dialogs/knewpassworddialog.h
     dialogs/kpassworddialog.h
-    dialogs/kpixmapregionselectordialog.h
     dialogs/kprogressdialog.h
     dialogs/ksplashscreen.h
     dialogs/kshortcutsdialog.h
@@ -546,7 +543,6 @@ install(
     widgets/kmessagewidget.h
     widgets/kmultitabbar.h
     widgets/knuminput.h
-    widgets/kpixmapregionselectorwidget.h
     widgets/kpushbutton.h
     widgets/kratingpainter.h
     widgets/kratingwidget.h

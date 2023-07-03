@@ -215,8 +215,6 @@ install(
     KPasswordDialog
     KPasteTextAction
     KPixmap
-    KPixmapRegionSelectorDialog
-    KPixmapRegionSelectorWidget
     KPluginFactory
     KPluginInfo
     KPluginLoader

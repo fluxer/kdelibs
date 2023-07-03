@@ -220,11 +220,6 @@ ToolTip=Paged Widget (KDE)
 WhatsThis=Page widget with many layouts (faces).
 Group=Views (KDE)
 
-[KPixmapRegionSelectorWidget]
-IncludeFile=kpixmapregionselectorwidget.h
-ToolTip=Pixmap Region Selector (KDE)
-Group=Graphics (KDE)
-
 [KPixmapSequenceWidget]
 ToolTip=Pixmap Sequence Widget (KDE)
 WhatsThis=A simple widget showing a fixed size pixmap sequence.
