@@ -64,7 +64,9 @@ static QString kPathDirectory(const QString &path)
     if (lastslash == 0) {
         return QString(QLatin1Char('/'));
     }
-    return path.left(lastslash);
+    QString result = path.left(lastslash);
+    result.append(QLatin1Char('/'));
+    return result;
 }
 
 static QByteArray kUriListData(const KUrl::List &urls)
@@ -614,7 +616,8 @@ KUrl KUrl::upUrl() const
             if (KDE_stat(urlpathencoded, &statbuff) == 0 && S_ISDIR(statbuff.st_mode)) {
                 newpath = kPathDirectory(urlpath);
             } else {
-                newpath = kPathDirectory(kPathDirectory(urlpath));
+                newpath = kPathDirectory(urlpath);
+                newpath = kPathDirectory(newpath.mid(0, newpath.size() - 1));
             }
         }
         KUrl result(*this);

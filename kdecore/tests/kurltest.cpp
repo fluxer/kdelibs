@@ -61,6 +61,12 @@ void KUrlTest::testUpUrl()
     KUrl newUrl = url.upUrl();
     // qDebug() << Q_FUNC_INFO << newUrl << url2;
     QCOMPARE(newUrl, url2);
+    const QString newPath = newUrl.path();
+    if (newPath.isEmpty()) {
+        // empty/null URL, if the slash is there it will be root path ("/")
+        return;
+    }
+    QCOMPARE(newPath[newPath.size() - 1], QChar::fromLatin1('/'));
 }
 
 void KUrlTest::testHash_data()
