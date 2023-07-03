@@ -36,6 +36,7 @@ KDirOperatorDetailView::KDirOperatorDetailView(QWidget *parent) :
     m_resizeColumns(true), m_hideDetailColumns(false)
 {
     setRootIsDecorated(false);
+    setItemsExpandable(false);
     setSortingEnabled(true);
     setUniformRowHeights(true);
     setDragDropMode(QListView::DragOnly);
@@ -65,30 +66,12 @@ void KDirOperatorDetailView::setModel(QAbstractItemModel *model)
 
 bool KDirOperatorDetailView::setViewMode(KFile::FileView viewMode)
 {
-    bool tree = false;
-    
     if (KFile::isDetailView(viewMode)) {
         m_hideDetailColumns = false;
-    } else if (KFile::isTreeView(viewMode)) {
-        m_hideDetailColumns = true;
-        tree = true;
-    } else if (KFile::isDetailTreeView(viewMode)) {
-        m_hideDetailColumns = false;
-        tree = true;
     } else {
         return false;
     }
-    
-    setRootIsDecorated(tree);
-    setItemsExpandable(tree);
-    // This allows to have a horizontal scrollbar in case this view is used as
-    // a plain treeview instead of cutting off filenames, especially useful when
-    // using KDirOperator in horizontally limited parts of an app.
-    if( tree && m_hideDetailColumns ) {
-        header()->setResizeMode( QHeaderView::ResizeToContents );
-        header()->setStretchLastSection( false );
-    }
-    
+
     return true;
 }
 

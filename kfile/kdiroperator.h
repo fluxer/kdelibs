@@ -880,8 +880,6 @@ private:
 
     Q_PRIVATE_SLOT( d, void _k_slotDetailedView() )
     Q_PRIVATE_SLOT( d, void _k_slotSimpleView() )
-    Q_PRIVATE_SLOT( d, void _k_slotTreeView() )
-    Q_PRIVATE_SLOT( d, void _k_slotDetailedTreeView() )
     Q_PRIVATE_SLOT( d, void _k_slotToggleHidden(bool) )
     Q_PRIVATE_SLOT( d, void _k_togglePreview(bool) )
     Q_PRIVATE_SLOT( d, void _k_toggleInlinePreviews(bool) )

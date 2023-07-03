@@ -206,8 +206,6 @@ public:
     // private slots
     void _k_slotDetailedView();
     void _k_slotSimpleView();
-    void _k_slotTreeView();
-    void _k_slotDetailedTreeView();
     void _k_slotToggleHidden(bool);
     void _k_togglePreview(bool);
     void _k_toggleInlinePreviews(bool);
@@ -577,7 +575,7 @@ KActionCollection * KDirOperator::actionCollection() const
 }
 
 KFile::FileView KDirOperator::Private::allViews() {
-    return static_cast<KFile::FileView>(KFile::Simple | KFile::Detail | KFile::Tree | KFile::DetailTree);
+    return static_cast<KFile::FileView>(KFile::Simple | KFile::Detail);
 }
 
 void KDirOperator::Private::_k_slotDetailedView()
@@ -589,18 +587,6 @@ void KDirOperator::Private::_k_slotDetailedView()
 void KDirOperator::Private::_k_slotSimpleView()
 {
     KFile::FileView view = static_cast<KFile::FileView>((viewKind & ~allViews()) | KFile::Simple);
-    parent->setView(view);
-}
-
-void KDirOperator::Private::_k_slotTreeView()
-{
-    KFile::FileView view = static_cast<KFile::FileView>((viewKind & ~allViews()) | KFile::Tree);
-    parent->setView(view);
-}
-
-void KDirOperator::Private::_k_slotDetailedTreeView()
-{
-    KFile::FileView view = static_cast<KFile::FileView>((viewKind & ~allViews()) | KFile::DetailTree);
     parent->setView(view);
 }
 
@@ -1359,7 +1345,7 @@ bool KDirOperator::Private::checkPreviewInternal() const
 QAbstractItemView* KDirOperator::createView(QWidget* parent, KFile::FileView viewKind)
 {
     QAbstractItemView *itemView = 0;
-    if (KFile::isDetailView(viewKind) || KFile::isTreeView(viewKind) || KFile::isDetailTreeView(viewKind)) {
+    if (KFile::isDetailView(viewKind)) {
         KDirOperatorDetailView *detailView = new KDirOperatorDetailView(parent);
         detailView->setViewMode(viewKind);
         itemView = detailView;
@@ -1385,10 +1371,6 @@ void KDirOperator::setView(KFile::FileView viewKind)
     if (viewKind == KFile::Default) {
         if (KFile::isDetailView((KFile::FileView)d->defaultView)) {
             viewKind = KFile::Detail;
-        } else if (KFile::isTreeView((KFile::FileView)d->defaultView)) {
-            viewKind = KFile::Tree;
-        } else if (KFile::isDetailTreeView((KFile::FileView)d->defaultView)) {
-            viewKind = KFile::DetailTree;
         } else {
             viewKind = KFile::Simple;
         }
@@ -1836,21 +1818,9 @@ void KDirOperator::setupActions()
     detailedAction->setIcon(KIcon(QLatin1String("view-list-details")));
     connect(detailedAction, SIGNAL(triggered()), SLOT(_k_slotDetailedView()));
 
-    KToggleAction *treeAction = new KToggleAction(i18n("Tree View"), this);
-    d->actionCollection->addAction("tree view", treeAction);
-    treeAction->setIcon(KIcon(QLatin1String("view-list-tree")));
-    connect(treeAction, SIGNAL(triggered()), SLOT(_k_slotTreeView()));
-
-    KToggleAction *detailedTreeAction = new KToggleAction(i18n("Detailed Tree View"), this);
-    d->actionCollection->addAction("detailed tree view", detailedTreeAction);
-    detailedTreeAction->setIcon(KIcon(QLatin1String("view-list-tree")));
-    connect(detailedTreeAction, SIGNAL(triggered()), SLOT(_k_slotDetailedTreeView()));
-
     QActionGroup* viewGroup = new QActionGroup(this);
     shortAction->setActionGroup(viewGroup);
     detailedAction->setActionGroup(viewGroup);
-    treeAction->setActionGroup(viewGroup);
-    detailedTreeAction->setActionGroup(viewGroup);
 
     KToggleAction *showHiddenAction = new KToggleAction(i18n("Show Hidden Files"), this);
     d->actionCollection->addAction("show hidden", showHiddenAction);
@@ -1882,9 +1852,6 @@ void KDirOperator::setupActions()
     d->actionCollection->addAction("view menu", viewMenu);
     viewMenu->addAction(shortAction);
     viewMenu->addAction(detailedAction);
-    // Comment following lines to hide the extra two modes
-    viewMenu->addAction(treeAction);
-    viewMenu->addAction(detailedTreeAction);
     // TODO: QAbstractItemView does not offer an action collection. Provide
     // an interface to add a custom action collection.
 
@@ -1982,8 +1949,6 @@ void KDirOperator::updateViewActions()
 
     d->actionCollection->action("short view")->setChecked(KFile::isSimpleView(fv));
     d->actionCollection->action("detailed view")->setChecked(KFile::isDetailView(fv));
-    d->actionCollection->action("tree view")->setChecked(KFile::isTreeView(fv));
-    d->actionCollection->action("detailed tree view")->setChecked(KFile::isDetailTreeView(fv));
 }
 
 void KDirOperator::readConfig(const KConfigGroup& configGroup)
@@ -1992,10 +1957,6 @@ void KDirOperator::readConfig(const KConfigGroup& configGroup)
     QString viewStyle = configGroup.readEntry("View Style", "Simple");
     if (viewStyle == QLatin1String("Detail")) {
         d->defaultView |= KFile::Detail;
-    } else if (viewStyle == QLatin1String("Tree")) {
-        d->defaultView |= KFile::Tree;
-    } else if (viewStyle == QLatin1String("DetailTree")) {
-        d->defaultView |= KFile::DetailTree;
     } else {
         d->defaultView |= KFile::Simple;
     }
@@ -2093,10 +2054,6 @@ void KDirOperator::writeConfig(KConfigGroup& configGroup)
         style = QLatin1String("Detail");
     else if (KFile::isSimpleView(fv))
         style = QLatin1String("Simple");
-    else if (KFile::isTreeView(fv))
-        style = QLatin1String("Tree");
-    else if (KFile::isDetailTreeView(fv))
-        style = QLatin1String("DetailTree");
     configGroup.writeEntry(QLatin1String("View Style"), style);
 
     if (d->inlinePreviewState == Private::NotForced) {

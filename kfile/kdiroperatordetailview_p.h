@@ -39,7 +39,7 @@ public:
     virtual void setModel(QAbstractItemModel *model);
 
     /**
-    * Displays either Detail, Tree or DetailTree modes.
+    * Displays Detail mode.
     */
     virtual bool setViewMode(KFile::FileView viewMode);
 

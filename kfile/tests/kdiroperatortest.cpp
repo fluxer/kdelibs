@@ -52,8 +52,8 @@ private Q_SLOTS:
     {
         // Test: Make sure readConfig() and then setView() restores
         // the correct kind of view.
-        KDirOperator *dirOp = new KDirOperator;
-        dirOp->setView(KFile::DetailTree);
+        KDirOperator *dirOp = new KDirOperator();
+        dirOp->setView(KFile::Detail);
         dirOp->setShowHiddenFiles(true);
         KConfigGroup cg(KGlobal::config(), "diroperator");
         dirOp->writeConfig(cg);
@@ -83,7 +83,7 @@ private Q_SLOTS:
         const KUrl kFileDirUrl(KUrl(KDESRCDIR).upUrl());
 
         KDirOperator dirOp(kFileDirUrl);
-        dirOp.setView(KFile::DetailTree);
+        dirOp.setView(KFile::Detail);
         QTest::qWait(3000);
         QVERIFY(dirOp.dirLister()->isFinished());
         dirOp.setCurrentItem("file:///");

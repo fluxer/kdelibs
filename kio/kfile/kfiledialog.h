@@ -687,7 +687,6 @@ public:
      */
     static void setStartDir( const KUrl& directory );
 
-
 Q_SIGNALS:
     /**
       * Emitted when the user selects a file. It is only emitted in single-
