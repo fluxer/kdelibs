@@ -272,10 +272,8 @@ KDirLister::~KDirLister()
     delete d;
 }
 
-bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
+bool KDirLister::openUrl(const KUrl &url)
 {
-    Q_UNUSED(flags);
-
     stop();
 
     if (d->dirWatch) {
@@ -295,7 +293,7 @@ bool KDirLister::openUrl(const KUrl &url, OpenUrlFlags flags)
         d->dirNotify = nullptr;
     }
 
-    kDebug(7003) << "opening" << url << flags;
+    kDebug(7003) << "opening" << url;
     d->url = url;
     d->allItems.clear();
     if (!d->filteredItems.isEmpty()) {
@@ -435,7 +433,7 @@ void KDirLister::updateDirectory()
 {
     // NOTE: no partial updates for non-local directories because the signals are bogus for
     // some KIO slaves (such as trash:/, see kde-workspace/kioslave/trash/ktrash.cpp for example)
-    openUrl(d->url, KDirLister::NoFlags);
+    openUrl(d->url);
 }
 
 bool KDirLister::isFinished() const

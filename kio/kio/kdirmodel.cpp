@@ -1019,7 +1019,7 @@ void KDirModel::fetchMore( const QModelIndex & parent )
     dirNode->setPopulated( true );
 
     const KUrl parentUrl = parentItem.url();
-    d->m_dirLister->openUrl(parentUrl, KDirLister::Keep);
+    d->m_dirLister->openUrl(parentUrl);
 }
 
 bool KDirModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )

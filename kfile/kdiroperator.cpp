@@ -196,7 +196,7 @@ public:
 
     // private methods
     bool checkPreviewInternal() const;
-    bool openUrl(const KUrl &url, KDirLister::OpenUrlFlags flags = KDirLister::NoFlags);
+    bool openUrl(const KUrl &url);
     int sortColumn() const;
     Qt::SortOrder sortOrder() const;
     void updateSorting(QDir::SortFlags sort);
@@ -1009,13 +1009,13 @@ void KDirOperator::updateDir()
 void KDirOperator::rereadDir()
 {
     pathChanged();
-    d->openUrl(d->currUrl, KDirLister::Reload);
+    d->openUrl(d->currUrl);
 }
 
 
-bool KDirOperator::Private::openUrl(const KUrl& url, KDirLister::OpenUrlFlags flags)
+bool KDirOperator::Private::openUrl(const KUrl &url)
 {
-    const bool result = KProtocolManager::supportsListing(url) && dirLister->openUrl(url, flags);
+    const bool result = KProtocolManager::supportsListing(url) && dirLister->openUrl(url);
     if (!result)   // in that case, neither completed() nor canceled() will be emitted by KDL
         _k_slotCanceled();
 

@@ -54,16 +54,6 @@ class KIO_EXPORT KDirLister : public QObject
     Q_PROPERTY(QStringList mimeFilter READ mimeFilters WRITE setMimeFilter RESET clearMimeFilter)
 
 public:
-    enum OpenUrlFlag
-    {
-        NoFlags = 0x0, ///< No additional flags specified.
-
-        Keep = 0x1,    ///< Deprecated, non-operational.
-
-        Reload = 0x2   ///< Deprecated, non-operational.
-    };
-    Q_DECLARE_FLAGS(OpenUrlFlags, OpenUrlFlag)
-
     /**
      * Create a directory lister.
      */
@@ -85,11 +75,10 @@ public:
      * completed() signal is emitted (and isFinished() returns true).
      *
      * @param url the directory URL.
-     * @param flags see OpenUrlFlags
      * @return true if successful, false otherwise (e.g. if invalid @p url) was
      *         passed.
      */
-    bool openUrl(const KUrl &url, OpenUrlFlags flags = NoFlags);
+    bool openUrl(const KUrl &url);
 
     /**
      * Stop listing the current directory URL. Emits canceled() if there was
@@ -466,7 +455,5 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotFilesChangedOrRemoved(const QStringList &paths));
     Q_PRIVATE_SLOT(d, void _k_slotUpdateDirectory());
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KDirLister::OpenUrlFlags)
 
 #endif // KDIRLISTER_H
