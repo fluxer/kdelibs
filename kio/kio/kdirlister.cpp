@@ -94,7 +94,7 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
         if (name.isEmpty()) {
             continue;
         }
-        KFileItem item(it, listJob->url(), delayedMimeTypes, true);
+        const KFileItem item(it, listJob->url(), delayedMimeTypes, true);
         if (name == QLatin1String(".")) {
             rootFileItem = item;
             continue;
