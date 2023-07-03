@@ -53,11 +53,16 @@ QString KRecentDocument::recentDocumentDirectory()
 
 QStringList KRecentDocument::recentDocuments()
 {
-    QDir d(recentDocumentDirectory(), "*.desktop", QDir::Time,
-           QDir::Files | QDir::Readable | QDir::Hidden);
+    QDir d(
+        recentDocumentDirectory(),
+        "*.desktop",
+        QDir::Time,
+        QDir::Files | QDir::Readable | QDir::Hidden
+    );
 
-    if (!d.exists())
+    if (!d.exists()) {
         d.mkdir(recentDocumentDirectory());
+    }
 
     const QStringList list = d.entryList();
     QStringList fullList;
@@ -76,7 +81,7 @@ QStringList KRecentDocument::recentDocuments()
         if (urlDesktopFile.isLocalFile() && !QFile(urlDesktopFile.toLocalFile()).exists()) {
             d.remove(pathDesktop);
         } else {
-            fullList.append( pathDesktop );
+            fullList.append(pathDesktop);
         }
     }
 
@@ -91,8 +96,9 @@ void KRecentDocument::add(const KUrl& url)
 
 void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
 {
-    if ( url.isLocalFile() && KGlobal::dirs()->relativeLocation( "tmp", url.toLocalFile() ) != url.toLocalFile() )
-      return; // inside tmp resource, do not save
+    if (url.isLocalFile() && KGlobal::dirs()->relativeLocation("tmp", url.toLocalFile() ) != url.toLocalFile()) {
+        return; // inside tmp resource, do not save
+    }
 
     QString openStr = url.url();
     openStr.replace( QRegExp("\\$"), "$$" ); // Desktop files with type "Link" are $-variable expanded
@@ -117,7 +123,7 @@ void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
     while(QFile::exists(ddesktop)){
         // see if it points to the same file and application
         KDesktopFile tmp(ddesktop);
-        if ( tmp.desktopGroup().readEntry("X-KDE-LastOpenedWith") == desktopEntryName ) {
+        if (tmp.desktopGroup().readEntry("X-KDE-LastOpenedWith") == desktopEntryName) {
             KDE::utime(ddesktop, NULL);
             return;
         }
@@ -144,12 +150,12 @@ void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
     // create the applnk
     KDesktopFile configFile(ddesktop);
     KConfigGroup conf = configFile.desktopGroup();
-    conf.writeEntry( "Type", QString::fromLatin1("Link") );
-    conf.writePathEntry( "URL", openStr );
+    conf.writeEntry("Type", QString::fromLatin1("Link"));
+    conf.writePathEntry("URL", openStr );
     // If you change the line below, change the test in the above loop
-    conf.writeEntry( "X-KDE-LastOpenedWith", desktopEntryName );
-    conf.writeEntry( "Name", url.fileName() );
-    conf.writeEntry( "Icon", KMimeType::iconNameForUrl( url ) );
+    conf.writeEntry("X-KDE-LastOpenedWith", desktopEntryName);
+    conf.writeEntry("Name", url.fileName() );
+    conf.writeEntry("Icon", KMimeType::iconNameForUrl(url ));
 }
 
 void KRecentDocument::clear()
