@@ -1769,9 +1769,10 @@ void KFileWidget::setMode( KFile::Modes m )
     d->ops->setMode(m);
     if ( d->ops->dirOnlyMode() ) {
         d->filterWidget->setFilter( i18n("*|All Folders") );
-    }
-    else {
+        d->filterWidget->setEditable( false );
+    } else {
         d->filterWidget->setDefaultFilter( i18n("*|All Files") );
+        d->filterWidget->setEditable( !d->hasDefaultFilter || d->operationMode != Saving );
     }
 
     d->updateAutoSelectExtension();
