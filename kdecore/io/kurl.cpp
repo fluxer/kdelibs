@@ -590,15 +590,34 @@ QString KUrl::directory(AdjustPathOption trailing) const
 KUrl KUrl::upUrl() const
 {
     const QString urlpath = QUrl::path();
-    if (urlpath.isEmpty()) {
+    if (urlpath.isEmpty() || urlpath == QLatin1String("/")) {
         return *this;
+    }
+
+    static const QString s_dotdotslash = QString::fromLatin1("../");
+    if (urlpath.count(s_dotdotslash) >= 10) {
+        // way too long, going to reach the path limit with that
+        KUrl result(*this);
+        result.setPath(QLatin1String("/"));
+        result.setQuery(QString());
+        result.setFragment(QString());
+        return result;
     }
 
     if (QDir::isRelativePath(urlpath)) {
         KUrl result(*this);
-        QString newpath = QString::fromLatin1("../");
+        QString newpath = s_dotdotslash;
         newpath.append(kPathDirectory(urlpath));
         result.setPath(newpath);
+        result.setQuery(QString());
+        result.setFragment(QString());
+        return result;
+    }
+
+    if (QDir::cleanPath(urlpath).count(QLatin1Char('/')) <= 1) {
+        // something like /home
+        KUrl result(*this);
+        result.setPath(QLatin1String("/"));
         result.setQuery(QString());
         result.setFragment(QString());
         return result;

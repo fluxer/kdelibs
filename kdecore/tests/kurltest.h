@@ -27,6 +27,8 @@ class KUrlTest : public QObject
 private Q_SLOTS:
     void testUpUrl_data();
     void testUpUrl();
+    void testUpUrl2_data();
+    void testUpUrl2();
     void testHash_data();
     void testHash();
     void testQueryAndFragment_data();

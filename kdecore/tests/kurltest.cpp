@@ -52,6 +52,10 @@ void KUrlTest::testUpUrl_data()
         << KUrl("ftp://ftp.kde.org/foo?bar=baz#foobar")
         << KUrl("ftp://ftp.kde.org/");
 }
+void KUrlTest::testUpUrl2_data()
+{
+    testUpUrl_data();
+}
 
 void KUrlTest::testUpUrl()
 {
@@ -67,6 +71,18 @@ void KUrlTest::testUpUrl()
         return;
     }
     QCOMPARE(newPath[newPath.size() - 1], QChar::fromLatin1('/'));
+}
+
+void KUrlTest::testUpUrl2()
+{
+    QFETCH(KUrl, url);
+    QFETCH(KUrl, url2);
+
+    KUrl copy(url);
+    while (copy.hasPath() && copy.path() != QLatin1String("/")) {
+        copy = copy.upUrl();
+        // qDebug() << Q_FUNC_INFO << copy.path();
+    }
 }
 
 void KUrlTest::testHash_data()

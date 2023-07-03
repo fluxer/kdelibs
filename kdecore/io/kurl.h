@@ -439,7 +439,7 @@ public:
      *         <tt>file:///hallo/torben</tt> would return "hallo/". The returned string is decoded.
      *         QString() is returned when there is no path.
      */
-    QString directory(AdjustPathOption trailing = RemoveTrailingSlash) const;
+    QString directory(AdjustPathOption trailing = AddTrailingSlash) const;
 
     /**
      * Set the directory to @p dir, leaving the filename empty.
