@@ -117,8 +117,6 @@ void KAutoMountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
     if (m_bShowFilemanagerWindow) {
         KRun::runUrl(url, "inode/directory", nullptr /*TODO - window*/);
     }
-    // Notify about the new stuff in that dir, in case of opened windows showing it
-    org::kde::KDirNotify::emitFilesAdded(url.url());
 
     // Update the desktop file which is used for mount/unmount (icon change)
     kDebug(7015) << " mount finished : updating " << m_desktopFile;
@@ -202,13 +200,6 @@ void KAutoUnmountPrivate::slotFinished(QDBusPendingCallWatcher *watcher)
     KUrl dfURL;
     dfURL.setPath(m_desktopFile);
     org::kde::KDirNotify::emitFilesChanged(QStringList() << dfURL.url());
-
-    // Notify about the new stuff in that dir, in case of opened windows showing it
-    // You may think we removed files, but this may have also readded some
-    // (if the mountpoint wasn't empty). The only possible behavior on FilesAdded
-    // is to relist the directory anyway.
-    KUrl mp(m_mountpoint);
-    org::kde::KDirNotify::emitFilesAdded(mp.url());
 
     emit q->finished();
     q->deleteLater();
