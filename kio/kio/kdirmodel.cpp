@@ -362,7 +362,7 @@ void KDirModelPrivate::_k_slotAddedItems(const KFileItemList& items)
 
     KDirModelNode* result = nodeForUrl(directoryUrl); // O(depth)
     // If the directory containing the items wasn't found, then we have a big problem.
-    // Are you calling KDirLister::openUrl(url,true,false)? Please use expandToUrl() instead.
+    // Are you calling KDirLister::openUrl()? Please use expandToUrl() instead.
     if (!result) {
         kError(7008) << "Items emitted in directory" << directoryUrl
                      << "but that directory isn't in KDirModel!"

@@ -420,6 +420,11 @@ KUrl KDirLister::url() const
 
 void KDirLister::updateDirectory()
 {
+    if (!d->url.isValid()) {
+        // attempt to update before anything was listed or after invalid was listed
+        return;
+    }
+
     // NOTE: no partial updates for non-local directories because the signals are bogus for
     // some KIO slaves (such as trash:/, see kde-workspace/kioslave/trash/ktrash.cpp for example)
     openUrl(d->url, d->recursive);
