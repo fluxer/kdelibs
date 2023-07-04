@@ -54,7 +54,7 @@ public:
     KDirWatch* dirWatch;
     OrgKdeKDirNotifyInterface* dirNotify;
     QTimer* pendingUpdateTimer;
-    KUrl::List desktopUrls;
+    KUrl::List watchedUrls;
 
     void _k_slotInfoMessage(KJob *job, const QString &msg);
     void _k_slotPercent(KJob *job, ulong value);

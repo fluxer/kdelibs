@@ -113,8 +113,12 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
             KDesktopFile desktopfile(itempath);
             const KUrl desktopurl = desktopfile.readUrl();
             if (desktopurl.isValid()) {
-                desktopUrls.append(desktopurl);
+                watchedUrls.append(desktopurl);
             }
+        }
+
+        if (item.isDir() && recursive) {
+            watchedUrls.append(item.url());
         }
     }
 }
@@ -136,10 +140,8 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     emit m_parent->completed();
 
     if (autoUpdate) {
-        const KUrl::List towatch = KUrl::List()
-            << url
-            << desktopUrls;
-        foreach (const KUrl &it, towatch) {
+        watchedUrls.append(url);
+        foreach (const KUrl &it, watchedUrls) {
             if (it.isLocalFile()) {
                 const QString localfile = it.toLocalFile();
                 kDebug(7003) << "watching" << localfile;
@@ -203,22 +205,11 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
 {
     kDebug(7003) << "file added" << path;
     const KUrl pathurl(path);
-
-    if (pathurl == url) {
-        _k_slotUpdateDirectory();
-        return;
-    }
-
     const KUrl pathdirectory = pathurl.directory();
-    if (pathdirectory == url) {
-        _k_slotUpdateDirectory();
-        return;
-    }
-
-    foreach (const KUrl &it, desktopUrls) {
+    foreach (const KUrl &it, watchedUrls) {
         if (it == pathdirectory || it == pathurl) {
             _k_slotUpdateDirectory();
-            break;
+            return;
         }
     }
 }
@@ -228,23 +219,16 @@ void KDirListerPrivate::_k_slotFilesChangedOrRemoved(const QStringList &paths)
     kDebug(7003) << "files changed" << paths;
     foreach (const QString &it, paths) {
         const KUrl pathurl(it);
-
-        if (pathurl == url) {
-            _k_slotUpdateDirectory();
-            return;
-        }
-
-        foreach (const KFileItem &it2, filteredItems) {
-            if (it2.url() == pathurl) {
+        foreach (const KUrl &it2, watchedUrls) {
+            if (it2 == pathurl) {
                 _k_slotUpdateDirectory();
                 return;
             }
         }
-
-        foreach (const KUrl &it2, desktopUrls) {
-            if (it2 == pathurl) {
+        foreach (const KFileItem &it2, filteredItems) {
+            if (it2.url() == pathurl) {
                 _k_slotUpdateDirectory();
-                break;
+                return;
             }
         }
     }
@@ -282,8 +266,7 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
         d->dirWatch = nullptr;
     }
     if (d->dirNotify) {
-        org::kde::KDirNotify::emitLeftDirectory(d->url.url());
-        foreach (const KUrl &it, d->desktopUrls) {
+        foreach (const KUrl &it, d->watchedUrls) {
             if (!it.isLocalFile()) {
                 org::kde::KDirNotify::emitLeftDirectory(it.url());
             }
@@ -297,6 +280,7 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
     d->url = url;
     d->recursive = recursive;
     d->allItems.clear();
+    d->watchedUrls.clear();
     if (!d->filteredItems.isEmpty()) {
         emit itemsDeleted(d->filteredItems);
         d->filteredItems.clear();
