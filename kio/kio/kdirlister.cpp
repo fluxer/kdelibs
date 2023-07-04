@@ -107,8 +107,8 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
             filteredItems.append(item);
         }
 
-        const QString itempath = item.localPath();
-        if (KDesktopFile::isDesktopFile(itempath)) {
+        if (item.isDesktopFile()) {
+            const QString itempath = item.localPath();
             kDebug(7003) << "desktop file entry" << itempath;
             KDesktopFile desktopfile(itempath);
             const KUrl desktopurl = desktopfile.readUrl();
