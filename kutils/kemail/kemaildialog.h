@@ -38,7 +38,6 @@ class KEMailDialogPrivate;
     \endcode
 
     @since 4.22
-    @warning the API is subject to change
 
     @see KEMail
     @see KEMailSettings
