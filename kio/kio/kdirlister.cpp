@@ -107,7 +107,7 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
             filteredItems.append(item);
         }
 
-        if (item.isDesktopFile()) {
+        if (autoUpdate && item.isDesktopFile()) {
             const QString itempath = item.localPath();
             kDebug(7003) << "desktop file entry" << itempath;
             KDesktopFile desktopfile(itempath);
@@ -117,7 +117,7 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
             }
         }
 
-        if (item.isDir() && recursive) {
+        if (autoUpdate && item.isDir() && recursive) {
             watchedUrls.append(item.url());
         }
     }
