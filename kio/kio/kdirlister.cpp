@@ -18,7 +18,6 @@
 
 #include "kdirlister.h"
 #include "kdirlister_p.h"
-
 #include "klocale.h"
 #include "kio/jobuidelegate.h"
 #include "kmessagebox.h"
@@ -34,6 +33,7 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     autoErrorHandling(true),
     showingDotFiles(false),
     dirOnlyMode(false),
+    recursive(false),
     complete(true),
     window(nullptr),
     listJob(nullptr),
@@ -272,7 +272,7 @@ KDirLister::~KDirLister()
     delete d;
 }
 
-bool KDirLister::openUrl(const KUrl &url)
+bool KDirLister::openUrl(const KUrl &url, bool recursive)
 {
     stop();
 
@@ -293,8 +293,9 @@ bool KDirLister::openUrl(const KUrl &url)
         d->dirNotify = nullptr;
     }
 
-    kDebug(7003) << "opening" << url;
+    kDebug(7003) << "opening" << url << recursive;
     d->url = url;
+    d->recursive = recursive;
     d->allItems.clear();
     if (!d->filteredItems.isEmpty()) {
         emit itemsDeleted(d->filteredItems);
@@ -312,7 +313,11 @@ bool KDirLister::openUrl(const KUrl &url)
         }
     }
     d->complete = false;
-    d->listJob = KIO::listDir(url, KIO::HideProgressInfo);
+    if (recursive) {
+        d->listJob = KIO::listRecursive(url, KIO::HideProgressInfo);
+    } else {
+        d->listJob = KIO::listDir(url, KIO::HideProgressInfo);
+    }
     d->listJob->setAutoDelete(false);
     if (d->window) {
         d->listJob->ui()->setWindow(d->window);
@@ -433,7 +438,7 @@ void KDirLister::updateDirectory()
 {
     // NOTE: no partial updates for non-local directories because the signals are bogus for
     // some KIO slaves (such as trash:/, see kde-workspace/kioslave/trash/ktrash.cpp for example)
-    openUrl(d->url);
+    openUrl(d->url, d->recursive);
 }
 
 bool KDirLister::isFinished() const

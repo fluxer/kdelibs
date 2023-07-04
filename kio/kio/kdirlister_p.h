@@ -39,6 +39,7 @@ public:
     bool autoErrorHandling;
     bool showingDotFiles;
     bool dirOnlyMode;
+    bool recursive;
     bool complete;
     QWidget* window;
     KIO::ListJob* listJob;

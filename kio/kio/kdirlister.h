@@ -75,10 +75,13 @@ public:
      * completed() signal is emitted (and isFinished() returns true).
      *
      * @param url the directory URL.
+     * @param recursive whether to list directory recursively.
      * @return true if successful, false otherwise (e.g. if invalid @p url) was
      *         passed.
+     * @see KIO::listDir()
+     * @see KIO::listRecursive()
      */
-    bool openUrl(const KUrl &url);
+    bool openUrl(const KUrl &url, bool recursive = false);
 
     /**
      * Stop listing the current directory URL. Emits canceled() if there was
@@ -88,7 +91,7 @@ public:
 
     /**
      * @return true if the "delayed mimetypes" feature was enabled
-     * @see setDelayedMimeTypes
+     * @see setDelayedMimeTypes()
      */
     bool delayedMimeTypes() const;
 
@@ -210,7 +213,7 @@ public:
      *
      * @param filter the new filter, empty QString() to disable filtering
      * @note Call updateDirectory() afterwards for the changes to take effect.
-     * @see matchesFilter
+     * @see matchesFilter()
      */
     void setNameFilter(const QString &filter);
 
@@ -227,8 +230,8 @@ public:
      * @param mimeList a list of MIME-types.
      *
      * @note Call updateDirectory() afterwards for the changes to take effect.
-     * @see clearMimeFilter
-     * @see matchesMimeFilter
+     * @see clearMimeFilter()
+     * @see matchesMimeFilter()
      */
     void setMimeFilter(const QStringList &mimeList);
 
@@ -236,7 +239,7 @@ public:
      * Clears the mime based filter.
      *
      * @note Call updateDirectory() afterwards for the changes to take effect.
-     * @see setMimeFilter
+     * @see setMimeFilter()
      */
     void clearMimeFilter();
 
@@ -248,14 +251,14 @@ public:
 
     /**
      * @return true if @p name matches a filter in the list, otherwise false.
-     * @see setNameFilter
+     * @see setNameFilter()
      */
     bool matchesFilter(const QString &name) const;
 
     /**
      * @param mime the mimetype to find in the filter list.
      * @return true if @p name matches a filter in the list, otherwise false.
-     * @see setMimeFilter.
+     * @see setMimeFilter()
      */
     bool matchesMimeFilter(const QString &mime) const;
 
@@ -395,8 +398,8 @@ protected:
     *
     * @return true if the item is "ok". false if the item shall not be shown in
     *         a view, e.g. files not matching a *.cpp pattern
-    * @see matchesFilter
-    * @see setNameFilter
+    * @see matchesFilter()
+    * @see setNameFilter()
     */
    virtual bool matchesFilter(const KFileItem &item) const;
 
@@ -408,8 +411,8 @@ protected:
     *
     * @return true if the item is "ok". false if the item shall not be shown in
     *         a view, e.g. files not matching a text/plain MIME
-    * @see matchesMimeFilter
-    * @see setMimeFilter
+    * @see matchesMimeFilter()
+    * @see setMimeFilter()
     */
    virtual bool matchesMimeFilter(const KFileItem &item) const;
 

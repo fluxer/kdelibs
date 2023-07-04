@@ -29,6 +29,15 @@
 #include "kdirwatch.h"
 #include "kprotocolinfo.h"
 #include "kprotocolmanager.h"
+#include "klocale.h"
+#include "kconfig.h"
+#include "kdebug.h"
+#include "kde_file.h"
+#include "kdirnotify.h"
+
+#include <QList>
+#include <QTimer>
+#include <QFile>
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -38,17 +47,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-
-#include <QtCore/QList>
-#include <QtCore/QTimer>
-#include <QtCore/QFile>
-#include <QtCore/qbuffer.h>
-
-#include <klocale.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kde_file.h>
-#include <kdirnotify.h>
 
 using namespace KIO;
 
