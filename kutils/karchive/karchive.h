@@ -174,7 +174,7 @@ Q_SIGNALS:
         @note The progress value is between 0.0 and 1.0
         @note If you are connecting the progress signal to QProgressBar, derived or similar class
         make sure to set its initial value, progress is emited only for @b valid paths. For example
-        progress will note be emited for paths that are not in the archive from
+        progress will not be emited for paths that are not in the archive from
         @p KArchive::remove()
     */
     void progress(const qreal value) const;
