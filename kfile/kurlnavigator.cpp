@@ -27,29 +27,27 @@
 #include "kurlnavigatordropdownbutton_p.h"
 #include "kurlnavigatorbutton_p.h"
 #include "kurlnavigatortogglebutton_p.h"
+#include "kfileitem.h"
+#include "kfileplacesmodel.h"
+#include "kglobalsettings.h"
+#include "kicon.h"
+#include "klocale.h"
+#include "kmenu.h"
+#include "kprotocolinfo.h"
+#include "kurlcombobox.h"
+#include "kurlcompletion.h"
+#include "kurifilter.h"
 
-#include <kfileitem.h>
-#include <kfileplacesmodel.h>
-#include <kglobalsettings.h>
-#include <kicon.h>
-#include <klocale.h>
-#include <kmenu.h>
-#include <kprotocolinfo.h>
-#include <kurlcombobox.h>
-#include <kurlcompletion.h>
-#include <kurifilter.h>
-
-#include <QtCore/QDir>
-#include <QtCore/QList>
-#include <QtCore/QTimer>
-#include <QtGui/QApplication>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QClipboard>
-#include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
-#include <QtGui/QLabel>
-#include <QtGui/QPainter>
-#include <QtGui/QStyleOption>
+#include <QDir>
+#include <QList>
+#include <QTimer>
+#include <QApplication>
+#include <QBoxLayout>
+#include <QClipboard>
+#include <QDropEvent>
+#include <QLabel>
+#include <QPainter>
+#include <QStyleOption>
 
 using namespace KDEPrivate;
 

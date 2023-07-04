@@ -23,16 +23,15 @@
 #include <kpushbutton.h>
 #include <kurl.h>
 #include <khbox.h>
-
 #include <keditlistwidget.h>
+
+#include <QString>
+#include <QEvent>
 
 class KComboBox;
 class KFileDialog;
 class KLineEdit;
 class KUrlCompletion;
-
-#include <QString>
-#include <QEvent>
 
 /**
  * This class is a widget showing a lineedit and a button, which invokes a
