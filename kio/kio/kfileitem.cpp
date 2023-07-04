@@ -1048,10 +1048,6 @@ bool KFileItem::isReadable() const
         // No read permission at all
         if ( !(S_IRUSR & d->m_permissions) && !(S_IRGRP & d->m_permissions) && !(S_IROTH & d->m_permissions) )
             return false;
-
-        // Read permissions for all: save a stat call
-        if ( (S_IRUSR|S_IRGRP|S_IROTH) & d->m_permissions )
-            return true;
     }
 
     // Or if we can't read it [using ::access()] - not network transparent
