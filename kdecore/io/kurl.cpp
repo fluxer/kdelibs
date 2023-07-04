@@ -162,7 +162,7 @@ KUrl::List::List(const QList<KUrl> &list)
 
 KUrl::List::List(const QList<QUrl> &list)
 {
-    reserve(size() + list.size());
+    reserve(list.size());
     foreach (const QUrl &url, list) {
         append(KUrl(url));
     }
@@ -170,7 +170,7 @@ KUrl::List::List(const QList<QUrl> &list)
 
 KUrl::List::List(const QStringList &list)
 {
-    reserve(size() + list.size());
+    reserve(list.size());
     foreach (const QString &str, list) {
         append(KUrl(str));
     }
