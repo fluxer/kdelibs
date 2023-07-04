@@ -911,9 +911,19 @@ void KFileWidget::slotOk()
 
         // if we are on local mode, make sure we haven't got a remote base url
         if ((mode & KFile::LocalOnly) && !d->mostLocalUrl(d->url).isLocalFile()) {
-            KMessageBox::sorry(this,
-                            i18n("You can only select local files"),
-                            i18n("Remote files not accepted"));
+            if (directoryMode) {
+                KMessageBox::sorry(
+                    this,
+                    i18n("You can only select local directories"),
+                    i18n("Remote directories not accepted")
+                );
+                return;
+            }
+            KMessageBox::sorry(
+                this,
+                i18n("You can only select local files"),
+                i18n("Remote files not accepted")
+            );
             return;
         }
 
