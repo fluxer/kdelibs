@@ -43,10 +43,14 @@ public:
     bool complete;
     QWidget* window;
     KIO::ListJob* listJob;
+    KIO::ListJob* updateJob;
     // file item for the root itself (".")
     KFileItem rootFileItem;
-    KFileItemList allItems;
-    KFileItemList filteredItems;
+    KFileItemList allFileItems;
+    KFileItemList filteredFileItems;
+    KFileItem updateRootFileItem;
+    KFileItemList updateAllFileItems;
+    KFileItemList updateFilteredFileItems;
     QString nameFilter;
     QStringList mimeFilter;
     QList<QRegExp> nameFilters;
@@ -71,6 +75,14 @@ public:
     void _k_slotFilesAdded(const QString &path);
     void _k_slotFilesChangedOrRemoved(const QStringList &paths);
     void _k_slotUpdateDirectory();
+    void _k_slotUpdateEntries(KIO::Job *job, const KIO::UDSEntryList &entries);
+    void _k_slotUpdateResult(KJob *job);
+
+    void watchUrl(const KUrl &it);
+    void unwatchUrl(const KUrl &it);
+    void processEntries(KIO::Job *job, const KIO::UDSEntryList &entries,
+                        KFileItem &rootItem, KFileItemList &allItems, KFileItemList &filteredItems,
+                        const bool watch);
 
 private:
     KDirLister *m_parent;

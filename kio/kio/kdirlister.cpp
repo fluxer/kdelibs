@@ -37,6 +37,7 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     complete(true),
     window(nullptr),
     listJob(nullptr),
+    updateJob(nullptr),
     dirWatch(nullptr),
     dirNotify(nullptr),
     pendingUpdateTimer(new QTimer(parent)),
@@ -47,6 +48,116 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
         pendingUpdateTimer, SIGNAL(timeout()),
         m_parent, SLOT(_k_slotUpdateDirectory())
     );
+}
+
+void KDirListerPrivate::processEntries(KIO::Job *job, const KIO::UDSEntryList &entries,
+                                       KFileItem &rootItem, KFileItemList &allItems, KFileItemList &filteredItems,
+                                       const bool watch)
+{
+    KIO::ListJob* processJob = qobject_cast<KIO::ListJob*>(job);
+    Q_ASSERT(processJob);
+    foreach (const KIO::UDSEntry &it, entries) {
+        const QString name = it.stringValue(KIO::UDSEntry::UDS_NAME);
+        if (name.isEmpty()) {
+            continue;
+        }
+        const KFileItem item(it, processJob->url(), delayedMimeTypes, true);
+        if (name == QLatin1String(".")) {
+            rootItem = item;
+            continue;
+        } else if (name == QLatin1String("..")) {
+            continue;
+        }
+        allItems.append(item);
+        if (m_parent->matchesFilter(item) && m_parent->matchesMimeFilter(item)) {
+            kDebug(7003) << "filtered entry" << item;
+            filteredItems.append(item);
+            if (watch && recursive && item.isDir()) {
+                watchUrl(item.url());
+            }
+        }
+
+        if (watch && item.isDesktopFile()) {
+            const QString itempath = item.localPath();
+            kDebug(7003) << "desktop file entry" << itempath;
+            KDesktopFile desktopfile(itempath);
+            const KUrl desktopurl = desktopfile.readUrl();
+            if (desktopurl.isValid()) {
+                watchUrl(desktopurl);
+            }
+        }
+    }
+}
+
+void KDirListerPrivate::watchUrl(const KUrl &it)
+{
+    if (!autoUpdate) {
+        return;
+    }
+
+    if (it.isLocalFile()) {
+        const QString localfile = it.toLocalFile();
+        kDebug(7003) << "watching" << localfile;
+        if (!dirWatch) {
+            dirWatch = new KDirWatch(m_parent);
+            m_parent->connect(
+                dirWatch, SIGNAL(dirty(QString)),
+                m_parent, SLOT(_k_slotDirty(QString))
+            );
+        }
+        const QFileInfo localinfo(localfile);
+        if (localinfo.isDir()) {
+            dirWatch->addDir(localfile);
+        } else {
+            dirWatch->addFile(localfile);
+        }
+    } else {
+        kDebug(7003) << "watching remote" << it;
+        if (!dirNotify) {
+            dirNotify = new org::kde::KDirNotify(
+                QString(), QString(), QDBusConnection::sessionBus(),
+                m_parent
+            );
+            m_parent->connect(
+                dirNotify, SIGNAL(FileRenamed(QString,QString)),
+                m_parent, SLOT(_k_slotFileRenamed(QString,QString))
+            );
+            m_parent->connect(
+                dirNotify, SIGNAL(FilesAdded(QString)),
+                m_parent, SLOT(_k_slotFilesAdded(QString))
+            );
+            m_parent->connect(
+                dirNotify, SIGNAL(FilesChanged(QStringList)),
+                m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
+            );
+            m_parent->connect(
+                dirNotify, SIGNAL(FilesRemoved(QStringList)),
+                m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
+            );
+        }
+        org::kde::KDirNotify::emitEnteredDirectory(it.url());
+        watchedUrls.append(it);
+    }
+}
+
+void KDirListerPrivate::unwatchUrl(const KUrl &it)
+{
+    if (!autoUpdate) {
+        return;
+    }
+
+    if (it.isLocalFile()) {
+        const QString localfile = it.toLocalFile();
+        const QFileInfo localinfo(localfile);
+        kDebug(7003) << "no longer watching" << localfile;
+        // not tracking what it is, KDirWatch does tho
+        dirWatch->removeDir(localfile);
+        dirWatch->removeFile(localfile);
+    } else {
+        kDebug(7003) << "no longer watching remote" << it.url();
+        org::kde::KDirNotify::emitLeftDirectory(it.url());
+        watchedUrls.removeAll(it);
+    }
 }
 
 void KDirListerPrivate::_k_slotInfoMessage(KJob *job, const QString &msg)
@@ -89,38 +200,7 @@ void KDirListerPrivate::_k_slotEntries(KIO::Job *job, const KIO::UDSEntryList &e
 {
     Q_ASSERT(listJob == qobject_cast<KIO::ListJob*>(job));
     kDebug(7003) << "got entries for" << listJob->url();
-    foreach (const KIO::UDSEntry &it, entries) {
-        const QString name = it.stringValue(KIO::UDSEntry::UDS_NAME);
-        if (name.isEmpty()) {
-            continue;
-        }
-        const KFileItem item(it, listJob->url(), delayedMimeTypes, true);
-        if (name == QLatin1String(".")) {
-            rootFileItem = item;
-            continue;
-        } else if (name == QLatin1String("..")) {
-            continue;
-        }
-        allItems.append(item);
-        if (m_parent->matchesFilter(item) && m_parent->matchesMimeFilter(item)) {
-            kDebug(7003) << "filtered entry" << item;
-            filteredItems.append(item);
-        }
-
-        if (autoUpdate && item.isDesktopFile()) {
-            const QString itempath = item.localPath();
-            kDebug(7003) << "desktop file entry" << itempath;
-            KDesktopFile desktopfile(itempath);
-            const KUrl desktopurl = desktopfile.readUrl();
-            if (desktopurl.isValid()) {
-                watchedUrls.append(desktopurl);
-            }
-        }
-
-        if (autoUpdate && item.isDir() && recursive) {
-            watchedUrls.append(item.url());
-        }
-    }
+    processEntries(job, entries, rootFileItem, allFileItems, filteredFileItems, autoUpdate);
 }
 
 void KDirListerPrivate::_k_slotResult(KJob *job)
@@ -133,59 +213,85 @@ void KDirListerPrivate::_k_slotResult(KJob *job)
     listJob = nullptr;
     job->deleteLater();
 
-    if (!filteredItems.isEmpty()) {
-        emit m_parent->itemsAdded(filteredItems);
+    if (!filteredFileItems.isEmpty()) {
+        emit m_parent->itemsAdded(filteredFileItems);
     }
     complete = true;
     emit m_parent->completed();
 
-    if (autoUpdate) {
-        watchedUrls.append(url);
-        foreach (const KUrl &it, watchedUrls) {
-            if (it.isLocalFile()) {
-                const QString localfile = it.toLocalFile();
-                kDebug(7003) << "watching" << localfile;
-                if (!dirWatch) {
-                    dirWatch = new KDirWatch(m_parent);
-                    m_parent->connect(
-                        dirWatch, SIGNAL(dirty(QString)),
-                        m_parent, SLOT(_k_slotDirty(QString))
-                    );
-                }
-                const QFileInfo localinfo(localfile);
-                if (localinfo.isDir()) {
-                    dirWatch->addDir(localfile);
-                } else {
-                    dirWatch->addFile(localfile);
-                }
-            } else {
-                kDebug(7003) << "watching remote" << it;
-                if (!dirNotify) {
-                    dirNotify = new org::kde::KDirNotify(
-                        QString(), QString(), QDBusConnection::sessionBus(),
-                        m_parent
-                    );
-                    m_parent->connect(
-                        dirNotify, SIGNAL(FileRenamed(QString,QString)),
-                        m_parent, SLOT(_k_slotFileRenamed(QString,QString))
-                    );
-                    m_parent->connect(
-                        dirNotify, SIGNAL(FilesAdded(QString)),
-                        m_parent, SLOT(_k_slotFilesAdded(QString))
-                    );
-                    m_parent->connect(
-                        dirNotify, SIGNAL(FilesChanged(QStringList)),
-                        m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
-                    );
-                    m_parent->connect(
-                        dirNotify, SIGNAL(FilesRemoved(QStringList)),
-                        m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
-                    );
-                }
-                org::kde::KDirNotify::emitEnteredDirectory(it.url());
-            }
+    watchUrl(url);
+}
+
+void KDirListerPrivate::_k_slotUpdateEntries(KIO::Job *job, const KIO::UDSEntryList &entries)
+{
+    Q_ASSERT(updateJob == qobject_cast<KIO::ListJob*>(job));
+    kDebug(7003) << "got update entries for" << updateJob->url();
+    processEntries(job, entries, updateRootFileItem, updateAllFileItems, updateFilteredFileItems, false);
+}
+
+void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
+{
+    Q_ASSERT(updateJob == qobject_cast<KIO::ListJob*>(job));
+    kDebug(7003) << "done updating" << updateJob->url();
+    if (job->error() != KJob::KilledJobError && job->error() != KJob::NoError) {
+        m_parent->handleError(updateJob);
+    }
+    updateJob = nullptr;
+    job->deleteLater();
+
+    KFileItemList addedItems;
+    KFileItemList deletedItems;
+    QList<QPair<KFileItem, KFileItem>> refreshedItems;
+
+    if (!updateRootFileItem.isNull() && rootFileItem != updateRootFileItem) {
+        // no way its deleted if it is not null, wasn't added either
+        kDebug(7003) << "updated root entry" << rootFileItem;
+        refreshedItems.append(qMakePair(rootFileItem, updateRootFileItem));
+    }
+
+    foreach (const KFileItem &item, filteredFileItems) {
+        KFileItem founditem = updateFilteredFileItems.findByUrl(item.url());
+        if (founditem.isNull()) {
+            kDebug(7003) << "deleted entry" << item;
+            deletedItems.append(item);
+        } else if (item != founditem) {
+            kDebug(7003) << "updated entry" << item;
+            refreshedItems.append(qMakePair(item, founditem));
         }
     }
+    foreach (const KFileItem &item, updateFilteredFileItems) {
+        KFileItem founditem = filteredFileItems.findByUrl(item.url());
+        if (founditem.isNull()) {
+            kDebug(7003) << "added entry" << item;
+            addedItems.append(item);
+        }
+    }
+
+    foreach (const KFileItem &item, updateFilteredFileItems) {
+        // if an update was triggered might aswell refresh all .desktop files
+        if (item.isDesktopFile()) {
+            const KFileItem olditem = filteredFileItems.findByUrl(item.url());
+            kDebug(7003) << "updating desktop entry" << item;
+            refreshedItems.append(qMakePair(item, olditem));
+        }
+    }
+
+    if (!addedItems.isEmpty()) {
+        emit m_parent->itemsAdded(addedItems);
+    }
+    if (!deletedItems.isEmpty()) {
+        emit m_parent->itemsDeleted(deletedItems);
+    }
+    if (!refreshedItems.isEmpty()) {
+        emit m_parent->refreshItems(refreshedItems);
+    }
+
+    rootFileItem = updateRootFileItem;
+    allFileItems = updateAllFileItems;
+    filteredFileItems = updateFilteredFileItems;
+
+    complete = true;
+    emit m_parent->completed();
 }
 
 void KDirListerPrivate::_k_slotDirty(const QString &path)
@@ -225,7 +331,7 @@ void KDirListerPrivate::_k_slotFilesChangedOrRemoved(const QStringList &paths)
                 return;
             }
         }
-        foreach (const KFileItem &it2, filteredItems) {
+        foreach (const KFileItem &it2, filteredFileItems) {
             if (it2.url() == pathurl) {
                 _k_slotUpdateDirectory();
                 return;
@@ -260,17 +366,15 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
 {
     stop();
 
+    foreach (const KUrl &it, d->watchedUrls) {
+        d->unwatchUrl(it);
+    }
     if (d->dirWatch) {
         d->dirWatch->disconnect(this);
         delete d->dirWatch;
         d->dirWatch = nullptr;
     }
     if (d->dirNotify) {
-        foreach (const KUrl &it, d->watchedUrls) {
-            if (!it.isLocalFile()) {
-                org::kde::KDirNotify::emitLeftDirectory(it.url());
-            }
-        }
         // d->dirNotify->disconnect(this);
         delete d->dirNotify;
         d->dirNotify = nullptr;
@@ -279,8 +383,12 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
     kDebug(7003) << "opening" << url << recursive;
     d->url = url;
     d->recursive = recursive;
-    d->allItems.clear();
-    d->filteredItems.clear();
+    d->rootFileItem = KFileItem();
+    d->allFileItems.clear();
+    d->filteredFileItems.clear();
+    d->updateRootFileItem = KFileItem();
+    d->updateAllFileItems.clear();
+    d->updateFilteredFileItems.clear();
     d->watchedUrls.clear();
     emit clear();
     if (d->autoErrorHandling) {
@@ -349,12 +457,24 @@ void KDirLister::stop()
     if (d->pendingUpdateTimer->isActive()) {
         d->pendingUpdateTimer->stop();
     }
+    bool emitcancel = false;
+    if (d->updateJob) {
+        kDebug(7003) << "killing update job for" << d->url;
+        d->updateJob->disconnect(this);
+        d->updateJob->kill();
+        d->updateJob->deleteLater();
+        d->updateJob = nullptr;
+        emitcancel = true;
+    }
     if (d->listJob) {
         kDebug(7003) << "killing job for" << d->url;
         d->listJob->disconnect(this);
         d->listJob->kill();
         d->listJob->deleteLater();
         d->listJob = nullptr;
+        emitcancel = true;
+    }
+    if (emitcancel) {
         d->complete = true;
         emit canceled();
     }
@@ -422,9 +542,37 @@ void KDirLister::updateDirectory()
         return;
     }
 
-    // NOTE: no partial updates for non-local directories because the signals are bogus for
-    // some KIO slaves (such as trash:/, see kde-workspace/kioslave/trash/ktrash.cpp for example)
-    openUrl(d->url, d->recursive);
+    if (d->updateJob) {
+        kDebug(7003) << "updating in progress for" << d->url << d->recursive;
+        return;
+    }
+
+    kDebug(7003) << "updating" << d->url << d->recursive;
+    d->updateRootFileItem = KFileItem();
+    d->updateAllFileItems.clear();
+    d->updateFilteredFileItems.clear();
+    d->complete = false;
+    if (d->recursive) {
+        d->updateJob = KIO::listRecursive(d->url, KIO::HideProgressInfo);
+    } else {
+        d->updateJob = KIO::listDir(d->url, KIO::HideProgressInfo);
+    }
+    d->updateJob->setAutoDelete(false);
+    if (d->window) {
+        d->updateJob->ui()->setWindow(d->window);
+    }
+
+    // private slots
+    connect(
+        d->updateJob, SIGNAL(entries(KIO::Job*, KIO::UDSEntryList)),
+        this, SLOT(_k_slotUpdateEntries(KIO::Job*, KIO::UDSEntryList))
+    );
+    connect(
+        d->updateJob, SIGNAL(result(KJob*)),
+        this, SLOT(_k_slotUpdateResult(KJob*))
+    );
+
+    emit started();
 }
 
 bool KDirLister::isFinished() const
@@ -442,7 +590,7 @@ KFileItem KDirLister::findByUrl(const KUrl &url) const
     if (url == d->rootFileItem.url()) {
         return d->rootFileItem;
     }
-    foreach (const KFileItem &it, d->allItems) {
+    foreach (const KFileItem &it, d->allFileItems) {
         if (it.url() == url) {
             return it;
         }
@@ -455,7 +603,7 @@ KFileItem KDirLister::findByName(const QString &name) const
     if (name == d->rootFileItem.name()) {
         return d->rootFileItem;
     }
-    foreach (const KFileItem &it, d->allItems) {
+    foreach (const KFileItem &it, d->allFileItems) {
         if (it.name() == name) {
             return it;
         }
@@ -593,10 +741,10 @@ KFileItemList KDirLister::items(WhichItems which) const
 {
     switch (which) {
         case KDirLister::AllItems: {
-            return d->allItems;
+            return d->allFileItems;
         }
         case KDirLister::FilteredItems: {
-            return d->filteredItems;
+            return d->filteredFileItems;
         }
     }
     return KFileItemList();
