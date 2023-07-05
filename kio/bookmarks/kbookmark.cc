@@ -319,7 +319,7 @@ void KBookmark::setFullText(const QString &fullText)
 
 KUrl KBookmark::url() const
 {
-    return KUrl(element.attribute("href").toLatin1()); // Decodes it from utf8
+    return KUrl(element.attribute("href")); // Decodes it from utf8
 }
 
 void KBookmark::setUrl(const KUrl &url)
