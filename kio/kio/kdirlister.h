@@ -416,22 +416,6 @@ protected:
     */
    virtual bool matchesMimeFilter(const KFileItem &item) const;
 
-   /**
-    * Called by the protected matchesFilter() to do the actual filtering.
-    *
-    * @param name the name to filter
-    * @param filters a list of regular expressions for filtering
-    */
-   virtual bool doNameFilter(const QString &name, const QList<QRegExp> &filters) const;
-
-   /**
-    * Called by the protected matchesMimeFilter() to do the actual filtering.
-    *
-    * @param mime the mime type to filter
-    * @param filters the list of mime types to filter
-     */
-    virtual bool doMimeFilter(const QString &mime, const QStringList &filters) const;
-
     /**
      * Called whenever list job error occurs. Reimplement to customize error
      * handling. The default implementation uses the job UI delegate.

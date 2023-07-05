@@ -655,12 +655,34 @@ QStringList KDirLister::mimeFilters() const
 
 bool KDirLister::matchesFilter(const QString &name) const
 {
-    return doNameFilter(name, d->nameFilters);
+    if (d->nameFilters.isEmpty()) {
+        return true;
+    }
+    kDebug(7003) << "matchesFilter" << name << d->nameFilters;
+    foreach (const QRegExp &it, d->nameFilters) {
+        if (it.exactMatch(name)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool KDirLister::matchesMimeFilter(const QString &mime) const
 {
-    return doMimeFilter(mime, d->mimeFilter);
+    if (d->mimeFilter.isEmpty()) {
+        return true;
+    }
+    kDebug(7003) << "matchesMimeFilter" << mime << d->mimeFilter;
+    const KMimeType::Ptr mimeptr = KMimeType::mimeType(mime);
+    if (!mimeptr) {
+        return false;
+    }
+    foreach (const QString &it, d->mimeFilter) {
+        if (mimeptr->is(it)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool KDirLister::matchesFilter(const KFileItem &item) const
@@ -686,38 +708,6 @@ bool KDirLister::matchesMimeFilter(const KFileItem &item) const
         return true;
     }
     return matchesMimeFilter(item.mimetype());
-}
-
-bool KDirLister::doNameFilter(const QString &name, const QList<QRegExp> &filters) const
-{
-    if (filters.isEmpty()) {
-        return true;
-    }
-    kDebug(7003) << "doNameFilter" << name << filters;
-    foreach (const QRegExp &it, filters) {
-        if (it.exactMatch(name)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool KDirLister::doMimeFilter(const QString &mime, const QStringList &filters) const
-{
-    if (filters.isEmpty()) {
-        return true;
-    }
-    kDebug(7003) << "doMimeFilter" << mime << filters;
-    const KMimeType::Ptr mimeptr = KMimeType::mimeType(mime);
-    if (!mimeptr) {
-        return false;
-    }
-    foreach (const QString &it, filters) {
-        if (mimeptr->is(it)) {
-            return true;
-        }
-    }
-    return false;
 }
 
 void KDirLister::handleError(KIO::Job *job)
