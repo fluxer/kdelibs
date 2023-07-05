@@ -22,6 +22,8 @@
 #ifndef SOLID_SOLIDNAMESPACE_H
 #define SOLID_SOLIDNAMESPACE_H
 
+#include <solid/solid_export.h>
+
 #include <QtCore/QMetaType>
 
 namespace Solid
@@ -37,7 +39,7 @@ namespace Solid
         Insecure
     };
 
-    QString errorString(const ErrorType error);
+    SOLID_EXPORT QString errorString(const ErrorType error);
 }
 
 Q_DECLARE_METATYPE(Solid::ErrorType)
