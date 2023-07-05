@@ -280,11 +280,8 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
     d->url = url;
     d->recursive = recursive;
     d->allItems.clear();
+    d->filteredItems.clear();
     d->watchedUrls.clear();
-    if (!d->filteredItems.isEmpty()) {
-        emit itemsDeleted(d->filteredItems);
-        d->filteredItems.clear();
-    }
     emit clear();
     if (d->autoErrorHandling) {
         if (!url.isValid()) {
