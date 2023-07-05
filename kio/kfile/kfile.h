@@ -38,8 +38,8 @@ public:
      * @li @p File - Get a single file name from the user.
      * @li @p Directory - Get a directory name from the user.
      * @li @p Files - Get multiple file names from the user.
-     * @li @p ExistingOnly - Never return a filename which does not exist yet
-     * @li @p LocalOnly - Don't return remote filenames
+     * @li @p ExistingOnly - Never return a file or directory which does not exist yet
+     * @li @p LocalOnly - Don't return remote file or directory
      */
     enum Mode {
         File         = 1,
