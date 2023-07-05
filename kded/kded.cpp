@@ -390,7 +390,7 @@ KDEDModule *Kded::loadModule(const KService::Ptr& s, bool onDemand)
             kDebug(7020) << "Successfully loaded module" << obj;
             return module;
         } else {
-            kDebug(7020) << "Could not load module" << obj;
+            kDebug(7020) << "Could not load module" << obj << loader.errorString();
             // loader.unload();
         }
     }
