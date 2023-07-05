@@ -27,10 +27,10 @@
 Solid::StorageAccess::StorageAccess(QObject *backendObject)
     : DeviceInterface(*new StorageAccessPrivate(), backendObject)
 {
-    connect(backendObject, SIGNAL(setupDone(Solid::ErrorType,QVariant,QString)),
-            this, SIGNAL(setupDone(Solid::ErrorType,QVariant,QString)));
-    connect(backendObject, SIGNAL(teardownDone(Solid::ErrorType,QVariant,QString)),
-            this, SIGNAL(teardownDone(Solid::ErrorType,QVariant,QString)));
+    connect(backendObject, SIGNAL(setupDone(Solid::ErrorType,QString,QString)),
+            this, SIGNAL(setupDone(Solid::ErrorType,QString,QString)));
+    connect(backendObject, SIGNAL(teardownDone(Solid::ErrorType,QString,QString)),
+            this, SIGNAL(teardownDone(Solid::ErrorType,QString,QString)));
     connect(backendObject, SIGNAL(setupRequested(QString)),
             this, SIGNAL(setupRequested(QString)));
     connect(backendObject, SIGNAL(teardownRequested(QString)),
@@ -43,10 +43,10 @@ Solid::StorageAccess::StorageAccess(QObject *backendObject)
 Solid::StorageAccess::StorageAccess(StorageAccessPrivate &dd, QObject *backendObject)
     : DeviceInterface(dd, backendObject)
 {
-    connect(backendObject, SIGNAL(setupDone(Solid::StorageAccess::SetupResult,QVariant,QString)),
-            this, SIGNAL(setupDone(Solid::StorageAccess::SetupResult,QVariant,QString)));
-    connect(backendObject, SIGNAL(teardownDone(Solid::StorageAccess::TeardownResult,QVariant,QString)),
-            this, SIGNAL(teardownDone(Solid::StorageAccess::TeardownResult,QVariant,QString)));
+    connect(backendObject, SIGNAL(setupDone(Solid::StorageAccess::SetupResult,QString,QString)),
+            this, SIGNAL(setupDone(Solid::StorageAccess::SetupResult,QString,QString)));
+    connect(backendObject, SIGNAL(teardownDone(Solid::StorageAccess::TeardownResult,QString,QString)),
+            this, SIGNAL(teardownDone(Solid::StorageAccess::TeardownResult,QString,QString)));
     connect(backendObject, SIGNAL(setupRequested(QString)),
             this, SIGNAL(setupRequested(QString)));
     connect(backendObject, SIGNAL(teardownRequested(QString)),

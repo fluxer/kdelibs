@@ -49,8 +49,8 @@ public:
 
 Q_SIGNALS:
     void accessibilityChanged(bool accessible, const QString &udi);
-    void setupDone(Solid::ErrorType error, QVariant data, const QString &udi);
-    void teardownDone(Solid::ErrorType error, QVariant data, const QString &udi);
+    void setupDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
+    void teardownDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
     void setupRequested(const QString &udi);
     void teardownRequested(const QString &udi);
 

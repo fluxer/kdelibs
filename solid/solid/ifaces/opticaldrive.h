@@ -91,7 +91,7 @@ namespace Ifaces
          */
         virtual void ejectPressed(const QString &udi) = 0;
 
-        virtual void ejectDone(Solid::ErrorType error, QVariant errorData, const QString &udi) = 0;
+        virtual void ejectDone(Solid::ErrorType error, const QString &errorData, const QString &udi) = 0;
     };
 }
 }

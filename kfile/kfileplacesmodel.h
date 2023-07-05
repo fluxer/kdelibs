@@ -141,8 +141,8 @@ private:
     Q_PRIVATE_SLOT(d, void _k_contentChanged(const QString&, const bool))
     Q_PRIVATE_SLOT(d, void _k_itemChanged(const QString&))
     Q_PRIVATE_SLOT(d, void _k_reloadBookmarks())
-    Q_PRIVATE_SLOT(d, void _k_storageSetupDone(Solid::ErrorType, QVariant))
-    Q_PRIVATE_SLOT(d, void _k_storageTeardownDone(Solid::ErrorType, QVariant))
+    Q_PRIVATE_SLOT(d, void _k_storageSetupDone(Solid::ErrorType, const QString &, const QString &))
+    Q_PRIVATE_SLOT(d, void _k_storageTeardownDone(Solid::ErrorType, const QString &, const QString &))
 
     class Private;
     Private * const d;

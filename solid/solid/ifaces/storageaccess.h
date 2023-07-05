@@ -101,7 +101,7 @@ namespace Ifaces
          * @param newState true if the volume is mounted, false otherwise
          * @param udi the UDI of the volume
          */
-        virtual void setupDone(Solid::ErrorType error, QVariant resultData, const QString &udi) = 0;
+        virtual void setupDone(Solid::ErrorType error, const QString &errorData, const QString &udi) = 0;
 
         /**
          * This signal is emitted when the mount state of this device
@@ -110,7 +110,7 @@ namespace Ifaces
          * @param newState true if the volume is mounted, false otherwise
          * @param udi the UDI of the volume
          */
-        virtual void teardownDone(Solid::ErrorType error, QVariant resultData, const QString &udi) = 0;
+        virtual void teardownDone(Solid::ErrorType error, const QString &errorData, const QString &udi) = 0;
 
         /**
          * This signal is emitted when a setup of this device is requested.

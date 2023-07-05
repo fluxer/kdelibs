@@ -136,7 +136,7 @@ namespace Solid
          * @param errorData more information about the error, if any
          * @param udi the UDI of the volume
          */
-        void setupDone(Solid::ErrorType error, QVariant errorData, const QString &udi);
+        void setupDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
 
         /**
          * This signal is emitted when the attempted tearing down of this
@@ -147,7 +147,7 @@ namespace Solid
          * @param errorData more information about the error, if any
          * @param udi the UDI of the volume
          */
-        void teardownDone(Solid::ErrorType error, QVariant errorData, const QString &udi);
+        void teardownDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
 
         /**
          * This signal is emitted when a setup of this device is requested.

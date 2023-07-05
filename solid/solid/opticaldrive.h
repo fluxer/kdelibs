@@ -167,7 +167,7 @@ namespace Solid
          * @param errorData more information about the error, if any
          * @param udi the UDI of the volume
          */
-        void ejectDone(Solid::ErrorType error, QVariant errorData, const QString &udi);
+        void ejectDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
 
         /**
          * This signal is emitted when eject on this drive is

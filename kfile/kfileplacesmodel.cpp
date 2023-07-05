@@ -75,8 +75,8 @@ public:
     void _k_contentChanged(const QString &udi, const bool hascontent);
     void _k_itemChanged(const QString &udi);
     void _k_reloadBookmarks();
-    void _k_storageSetupDone(Solid::ErrorType error, QVariant errorData);
-    void _k_storageTeardownDone(Solid::ErrorType error, QVariant errorData);
+    void _k_storageSetupDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
+    void _k_storageTeardownDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
 };
 
 KFilePlacesModel::KFilePlacesModel(QObject *parent)
@@ -765,8 +765,8 @@ void KFilePlacesModel::requestTeardown(const QModelIndex &index)
     Solid::StorageAccess *access = device.as<Solid::StorageAccess>();
 
     if (access!=0) {
-        connect(access, SIGNAL(teardownDone(Solid::ErrorType,QVariant,QString)),
-                this, SLOT(_k_storageTeardownDone(Solid::ErrorType,QVariant)));
+        connect(access, SIGNAL(teardownDone(Solid::ErrorType,QString,QString)),
+                this, SLOT(_k_storageTeardownDone(Solid::ErrorType,QString,QString)));
 
         access->teardown();
     }
@@ -779,8 +779,8 @@ void KFilePlacesModel::requestEject(const QModelIndex &index)
     Solid::OpticalDrive *drive = device.as<Solid::OpticalDrive>();
 
     if (drive!=0) {
-        connect(drive, SIGNAL(ejectDone(Solid::ErrorType,QVariant,QString)),
-                this, SLOT(_k_storageTeardownDone(Solid::ErrorType,QVariant)));
+        connect(drive, SIGNAL(ejectDone(Solid::ErrorType,QString,QString)),
+                this, SLOT(_k_storageTeardownDone(Solid::ErrorType,QString,QString)));
 
         drive->eject();
     } else {
@@ -802,15 +802,17 @@ void KFilePlacesModel::requestSetup(const QModelIndex &index)
 
         d->setupInProgress[access] = index;
 
-        connect(access, SIGNAL(setupDone(Solid::ErrorType,QVariant,QString)),
-                this, SLOT(_k_storageSetupDone(Solid::ErrorType,QVariant)));
+        connect(access, SIGNAL(setupDone(Solid::ErrorType,QString,QString)),
+                this, SLOT(_k_storageSetupDone(Solid::ErrorType,QString,QString)));
 
         access->setup();
     }
 }
 
-void KFilePlacesModel::Private::_k_storageSetupDone(Solid::ErrorType error, QVariant errorData)
+void KFilePlacesModel::Private::_k_storageSetupDone(Solid::ErrorType error, const QString &errorData, const QString &udi)
 {
+    Q_UNUSED(udi);
+
     QPersistentModelIndex index = setupInProgress.take(q->sender());
 
     if (!index.isValid()) {
@@ -820,10 +822,10 @@ void KFilePlacesModel::Private::_k_storageSetupDone(Solid::ErrorType error, QVar
     if (!error) {
         emit q->setupDone(index, true);
     } else {
-        if (errorData.isValid()) {
+        if (!errorData.isEmpty()) {
             emit q->errorMessage(i18n("An error occurred while accessing '%1', the system responded: %2",
                                       q->text(index),
-                                      errorData.toString()));
+                                      errorData));
         } else {
             emit q->errorMessage(i18n("An error occurred while accessing '%1'",
                                       q->text(index)));
@@ -833,10 +835,11 @@ void KFilePlacesModel::Private::_k_storageSetupDone(Solid::ErrorType error, QVar
 
 }
 
-void KFilePlacesModel::Private::_k_storageTeardownDone(Solid::ErrorType error, QVariant errorData)
+void KFilePlacesModel::Private::_k_storageTeardownDone(Solid::ErrorType error, const QString &errorData, const QString &udi)
 {
-    if (error && errorData.isValid()) {
-        emit q->errorMessage(errorData.toString());
+    Q_UNUSED(udi);
+    if (error && !errorData.isEmpty()) {
+        emit q->errorMessage(errorData);
     }
 }
 

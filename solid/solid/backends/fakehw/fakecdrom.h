@@ -48,7 +48,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void ejectPressed(const QString &udi);
-    void ejectDone(Solid::ErrorType error, QVariant errorData, const QString &udi);
+    void ejectDone(Solid::ErrorType error, const QString &errorData, const QString &udi);
 };
 }
 }
