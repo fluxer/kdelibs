@@ -21,7 +21,8 @@
 #define KTIMEZONESTEST_P_H
 
 #include <QDebug>
-#include <QtCore/QDir>
+#include <QDir>
+#include <QTextStream>
 #include "qtest_kde.h"
 
 class TimeZoneTestData

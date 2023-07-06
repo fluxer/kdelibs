@@ -18,15 +18,15 @@
 *******************************************************************************/
 
 #include "plasmoidpackagetest.h"
+#include "plasma/applet.h"
+#include "plasma/packagemetadata.h"
 #include "../config-plasma.h"
+
+#include <kstandarddirs.h>
 
 #include <QDir>
 #include <QFile>
-#include <kstandarddirs.h>
-
-#include "plasma/applet.h"
-#include "plasma/packagemetadata.h"
-
+#include <QTextStream>
 
 void PlasmoidPackageTest::init()
 {

@@ -19,21 +19,22 @@
 #ifndef QTEST_KDE_H
 #define QTEST_KDE_H
 
-#include <stdlib.h>
-#include <assert.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kcomponentdata.h>
 #include <kglobal.h>
 #include <kurl.h>
-#include <QtGui/QApplication>
-#include <QtCore/QEventLoop>
-#include <QtTest/QSignalSpy>
-#include <QtTest/QtTest>
+
+#include <QApplication>
+#include <QEventLoop>
+#include <QSignalSpy>
 #include <QTimer>
-#include <QtCore/qfile.h>
-#include <QtCore/qdir.h>
-#include <QtCore/qtextstream.h>
+#include <QFile>
+#include <QDir>
+#include <QtTest/QtTest>
+
+#include <stdlib.h>
+#include <assert.h>
 
 QT_BEGIN_NAMESPACE
 

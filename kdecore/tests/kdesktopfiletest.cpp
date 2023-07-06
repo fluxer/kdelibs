@@ -19,11 +19,12 @@
 #include <kconfiggroup.h>
 #include <ktemporaryfile.h>
 #include <kstandarddirs.h>
-#include "moc_kdesktopfiletest.cpp"
-
 #include "kdesktopfile.h"
-
 #include <qtest_kde.h>
+
+#include <QTextStream>
+
+#include "moc_kdesktopfiletest.cpp"
 
 QTEST_KDEMAIN_CORE( KDesktopFileTest )
 

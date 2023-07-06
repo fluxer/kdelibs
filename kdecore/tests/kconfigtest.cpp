@@ -27,11 +27,11 @@
 #include <kdebug.h>
 #include <kconfiggroup.h>
 
+#include <QTextStream>
+
 #include <future>
 
-#ifdef Q_OS_UNIX
 #include <utime.h>
-#endif
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(KConfigTest,Testing)
 KCONFIGGROUP_DECLARE_FLAGS_QOBJECT(KConfigTest,Flags)

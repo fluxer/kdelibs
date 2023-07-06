@@ -17,16 +17,18 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <cstdlib>
 #include <qtest_kde.h>
-#include <QtCore/QDir>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kcalendarsystem.h>
 #include <ksystemtimezone.h>
 #include <kdatetime.h>
 #include <kconfiggroup.h>
-#include <QtDBus/QtDBus>
+
+#include <QDir>
+#include <QTextStream>
+
+#include <cstdlib>
 
 #include "moc_kdatetimetest.cpp"
 

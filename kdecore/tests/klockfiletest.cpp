@@ -20,9 +20,11 @@
 #include "moc_klockfiletest.cpp"
 
 #include <kdebug.h>
-#include <unistd.h>
 
 #include <QProcess>
+#include <QTextStream>
+
+#include <unistd.h>
 
 // TODO test locking from two different threads
 
