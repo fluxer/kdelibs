@@ -277,7 +277,9 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
                 }
             }
         } else if (item.isDesktopFile()) {
-            // if an update was triggered might aswell refresh all current .desktop files
+            // if an update was triggered might aswell refresh all current .desktop files, this
+            // will also ensure .desktop files on remote protocol have their icon updated since
+            // non-local .desktop files cannot be parsed by KDesktopFile without get() job
             kDebug(7003) << "updating desktop entry" << item;
             refreshedItems.append(qMakePair(founditem, item));
         }
