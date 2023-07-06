@@ -298,18 +298,18 @@ public:
 
 Q_SIGNALS:
     /**
-     * Signals that listing has started.
+     * Signals that listing or update has started.
      */
     void started();
 
     /**
-     * Signals that listing has finished.
+     * Signals that listing or update has finished.
      */
     void completed();
 
     /**
-     * Signals that listing has been canceled, either by a call to stop() or
-     * openUrl() while listing was in progress.
+     * Signals that listing or update has been canceled, either by a call to
+     * stop() or openUrl() while listing was in progress.
      */
     void canceled();
 
