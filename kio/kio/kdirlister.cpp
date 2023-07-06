@@ -272,7 +272,7 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
         if (item.isDesktopFile()) {
             const KFileItem olditem = filteredFileItems.findByUrl(item.url());
             kDebug(7003) << "updating desktop entry" << item;
-            refreshedItems.append(qMakePair(item, olditem));
+            refreshedItems.append(qMakePair(olditem, item));
         }
     }
 
