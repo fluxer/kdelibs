@@ -104,22 +104,24 @@ bool KDirSortFilterProxyModel::canFetchMore(const QModelIndex& parent) const
     return sourceModel()->canFetchMore(sourceParent);
 }
 
-int KDirSortFilterProxyModel::pointsForPermissions(const QFileInfo &info)
+int KDirSortFilterProxyModel::pointsForPermissions(const QFile::Permissions permissions)
 {
     int points = 0;
 
-    QFile::Permission permissionsCheck[] = { QFile::ReadUser,
-                                             QFile::WriteUser,
-                                             QFile::ExeUser,
-                                             QFile::ReadGroup,
-                                             QFile::WriteGroup,
-                                             QFile::ExeGroup,
-                                             QFile::ReadOther,
-                                             QFile::WriteOther,
-                                             QFile::ExeOther };
+    QFile::Permission permissionsCheck[] = {
+        QFile::ReadUser,
+        QFile::WriteUser,
+        QFile::ExeUser,
+        QFile::ReadGroup,
+        QFile::WriteGroup,
+        QFile::ExeGroup,
+        QFile::ReadOther,
+        QFile::WriteOther,
+        QFile::ExeOther
+    };
 
     for (int i = 0; i < 9; i++) {
-        points += info.permission(permissionsCheck[i]) ? 1 : 0;
+        points += permissions.testFlag(permissionsCheck[i]) ? 1 : 0;
     }
 
     return points;
@@ -240,12 +242,11 @@ bool KDirSortFilterProxyModel::subSortLessThan(const QModelIndex& left,
     }
 
     case KDirModel::Permissions: {
-        // ### You can't use QFileInfo on urls!! Use the KFileItem instead.
-        QFileInfo leftFileInfo(leftFileItem.url().pathOrUrl());
-        QFileInfo rightFileInfo(rightFileItem.url().pathOrUrl());
+        const QFile::Permissions leftFilePerms = KIO::convertPermissions(leftFileItem.permissions());
+        const QFile::Permissions rightFilePerms = KIO::convertPermissions(rightFileItem.permissions());
 
-        int leftPermissionsPoints = pointsForPermissions(leftFileInfo);
-        int rightPermissionsPoints = pointsForPermissions(rightFileInfo);
+        int leftPermissionsPoints = pointsForPermissions(leftFilePerms);
+        int rightPermissionsPoints = pointsForPermissions(rightFilePerms);
 
         if (leftPermissionsPoints == rightPermissionsPoints) {
             return d->compare(leftFileItem.text(), rightFileItem.text(), sortCaseSensitivity()) < 0;

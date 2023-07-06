@@ -23,7 +23,7 @@
 #ifndef KDIRSORTFILTERPROXYMODEL_H
 #define KDIRSORTFILTERPROXYMODEL_H
 
-#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
 
 #include <kcategorizedsortfilterproxymodel.h>
 
@@ -69,7 +69,7 @@ public:
      * Returns the permissions in "points". This is useful for sorting by
      * permissions.
      */
-    static int pointsForPermissions(const QFileInfo &info);
+    static int pointsForPermissions(const QFile::Permissions permissions);
 
     /**
      * Choose if files and folders are sorted separately (with folders first) or not.
