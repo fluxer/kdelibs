@@ -254,6 +254,7 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
         if (founditem.isNull()) {
             kDebug(7003) << "deleted entry" << item;
             deletedItems.append(item);
+            unwatchUrl(item.url());
         } else if (item != founditem) {
             kDebug(7003) << "updated entry" << item;
             refreshedItems.append(qMakePair(item, founditem));
@@ -264,6 +265,16 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
         if (founditem.isNull()) {
             kDebug(7003) << "added entry" << item;
             addedItems.append(item);
+            if (autoUpdate && recursive && item.isDir()) {
+                watchUrl(item.url());
+            }
+            if (autoUpdate && item.isDesktopFile()) {
+                KDesktopFile desktopfile(item.localPath());
+                const KUrl desktopurl = desktopfile.readUrl();
+                if (desktopurl.isValid()) {
+                    watchUrl(desktopurl);
+                }
+            }
         }
     }
 
