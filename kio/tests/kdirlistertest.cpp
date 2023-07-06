@@ -27,8 +27,6 @@ void KDirListerTest::initTestCase()
 {
     m_tempDir = new KTempDir();
     m_dirLister = new KDirLister();
-
-    qDebug() << Q_FUNC_INFO << m_tempDir->name();
 }
 
 void KDirListerTest::cleanupTestCase()
@@ -48,7 +46,7 @@ void KDirListerTest::testOpenUrl()
 void KDirListerTest::testItems()
 {
     const QString testfile = QString::fromLatin1("%1/foo.bar").arg(m_tempDir->name());
-    KUrl testfileurl(testfile);
+    const KUrl testfileurl(testfile);
     createTestFile(testfile);
 
     m_dirLister->openUrl(KUrl(m_tempDir->name()));

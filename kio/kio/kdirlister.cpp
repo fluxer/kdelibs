@@ -285,11 +285,11 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
         }
     }
 
-    if (!addedItems.isEmpty()) {
-        emit m_parent->itemsAdded(addedItems);
-    }
     if (!deletedItems.isEmpty()) {
         emit m_parent->itemsDeleted(deletedItems);
+    }
+    if (!addedItems.isEmpty()) {
+        emit m_parent->itemsAdded(addedItems);
     }
     if (!refreshedItems.isEmpty()) {
         emit m_parent->refreshItems(refreshedItems);
