@@ -276,15 +276,10 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
                     watchUrl(desktopurl);
                 }
             }
-        }
-    }
-
-    foreach (const KFileItem &item, updateFilteredFileItems) {
-        // if an update was triggered might aswell refresh all .desktop files
-        if (item.isDesktopFile()) {
-            const KFileItem olditem = filteredFileItems.findByUrl(item.url());
+        } else if (item.isDesktopFile()) {
+            // if an update was triggered might aswell refresh all current .desktop files
             kDebug(7003) << "updating desktop entry" << item;
-            refreshedItems.append(qMakePair(olditem, item));
+            refreshedItems.append(qMakePair(founditem, item));
         }
     }
 
