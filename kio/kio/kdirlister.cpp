@@ -148,7 +148,6 @@ void KDirListerPrivate::unwatchUrl(const KUrl &it)
 
     if (it.isLocalFile()) {
         const QString localfile = it.toLocalFile();
-        const QFileInfo localinfo(localfile);
         kDebug(7003) << "no longer watching" << localfile;
         // not tracking what it is, KDirWatch does tho
         dirWatch->removeDir(localfile);
