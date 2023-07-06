@@ -59,14 +59,4 @@ void OrgKdeKDirNotifyInterface::emitFilesRemoved(const QStringList &fileList)
     emitSignal(QLatin1String("FilesRemoved"), QVariantList() << QVariant(fileList));
 }
 
-void OrgKdeKDirNotifyInterface::emitEnteredDirectory(const QString &url)
-{
-    emitSignal(QLatin1String("enteredDirectory"), QVariantList() << url);
-}
-
-void OrgKdeKDirNotifyInterface::emitLeftDirectory(const QString &url)
-{
-    emitSignal(QLatin1String("leftDirectory"), QVariantList() << url);
-}
-
 #include "moc_kdirnotify.cpp"

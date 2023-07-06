@@ -135,7 +135,6 @@ void KDirListerPrivate::watchUrl(const KUrl &it)
                 m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
             );
         }
-        org::kde::KDirNotify::emitEnteredDirectory(it.url());
         watchedUrls.append(it);
     }
 }
@@ -156,7 +155,6 @@ void KDirListerPrivate::unwatchUrl(const KUrl &it)
         }
     } else {
         kDebug(7003) << "no longer watching remote" << it.url();
-        org::kde::KDirNotify::emitLeftDirectory(it.url());
         watchedUrls.removeAll(it);
     }
 }
