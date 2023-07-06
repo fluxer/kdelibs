@@ -149,9 +149,11 @@ void KDirListerPrivate::unwatchUrl(const KUrl &it)
     if (it.isLocalFile()) {
         const QString localfile = it.toLocalFile();
         kDebug(7003) << "no longer watching" << localfile;
-        // not tracking what it is, KDirWatch does tho
-        dirWatch->removeDir(localfile);
-        dirWatch->removeFile(localfile);
+        if (dirWatch) {
+            // not tracking what it is, KDirWatch does tho
+            dirWatch->removeDir(localfile);
+            dirWatch->removeFile(localfile);
+        }
     } else {
         kDebug(7003) << "no longer watching remote" << it.url();
         org::kde::KDirNotify::emitLeftDirectory(it.url());
