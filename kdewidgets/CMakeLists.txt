@@ -1,9 +1,5 @@
 project(kdewidgets)
 
-if(ENABLE_TESTING)
-    add_subdirectory(tests)
-endif()
-
 add_subdirectory(pics)
 
 include_directories(
