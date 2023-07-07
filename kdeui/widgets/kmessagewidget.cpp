@@ -317,7 +317,7 @@ void KMessageWidget::animatedShow()
     d->animation = new QPropertyAnimation(this, "windowOpacity", this);
     d->animation->setStartValue(0.0);
     d->animation->setEndValue(1.0);
-    d->animation->setEasingCurve(QEasingCurve::InOutQuad);
+    d->animation->setEasingCurve(QEasingCurve::InQuad);
     d->animation->setDuration(s_kmessageanimationduration);
     d->animation->start();
     QFrame::show();
@@ -339,10 +339,11 @@ void KMessageWidget::animatedHide()
         return;
     }
 
-    d->animation = new QPropertyAnimation(this, "windowOpacity", this);
-    d->animation->setStartValue(1.0);
-    d->animation->setEndValue(0.0);
-    d->animation->setEasingCurve(QEasingCurve::InOutQuad);
+    setMaximumHeight(height());
+    d->animation = new QPropertyAnimation(this, "maximumHeight", this);
+    d->animation->setStartValue(height());
+    d->animation->setEndValue(0);
+    d->animation->setEasingCurve(QEasingCurve::OutQuad);
     d->animation->setDuration(s_kmessageanimationduration);
     d->animation->start();
     QFrame::hide();
