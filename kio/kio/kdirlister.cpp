@@ -242,12 +242,6 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
     KFileItemList deletedItems;
     QList<QPair<KFileItem, KFileItem>> refreshedItems;
 
-    if (!updateRootFileItem.isNull() && rootFileItem != updateRootFileItem) {
-        // no way its deleted if it is not null, wasn't added either
-        kDebug(7003) << "updated root entry" << rootFileItem;
-        refreshedItems.append(qMakePair(rootFileItem, updateRootFileItem));
-    }
-
     foreach (const KFileItem &item, filteredFileItems) {
         KFileItem founditem = updateFilteredFileItems.findByUrl(item.url());
         if (founditem.isNull()) {
