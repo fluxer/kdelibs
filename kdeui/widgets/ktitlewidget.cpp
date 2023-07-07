@@ -39,29 +39,41 @@ public:
     {
     }
 
-    QString textStyleSheet() const
+    void updateTextWidget() const
     {
-        return QString("QLabel { font-weight: bold; color: %1}").arg(q->palette().color(QPalette::WindowText).name());
+        QFont f = textLabel->font();
+        f.setBold(true);
+        textLabel->setFont(f);
     }
 
-    QString commentStyleSheet() const
+    void updateCommentWidget() const
     {
-        QString styleSheet;
+        // FIXME: we need the usability color styles to implement different
+        // yet palette appropriate colours for the different use cases!
+        // also .. should we include an icon here,
+        // perhaps using the imageLabel?
         switch (messageType) {
-            //FIXME: we need the usability color styles to implement different
-            //       yet palette appropriate colours for the different use cases!
-            //       also .. should we include an icon here,
-            //       perhaps using the imageLabel?
             case InfoMessage:
             case WarningMessage:
-            case ErrorMessage:
-                styleSheet = QString("QLabel { color: palette(%1); background: palette(%2); }").arg(q->palette().color(QPalette::HighlightedText).name()).arg(q->palette().color(QPalette::Highlight).name());
+            case ErrorMessage: {
+                QPalette p = commentLabel->palette();
+                const QColor c = q->palette().color(QPalette::HighlightedText);
+                p.setColor(QPalette::Foreground, c);
+                p.setColor(QPalette::Background, c);
+                commentLabel->setPalette(p);
                 break;
+            }
             case PlainMessage:
-            default:
+            default: {
+                QPalette p = commentLabel->palette();
+                QColor c = q->palette().color(QPalette::Foreground);
+                p.setColor(QPalette::Foreground, c);
+                c = q->palette().color(QPalette::Background);
+                p.setColor(QPalette::Background, c);
+                commentLabel->setPalette(p);
                 break;
+            }
         }
-        return styleSheet;
     }
 
     KTitleWidget* q;
@@ -90,17 +102,13 @@ QString KTitleWidget::Private::iconTypeToIconName(KTitleWidget::MessageType type
     switch (type) {
         case KTitleWidget::InfoMessage:
             return QLatin1String("dialog-information");
-            break;
         case KTitleWidget::ErrorMessage:
             return QLatin1String("dialog-error");
-            break;
         case KTitleWidget::WarningMessage:
             return QLatin1String("dialog-warning");
-            break;
         case KTitleWidget::PlainMessage:
             break;
     }
-
     return QString();
 }
 
@@ -193,8 +201,8 @@ void KTitleWidget::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
     if (e->type() == QEvent::PaletteChange) {
-        d->textLabel->setStyleSheet(d->textStyleSheet());
-        d->commentLabel->setStyleSheet(d->commentStyleSheet());
+        d->updateTextWidget();
+        d->updateCommentWidget();
     }
 }
 
@@ -203,7 +211,7 @@ void KTitleWidget::setText(const QString &text, Qt::Alignment alignment)
     d->textLabel->setVisible(!text.isNull());
 
     if (!Qt::mightBeRichText(text)) {
-        d->textLabel->setStyleSheet(d->textStyleSheet());
+        d->updateTextWidget();
     }
 
     d->textLabel->setText(text);
@@ -223,7 +231,7 @@ void KTitleWidget::setComment(const QString &comment, MessageType type)
 
     //TODO: should we override the current icon with the corresponding MessageType icon?
     d->messageType = type;
-    d->commentLabel->setStyleSheet(d->commentStyleSheet());
+    d->updateCommentWidget();
     d->commentLabel->setText(comment);
     show();
 }
