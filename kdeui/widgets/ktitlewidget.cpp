@@ -200,7 +200,7 @@ void KTitleWidget::setBuddy(QWidget *buddy)
 void KTitleWidget::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
-    if (e->type() == QEvent::PaletteChange) {
+    if (e->type() == QEvent::PaletteChange || e->type() == QEvent::FontChange) {
         d->updateTextWidget();
         d->updateCommentWidget();
     }
