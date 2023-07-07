@@ -227,7 +227,7 @@ void KMessageWidget::setMessageType(KMessageWidget::MessageType type)
             "    stop: 1.0 %3);"
             "border-radius: 5px;"
             "border: 1px solid %4;"
-            "color: %6;"
+            "color: %5;"
             "}"
             )
         .arg(bg0.name())
