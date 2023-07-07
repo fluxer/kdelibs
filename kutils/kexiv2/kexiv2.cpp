@@ -27,6 +27,12 @@
 #endif
 
 #if defined(HAVE_EXIV2)
+// there is vendor specific metadata that is not supposed to be user-visible
+static bool kIsInternalKey(const std::string &key)
+{
+    return (key.find(std::string(".0x")) != std::string::npos);
+}
+
 static void KExiv2MsgHandler(int level, const char* message)
 {
     switch (level) {
@@ -256,6 +262,10 @@ KExiv2PropertyList KExiv2::metadata() const
             result.reserve(exiv2data.count());
             for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
                 const std::string key = (*it).key();
+                if (kIsInternalKey(key)) {
+                    kDebug() << "Internal key" << key.c_str();
+                    continue;
+                }
                 const std::string value = (*it).value().toString();
                 const std::string taglabel = (*it).tagLabel();
                 kDebug() << "Key" << key.c_str() << "value" << value.c_str() << "tag label" << taglabel.c_str();
@@ -270,6 +280,10 @@ KExiv2PropertyList KExiv2::metadata() const
             result.reserve(result.size() + iptcdata.count());
             for (Exiv2::IptcData::const_iterator it = iptcdata.begin(); it != iptcdata.end(); it++) {
                 const std::string key = (*it).key();
+                if (kIsInternalKey(key)) {
+                    kDebug() << "Internal key" << key.c_str();
+                    continue;
+                }
                 const std::string value = (*it).value().toString();
                 const std::string taglabel = (*it).tagLabel();
                 kDebug() << "Key" << key.c_str() << "value" << value.c_str() << "tag label" << taglabel.c_str();
@@ -284,6 +298,10 @@ KExiv2PropertyList KExiv2::metadata() const
             result.reserve(result.size() + xmpdata.count());
             for (Exiv2::XmpData::const_iterator it = xmpdata.begin(); it != xmpdata.end(); it++) {
                 const std::string key = (*it).key();
+                if (kIsInternalKey(key)) {
+                    kDebug() << "Internal key" << key.c_str();
+                    continue;
+                }
                 const std::string value = (*it).value().toString();
                 const std::string taglabel = (*it).tagLabel();
                 kDebug() << "Key" << key.c_str() << "value" << value.c_str() << "tag label" << taglabel.c_str();
