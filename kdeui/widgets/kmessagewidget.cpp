@@ -22,7 +22,6 @@
 #include <kaction.h>
 #include <kcolorscheme.h>
 #include <kdebug.h>
-#include <kglobalsettings.h>
 #include <kicon.h>
 #include <kiconloader.h>
 #include <kstandardaction.h>
@@ -31,14 +30,8 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPainter>
-#include <QPropertyAnimation>
 #include <QToolButton>
 #include <QStyle>
-
-// NOTE: KateAnimation relies on this being 500ms, see:
-// kde-workspace/kate/part/view/kateanimation.cpp
-static const int s_kmessageanimationduration = 500;
 
 //---------------------------------------------------------------------
 // KMessageWidgetPrivate
@@ -53,10 +46,8 @@ public:
     QLabel* textLabel;
     QToolButton* closeButton;
     QIcon icon;
-
     KMessageWidget::MessageType messageType;
     QList<QToolButton*> buttons;
-    QPropertyAnimation* animation;
 
     void updateLayout();
 };
@@ -86,8 +77,6 @@ void KMessageWidgetPrivate::init(KMessageWidget *q_ptr)
     closeButton = new QToolButton(q);
     closeButton->setAutoRaise(true);
     closeButton->setDefaultAction(closeAction);
-
-    animation = nullptr;
 
     q->setMessageType(KMessageWidget::Information);
 }
@@ -300,52 +289,21 @@ void KMessageWidget::removeAction(QAction* action)
 
 void KMessageWidget::animatedShow()
 {
-    if (d->animation) {
-        delete d->animation;
-        d->animation = nullptr;
-    }
-
-    if (!(KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects)) {
-        show();
-        return;
-    }
-
     if (isVisible()) {
         return;
     }
 
-    d->animation = new QPropertyAnimation(this, "windowOpacity", this);
-    d->animation->setStartValue(0.0);
-    d->animation->setEndValue(1.0);
-    d->animation->setEasingCurve(QEasingCurve::InQuad);
-    d->animation->setDuration(s_kmessageanimationduration);
-    d->animation->start();
+    // yep, no animation. changing the geometry for 500ms looks exactly the same as showing the
+    // widget without doing so
     QFrame::show();
 }
 
 void KMessageWidget::animatedHide()
 {
-    if (d->animation) {
-        delete d->animation;
-        d->animation = nullptr;
-    }
-
-    if (!(KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects)) {
-        hide();
-        return;
-    }
-
     if (!isVisible()) {
         return;
     }
 
-    setMaximumHeight(height());
-    d->animation = new QPropertyAnimation(this, "maximumHeight", this);
-    d->animation->setStartValue(height());
-    d->animation->setEndValue(0);
-    d->animation->setEasingCurve(QEasingCurve::OutQuad);
-    d->animation->setDuration(s_kmessageanimationduration);
-    d->animation->start();
     QFrame::hide();
 }
 
