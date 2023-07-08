@@ -49,7 +49,6 @@ protected:
 private Q_SLOTS:
     void nmStateChanged(const uint nmstate);
     void cmStateChanged(const QString &cmname, const QDBusVariant &cmvalue);
-    void n1StateChanged(const QString &n1name, const QDBusVariant &n1value);
 
 private:
     void emitSignals();
@@ -208,13 +207,6 @@ void KNetworkManagerPrivate::cmStateChanged(const QString &cmname, const QDBusVa
 {
     Q_UNUSED(cmname);
     Q_UNUSED(cmvalue);
-    emitSignals();
-}
-
-void KNetworkManagerPrivate::n1StateChanged(const QString &n1name, const QDBusVariant &n1value)
-{
-    Q_UNUSED(n1name);
-    Q_UNUSED(n1value);
     emitSignals();
 }
 
