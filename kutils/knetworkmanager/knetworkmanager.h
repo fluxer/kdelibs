@@ -24,12 +24,26 @@
 #include <QObject>
 #include <QMetaType>
 
+/*!
+    Structure that holds information about network connection.
+
+    @ingroup Types
+    @since 4.23
+    @see KNetworkManager
+*/
+struct KNetworkConnection
+{
+    QString name;
+    QString dbuspath; // internal
+};
+
 class KNetworkManagerPrivate;
 
 /*!
     Class to query, manage and watch the system network state.
 
     @since 4.23
+    @see KNetworkConnection
     @warning the API is subject to change
 */
 class KNETWORKMANAGER_EXPORT KNetworkManager : public QObject
@@ -55,6 +69,16 @@ public:
     KNetworkStatus status() const;
 
     /*!
+        @brief Returns the current network connections
+    */
+    QList<KNetworkConnection> connections() const;
+
+    /*!
+        @brief Enables or disables the network connection named @p name
+    */
+    bool enable(const QString &name, const bool enable);
+
+    /*!
         @brief Returns @p true if network management is supported on this host,
         @p false otherwise
     */
@@ -67,10 +91,9 @@ Q_SIGNALS:
     void statusChanged(const KNetworkManager::KNetworkStatus status);
 
 private:
+    friend KNetworkManagerPrivate;
     Q_DISABLE_COPY(KNetworkManager);
     KNetworkManagerPrivate *d;
-
-    friend KNetworkManagerPrivate;
 };
 
 Q_DECLARE_METATYPE(KNetworkManager::KNetworkStatus);
