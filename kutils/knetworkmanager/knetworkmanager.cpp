@@ -22,6 +22,19 @@
 #include <QTimer>
 #include <QNetworkInterface>
 
+static KNetworkManager::KNetworkStatus kGetNetworkStatus()
+{
+    KNetworkManager::KNetworkStatus result = KNetworkManager::DisconnectedStatus;
+    foreach (const QNetworkInterface &iface, QNetworkInterface::allInterfaces()) {
+        const QNetworkInterface::InterfaceFlags iflags = iface.flags();
+        if (iflags & QNetworkInterface::CanBroadcast && iflags & QNetworkInterface::IsRunning) {
+            result = KNetworkManager::ConnectedStatus;
+            break;
+        }
+    }
+    return result;
+}
+
 class KNetworkManagerPrivate
  {
 public:
@@ -41,6 +54,8 @@ KNetworkManager::KNetworkManager(QObject *parent)
     : QObject(parent),
     d(new KNetworkManagerPrivate())
 {
+    d->status = kGetNetworkStatus();
+
     d->statustimer = new QTimer(this);
     connect(d->statustimer, SIGNAL(timeout()), this, SLOT(_checkStatus()));
     d->statustimer->start(2000);
@@ -63,15 +78,7 @@ bool KNetworkManager::isSupported()
 
 void KNetworkManager::_checkStatus()
 {
-    KNetworkManager::KNetworkStatus newstatus = KNetworkManager::DisconnectedStatus;
-    foreach (const QNetworkInterface &iface, QNetworkInterface::allInterfaces()) {
-        const QNetworkInterface::InterfaceFlags iflags = iface.flags();
-        if (iflags & QNetworkInterface::CanBroadcast && iflags & QNetworkInterface::IsRunning) {
-            newstatus = KNetworkManager::ConnectedStatus;
-            break;
-        }
-    }
-
+    KNetworkManager::KNetworkStatus newstatus = kGetNetworkStatus();
     if (d->status != newstatus) {
         d->status = newstatus;
         kDebug() << "Status changed to" << newstatus;
