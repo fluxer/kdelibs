@@ -14,6 +14,7 @@ add_subdirectory(kpowermanager)
 add_subdirectory(kdnssd)
 add_subdirectory(karchive)
 add_subdirectory(kemail)
+add_subdirectory(knetworkmanager)
 
 ######## kidletime ####################
 

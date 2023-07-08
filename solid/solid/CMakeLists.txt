@@ -20,7 +20,6 @@ set_source_files_properties(
 )
 
 set(solid_LIB_SRCS
-    networking.cpp
     solidnamespace.cpp
     managerbase.cpp
     device.cpp
@@ -185,11 +184,6 @@ if(DEVINFO_FOUND)
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${DEVINFO_LIBRARIES})
 endif()
 
-qt4_add_dbus_interface(solid_LIB_SRCS
-    org.kde.Solid.Networking.Client.xml
-    org_kde_solid_networking_client
-)
-
 add_library(solid SHARED ${solid_LIB_SRCS})
 
 target_link_libraries(solid PRIVATE
@@ -211,12 +205,6 @@ install(
     TARGETS solid
     EXPORT kdelibsTargets
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
-)
-
-install(
-    FILES
-    org.kde.Solid.Networking.Client.xml
-    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -246,7 +234,6 @@ install(
     audiointerface.h
     predicate.h
     powermanagement.h
-    networking.h
     video.h
     graphic.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid

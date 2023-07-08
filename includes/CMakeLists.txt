@@ -198,6 +198,7 @@ install(
     KMultiTabBarButton
     KMultiTabBarTab
     KNameAndUrlInputDialog
+    KNetworkManager
     KNewFileMenu
     KNewPasswordDialog
     KNotification
@@ -472,7 +473,6 @@ install(
     Solid/DeviceNotifier
     Solid/GenericInterface
     Solid/NetworkInterface
-    Solid/Networking
     Solid/OpticalDisc
     Solid/OpticalDrive
     Solid/PortableMediaPlayer

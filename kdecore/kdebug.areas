@@ -39,7 +39,6 @@
 711         kutils (KCModuleProxy)
 712         kutils (KCModuleInfo)
 713         kutils (KCModuleContainer)
-921         Solid Networking
 930         KUnitConversion
 940         kmediaplayer
 1000        kparts
@@ -74,6 +73,7 @@
 51006       kdnssd
 51009       karchive
 51010       kemail
+51011       knetworkmanager
 
 # kde-workspace
 101         kioclient
