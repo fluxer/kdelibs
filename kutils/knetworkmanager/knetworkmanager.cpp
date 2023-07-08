@@ -127,19 +127,19 @@ KNetworkManager::KNetworkStatus KNetworkManagerPrivate::status() const
 
     if (m_cm.isValid()) {
         KNetworkManager::KNetworkStatus result = KNetworkManager::UnknownStatus;
-        QDBusReply<ConnmanPropertiesType> connmanreply = m_cm.call("GetProperties");
-        const ConnmanPropertiesType connmanproperties = connmanreply.value();
-        const QString connmanstate = connmanproperties.value("State").toString();
-        if (connmanstate == QLatin1String("ready") || connmanstate == QLatin1String("online")) {
+        QDBusReply<ConnmanPropertiesType> cmreply = m_cm.call("GetProperties");
+        const ConnmanPropertiesType cmproperties = cmreply.value();
+        const QString cmstate = cmproperties.value("State").toString();
+        if (cmstate == QLatin1String("ready") || cmstate == QLatin1String("online")) {
             result = KNetworkManager::ConnectedStatus;
-        } else if (connmanstate == QLatin1String("association") || connmanstate == QLatin1String("configuration")
-            || connmanstate == QLatin1String("disconnect")) {
+        } else if (cmstate == QLatin1String("association") || cmstate == QLatin1String("configuration")
+            || cmstate == QLatin1String("disconnect")) {
             // connecting/disconnecting
             result = KNetworkManager::UnknownStatus;
-        } else if (connmanstate == QLatin1String("offline") || connmanstate == QLatin1String("idle")) {
+        } else if (cmstate == QLatin1String("offline") || cmstate == QLatin1String("idle")) {
             result = KNetworkManager::DisconnectedStatus;
         } else {
-            kWarning() << "Unknown net.connman state" << connmanstate;
+            kWarning() << "Unknown net.connman state" << cmstate;
         }
         return result;
     }
@@ -183,10 +183,10 @@ void KNetworkManagerPrivate::nmStateChanged(const uint nmstate)
     emitSignals();
 }
 
-void KNetworkManagerPrivate::cmStateChanged(const QString &name, const QDBusVariant &value)
+void KNetworkManagerPrivate::cmStateChanged(const QString &cmname, const QDBusVariant &cmvalue)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(value);
+    Q_UNUSED(cmname);
+    Q_UNUSED(cmvalue);
     emitSignals();
 }
 
