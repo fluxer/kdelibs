@@ -39,7 +39,8 @@ public:
     enum KNetworkStatus {
         UnknownStatus = 0,
         ConnectedStatus = 1,
-        DisconnectedStatus = 2
+        DisconnectedStatus = 2,
+        IntermediateStatus = 3 // connecting or disconnecting
     };
 
     /*!

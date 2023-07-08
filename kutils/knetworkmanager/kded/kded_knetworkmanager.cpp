@@ -73,6 +73,10 @@ void KNetworkManagerModule::slotStatusChanged(const KNetworkManager::KNetworkSta
             knotification->setText(i18n("Network status is disconnected"));
             break;
         }
+        case KNetworkManager::IntermediateStatus: {
+            // no notification for intermediate status changes
+            return;
+        }
     }
     knotification->sendEvent();
 }

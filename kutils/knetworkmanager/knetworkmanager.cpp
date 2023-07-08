@@ -119,7 +119,7 @@ KNetworkManager::KNetworkStatus KNetworkManagerPrivate::status() const
             }
             case 30:
             case 40: {
-                // connecting/disconnecting
+                result = KNetworkManager::IntermediateStatus;
                 break;
             }
             default: {
@@ -139,8 +139,7 @@ KNetworkManager::KNetworkStatus KNetworkManagerPrivate::status() const
             result = KNetworkManager::ConnectedStatus;
         } else if (cmstate == QLatin1String("association") || cmstate == QLatin1String("configuration")
             || cmstate == QLatin1String("disconnect")) {
-            // connecting/disconnecting
-            result = KNetworkManager::UnknownStatus;
+            result = KNetworkManager::IntermediateStatus;
         } else if (cmstate == QLatin1String("offline") || cmstate == QLatin1String("idle")) {
             result = KNetworkManager::DisconnectedStatus;
         } else {
@@ -157,8 +156,7 @@ KNetworkManager::KNetworkStatus KNetworkManagerPrivate::status() const
         } else if (n1state == QLatin1String("no-carrier")) {
             result = KNetworkManager::DisconnectedStatus;
         } else if (n1state == QLatin1String("carrier") || n1state == QLatin1String("degraded")) {
-            // connecting/disconnecting
-            result = KNetworkManager::UnknownStatus;
+            result = KNetworkManager::IntermediateStatus;
         } else {
             kWarning() << "Unknown org.freedesktop.network1 state" << n1state;
         }
