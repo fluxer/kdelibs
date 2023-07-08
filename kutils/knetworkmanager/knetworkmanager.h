@@ -62,7 +62,7 @@ Q_SIGNALS:
     /*!
         @brief Signals that the current status has changed to @p status
     */
-    void statusChanged(const KNetworkStatus status);
+    void statusChanged(const KNetworkManager::KNetworkStatus status);
 
 private Q_SLOTS:
     void _checkStatus();
