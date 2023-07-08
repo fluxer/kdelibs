@@ -70,7 +70,7 @@ void KNetworkManagerModule::slotStatusChanged(const KNetworkManager::KNetworkSta
             knotification = new KNotification("Disconnected");
             knotification->setComponentData(KComponentData("knetworkmanager"));
             knotification->setTitle(i18n("Network status changed"));
-            knotification->setText(i18n("Network status is offline"));
+            knotification->setText(i18n("Network status is disconnected"));
             break;
         }
     }
