@@ -37,4 +37,4 @@ install(
     DESTINATION ${KDE4_LIB_INSTALL_DIR}
 )
 
-# add_subdirectory(kded)
+add_subdirectory(kded)

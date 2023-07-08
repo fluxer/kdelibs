@@ -22,6 +22,7 @@
 #include "knetworkmanager_export.h"
 
 #include <QObject>
+#include <QMetaType>
 
 class KNetworkManagerPrivate;
 
@@ -64,12 +65,13 @@ Q_SIGNALS:
     */
     void statusChanged(const KNetworkManager::KNetworkStatus status);
 
-private Q_SLOTS:
-    void _checkStatus();
-
 private:
     Q_DISABLE_COPY(KNetworkManager);
     KNetworkManagerPrivate *d;
+
+    friend KNetworkManagerPrivate;
 };
+
+Q_DECLARE_METATYPE(KNetworkManager::KNetworkStatus);
 
 #endif // KNETWORKMANAGER_H

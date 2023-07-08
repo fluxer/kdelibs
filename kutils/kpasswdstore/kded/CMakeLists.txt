@@ -6,7 +6,7 @@ set(kded_kpasswdstore_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kpasswdstore.xml
 )
 
-qt4_generate_dbus_interface(kded_kpasswdstore.h org.kde.kpasswdstore.xml )
+qt4_generate_dbus_interface(kded_kpasswdstore.h org.kde.kpasswdstore.xml)
 
 kde4_add_plugin(kded_kpasswdstore ${kded_kpasswdstore_SRCS})
 target_link_libraries(kded_kpasswdstore PRIVATE

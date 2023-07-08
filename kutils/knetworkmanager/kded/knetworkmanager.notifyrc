@@ -1,0 +1,22 @@
+[Global]
+Name=knetworkmanager
+Comment=Network manager
+IconName=network-workgroup
+
+[Event/Unknown]
+Name=Network status is unknown
+Action=Sound|Popup
+Sound=KDE-Im-Cant-Connect.ogg
+IconName=dialog-warning
+
+[Event/Disconnected]
+Name=Network status is disconnected
+Action=Sound|Popup
+Sound=KDE-Im-Contact-Out.ogg
+IconName=network-disconnect
+
+[Event/Connected]
+Name=Network status is connected
+Action=Sound|Popup
+Sound=KDE-Im-Contact-In.ogg
+IconName=network-connect
