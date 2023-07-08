@@ -29,6 +29,7 @@
 // https://developer-old.gnome.org/NetworkManager/stable/gdbus-org.freedesktop.NetworkManager.html
 // https://git.kernel.org/pub/scm/network/connman/connman.git/tree/doc/overview-api.txt
 // https://git.kernel.org/pub/scm/network/connman/connman.git/tree/doc/manager-api.txt
+// https://www.freedesktop.org/software/systemd/man/org.freedesktop.network1.html
 
 typedef QMap<QString,QVariant> ConnmanPropertiesType;
 
@@ -48,22 +49,23 @@ protected:
 private Q_SLOTS:
     void nmStateChanged(const uint nmstate);
     void cmStateChanged(const QString &cmname, const QDBusVariant &cmvalue);
+    void n1StateChanged(const QString &n1name, const QDBusVariant &n1value);
 
 private:
     void emitSignals();
 
-    KNetworkManager* m_q;
     QDBusInterface m_nm;
     QDBusInterface m_cm;
+    QDBusInterface m_n1;
     int m_timerid;
     KNetworkManager::KNetworkStatus m_status;
 };
 
 KNetworkManagerPrivate::KNetworkManagerPrivate(KNetworkManager *parent)
     : QObject(parent),
-    m_q(parent),
     m_nm("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager", "org.freedesktop.NetworkManager", QDBusConnection::systemBus()),
     m_cm("net.connman", "/", "net.connman.Manager", QDBusConnection::systemBus()),
+    m_n1("org.freedesktop.network1", "/org/freedesktop/network1", "org.freedesktop.network1.Manager", QDBusConnection::systemBus()),
     m_timerid(0),
     m_status(KNetworkManager::UnknownStatus)
 {
@@ -80,6 +82,9 @@ KNetworkManagerPrivate::KNetworkManagerPrivate(KNetworkManager *parent)
             &m_cm, SIGNAL(PropertyChanged(QString,QDBusVariant)),
             this, SLOT(cmStateChanged(QString,QDBusVariant))
         );
+    } else if (m_n1.isValid()) {
+        kDebug() << "Using org.freedesktop.network1";
+        m_timerid = startTimer(2000);
     } else {
         kDebug() << "Using fallback";
         m_timerid = startTimer(2000);
@@ -144,6 +149,22 @@ KNetworkManager::KNetworkStatus KNetworkManagerPrivate::status() const
         return result;
     }
 
+    if (m_n1.isValid()) {
+        KNetworkManager::KNetworkStatus result = KNetworkManager::UnknownStatus;
+        const QString n1state = m_n1.property("OperationalState").toString();
+        if (n1state == QLatin1String("routable")) {
+            result = KNetworkManager::ConnectedStatus;
+        } else if (n1state == QLatin1String("no-carrier")) {
+            result = KNetworkManager::DisconnectedStatus;
+        } else if (n1state == QLatin1String("carrier") || n1state == QLatin1String("degraded")) {
+            // connecting/disconnecting
+            result = KNetworkManager::UnknownStatus;
+        } else {
+            kWarning() << "Unknown org.freedesktop.network1 state" << n1state;
+        }
+        return result;
+    }
+
     KNetworkManager::KNetworkStatus result = KNetworkManager::DisconnectedStatus;
     foreach (const QNetworkInterface &iface, QNetworkInterface::allInterfaces()) {
         const QNetworkInterface::InterfaceFlags iflags = iface.flags();
@@ -173,7 +194,9 @@ void KNetworkManagerPrivate::emitSignals()
     kDebug() << "Old status" << oldstatus << "new status" << m_status;
 
     if (oldstatus != m_status) {
-        emit m_q->statusChanged(m_status);
+        KNetworkManager* knetworkmanager = qobject_cast<KNetworkManager*>(parent());
+        Q_ASSERT(knetworkmanager);
+        emit knetworkmanager->statusChanged(m_status);
     }
 }
 
@@ -187,6 +210,13 @@ void KNetworkManagerPrivate::cmStateChanged(const QString &cmname, const QDBusVa
 {
     Q_UNUSED(cmname);
     Q_UNUSED(cmvalue);
+    emitSignals();
+}
+
+void KNetworkManagerPrivate::n1StateChanged(const QString &n1name, const QDBusVariant &n1value)
+{
+    Q_UNUSED(n1name);
+    Q_UNUSED(n1value);
     emitSignals();
 }
 
@@ -209,6 +239,7 @@ KNetworkManager::KNetworkStatus KNetworkManager::status() const
 
 bool KNetworkManager::isSupported()
 {
+    // NOTE: to be used for connections management capability (possibly)
     return true;
 }
 
