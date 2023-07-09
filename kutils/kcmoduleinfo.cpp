@@ -38,7 +38,7 @@ class KCModuleInfo::Private
     Private( KService::Ptr );
 
     QStringList keywords;
-    QString     name, icon, lib, handle, fileName, doc, comment;
+    QString     name, icon, lib, fileName, doc, comment;
     bool        allLoaded;
     int         weight;
 
