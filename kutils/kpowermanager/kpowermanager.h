@@ -30,7 +30,6 @@ class KPowerManagerPrivate;
     Class to query, manage and watch the system power state.
 
     @since 4.21
-    @warning the API is subject to change
 */
 class KPOWERMANAGER_EXPORT KPowerManager : public QObject
 {
