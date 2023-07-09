@@ -170,22 +170,19 @@ bool KExiv2::rotateImage(QImage &image) const
     // https://exiv2.org/tags-xmp-tiff.html
     int orientation = 0;
     if (d->m_exiv2image.get()) {
-        static const std::string s_orientationkey = std::string("Exif.Image.Orientation");
         try {
             kDebug() << "Checking for orientation Exif data for" << d->m_path;
             const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
-            for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
-                const std::string key = (*it).key();
-                if (key != s_orientationkey) {
-                    continue;
-                }
+            const Exiv2::ExifData::const_iterator exiv2orientation = Exiv2::orientation(exiv2data);
+            if (exiv2orientation != exiv2data.end()) {
 #if defined(EXIV2_TEST_VERSION) && EXIV2_TEST_VERSION(0, 28, 0)
-                orientation = (*it).value().toInt64();
+                orientation = (*exiv2orientation).value().toInt64();
 #else
-                orientation = (*it).value().toLong();
+                orientation = (*exiv2orientation).value().toLong();
 #endif
                 kDebug() << "Found orientation Exif data" << orientation;
-                break;
+            } else {
+                kDebug() << "No orientation Exif data for" << d->m_path;
             }
         } catch(Exiv2::Error &err) {
             kWarning() << err.what() << static_cast<int>(err.code());
