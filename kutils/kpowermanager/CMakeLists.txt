@@ -63,5 +63,5 @@ install(
     DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR}
 )
 
-kde4_install_auth_helper_files(kpowermanager_helper org.kde.kpowermanager.helper root)
+kde4_install_auth_helper_files(kpowermanager_helper org.kde.kpowermanager.helper)
 

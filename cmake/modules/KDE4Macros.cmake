@@ -229,14 +229,14 @@ macro(KDE4_ADD_WIDGET _sources)
     endforeach()
 endmacro(KDE4_ADD_WIDGET)
 
-#  KDE4_INSTALL_AUTH_HELPER_FILES(HELPER_TARGET HELPER_ID HELPER_USER)
+#  KDE4_INSTALL_AUTH_HELPER_FILES(HELPER_TARGET HELPER_ID)
 #   This macro adds the needed files for an helper executable meant to be used
-#   by applications using KAuth. It accepts the helper target, the helper ID
-#   (the D-Bus name) and the user under which the helper will run on.
+#   by applications using KAuth. It accepts the helper target and the helper ID
+#   (the D-Bus name).
 #
 #   *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to
 #             make sure everything will work.
-function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
+function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID)
     if(_kdeBootStrapping)
         set(_stubFilesDir ${CMAKE_SOURCE_DIR}/kdecore)
     else()
