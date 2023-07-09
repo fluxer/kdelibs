@@ -30,8 +30,6 @@ class KNetworkManagerPrivate;
     Class to query, manage and watch the system network state.
 
     @since 4.23
-    @see KNetworkConnection
-    @warning the API is subject to change
 */
 class KNETWORKMANAGER_EXPORT KNetworkManager : public QObject
 {
