@@ -79,10 +79,8 @@ namespace Solid
          * Requests that the system go to sleep
          *
          * @param state the sleep state use
-         * @param receiver the object to call a slot on once the operation completes
-         * @param member the slot to call
          */
-        SOLID_EXPORT void requestSleep(SleepState state, QObject *receiver, const char *member);
+        SOLID_EXPORT void requestSleep(SleepState state);
 
         /**
          * Tell the power management subsystem to suppress automatic system sleep until further
