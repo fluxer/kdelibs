@@ -120,7 +120,6 @@ int main(int argc, char **argv)
             "data", I18N_NOOP("Where applications store data"),
             "exe", I18N_NOOP("Executables in $prefix/bin"),
             "icon", I18N_NOOP("Icons"),
-            "kcfg", I18N_NOOP("Configuration description files"),
             "lib", I18N_NOOP("Libraries"),
             "include", I18N_NOOP("Includes/Headers"),
             "locale", I18N_NOOP("Translation files for KLocale"),
