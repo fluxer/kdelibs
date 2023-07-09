@@ -48,6 +48,11 @@ int KNetworkManagerModule::status() const
     return static_cast<int>(m_networkmanager->status());
 }
 
+bool KNetworkManagerModule::enable(const bool enable)
+{
+    return m_networkmanager->enable(enable);
+}
+
 void KNetworkManagerModule::slotStatusChanged(const KNetworkManager::KNetworkStatus status)
 {
     KNotification *knotification = nullptr;

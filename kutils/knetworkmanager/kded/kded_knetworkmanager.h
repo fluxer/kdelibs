@@ -34,6 +34,7 @@ public:
     ~KNetworkManagerModule();
 
     Q_SCRIPTABLE int status() const;
+    Q_SCRIPTABLE bool enable(const bool enable);
 
 private Q_SLOTS:
     void slotStatusChanged(const KNetworkManager::KNetworkStatus status);
