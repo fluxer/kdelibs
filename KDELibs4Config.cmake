@@ -16,7 +16,6 @@
 #  KDE4_CONFIG_INSTALL_DIR  - the directory where config files from kdelibs are installed
 #  KDE4_ICON_INSTALL_DIR    - the directory where icons from kdelibs are
 #  KDE4_IMPORTS_INSTALL_DIR - the directory where imports from kdelibs are
-#  KDE4_KCFG_INSTALL_DIR    - the directory where kconfig files from kdelibs are installed
 #  KDE4_LOCALE_INSTALL_DIR  - the directory where translations from kdelibs are installed
 #  KDE4_MIME_INSTALL_DIR    - the directory where mimetype desktop files from kdelibs are installed
 #  KDE4_SOUND_INSTALL_DIR   - the directory where sound files from kdelibs are installed
@@ -72,7 +71,6 @@ if(NOT KDELIBS4_FOUND)
     set(KDE4_CONFIG_INSTALL_DIR       "@KDE4_CONFIG_INSTALL_DIR@")
     set(KDE4_DATA_INSTALL_DIR         "@KDE4_DATA_INSTALL_DIR@")
     set(KDE4_ICON_INSTALL_DIR         "@KDE4_ICON_INSTALL_DIR@")
-    set(KDE4_KCFG_INSTALL_DIR         "@KDE4_KCFG_INSTALL_DIR@")
     set(KDE4_LOCALE_INSTALL_DIR       "@KDE4_LOCALE_INSTALL_DIR@")
     set(KDE4_SERVICES_INSTALL_DIR     "@KDE4_SERVICES_INSTALL_DIR@")
     set(KDE4_SERVICETYPES_INSTALL_DIR "@KDE4_SERVICETYPES_INSTALL_DIR@")

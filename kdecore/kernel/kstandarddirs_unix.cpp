@@ -37,8 +37,6 @@ QString KStandardDirs::installPath(const char *type)
                 return QFile::decodeName(CONFIG_INSTALL_DIR "/");
             break;
         case 'k':
-            if (strcmp("kcfg", type) == 0)
-                return QFile::decodeName(KCFG_INSTALL_DIR "/");
             if (strcmp("kdedir", type) == 0)
                 return QFile::decodeName(KDEDIR "/");
             break;

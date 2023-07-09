@@ -583,7 +583,6 @@ public:
      * @li @c lib - @c lib[suffix]
      * @li @c module - @c lib[suffix]/kde4
      * @li @c qtplugins - @c lib[suffix]/kde4/plugins
-     * @li @c kcfg - @c share/config.kcfg
      * @li @c xdgdata-apps - @c applications
      * @li @c xdgdata-icon - @c icons
      * @li @c xdgdata-pixmap - @c pixmaps

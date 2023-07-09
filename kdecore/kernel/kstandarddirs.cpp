@@ -323,7 +323,6 @@ static const struct ResourcesTblData {
     { "exe\0", "bin\0" },
     { "module\0", "%lib/kde4\0" },
     { "qtplugins\0", "%lib/kde4/plugins\0" },
-    { "kcfg\0", "share/config.kcfg\0" },
     { "xdgdata-apps\0", "applications\0" },
     { "xdgdata-icon\0", "icons\0" },
     { "xdgdata-pixmap\0", "pixmaps\0" },
