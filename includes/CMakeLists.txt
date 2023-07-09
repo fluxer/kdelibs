@@ -221,6 +221,7 @@ install(
     KPluginLoader
     KPluginSelector
     KPopupFrame
+    KPowerManager
     KPreviewWidgetBase
     KProcess
     KProgressDialog
