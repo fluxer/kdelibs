@@ -56,7 +56,7 @@ public:
     QList<QRegExp> nameFilters;
 
     KDirWatch* dirWatch;
-    OrgKdeKDirNotifyInterface* dirNotify;
+    OrgKdeKDirNotifyInterface* m_dirNotify;
     QTimer* pendingUpdateTimer;
     KUrl::List watchedUrls;
 
@@ -73,7 +73,8 @@ public:
     void _k_slotDirty(const QString &path);
     void _k_slotFileRenamed(const QString &path, const QString &path2);
     void _k_slotFilesAdded(const QString &path);
-    void _k_slotFilesChangedOrRemoved(const QStringList &paths);
+    void _k_slotFilesChanged(const QStringList &paths);
+    void _k_slotFilesRemoved(const QStringList &paths);
     void _k_slotUpdateDirectory();
     void _k_slotUpdateEntries(KIO::Job *job, const KIO::UDSEntryList &entries);
     void _k_slotUpdateResult(KJob *job);

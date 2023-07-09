@@ -39,7 +39,7 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     listJob(nullptr),
     updateJob(nullptr),
     dirWatch(nullptr),
-    dirNotify(nullptr),
+    m_dirNotify(nullptr),
     pendingUpdateTimer(new QTimer(parent)),
     m_parent(parent)
 {
@@ -47,6 +47,26 @@ KDirListerPrivate::KDirListerPrivate(KDirLister *parent)
     m_parent->connect(
         pendingUpdateTimer, SIGNAL(timeout()),
         m_parent, SLOT(_k_slotUpdateDirectory())
+    );
+    m_dirNotify = new org::kde::KDirNotify(
+        QString(), QString(), QDBusConnection::sessionBus(),
+        m_parent
+    );
+    m_parent->connect(
+        m_dirNotify, SIGNAL(FileRenamed(QString,QString)),
+        m_parent, SLOT(_k_slotFileRenamed(QString,QString))
+    );
+    m_parent->connect(
+        m_dirNotify, SIGNAL(FilesAdded(QString)),
+        m_parent, SLOT(_k_slotFilesAdded(QString))
+    );
+    m_parent->connect(
+        m_dirNotify, SIGNAL(FilesChanged(QStringList)),
+        m_parent, SLOT(_k_slotFilesChanged(QStringList))
+    );
+    m_parent->connect(
+        m_dirNotify, SIGNAL(FilesRemoved(QStringList)),
+        m_parent, SLOT(_k_slotFilesRemoved(QStringList))
     );
 }
 
@@ -97,7 +117,7 @@ void KDirListerPrivate::watchUrl(const KUrl &it)
 
     if (it.isLocalFile()) {
         const QString localfile = it.toLocalFile();
-        kDebug(7003) << "watching" << localfile;
+        kDebug(7003) << "watching local" << localfile;
         if (!dirWatch) {
             dirWatch = new KDirWatch(m_parent);
             m_parent->connect(
@@ -113,28 +133,6 @@ void KDirListerPrivate::watchUrl(const KUrl &it)
         }
     } else {
         kDebug(7003) << "watching remote" << it;
-        if (!dirNotify) {
-            dirNotify = new org::kde::KDirNotify(
-                QString(), QString(), QDBusConnection::sessionBus(),
-                m_parent
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FileRenamed(QString,QString)),
-                m_parent, SLOT(_k_slotFileRenamed(QString,QString))
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FilesAdded(QString)),
-                m_parent, SLOT(_k_slotFilesAdded(QString))
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FilesChanged(QStringList)),
-                m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
-            );
-            m_parent->connect(
-                dirNotify, SIGNAL(FilesRemoved(QStringList)),
-                m_parent, SLOT(_k_slotFilesChangedOrRemoved(QStringList))
-            );
-        }
         watchedUrls.append(it);
     }
 }
@@ -304,7 +302,7 @@ void KDirListerPrivate::_k_slotDirty(const QString &path)
 void KDirListerPrivate::_k_slotFileRenamed(const QString &path, const QString &path2)
 {
     kDebug(7003) << "file renamed" << path << path2;
-    _k_slotFilesChangedOrRemoved(QStringList() << path);
+    _k_slotFilesRemoved(QStringList() << path);
     _k_slotFilesAdded(path2);
 }
 
@@ -321,9 +319,36 @@ void KDirListerPrivate::_k_slotFilesAdded(const QString &path)
     }
 }
 
-void KDirListerPrivate::_k_slotFilesChangedOrRemoved(const QStringList &paths)
+void KDirListerPrivate::_k_slotFilesChanged(const QStringList &paths)
 {
     kDebug(7003) << "files changed" << paths;
+    // NOTE: the signal can be emitted for emblem icon changes
+    QList<QPair<KFileItem, KFileItem>> refreshedItems;
+    foreach (const QString &it, paths) {
+        const KUrl pathurl(it);
+        foreach (const KUrl &it2, watchedUrls) {
+            if (it2 == pathurl) {
+                _k_slotUpdateDirectory();
+                return;
+            }
+        }
+        foreach (const KFileItem &it2, filteredFileItems) {
+            if (it2.url() == pathurl) {
+                kDebug(7003) << "refreshing entry" << it2;
+                KFileItem item(it2);
+                item.refresh();
+                refreshedItems.append(qMakePair(it2, item));
+            }
+        }
+    }
+    if (!refreshedItems.isEmpty()) {
+        emit m_parent->refreshItems(refreshedItems);
+    }
+}
+
+void KDirListerPrivate::_k_slotFilesRemoved(const QStringList &paths)
+{
+    kDebug(7003) << "files removed" << paths;
     foreach (const QString &it, paths) {
         const KUrl pathurl(it);
         foreach (const KUrl &it2, watchedUrls) {
@@ -374,11 +399,6 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
         d->dirWatch->disconnect(this);
         delete d->dirWatch;
         d->dirWatch = nullptr;
-    }
-    if (d->dirNotify) {
-        // d->dirNotify->disconnect(this);
-        delete d->dirNotify;
-        d->dirNotify = nullptr;
     }
 
     kDebug(7003) << "opening" << url << recursive;
