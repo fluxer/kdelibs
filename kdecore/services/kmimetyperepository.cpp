@@ -221,7 +221,6 @@ QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QStri
 {
     parseGlobs();
 
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     // First try the high weight matches (>=50), if any.
     QStringList matchingMimeTypes;
     QString foundExt;
@@ -258,15 +257,12 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
     parseMagic();
 
     // Apply magic rules
-    {
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
-        Q_FOREACH ( const KMimeMagicRule& rule, m_magicRules ) {
-            if (rule.match(device, deviceSize, beginning)) {
-                if (accuracy) {
-                    *accuracy = rule.priority();
-                }
-                return findMimeTypeByName(rule.mimetype());
+    Q_FOREACH ( const KMimeMagicRule& rule, m_magicRules ) {
+        if (rule.match(device, deviceSize, beginning)) {
+            if (accuracy) {
+                *accuracy = rule.priority();
             }
+            return findMimeTypeByName(rule.mimetype());
         }
     }
 
