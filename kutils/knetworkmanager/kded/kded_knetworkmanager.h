@@ -22,8 +22,6 @@
 #include "kdedmodule.h"
 #include "knetworkmanager.h"
 
-#include <QMap>
-
 class KNetworkManagerModule: public KDEDModule
 {
     Q_OBJECT
