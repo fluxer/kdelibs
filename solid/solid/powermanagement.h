@@ -147,6 +147,13 @@ namespace Solid
              */
             void resumingFromSuspend();
 
+            /**
+             * This signal is emitted whenever the supported sleep states change.
+             *
+             * @since 4.23
+             */
+            void supportedSleepStatesChanged();
+
         protected:
             Notifier();
         };

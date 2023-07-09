@@ -184,10 +184,12 @@ void Solid::PowerManagementPrivate::slotCanSuspendChanged(bool newState)
     }
 
     if (newState) {
-        supportedSleepStates+= Solid::PowerManagement::SuspendState;
+        supportedSleepStates += Solid::PowerManagement::SuspendState;
     } else {
-        supportedSleepStates-= Solid::PowerManagement::SuspendState;
+        supportedSleepStates -= Solid::PowerManagement::SuspendState;
     }
+
+    emit supportedSleepStatesChanged();
 }
 
 void Solid::PowerManagementPrivate::slotCanHibernateChanged(bool newState)
@@ -197,10 +199,12 @@ void Solid::PowerManagementPrivate::slotCanHibernateChanged(bool newState)
     }
 
     if (newState) {
-        supportedSleepStates+= Solid::PowerManagement::HibernateState;
+        supportedSleepStates += Solid::PowerManagement::HibernateState;
     } else {
-        supportedSleepStates-= Solid::PowerManagement::HibernateState;
+        supportedSleepStates -= Solid::PowerManagement::HibernateState;
     }
+
+    emit supportedSleepStatesChanged();
 }
 
 void Solid::PowerManagementPrivate::slotCanHybridSuspendChanged(bool newState)
@@ -210,10 +214,12 @@ void Solid::PowerManagementPrivate::slotCanHybridSuspendChanged(bool newState)
     }
 
     if (newState) {
-        supportedSleepStates+= Solid::PowerManagement::HybridSuspendState;
+        supportedSleepStates += Solid::PowerManagement::HybridSuspendState;
     } else {
-        supportedSleepStates-= Solid::PowerManagement::HybridSuspendState;
+        supportedSleepStates -= Solid::PowerManagement::HybridSuspendState;
     }
+
+    emit supportedSleepStatesChanged();
 }
 
 void Solid::PowerManagementPrivate::slotPowerSaveStatusChanged(bool newState)
