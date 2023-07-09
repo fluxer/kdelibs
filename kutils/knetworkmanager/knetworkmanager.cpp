@@ -35,15 +35,15 @@
 
 typedef QMap<QString,QVariant> ConnmanPropertiesType;
 
-struct ConnmanServicesType
+struct ConnmanServiceType
 {
     QDBusObjectPath service_object;
     QVariantMap service_dict;
 };
-Q_DECLARE_METATYPE(ConnmanServicesType);
-Q_DECLARE_METATYPE(QList<ConnmanServicesType>);
+Q_DECLARE_METATYPE(ConnmanServiceType);
+Q_DECLARE_METATYPE(QList<ConnmanServiceType>);
 
-QDBusArgument& operator<<(QDBusArgument &argument, const ConnmanServicesType &connmanservice)
+QDBusArgument& operator<<(QDBusArgument &argument, const ConnmanServiceType &connmanservice)
 {
     argument.beginStructure();
     argument << connmanservice.service_object;
@@ -52,7 +52,7 @@ QDBusArgument& operator<<(QDBusArgument &argument, const ConnmanServicesType &co
     return argument;
 }
 
-const QDBusArgument& operator>>(const QDBusArgument &argument, ConnmanServicesType &connmanservice)
+const QDBusArgument& operator>>(const QDBusArgument &argument, ConnmanServiceType &connmanservice)
 {
     argument.beginStructure();
     argument >> connmanservice.service_object;
@@ -70,8 +70,7 @@ public:
     ~KNetworkManagerPrivate();
 
     KNetworkManager::KNetworkStatus status() const;
-    QList<KNetworkConnection> connections() const;
-    bool enable(const QString &name, const bool enable);
+    bool enable(const bool enable);
 
 protected:
     // QObject reimplementation
@@ -108,8 +107,8 @@ KNetworkManagerPrivate::KNetworkManagerPrivate(KNetworkManager *parent)
         );
     } else if (m_cm.isValid()) {
         kDebug() << "Using net.connman";
-        qDBusRegisterMetaType<ConnmanServicesType>();
-        qDBusRegisterMetaType<QList<ConnmanServicesType>>();
+        qDBusRegisterMetaType<ConnmanServiceType>();
+        qDBusRegisterMetaType<QList<ConnmanServiceType>>();
         connect(
             &m_cm, SIGNAL(PropertyChanged(QString,QDBusVariant)),
             this, SLOT(cmStateChanged(QString,QDBusVariant))
@@ -206,60 +205,61 @@ KNetworkManager::KNetworkStatus KNetworkManagerPrivate::status() const
     return result;
 }
 
-QList<KNetworkConnection> KNetworkManagerPrivate::connections() const
+bool KNetworkManagerPrivate::enable(const bool enable)
 {
-    QList<KNetworkConnection> result;
-    if (!m_cm.isValid()) {
-        kDebug() << "Connection management not supported";
+    if (m_nm.isValid()) {
+        bool result = false;
+        QDBusReply<void> nmenablereply = m_nm.call("Enable", enable);
+        result = nmenablereply.isValid();
+        if (!result) {
+            kWarning() << "Invalid org.freedesktop.NetworkManager reply" << nmenablereply.error();
+            return result;
+        }
+        if (enable) {
+            kDebug() << "Done enabling org.freedesktop.NetworkManager connections" << result;
+        } else {
+            kDebug() << "Done disabling org.freedesktop.NetworkManager connections" << result;
+        }
         return result;
     }
-    QDBusReply<QList<ConnmanServicesType>> cmreply = m_cm.call("GetServices");
-    if (!cmreply.isValid()) {
-        kWarning() << "Invalid reply" << cmreply.error();
-        return result;
-    }
-    const QList<ConnmanServicesType> cmvalue = cmreply.value();
-    foreach (const ConnmanServicesType &cmservice, cmvalue) {
-        KNetworkConnection knetworkconnection;
-        knetworkconnection.name = cmservice.service_dict.value(QLatin1String("Name")).toString();
-        knetworkconnection.dbuspath = cmservice.service_object.path();
-        result.append(knetworkconnection);
-    }
-    return result;
-}
 
-bool KNetworkManagerPrivate::enable(const QString &name, const bool enable)
-{
-    bool result = false;
-    if (!m_cm.isValid()) {
-        kDebug() << "Connection management not supported";
-        return result;
-    }
-    bool foundit = false;
-    foreach (const KNetworkConnection &knetworkconnection, connections()) {
-        if (knetworkconnection.name == name) {
-            foundit = true;
+    if (m_cm.isValid()) {
+        bool result = false;
+        QDBusReply<QList<ConnmanServiceType>> cmservicesreply = m_cm.call("GetServices");
+        if (!cmservicesreply.isValid()) {
+            kWarning() << "Invalid net.connman reply" << cmservicesreply.error();
+            return result;
+        }
+        const QList<ConnmanServiceType> cmservicesvalue = cmservicesreply.value();
+        foreach (const ConnmanServiceType &cmservice, cmservicesvalue) {
+            const QString cmservicename = cmservice.service_dict.value(QLatin1String("Name")).toString();
             QDBusInterface cmserviceinterface(
-                "net.connman", knetworkconnection.dbuspath, "net.connman.Service",
+                "net.connman", cmservice.service_object.path(), "net.connman.Service",
                 QDBusConnection::systemBus()
             );
-            QDBusReply<void> cmreply;
+            QDBusReply<void> cmservicereply;
             if (enable) {
-                cmreply = cmserviceinterface.call("Connect");
+                kDebug() << "Enabling net.connman service" << cmservicename;
+                cmservicereply = cmserviceinterface.call("Connect");
             } else {
-                cmreply = cmserviceinterface.call("Disconnect");
+                kDebug() << "Disabling net.connman service" << cmservicename;
+                cmservicereply = cmserviceinterface.call("Disconnect");
             }
-            result = cmreply.isValid();
+            result |= cmservicereply.isValid();
             if (!result) {
-                kWarning() << "Invalid net.connman.Service reply" << cmreply.error();
+                kWarning() << "Invalid net.connman.Service reply" << cmservicereply.error();
             }
-            break;
         }
+        if (enable) {
+            kDebug() << "Done enabling net.connman services" << result;
+        } else {
+            kDebug() << "Done disabling net.connman services" << result;
+        }
+        return result;
     }
-    if (!foundit) {
-        kWarning() << "net.connman connection not found" << name;
-    }
-    return result;
+
+    kDebug() << "Connection management not supported";
+    return false;
 }
 
 void KNetworkManagerPrivate::timerEvent(QTimerEvent *event)
@@ -305,11 +305,7 @@ KNetworkManager::KNetworkManager(QObject *parent)
     d(new KNetworkManagerPrivate(this))
 {
 #if 0
-    foreach (const KNetworkConnection &knetworkconnection, connections()) {
-        qDebug() << Q_FUNC_INFO << knetworkconnection.name << knetworkconnection.dbuspath;
-    }
-    enable("Wired", false);
-    enable("Wired", true);
+    qDebug() << Q_FUNC_INFO << isSupported() << enable(false) << enable(true);
 #endif
 }
 
@@ -323,14 +319,9 @@ KNetworkManager::KNetworkStatus KNetworkManager::status() const
     return d->status();
 }
 
-QList<KNetworkConnection> KNetworkManager::connections() const
+bool KNetworkManager::enable(const bool enable)
 {
-    return d->connections();
-}
-
-bool KNetworkManager::enable(const QString &name, const bool enable)
-{
-    return d->enable(name, enable);
+    return d->enable(enable);
 }
 
 bool KNetworkManager::isSupported()
@@ -341,8 +332,13 @@ bool KNetworkManager::isSupported()
         kDebug() << "Null system D-Bus connection interface";
         return false;
     }
-    QDBusReply<bool> dbusreply = dbusinterface->isServiceRegistered("net.connman");
-    return dbusreply.value();
+    QDBusReply<bool> dbusreply = dbusinterface->isServiceRegistered("org.freedesktop.NetworkManager");
+    bool result = dbusreply.value();
+    if (!result) {
+        dbusreply = dbusinterface->isServiceRegistered("net.connman");
+        result = dbusreply.value();
+    }
+    return result;
 }
 
 #include "moc_knetworkmanager.cpp"
