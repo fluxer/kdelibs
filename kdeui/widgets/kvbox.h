@@ -29,33 +29,26 @@
  * Both margin and spacing are initialized to 0. Use QVBoxLayout
  * if you need standard layout margins.
  *
- * \image html kvbox.png "KDE Vertical Box containing three buttons"
- *
  * @see KHBox
  */
 class KDEUI_EXPORT KVBox : public KHBox
 {
-  Q_OBJECT
-  
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new vbox.
      *
      * @param parent The parent widget.
      */
-    explicit KVBox( QWidget* parent = 0 );
+    explicit KVBox(QWidget *parent = nullptr);
   
     /**
      * Destructor.
      */
     ~KVBox();
 
-  private:
-    class Private;
-    friend class Private;
-    Private* const d;
-
+private:
     Q_DISABLE_COPY(KVBox)
 };
 
-#endif
+#endif // KVBOX_H
