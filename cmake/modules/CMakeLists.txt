@@ -47,6 +47,7 @@ set(cmakeFiles
     FindLibUSB.cmake
     FindLibVNCServer.cmake
     FindLightDM.cmake
+    FindLibGit2.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindPCIUTILS.cmake
