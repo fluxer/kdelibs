@@ -64,6 +64,7 @@ static QString kPathDirectory(const QString &path)
     if (lastslash == 0) {
         return QString(QLatin1Char('/'));
     }
+    Q_ASSERT(!path.endsWith(QLatin1Char('/')));
     QString result = path.left(lastslash);
     result.append(QLatin1Char('/'));
     return result;
@@ -614,7 +615,8 @@ KUrl KUrl::upUrl() const
         return result;
     }
 
-    if (QDir::cleanPath(urlpath).count(QLatin1Char('/')) <= 1) {
+    const QString cleanurlpath = QDir::cleanPath(urlpath);
+    if (cleanurlpath.count(QLatin1Char('/')) <= 1) {
         // something like /home
         KUrl result(*this);
         result.setPath(QLatin1String("/"));
@@ -627,7 +629,7 @@ KUrl KUrl::upUrl() const
         QString newpath;
         if (urlpath.endsWith(QLatin1Char('/'))) {
             // assuming it is directory
-            newpath = kPathDirectory(urlpath);
+            newpath = kPathDirectory(cleanurlpath);
         } else {
             // the only way to be sure is to stat() then
             KDE_struct_stat statbuff;

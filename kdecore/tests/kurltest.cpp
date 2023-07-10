@@ -48,6 +48,9 @@ void KUrlTest::testUpUrl_data()
     QTest::newRow("local file 3")
         << KUrl("kde//foo?bar=baz#foobar")
         << KUrl("../kde/");
+    QTest::newRow("local file 4 - trailing slash")
+        << KUrl("/home/foo/bar/")
+        << KUrl("/home/foo/");
     QTest::newRow("ftp url")
         << KUrl("ftp://ftp.kde.org/foo?bar=baz#foobar")
         << KUrl("ftp://ftp.kde.org/");
