@@ -22,15 +22,15 @@
 #ifndef PLASMA_RUNNERMANAGER_H
 #define PLASMA_RUNNERMANAGER_H
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
+#include <QList>
+#include <QObject>
+#include <QAction>
 
 #include <kplugininfo.h>
 
 #include <plasma/plasma_export.h>
 #include "abstractrunner.h"
 
-#include <QAction>
 class KConfigGroup;
 
 namespace Plasma
