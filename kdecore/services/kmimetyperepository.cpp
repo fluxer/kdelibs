@@ -52,6 +52,31 @@ static int mimeDataBaseVersion()
     return -1;
 }
 
+static QString fallbackParent(const QString& mimeTypeName)
+{
+    const QString myGroup = mimeTypeName.left(mimeTypeName.indexOf(QLatin1Char('/')));
+    // All text/* types are subclasses of text/plain.
+    if (myGroup == QLatin1String("text") && mimeTypeName != QLatin1String("text/plain")) {
+        return QLatin1String("text/plain");
+    }
+    // All real-file mimetypes implicitly derive from application/octet-stream
+    if (myGroup != QLatin1String("inode") &&
+        // kde extensions
+        myGroup != QLatin1String("all") && myGroup != QLatin1String("fonts")
+        && myGroup != QLatin1String("print") && myGroup != QLatin1String("uri")
+        && mimeTypeName != QLatin1String("application/octet-stream"))
+    {
+        return QLatin1String("application/octet-stream");
+    }
+    return QString();
+}
+
+// Sort them in descending order of priority
+static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule& rhs)
+{
+    return lhs.priority() > rhs.priority();
+}
+
 KMimeTypeRepository * KMimeTypeRepository::self()
 {
     K_GLOBAL_STATIC(KMimeTypeRepository, s_self)
@@ -59,22 +84,99 @@ KMimeTypeRepository * KMimeTypeRepository::self()
 }
 
 KMimeTypeRepository::KMimeTypeRepository()
-    : m_parentsMapLoaded(false),
-    m_magicFilesParsed(false),
-    m_aliasFilesParsed(false),
-    m_globsFilesParsed(false),
-    m_mimeTypesChecked(false),
+    : m_mimeTypesChecked(false),
     m_useFavIcons(true),
     m_useFavIconsChecked(false),
     m_sharedMimeInfoVersion(0)
 {
+    KMimeGlobsFileParser parser;
+    m_globs = parser.parseGlobs();
+
+    const QStringList aliasFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("aliases"));
+    Q_FOREACH(const QString& fileName, aliasFiles) {
+        QFile qfile(fileName);
+        //kDebug(7021) << "Now parsing" << fileName;
+        if (qfile.open(QIODevice::ReadOnly)) {
+            while (!qfile.atEnd()) {
+                const QByteArray line = qfile.readLine().trimmed();
+                if (line.isEmpty() || line[0] == '#') {
+                    continue;
+                }
+                const int pos = line.indexOf(' ');
+                if (pos == -1) {
+                    // syntax error
+                    continue;
+                }
+                const QByteArray aliasTypeName = line.left(pos);
+                const QByteArray parentTypeName = line.mid(pos+1);
+                Q_ASSERT(!aliasTypeName.isEmpty());
+                Q_ASSERT(!parentTypeName.isEmpty());
+                const QString aliasTypeNameStr = QString::fromLatin1(aliasTypeName.constData(), aliasTypeName.size());
+                const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
+
+                const KMimeType::Ptr realMimeType = findMimeTypeByName(aliasTypeNameStr, KMimeType::DontResolveAlias);
+                if (realMimeType) {
+                    // kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeNameStr << "because also defined as a real mimetype";
+                } else {
+                    m_aliases.insert(aliasTypeNameStr, parentTypeNameStr);
+                }
+            }
+        }
+    }
+
+    const QStringList subclassFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("subclasses"));
+    // kDebug() << subclassFiles;
+    Q_FOREACH(const QString &fileName, subclassFiles) {
+        QFile qfile(fileName);
+        // kDebug(7021) << "Now parsing" << fileName;
+        if (qfile.open(QIODevice::ReadOnly)) {
+            while (!qfile.atEnd()) {
+                const QByteArray line = qfile.readLine().trimmed();
+                if (line.isEmpty() || line[0] == '#') {
+                    continue;
+                }
+                const int pos = line.indexOf(' ');
+                if (pos == -1) {
+                    // syntax error
+                    continue;
+                }
+                const QByteArray derivedTypeName = line.left(pos);
+                const QString derivedTypeNameStr = QString::fromLatin1(derivedTypeName.constData(), derivedTypeName.size());
+                KMimeType::Ptr derivedType = findMimeTypeByName(derivedTypeNameStr, KMimeType::ResolveAliases);
+                if (!derivedType) {
+                    kWarning(7021) << fileName << " refers to unknown mimetype " << derivedTypeNameStr;
+                } else {
+                    const QByteArray parentTypeName = line.mid(pos+1);
+                    const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
+                    Q_ASSERT(!parentTypeName.isEmpty());
+                    //derivedType->setParentMimeType(parentTypeNameStr);
+                    m_parents[derivedTypeNameStr].append(parentTypeNameStr);
+                }
+            }
+        }
+    }
+
+    const QStringList magicFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("magic"));
+    // kDebug() << magicFiles;
+    QListIterator<QString> magicIter( magicFiles );
+    // global first, then local. Turns out it doesn't matter though.
+    magicIter.toBack();
+    while (magicIter.hasPrevious()) {
+        const QString fileName = magicIter.previous();
+        QFile magicFile(fileName);
+        // kDebug(servicesDebugArea()) << "Now parsing " << fileName;
+        if (magicFile.open(QIODevice::ReadOnly)) {
+            m_magicRules += parseMagicFile(&magicFile, fileName);
+        }
+    }
+    qSort(m_magicRules.begin(), m_magicRules.end(), mimeMagicRuleCompare);
 }
 
 KMimeTypeRepository::~KMimeTypeRepository()
 {
 }
 
-KMimeType::Ptr KMimeTypeRepository::findMimeTypeByName(const QString &_name, KMimeType::FindByNameOption options)
+KMimeType::Ptr KMimeTypeRepository::findMimeTypeByName(const QString &_name, KMimeType::FindByNameOption options) const
 {
     QString name = _name;
     if (options & KMimeType::ResolveAliases) {
@@ -96,12 +198,12 @@ bool KMimeTypeRepository::checkMimeTypes()
     return !globFiles.isEmpty();
 }
 
-QString KMimeTypeRepository::resolveAlias(const QString& mime)
+QString KMimeTypeRepository::resolveAlias(const QString& mime) const
 {
     return aliases().value(mime);
 }
 
-QString KMimeTypeRepository::canonicalName(const QString& mime)
+QString KMimeTypeRepository::canonicalName(const QString& mime) const
 {
     QString c = resolveAlias(mime);
     if (c.isEmpty()) {
@@ -168,9 +270,9 @@ bool KMimeTypeRepository::matchFileName(const QString &filename, const QString &
 void KMimeTypeRepository::findFromOtherPatternList(QStringList &matchingMimeTypes,
                                                    const QString &fileName,
                                                    QString &foundExt,
-                                                   bool highWeight)
+                                                   bool highWeight) const
 {
-    KMimeGlobsFileParser::GlobList& patternList = highWeight ? m_globs.m_highWeightGlobs : m_globs.m_lowWeightGlobs;
+    const KMimeGlobsFileParser::GlobList& patternList = highWeight ? m_globs.m_highWeightGlobs : m_globs.m_lowWeightGlobs;
 
     int matchingPatternLength = 0;
     qint32 lastMatchedWeight = 0;
@@ -217,10 +319,8 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList &matchingMimeType
     }
 }
 
-QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QString *pMatchingExtension)
+QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QString *pMatchingExtension) const
 {
-    parseGlobs();
-
     // First try the high weight matches (>=50), if any.
     QStringList matchingMimeTypes;
     QString foundExt;
@@ -254,8 +354,6 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
         return defaultMimeTypePtr(); // don't bother detecting unreadable file
     }
 
-    parseMagic();
-
     // Apply magic rules
     Q_FOREACH ( const KMimeMagicRule& rule, m_magicRules ) {
         if (rule.match(device, deviceSize, beginning)) {
@@ -280,65 +378,8 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
     return defaultMimeTypePtr();
 }
 
-static QString fallbackParent(const QString& mimeTypeName)
+QStringList KMimeTypeRepository::parents(const QString& mime) const
 {
-    const QString myGroup = mimeTypeName.left(mimeTypeName.indexOf(QLatin1Char('/')));
-    // All text/* types are subclasses of text/plain.
-    if (myGroup == QLatin1String("text") && mimeTypeName != QLatin1String("text/plain")) {
-        return QLatin1String("text/plain");
-    }
-    // All real-file mimetypes implicitly derive from application/octet-stream
-    if (myGroup != QLatin1String("inode") &&
-        // kde extensions
-        myGroup != QLatin1String("all") && myGroup != QLatin1String("fonts")
-        && myGroup != QLatin1String("print") && myGroup != QLatin1String("uri")
-        && mimeTypeName != QLatin1String("application/octet-stream"))
-    {
-        return QLatin1String("application/octet-stream");
-    }
-    return QString();
-}
-
-QStringList KMimeTypeRepository::parents(const QString& mime)
-{
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    if (!m_parentsMapLoaded) {
-        m_parentsMapLoaded = true;
-        Q_ASSERT(m_parents.isEmpty());
-
-        const QStringList subclassFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("subclasses"));
-        // kDebug() << subclassFiles;
-        Q_FOREACH(const QString &fileName, subclassFiles) {
-            QFile qfile(fileName);
-            // kDebug(7021) << "Now parsing" << fileName;
-            if (qfile.open(QIODevice::ReadOnly)) {
-                while (!qfile.atEnd()) {
-                    const QByteArray line = qfile.readLine().trimmed();
-                    if (line.isEmpty() || line[0] == '#') {
-                        continue;
-                    }
-                    const int pos = line.indexOf(' ');
-                    if (pos == -1) {
-                        // syntax error
-                        continue;
-                    }
-                    const QByteArray derivedTypeName = line.left(pos);
-                    const QString derivedTypeNameStr = QString::fromLatin1(derivedTypeName.constData(), derivedTypeName.size());
-                    KMimeType::Ptr derivedType = findMimeTypeByName(derivedTypeNameStr, KMimeType::ResolveAliases);
-                    if (!derivedType) {
-                        kWarning(7021) << fileName << " refers to unknown mimetype " << derivedTypeNameStr;
-                    } else {
-                        const QByteArray parentTypeName = line.mid(pos+1);
-                        const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
-                        Q_ASSERT(!parentTypeName.isEmpty());
-                        //derivedType->setParentMimeType(parentTypeNameStr);
-                        m_parents[derivedTypeNameStr].append(parentTypeNameStr);
-                    }
-                }
-            }
-        }
-    }
-
     QStringList parents = m_parents.value(mime);
     if (parents.isEmpty()) {
         const QString myParent = fallbackParent(mime);
@@ -348,36 +389,6 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
     }
 
     return parents;
-}
-
-// Sort them in descending order of priority
-static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule& rhs)
-{
-    return lhs.priority() > rhs.priority();
-}
-
-void KMimeTypeRepository::parseMagic()
-{
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    if (m_magicFilesParsed) {
-        return;
-    }
-    m_magicFilesParsed = true;
-
-    const QStringList magicFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("magic"));
-    // kDebug() << magicFiles;
-    QListIterator<QString> magicIter( magicFiles );
-    // global first, then local. Turns out it doesn't matter though.
-    magicIter.toBack();
-    while (magicIter.hasPrevious()) {
-        const QString fileName = magicIter.previous();
-        QFile magicFile(fileName);
-        // kDebug(servicesDebugArea()) << "Now parsing " << fileName;
-        if (magicFile.open(QIODevice::ReadOnly)) {
-            m_magicRules += parseMagicFile(&magicFile, fileName);
-        }
-    }
-    qSort(m_magicRules.begin(), m_magicRules.end(), mimeMagicRuleCompare);
 }
 
 static char readNumber(qint64 &value, QIODevice *file)
@@ -587,58 +598,9 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice *file, const
     return rules;
 }
 
-const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
+const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases() const
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    if (m_aliasFilesParsed) {
-        return m_aliases;
-    }
-    m_aliasFilesParsed = true;
-
-    const QStringList aliasFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("aliases"));
-    Q_FOREACH(const QString& fileName, aliasFiles) {
-        QFile qfile(fileName);
-        //kDebug(7021) << "Now parsing" << fileName;
-        if (qfile.open(QIODevice::ReadOnly)) {
-            while (!qfile.atEnd()) {
-                const QByteArray line = qfile.readLine().trimmed();
-                if (line.isEmpty() || line[0] == '#') {
-                    continue;
-                }
-                const int pos = line.indexOf(' ');
-                if (pos == -1) {
-                    // syntax error
-                    continue;
-                }
-                const QByteArray aliasTypeName = line.left(pos);
-                const QByteArray parentTypeName = line.mid(pos+1);
-                Q_ASSERT(!aliasTypeName.isEmpty());
-                Q_ASSERT(!parentTypeName.isEmpty());
-                const QString aliasTypeNameStr = QString::fromLatin1(aliasTypeName.constData(), aliasTypeName.size());
-                const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
-
-                const KMimeType::Ptr realMimeType = findMimeTypeByName(aliasTypeNameStr, KMimeType::DontResolveAlias);
-                if (realMimeType) {
-                    // kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeNameStr << "because also defined as a real mimetype";
-                } else {
-                    m_aliases.insert(aliasTypeNameStr, parentTypeNameStr);
-                }
-            }
-        }
-    }
     return m_aliases;
-}
-
-void KMimeTypeRepository::parseGlobs()
-{
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    if (m_globsFilesParsed) {
-        return;
-    }
-    m_globsFilesParsed = true;
-
-    KMimeGlobsFileParser parser;
-    m_globs = parser.parseGlobs();
 }
 
 static void errorMissingMimeTypes(const QStringList &types)
@@ -655,7 +617,6 @@ static void errorMissingMimeTypes(const QStringList &types)
 
 void KMimeTypeRepository::checkEssentialMimeTypes()
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_mimeTypesChecked) { // already done
         return;
     }
@@ -710,7 +671,6 @@ void KMimeTypeRepository::checkEssentialMimeTypes()
 
 KMimeType::Ptr KMimeTypeRepository::defaultMimeTypePtr()
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_defaultMimeType) {
         // Try to find the default type
         KMimeType::Ptr mime = findMimeTypeByName(KMimeType::defaultMimeType());
@@ -731,7 +691,6 @@ bool KMimeTypeRepository::useFavIcons()
 {
     // this method will be called quite often, so better not read the config
     // again and again.
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_useFavIconsChecked) {
         m_useFavIconsChecked = true;
         KConfigGroup cg(KGlobal::config(), "HTML Settings");
@@ -742,7 +701,6 @@ bool KMimeTypeRepository::useFavIcons()
 
 int KMimeTypeRepository::sharedMimeInfoVersion()
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_sharedMimeInfoVersion == 0) {
         m_sharedMimeInfoVersion = mimeDataBaseVersion();
     }

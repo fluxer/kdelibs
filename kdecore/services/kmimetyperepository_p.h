@@ -25,8 +25,6 @@
 #include "kmimeglobsfileparser_p.h"
 #include "kmimetype.h"
 
-#include <mutex>
-
 /**
  * @internal  - this header is not installed
  * Can create KMimeTypes and holds all the extra information about mimetypes
@@ -45,22 +43,22 @@ public:
     /**
      * Creates a KMimeType
      */
-    KMimeType::Ptr findMimeTypeByName(const QString &_name, KMimeType::FindByNameOption options = KMimeType::DontResolveAlias);
+    KMimeType::Ptr findMimeTypeByName(const QString &_name, KMimeType::FindByNameOption options = KMimeType::DontResolveAlias) const;
 
     /**
      * Check if mime is an alias, and return the canonical name for it if it is, otherwise empty.
      */
-    QString resolveAlias(const QString &mime);
+    QString resolveAlias(const QString &mime) const;
 
     /**
      * Resolve mime if it's an alias, and return it otherwise.
      */
-    QString canonicalName(const QString &mime);
+    QString canonicalName(const QString &mime) const;
 
     /**
      * Returns the list of parents for a given mimetype
      */
-    QStringList parents(const QString &mime);
+    QStringList parents(const QString &mime) const;
 
     /**
      * This function makes sure that vital mime types are installed.
@@ -93,7 +91,7 @@ private: // only for KMimeType and unittests
      *
      * This is internal API, use KMimeType::findByUrl instead.
      */
-    QStringList findFromFileName(const QString &filename, QString *matchingExtension = nullptr);
+    QStringList findFromFileName(const QString &filename, QString *matchingExtension = nullptr) const;
 
     /**
      * Find a mimetype from the content of a file or buffer
@@ -115,17 +113,12 @@ private:
     ~KMimeTypeRepository();
 
     typedef QHash<QString, QString> AliasesMap;
-    const AliasesMap& aliases();
+    const AliasesMap& aliases() const;
 
     /**
      * @internal (public for unit tests only)
      */
     QList<KMimeMagicRule> parseMagicFile(QIODevice *file, const QString &fileName) const;
-
-    // Read magic files
-    void parseMagic();
-
-    void parseGlobs();
 
     /**
      * Look into either the high-weight patterns or the low-weight patterns.
@@ -139,17 +132,13 @@ private:
     void findFromOtherPatternList(QStringList &matchingMimeTypes,
                                   const QString &filename,
                                   QString &foundExt,
-                                  bool highWeight);
+                                  bool highWeight) const;
 
     AliasesMap m_aliases; // alias -> canonicalName
 
     typedef QHash<QString, QStringList> ParentsMap;
     ParentsMap m_parents;
 
-    bool m_parentsMapLoaded;
-    bool m_magicFilesParsed;
-    bool m_aliasFilesParsed;
-    bool m_globsFilesParsed;
     bool m_mimeTypesChecked;
     bool m_useFavIcons;
     bool m_useFavIconsChecked;
@@ -157,7 +146,6 @@ private:
     QList<KMimeMagicRule> m_magicRules;
     KMimeGlobsFileParser::AllGlobs m_globs;
     KMimeType::Ptr m_defaultMimeType;
-    std::recursive_mutex m_mutex;
 };
 
 #endif // KMIMETYPEREPOSITORY_H
