@@ -33,7 +33,6 @@
 
 #include <QWidget>
 #include <QtXml/qdom.h>
-#include <QtXml/qdom.h>
 #include <kapplication.h>
 #include <kmainwindow.h>
 #include <ktoolbar.h>

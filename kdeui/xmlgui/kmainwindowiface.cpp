@@ -67,7 +67,7 @@ bool KMainWindowInterface::disableAction( const QString& action)
         tmp_Action->setEnabled(false);
         return true;
     } else {
-            return false;
+        return false;
     }
 }
 
