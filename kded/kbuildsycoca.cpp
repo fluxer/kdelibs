@@ -35,13 +35,6 @@
 #include "kbuildprotocolinfofactory.h"
 #include "kctimefactory.h"
 #include <ktemporaryfile.h>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QCoreApplication>
-#include <QtDBus/QDBusConnectionInterface>
-#include <errno.h>
-
-#include <assert.h>
 #include <kglobal.h>
 #include <kdebug.h>
 #include <kdirwatch.h>
@@ -55,10 +48,17 @@
 #include <kcrash.h>
 #endif
 
+#include <QDir>
+#include <QFileInfo>
+#include <QCoreApplication>
+#include <QDBusConnectionInterface>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
 #include <signal.h>
+#include <errno.h>
+#include <assert.h>
 
 typedef QHash<QString, KSycocaEntry::Ptr> KBSEntryDict;
 typedef QList<KSycocaEntry::List> KSycocaEntryListList;
