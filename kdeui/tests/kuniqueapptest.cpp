@@ -75,7 +75,6 @@ int main(int argc, char *argv[])
     KAboutData about("kuniqueapptest", 0, ki18n("kuniqueapptest"), "version");
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
-    KUniqueApplication::addCmdLineOptions();
 
     if (!TestApp::start())
     {

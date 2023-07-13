@@ -157,9 +157,6 @@ class KAboutData;
  *     // Register the supported options
  *     KCmdLineArgs::addCmdLineOptions( options );
  *
- *     // Add options from other components
- *     KUniqueApplication::addCmdLineOptions();
- *
  *     ....
  *
  *     // Create application object without passing 'argc' and 'argv' again.

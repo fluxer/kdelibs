@@ -21,7 +21,6 @@
 #define KUNIQUEAPPLICATION_P_H
 
 #include <QtDBus/qdbusabstractadaptor.h>
-#include <kcmdlineargs.h>
 
 class KUniqueApplication::Private
 {
@@ -31,38 +30,31 @@ public:
     {
     }
 
-   void _k_newInstanceNoFork();
+   void _k_newInstance();
 
    static KComponentData initHack(bool configUnique);
 
    KUniqueApplication *q;
    bool firstInstance;
 
-   static bool s_nofork;
    static bool s_multipleInstances;
 };
 
 class KUniqueApplicationAdaptor: public QDBusAbstractAdaptor
 {
-  Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.KUniqueApplication")
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KUniqueApplication")
 public:
-  KUniqueApplicationAdaptor(KUniqueApplication *parent)
-    : QDBusAbstractAdaptor(parent)
-  { }
+    KUniqueApplicationAdaptor(KUniqueApplication *parent)
+        : QDBusAbstractAdaptor(parent)
+    {
+    }
 
-  inline KUniqueApplication *parent() const
-  { return static_cast<KUniqueApplication *>(QDBusAbstractAdaptor::parent()); }
+    inline KUniqueApplication *parent() const
+    { return static_cast<KUniqueApplication *>(QDBusAbstractAdaptor::parent()); }
 
 public Q_SLOTS:
-  int newInstance(const QByteArray &asn_id = QByteArray(), const QByteArray &args = QByteArray());
+    int newInstance(const QByteArray &asn_id = QByteArray(), const QByteArray &args = QByteArray());
 };
 
-#endif
-
-/*
- * Local variables:
- *  c-basic-offset: 2
- *  indent-tabs-mode: nil
- * End:
- */
+#endif // KUNIQUEAPPLICATION_P_H
