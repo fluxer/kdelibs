@@ -30,14 +30,14 @@ public:
     {
     }
 
-   void _k_newInstance();
+    void _k_newInstance();
 
-   static KComponentData initHack(bool configUnique);
+    static KComponentData initHack(bool configUnique);
 
-   KUniqueApplication *q;
-   bool firstInstance;
+    KUniqueApplication *q;
+    bool firstInstance;
 
-   static bool s_multipleInstances;
+    static bool s_multipleInstances;
 };
 
 class KUniqueApplicationAdaptor: public QDBusAbstractAdaptor

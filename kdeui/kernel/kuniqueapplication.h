@@ -80,9 +80,9 @@ public:
      *                 key in the "KDE" group of the application config file.
      */
     explicit KUniqueApplication(Display *display,
-                                Qt::HANDLE visual=0,
-                                Qt::HANDLE colormap=0,
-                                bool configUnique=false);
+                                Qt::HANDLE visual = 0,
+                                Qt::HANDLE colormap = 0,
+                                bool configUnique = false);
 #endif
 
     /** 
@@ -103,7 +103,7 @@ public:
          */
         NonUniqueInstance = 0x1
     };
-    Q_DECLARE_FLAGS(StartFlags,StartFlag)
+    Q_DECLARE_FLAGS(StartFlags, StartFlag)
 
     /**
      * Starts and registers with D-Bus.

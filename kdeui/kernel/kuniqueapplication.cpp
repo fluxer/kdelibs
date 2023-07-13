@@ -87,7 +87,7 @@ bool KUniqueApplication::start(StartFlags flags)
 
 
 KUniqueApplication::KUniqueApplication(bool configUnique)
-    : KApplication( Private::initHack(configUnique)),
+    : KApplication(Private::initHack(configUnique)),
     d(new Private(this))
 {
     d->firstInstance = true;
