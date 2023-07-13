@@ -170,7 +170,7 @@ public:
         /**
          * No completion is used.
          */
-        CompletionNone=1,
+        CompletionNone = 1,
         /**
          * Text is automatically filled in whenever possible.
          */
@@ -503,10 +503,11 @@ public:
      * An identifier for change signals.
      * \see emitChange
      */
-    enum ChangeType { PaletteChanged = 0, FontChanged, StyleChanged,
-                      SettingsChanged, IconChanged, CursorChanged,
-                      ToolbarStyleChanged, ClipboardConfigChanged,
-                      BlockShortcuts, NaturalSortingChanged };
+    enum ChangeType {
+        PaletteChanged = 0, FontChanged, StyleChanged,
+        SettingsChanged, IconChanged, CursorChanged,
+        ToolbarStyleChanged, BlockShortcuts, NaturalSortingChanged
+    };
 
     /**
      * Notifies all KDE applications on the current display of a change.
@@ -553,9 +554,11 @@ public:
     /**
      * Valid values for the settingsChanged signal
      */
-    enum SettingsCategory { SETTINGS_MOUSE, SETTINGS_COMPLETION, SETTINGS_PATHS,
-                            SETTINGS_POPUPMENU, SETTINGS_QT, SETTINGS_SHORTCUTS,
-                            SETTINGS_LOCALE, SETTINGS_STYLE };
+    enum SettingsCategory {
+        SETTINGS_MOUSE, SETTINGS_COMPLETION, SETTINGS_PATHS,
+        SETTINGS_POPUPMENU, SETTINGS_QT, SETTINGS_SHORTCUTS,
+        SETTINGS_LOCALE, SETTINGS_STYLE
+    };
 
 Q_SIGNALS:
     /**

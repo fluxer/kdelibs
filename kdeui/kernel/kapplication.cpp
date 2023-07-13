@@ -40,7 +40,6 @@
 #include "kcrash.h"
 #include "kconfig.h"
 #include "kcmdlineargs.h"
-#include "kclipboard.h"
 #include "kglobalsettings.h"
 #include "kdebug.h"
 #include "kglobal.h"
@@ -390,8 +389,6 @@ void KApplicationPrivate::init()
   (void) QApplication::clipboard();
 
   parseCommandLine();
-
-  (void) KClipboardSynchronizer::self();
 
 #ifdef Q_WS_X11
   // create all required atoms in _one_ roundtrip to the X server
@@ -949,12 +946,6 @@ void KApplicationPrivate::_k_KToolInvocation_hook(QStringList& envs,QByteArray& 
 void KApplicationPrivate::_k_disableAutorestartSlot()
 {
     KCrash::setFlags(KCrash::flags() & ~KCrash::AutoRestart);
-}
-
-void KApplication::setSynchronizeClipboard(bool synchronize)
-{
-    KClipboardSynchronizer::self()->setSynchronizing(synchronize);
-    KClipboardSynchronizer::self()->setReverseSynchronizing(synchronize);
 }
 
 #include "moc_kapplication.cpp"

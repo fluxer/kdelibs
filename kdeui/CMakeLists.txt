@@ -147,7 +147,6 @@ set(kdeui_LIB_SRCS
     jobs/kuiserverjobtracker.cpp
     jobs/kdynamicjobtracker.cpp
     kernel/kapplication.cpp
-    kernel/kclipboard.cpp
     kernel/kuniqueapplication.cpp
     kernel/ksessionmanager.cpp
     kernel/kstyle.cpp
