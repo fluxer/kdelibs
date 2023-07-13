@@ -170,9 +170,6 @@ static QStringList extractFormats(const QMimeData* mimeData)
         if (format.startsWith(QLatin1String("application/x-qt-"))) { // Katie-internal
             continue;
         }
-        if (format.startsWith(QLatin1String("x-kmail-drag/"))) { // app-internal
-            continue;
-        }
         if (!format.contains(QLatin1Char('/'))) { // e.g. TARGETS, MULTIPLE, TIMESTAMP
             continue;
         }
