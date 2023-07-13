@@ -185,7 +185,6 @@ public:
   bool session_save;
 
   QString sessionKey;
-  QString pSessionConfigFile;
 
   KConfig* pSessionConfig; //instance specific application config object
   bool bSessionManagement;
