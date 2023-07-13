@@ -83,7 +83,6 @@ bool KUniqueApplication::start(StartFlags flags)
         KCmdLineArgs::saveAppArgs(ds);
 
         QByteArray new_asn_id;
-#if defined Q_WS_X11
         KStartupInfoId id;
         if (kapp != NULL) {
             // KApplication constructor unsets the env. variable
@@ -94,7 +93,6 @@ bool KUniqueApplication::start(StartFlags flags)
         if (!id.none()) {
             new_asn_id = id.id();
         }
-#endif
 
         QDBusMessage msg = QDBusMessage::createMethodCall(appName, "/MainApplication", "org.kde.KUniqueApplication", "newInstance");
         msg << new_asn_id << saved_args;
