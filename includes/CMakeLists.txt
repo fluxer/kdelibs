@@ -28,7 +28,6 @@ install(
     KBookmarkManager
     KBookmarkMenu
     KBookmarkOwner
-    KBreadcrumbSelectionModel
     KBuildSycocaProgressDialog
     KButtonGroup
     KCapacityBar
@@ -46,7 +45,6 @@ install(
     KCalendarSystem
     KCharMacroExpander
     KCharsets
-    KCheckableProxyModel
     KCmdLineArgs
     KCmdLineOptions
     KCodecAction
@@ -158,7 +156,6 @@ install(
     KIconEffect
     KIconLoader
     KIconTheme
-    KIdentityProxyModel
     KImageFilePreview
     KImageIO
     KInputDialog

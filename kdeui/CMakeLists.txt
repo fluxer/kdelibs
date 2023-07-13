@@ -125,10 +125,7 @@ set(kdeui_LIB_SRCS
     icons/kicon.cpp
     icons/kiconloader.cpp
     icons/kicontheme.cpp
-    itemviews/kbreadcrumbselectionmodel.cpp
-    itemviews/kcheckableproxymodel.cpp
     itemviews/klinkitemselectionmodel.cpp
-    itemviews/kidentityproxymodel.cpp
     itemviews/krecursivefilterproxymodel.cpp
     itemviews/klistwidget.cpp
     itemviews/klistwidgetsearchline.cpp
@@ -449,12 +446,9 @@ install(
     icons/kicon.h
     icons/kiconloader.h
     icons/kicontheme.h
-    itemviews/kbreadcrumbselectionmodel.h
-    itemviews/kcheckableproxymodel.h
     itemviews/klinkitemselectionmodel.h
     itemviews/krecursivefilterproxymodel.h
     itemviews/klistwidget.h
-    itemviews/kidentityproxymodel.h
     itemviews/klistwidgetsearchline.h
     itemviews/ktreewidgetsearchline.h
     itemviews/kfilterproxysearchline.h
