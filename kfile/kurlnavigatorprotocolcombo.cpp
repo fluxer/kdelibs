@@ -201,15 +201,10 @@ void KUrlNavigatorProtocolCombo::initializeCategories()
         m_categories.insert("file", CoreCategory);
         m_categories.insert("ftp", CoreCategory);
         m_categories.insert("sftp", CoreCategory);
-
-        m_categories.insert("desktop", PlacesCategory);
-        m_categories.insert("fonts", PlacesCategory);
-        m_categories.insert("programs", PlacesCategory);
-        m_categories.insert("settings", PlacesCategory);
         m_categories.insert("trash", PlacesCategory);
-
         m_categories.insert("floppy", DevicesCategory);
         m_categories.insert("camera", DevicesCategory);
+        m_categories.insert("mtp", DevicesCategory);
         m_categories.insert("remote", DevicesCategory);
     }
 }
