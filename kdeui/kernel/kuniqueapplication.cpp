@@ -34,6 +34,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <limits.h>
 
 #if defined Q_WS_X11
 #  include <X11/Xlib.h>
@@ -73,12 +74,39 @@ bool KUniqueApplication::start(StartFlags flags)
         appName = appName + '-' + QString::number(::getpid());
     }
 
-    // Check to make sure that we're actually able to register with the D-Bus session
-    // server.
+    // Check to make sure that we're actually able to register with the D-Bus session server.
     bool registered = dbusService->registerService(appName) == QDBusConnectionInterface::ServiceRegistered;
     if (!registered) {
-        kError() << "KUniqueApplication: Can't setup D-Bus service. Probably already running.";
-        ::exit(255);
+        // If already running call newInstance() on the app interface
+        QByteArray saved_args;
+        QDataStream ds(&saved_args, QIODevice::WriteOnly);
+        KCmdLineArgs::saveAppArgs(ds);
+
+        QByteArray new_asn_id;
+#if defined Q_WS_X11
+        KStartupInfoId id;
+        if (kapp != NULL) {
+            // KApplication constructor unsets the env. variable
+            id.initId(kapp->startupId());
+        } else {
+            id = KStartupInfo::currentStartupIdEnv();
+        }
+        if (!id.none()) {
+            new_asn_id = id.id();
+        }
+#endif
+
+        QDBusMessage msg = QDBusMessage::createMethodCall(appName, "/MainApplication", "org.kde.KUniqueApplication", "newInstance");
+        msg << new_asn_id << saved_args;
+        QDBusReply<int> reply = QDBusConnection::sessionBus().call(msg, QDBus::Block, INT_MAX);
+
+        if (!reply.isValid()) {
+            QDBusError err = reply.error();
+            kError() << "Communication problem with " << KCmdLineArgs::aboutData()->appName() << ", it probably crashed.\n"
+                    << "Error message was: " << err.name() << ": \"" << err.message() << "\"";
+            ::exit(255);
+        }
+        ::exit(reply);
     }
 
     // We'll call newInstance in the constructor. Do nothing here.
