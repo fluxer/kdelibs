@@ -98,7 +98,6 @@
 1604        kfreespace
 7023        kurifilter (plugins)
 7024        kio (UIServer)
-7104        kio_floppy
 7115        kio_thumbnail
 7116        kio_trash
 7120        kio_sftp

@@ -441,17 +441,11 @@
    <max>255</max>
   </entry>
   <entry key="Plugins" type="StringList" />
-  <entry key="ar" type="Bool" />
   <entry key="file" type="Bool" />
-  <entry key="floppy" type="Bool" />
-  <entry key="fonts" type="Bool" />
   <entry key="ftp" type="Bool" />
-  <entry key="settings" type="Bool" />
   <entry key="sftp" type="Bool" />
   <entry key="mtp" type="Bool" />
-  <entry key="system" type="Bool" />
-  <entry key="tar" type="Bool" />
-  <entry key="zip" type="Bool" />
+  <entry key="camera" type="Bool" />
  </group>
  <group name="Toolbar style" >
   <entry key="Highlighting" type="Bool">

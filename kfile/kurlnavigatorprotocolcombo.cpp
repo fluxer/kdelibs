@@ -203,7 +203,6 @@ void KUrlNavigatorProtocolCombo::initializeCategories()
         m_categories.insert("sftp", CoreCategory);
         m_categories.insert("trash", PlacesCategory);
         m_categories.insert("remote", PlacesCategory);
-        m_categories.insert("floppy", DevicesCategory);
         m_categories.insert("camera", DevicesCategory);
         m_categories.insert("mtp", DevicesCategory);
         m_categories.insert("network", OtherCategory);
