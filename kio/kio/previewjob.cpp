@@ -104,8 +104,6 @@ public:
     QList<PreviewItem> items;
     // The current item
     PreviewItem currentItem;
-    // The modification time of that URL
-    time_t tOrig;
     // Path to thumbnail cache for the current size
     QString thumbPath;
     // Original URL of current item in TMS format
@@ -157,7 +155,6 @@ PreviewJob::PreviewJob(const KFileItemList &items,
 {
     Q_D(PreviewJob);
     const KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
-    d->tOrig = 0;
     d->initialItems = items;
     if (enabledPlugins) {
         d->enabledPlugins = *enabledPlugins;
@@ -413,7 +410,6 @@ void PreviewJob::slotResult(KJob *job)
                 return;
             }
             const KIO::UDSEntry entry = static_cast<KIO::StatJob*>(job)->statResult();
-            d->tOrig = entry.numberValue(KIO::UDSEntry::UDS_MODIFICATION_TIME, 0);
 
             bool skipCurrentItem = false;
             const KIO::filesize_t size = (KIO::filesize_t)entry.numberValue(KIO::UDSEntry::UDS_SIZE, 0);
