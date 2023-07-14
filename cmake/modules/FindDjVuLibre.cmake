@@ -10,7 +10,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PC_DJVULIBRE ddjvuapi)
+pkg_check_modules(PC_DJVULIBRE QUIET ddjvuapi)
 
 set(DJVULIBRE_VERSION ${PC_DJVULIBRE_VERSION})
 
