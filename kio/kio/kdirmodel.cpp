@@ -810,11 +810,6 @@ static bool lessThan(const KUrl &left, const KUrl &right)
     return left.url().compare(right.url()) < 0;
 }
 
-void KDirModel::requestSequenceIcon(const QModelIndex& index, int sequenceIndex)
-{
-    emit needSequenceIcon(index, sequenceIndex);
-}
-
 KUrl::List KDirModel::simplifiedUrlList(const KUrl::List &urls)
 {
     if (!urls.count()) {

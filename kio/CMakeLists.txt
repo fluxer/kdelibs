@@ -69,7 +69,6 @@ set(kiocore_STAT_SRCS
     kio/slaveconfig.cpp
     kio/slaveinterface.cpp
     kio/thumbcreator.cpp
-    kio/thumbsequencecreator.cpp
     kio/udsentry.cpp
     kio/usernotificationhandler.cpp
     kio/clipboardupdater.cpp
@@ -189,7 +188,6 @@ install(
     kio/ioslave_defaults.h
     kio/previewjob.h
     kio/thumbcreator.h
-    kio/thumbsequencecreator.h
     kio/directorysizejob.h
     kio/renamedialog.h
     kio/skipdialog.h

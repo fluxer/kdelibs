@@ -122,7 +122,6 @@ public:
     // Whether we should save the thumbnail
     bool bSave;
     bool ignoreMaximumSize;
-    int sequenceIndex;
     bool succeeded;
     // If the file to create a thumb for was a temp file, this is its name
     QString tempName;
@@ -181,7 +180,6 @@ PreviewJob::PreviewJob(const KFileItemList &items,
     d->succeeded = false;
     d->thumbRoot = QDir::homePath() + QLatin1String("/.thumbnails/");
     d->ignoreMaximumSize = false;
-    d->sequenceIndex = 0;
     d->maximumLocalSize = globalConfig.readEntry("MaximumSize", PreviewDefaults::MaxLocalSize * 1024 * 1024LL);
     d->maximumRemoteSize = globalConfig.readEntry("MaximumRemoteSize", PreviewDefaults::MaxRemoteSize * 1024 * 1024LL);
 
@@ -354,15 +352,6 @@ void PreviewJob::removeItem( const KUrl& url )
     }
 }
 
-void KIO::PreviewJob::setSequenceIndex(int index)
-{
-    d_func()->sequenceIndex = index;
-}
-
-int KIO::PreviewJob::sequenceIndex() const {
-    return d_func()->sequenceIndex;
-}
-
 void PreviewJob::setIgnoreMaximumSize(bool ignoreSize)
 {
     d_func()->ignoreMaximumSize = ignoreSize;
@@ -432,8 +421,7 @@ void PreviewJob::slotResult(KJob *job)
                 return;
             }
 
-            bool pluginHandlesSequences = d->currentItem.plugin->property("HandleSequences", QVariant::Bool).toBool();
-            if (!d->currentItem.plugin->property("CacheThumbnail").toBool() || (d->sequenceIndex && pluginHandlesSequences)) {
+            if (!d->currentItem.plugin->property("CacheThumbnail").toBool()) {
                 // This preview will not be cached, no need to look for a saved thumbnail
                 // Just create it, and be done
                 d->getOrCreateThumbnail();
@@ -528,16 +516,13 @@ void PreviewJobPrivate::createThumbnail(const QString &pixPath)
     KIO::TransferJob *job = KIO::get(thumbURL, NoReload, HideProgressInfo);
     q->addSubjob(job);
     q->connect(job, SIGNAL(data(KIO::Job*,QByteArray)), SLOT(slotThumbData(KIO::Job*,QByteArray)));
-    bool save = bSave && currentItem.plugin->property("CacheThumbnail").toBool() && !sequenceIndex;
+    bool save = bSave && currentItem.plugin->property("CacheThumbnail").toBool();
     job->addMetaData("mimeType", currentItem.item.mimetype());
     job->addMetaData("width", QString::number(save ? cacheWidth : width));
     job->addMetaData("height", QString::number(save ? cacheHeight : height));
     job->addMetaData("iconSize", QString::number(save ? 64 : iconSize));
     job->addMetaData("iconAlpha", QString::number(iconAlpha));
     job->addMetaData("plugin", currentItem.plugin->library());
-    if (sequenceIndex) {
-        job->addMetaData("sequence-index", QString::number(sequenceIndex));
-    }
 }
 
 void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
@@ -545,7 +530,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
     bool save = bSave &&
                 currentItem.plugin->property("CacheThumbnail").toBool() &&
                 (currentItem.item.url().protocol() != "file" ||
-                 !currentItem.item.url().directory( KUrl::AddTrailingSlash ).startsWith(thumbRoot)) && !sequenceIndex;
+                 !currentItem.item.url().directory( KUrl::AddTrailingSlash ).startsWith(thumbRoot));
     QImage thumb;
     QDataStream s(data);
     s >> thumb;

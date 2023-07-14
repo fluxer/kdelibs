@@ -141,23 +141,6 @@ namespace KIO {
         void setIgnoreMaximumSize(bool ignoreSize = true);
 
         /**
-         * Sets the sequence index given to the thumb creators.
-         * Use the sequence index, it is possible to create alternative
-         * icons for the same item. For example it may allow iterating through
-         * the items of a directory, or the frames of a video.
-         *
-         * @since KDE 4.3
-         **/
-        void setSequenceIndex(int index);
-
-        /**
-         * Returns the currently set sequence index
-         *
-         * @since KDE 4.3
-         **/
-        int sequenceIndex() const;
-
-        /**
          * Returns a list of all available preview plugins. The list
          * contains the basenames of the plugins' .desktop files (no path,
          * no .desktop).

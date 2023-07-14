@@ -157,12 +157,6 @@ public:
     ~Private();
 
     /**
-     * Requests a new icon for the item \a index.
-     * @param sequenceIndex If this is zero, the standard icon is requested, else another one.
-     */
-    void requestSequenceIcon(const QModelIndex& index, int sequenceIndex);
-
-    /**
      * Generates previews for the items \a items asynchronously.
      */
     void updateIcons(const KFileItemList& items);
@@ -364,7 +358,6 @@ public:
       */
     QHash<KUrl, QPixmap> m_cutItemsCache;
     QList<ItemInfo> m_previews;
-    QMap<KUrl, int> m_sequenceIndices;
 
     /**
      * When huge items are copied, it must be prevented that a preview gets generated
@@ -415,7 +408,6 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
     m_proxyModel(0),
     m_cutItemsCache(),
     m_previews(),
-    m_sequenceIndices(),
     m_changedItems(),
     m_changedItemsTimer(0),
     m_pendingItems(),
@@ -442,8 +434,6 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
                 q, SLOT(updateIcons(KFileItemList)));
         connect(dirModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 q, SLOT(updateIcons(QModelIndex,QModelIndex)));
-        connect(dirModel, SIGNAL(needSequenceIcon(QModelIndex,int)),
-               q, SLOT(requestSequenceIcon(QModelIndex,int)));
         connect(dirModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
                 q, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
     }
@@ -493,27 +483,6 @@ KFilePreviewGenerator::Private::~Private()
     m_pendingItems.clear();
     m_dispatchedItems.clear();
     delete m_tileSet;
-}
-
-void KFilePreviewGenerator::Private::requestSequenceIcon(const QModelIndex& index,
-                                                         int sequenceIndex)
-{
-    if (m_pendingItems.isEmpty() || (sequenceIndex == 0)) {
-        KDirModel* dirModel = m_dirModel.data();
-        if (!dirModel) {
-            return;
-        }
-
-        KFileItem item = dirModel->itemForIndex(index);
-        if (sequenceIndex == 0) {
-           m_sequenceIndices.remove(item.url());
-        } else {
-           m_sequenceIndices.insert(item.url(), sequenceIndex);
-        }
-
-        ///@todo Update directly, without using m_sequenceIndices
-        updateIcons(KFileItemList() << item);
-    }
 }
 
 void KFilePreviewGenerator::Private::updateIcons(const KFileItemList& items)
@@ -588,20 +557,6 @@ void KFilePreviewGenerator::Private::updateIcons(const QModelIndex& topLeft,
 
 void KFilePreviewGenerator::Private::addToPreviewQueue(const KFileItem& item, const QPixmap& pixmap)
 {
-    KIO::PreviewJob* senderJob = qobject_cast<KIO::PreviewJob*>(q->sender());
-    Q_ASSERT(senderJob != 0);
-    if (senderJob != 0) {
-        QMap<KUrl, int>::iterator it = m_sequenceIndices.find(item.url());
-        if (senderJob->sequenceIndex() && (it == m_sequenceIndices.end() || *it != senderJob->sequenceIndex())) {
-            return; // the sequence index does not match the one we want
-        }
-        if (!senderJob->sequenceIndex() && it != m_sequenceIndices.end()) {
-            return; // the sequence index does not match the one we want
-        }
-
-        m_sequenceIndices.erase(it);
-    }
-
     if (!m_previewShown) {
         // the preview has been canceled in the meantime
         return;
@@ -667,7 +622,6 @@ void KFilePreviewGenerator::Private::slotPreviewJobFinished(KJob* job)
             m_pendingVisibleIconUpdates = 0;
             QMetaObject::invokeMethod(q, "dispatchIconUpdateQueue", Qt::QueuedConnection);
         }
-        m_sequenceIndices.clear(); // just to be sure that we don't leak anything
     }
 }
 
@@ -998,15 +952,6 @@ void KFilePreviewGenerator::Private::startPreviewJob(const KFileItemList& items,
     if (items.count() > 0) {
         KIO::PreviewJob* job = KIO::filePreview(items, QSize(width, height), &m_enabledPlugins);
 
-        // Set the sequence index to the target. We only need to check if items.count() == 1,
-        // because requestSequenceIcon(..) creates exactly such a request.
-        if (!m_sequenceIndices.isEmpty() && (items.count() == 1)) {
-            QMap<KUrl, int>::iterator it = m_sequenceIndices.find(items[0].url());
-            if (it != m_sequenceIndices.end()) {
-                job->setSequenceIndex(*it);
-            }
-        }
-
         connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)),
                 q, SLOT(addToPreviewQueue(KFileItem,QPixmap)));
         connect(job, SIGNAL(finished(KJob*)),
@@ -1022,7 +967,6 @@ void KFilePreviewGenerator::Private::killPreviewJobs()
         job->kill();
     }
     m_previewJobs.clear();
-    m_sequenceIndices.clear();
     
     m_iconUpdateTimer->stop();
     m_scrollAreaTimer->stop();
