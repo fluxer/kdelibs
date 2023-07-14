@@ -392,8 +392,9 @@ bool KDirLister::openUrl(const KUrl &url, bool recursive)
 {
     stop();
 
-    foreach (const KUrl &it, d->watchedUrls) {
-        d->unwatchUrl(it);
+    QListIterator<KUrl> it(d->watchedUrls);
+    while (it.hasNext()) {
+        d->unwatchUrl(it.next());
     }
     if (d->dirWatch) {
         d->dirWatch->disconnect(this);
