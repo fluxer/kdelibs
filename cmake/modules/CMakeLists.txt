@@ -39,7 +39,6 @@ set(cmakeFiles
     FindLibDeflate.cmake
     FindLibDRM.cmake
     FindLibLZMA.cmake
-    FindLibMms.cmake
     FindLIBPARTED.cmake
     FindLibSpectre.cmake
     FindLibSSH.cmake
