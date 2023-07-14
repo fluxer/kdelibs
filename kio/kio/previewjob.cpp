@@ -182,8 +182,8 @@ PreviewJob::PreviewJob(const KFileItemList &items,
     d->thumbRoot = QDir::homePath() + QLatin1String("/.thumbnails/");
     d->ignoreMaximumSize = false;
     d->sequenceIndex = 0;
-    d->maximumLocalSize = 0;
-    d->maximumRemoteSize = 0;
+    d->maximumLocalSize = globalConfig.readEntry("MaximumSize", PreviewDefaults::MaxLocalSize * 1024 * 1024LL);
+    d->maximumRemoteSize = globalConfig.readEntry("MaximumRemoteSize", PreviewDefaults::MaxRemoteSize * 1024 * 1024LL);
 
     // Return to event loop first, determineNextFile() might delete this;
     QTimer::singleShot(0, this, SLOT(startPreview()));
@@ -319,10 +319,6 @@ void PreviewJobPrivate::startPreview()
             emit q->failed(kit);
         }
     }
-
-    KConfigGroup cg(KGlobal::config(), "PreviewSettings");
-    maximumLocalSize = cg.readEntry("MaximumSize", PreviewDefaults::MaxLocalSize * 1024 * 1024LL);
-    maximumRemoteSize = cg.readEntry("MaximumRemoteSize", PreviewDefaults::MaxRemoteSize * 1024 * 1024LL);
 
     if (bNeedCache) {
         if (width <= 128 && height <= 128) {
