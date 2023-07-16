@@ -108,6 +108,7 @@ void KMimeTypeRepository::parseMimeData(const QStringList &resources)
 void KMimeTypeRepository::parseMimeData()
 {
     QMutexLocker locker(&m_mutex);
+
     KMimeGlobsFileParser parser;
     m_globs = parser.parseGlobs();
 

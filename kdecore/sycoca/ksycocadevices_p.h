@@ -66,7 +66,7 @@ class KSycocaBufferDevice : public KSycocaAbstractDevice
 {
 public:
     KSycocaBufferDevice() {
-        m_buffer = new QBuffer;
+        m_buffer = new QBuffer();
     }
     ~KSycocaBufferDevice() {
         delete m_buffer;
