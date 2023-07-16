@@ -296,7 +296,7 @@ void KPty::login(const char *user, const char *remotehost)
     l_struct.ut_pid = ::getpid();
 #endif
 #ifdef HAVE_STRUCT_UTMP_UT_SESSION
-    l_struct.ut_session = getsid(0);
+    l_struct.ut_session = ::getsid(0);
 #endif
 
 #if defined(HAVE_UTIL_LOGINX)
