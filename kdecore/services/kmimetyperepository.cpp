@@ -26,6 +26,7 @@
 #include <kmessage.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <ksycoca.h>
 
 #include <QFile>
 #include <QtCore/qendian.h>
@@ -89,9 +90,28 @@ KMimeTypeRepository::KMimeTypeRepository()
     m_useFavIconsChecked(false),
     m_sharedMimeInfoVersion(0)
 {
+    parseMimeData();
+    connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), this, SLOT(parseMimeData(QStringList)));
+}
+
+KMimeTypeRepository::~KMimeTypeRepository()
+{
+}
+
+void KMimeTypeRepository::parseMimeData(const QStringList &resources)
+{
+    if (resources.contains(QLatin1String("xdgdata-mime"))) {
+        parseMimeData();
+    }
+}
+
+void KMimeTypeRepository::parseMimeData()
+{
+    QMutexLocker locker(&m_mutex);
     KMimeGlobsFileParser parser;
     m_globs = parser.parseGlobs();
 
+    m_aliases.clear();
     const QStringList aliasFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("aliases"));
     Q_FOREACH(const QString& fileName, aliasFiles) {
         QFile qfile(fileName);
@@ -124,6 +144,7 @@ KMimeTypeRepository::KMimeTypeRepository()
         }
     }
 
+    m_parents.clear();
     const QStringList subclassFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("subclasses"));
     // kDebug() << subclassFiles;
     Q_FOREACH(const QString &fileName, subclassFiles) {
@@ -156,6 +177,7 @@ KMimeTypeRepository::KMimeTypeRepository()
         }
     }
 
+    m_magicRules.clear();
     const QStringList magicFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("magic"));
     // kDebug() << magicFiles;
     QListIterator<QString> magicIter( magicFiles );
@@ -170,10 +192,6 @@ KMimeTypeRepository::KMimeTypeRepository()
         }
     }
     qSort(m_magicRules.begin(), m_magicRules.end(), mimeMagicRuleCompare);
-}
-
-KMimeTypeRepository::~KMimeTypeRepository()
-{
 }
 
 KMimeType::Ptr KMimeTypeRepository::findMimeTypeByName(const QString &_name, KMimeType::FindByNameOption options) const

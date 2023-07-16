@@ -25,6 +25,8 @@
 #include "kmimeglobsfileparser_p.h"
 #include "kmimetype.h"
 
+#include <QMutex>
+
 /**
  * @internal  - this header is not installed
  * Can create KMimeTypes and holds all the extra information about mimetypes
@@ -32,8 +34,9 @@
  *
  * Exported for kbuildsycoca, for now
  */
-class KDECORE_EXPORT KMimeTypeRepository
+class KDECORE_EXPORT KMimeTypeRepository : public QObject
 {
+    Q_OBJECT
 public:
     /**
      * @return the unique mimetype factory, creating it if necessary
@@ -108,12 +111,20 @@ private: // only for KMimeType and unittests
      */
     bool checkMimeTypes();
 
+private Q_SLOTS:
+    void parseMimeData(const QStringList &resources);
+
 private:
     KMimeTypeRepository();
     ~KMimeTypeRepository();
 
     typedef QHash<QString, QString> AliasesMap;
     const AliasesMap& aliases() const;
+
+    /**
+     * @internal (re-)parses the glob, aliases, parents and magic file(s)
+     */
+    void parseMimeData();
 
     /**
      * @internal (public for unit tests only)
@@ -146,6 +157,7 @@ private:
     QList<KMimeMagicRule> m_magicRules;
     KMimeGlobsFileParser::AllGlobs m_globs;
     KMimeType::Ptr m_defaultMimeType;
+    QMutex m_mutex;
 };
 
 #endif // KMIMETYPEREPOSITORY_H
