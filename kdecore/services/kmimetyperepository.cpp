@@ -677,10 +677,7 @@ KMimeType::Ptr KMimeTypeRepository::defaultMimeTypePtr()
         if (mime) {
             m_defaultMimeType = mime;
         } else {
-            const QString defaultMimeType = KMimeType::defaultMimeType();
-            errorMissingMimeTypes(QStringList(defaultMimeType));
-            const QString pathDefaultMimeType = KGlobal::dirs()->findResource("xdgdata-mime", defaultMimeType + QLatin1String(".xml"));
-            m_defaultMimeType = new KMimeType(pathDefaultMimeType, defaultMimeType, QLatin1String("mime"));
+            errorMissingMimeTypes(QStringList(KMimeType::defaultMimeType()));
         }
     }
     return m_defaultMimeType;
