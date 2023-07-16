@@ -246,7 +246,7 @@ void KDirListerPrivate::_k_slotUpdateResult(KJob *job)
             kDebug(7003) << "deleted entry" << item;
             deletedItems.append(item);
             unwatchUrl(item.url());
-        } else if (item != founditem) {
+        } else if (item != founditem || !item.cmp(founditem)) {
             kDebug(7003) << "updated entry" << item;
             refreshedItems.append(qMakePair(item, founditem));
         }
