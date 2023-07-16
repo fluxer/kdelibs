@@ -88,7 +88,6 @@ static Atom net_wm_allowed_actions   = 0;
 static Atom wm_window_role           = 0;
 static Atom net_frame_extents        = 0;
 static Atom net_wm_window_opacity    = 0;
-static Atom kde_net_wm_frame_strut   = 0;
 static Atom net_wm_fullscreen_monitors = 0;
 
 // KDE extensions
@@ -250,7 +249,7 @@ static int wcmp(const void *a, const void *b) {
 }
 
 
-static const int netAtomCount = 85;
+static const int netAtomCount = 84;
 static void create_netwm_atoms(Display *d) {
     static const char * const names[netAtomCount] =
     {
@@ -336,7 +335,6 @@ static void create_netwm_atoms(Display *d) {
         "_NET_WM_ACTION_CHANGE_DESKTOP",
         "_NET_WM_ACTION_CLOSE",
 
-        "_KDE_NET_WM_FRAME_STRUT",
         "_KDE_NET_WM_TEMPORARY_RULES",
         "_NET_WM_FRAME_OVERLAP",
 
@@ -432,7 +430,6 @@ static void create_netwm_atoms(Display *d) {
         &net_wm_action_change_desk,
         &net_wm_action_close,
 
-        &kde_net_wm_frame_strut,
         &kde_net_wm_temporary_rules,
         &kde_net_wm_frame_overlap,
 
@@ -1265,7 +1262,6 @@ void NETRootInfo::setSupported() {
 
     if (p->properties[ PROTOCOLS ] & WMFrameExtents) {
         atoms[pnum++] = net_frame_extents;
-        atoms[pnum++] = kde_net_wm_frame_strut;
     }
 
     if (p->properties[ PROTOCOLS2 ] & WM2FrameOverlap) {
@@ -1498,8 +1494,6 @@ void NETRootInfo::updateSupportedProperties( Atom atom )
         p->properties[ ACTIONS ] |= ActionClose;
 
     else if( atom == net_frame_extents )
-        p->properties[ PROTOCOLS ] |= WMFrameExtents;
-    else if( atom == kde_net_wm_frame_strut )
         p->properties[ PROTOCOLS ] |= WMFrameExtents;
     else if( atom == kde_net_wm_frame_overlap )
         p->properties[ PROTOCOLS2 ] |= WM2FrameOverlap;
@@ -3495,8 +3489,6 @@ void NETWinInfo::setFrameExtents(NETStrut strut) {
 
     XChangeProperty(p->display, p->window, net_frame_extents, XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *) d, 4);
-    XChangeProperty(p->display, p->window, kde_net_wm_frame_strut, XA_CARDINAL, 32,
-		    PropModeReplace, (unsigned char *) d, 4);
 }
 
 NETStrut NETWinInfo::frameExtents() const {
@@ -3778,8 +3770,6 @@ void NETWinInfo::event(XEvent *event, unsigned long* properties, int properties_
 	    else if (pe.xproperty.atom == xa_wm_state)
 		dirty |= XAWMState;
 	    else if (pe.xproperty.atom == net_frame_extents)
-		dirty |= WMFrameExtents;
-	    else if (pe.xproperty.atom == kde_net_wm_frame_strut)
 		dirty |= WMFrameExtents;
 	    else if (pe.xproperty.atom == kde_net_wm_frame_overlap)
 		dirty2 |= WM2FrameOverlap;
@@ -4205,12 +4195,10 @@ void NETWinInfo::update(const unsigned long dirty_props[]) {
 
     if (dirty & WMFrameExtents) {
         p->frame_strut = NETStrut();
-        bool ok = false;
 	if (XGetWindowProperty(p->display, p->window, net_frame_extents,
 			       0l, 4l, False, XA_CARDINAL, &type_ret, &format_ret,
 			       &nitems_ret, &unused, &data_ret) == Success) {
 	    if (type_ret == XA_CARDINAL && format_ret == 32 && nitems_ret == 4) {
-                ok = true;
 		long *d = (long *) data_ret;
 
 		p->frame_strut.left   = d[0];
@@ -4221,21 +4209,6 @@ void NETWinInfo::update(const unsigned long dirty_props[]) {
 	    if ( data_ret )
 		XFree(data_ret);
         }
-	if (!ok && XGetWindowProperty(p->display, p->window, kde_net_wm_frame_strut,
-			       0l, 4l, False, XA_CARDINAL, &type_ret, &format_ret,
-			       &nitems_ret, &unused, &data_ret) == Success) {
-	    if (type_ret == XA_CARDINAL && format_ret == 32 && nitems_ret == 4) {
-                ok = true;
-		long *d = (long *) data_ret;
-
-		p->frame_strut.left   = d[0];
-		p->frame_strut.right  = d[1];
-		p->frame_strut.top    = d[2];
-		p->frame_strut.bottom = d[3];
-	    }
-	    if ( data_ret )
-		XFree(data_ret);
-	}
     }
 
     if (dirty2 & WM2FrameOverlap) {
