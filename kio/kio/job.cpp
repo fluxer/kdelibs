@@ -61,23 +61,25 @@ static inline SlaveInterface *jobSlave(SimpleJob *job)
 //this will update the report dialog with 5 Hz, I think this is fast enough, aleXXX
 #define REPORT_TIMEOUT 200
 
-Job::Job() : KCompositeJob(*new JobPrivate, 0)
+Job::Job()
+    : KCompositeJob(*new JobPrivate, 0)
 {
-    setCapabilities( KJob::Killable | KJob::Suspendable );
+    setCapabilities(KJob::Killable | KJob::Suspendable);
 }
 
-Job::Job(JobPrivate &dd) : KCompositeJob(dd, 0)
+Job::Job(JobPrivate &dd)
+    : KCompositeJob(dd, 0)
 {
-    setCapabilities( KJob::Killable | KJob::Suspendable );
+    setCapabilities(KJob::Killable | KJob::Suspendable);
 }
 
 Job::~Job()
 {
 }
 
-JobUiDelegate *Job::ui() const
+JobUiDelegate* Job::ui() const
 {
-    return static_cast<JobUiDelegate*>( uiDelegate() );
+    return static_cast<JobUiDelegate*>(uiDelegate());
 }
 
 bool Job::addSubjob(KJob *jobBase)
@@ -103,10 +105,10 @@ bool Job::addSubjob(KJob *jobBase)
     return ok;
 }
 
-bool Job::removeSubjob( KJob *jobBase )
+bool Job::removeSubjob(KJob *jobBase)
 {
     //kDebug(7007) << "removeSubjob(" << jobBase << ") this=" << this << "subjobs=" << subjobs().count();
-    return KCompositeJob::removeSubjob( jobBase );
+    return KCompositeJob::removeSubjob(jobBase);
 }
 
 void JobPrivate::emitMoving(KIO::Job * job, const KUrl &src, const KUrl &dest)
@@ -149,20 +151,21 @@ void JobPrivate::emitTransferring(KIO::Job *job, const KUrl &url)
 
 bool Job::doKill()
 {
-  // kill all subjobs, without triggering their result slot
-  Q_FOREACH( KJob* it, subjobs()) {
-      it->kill( KJob::Quietly );
-  }
-  clearSubjobs();
+    // kill all subjobs, without triggering their result slot
+    Q_FOREACH( KJob* it, subjobs()) {
+        it->kill( KJob::Quietly );
+    }
+    clearSubjobs();
 
-  return true;
+    return true;
 }
 
 bool Job::doSuspend()
 {
     Q_FOREACH(KJob* it, subjobs()) {
-        if (!it->suspend())
+        if (!it->suspend()) {
             return false;
+        }
     }
 
     return true;
@@ -170,40 +173,39 @@ bool Job::doSuspend()
 
 bool Job::doResume()
 {
-    Q_FOREACH ( KJob* it, subjobs() )
-    {
-        if (!it->resume())
+    Q_FOREACH(KJob* it, subjobs()) {
+        if (!it->resume()) {
             return false;
+        }
     }
 
     return true;
 }
 
-void JobPrivate::slotSpeed( KJob*, unsigned long speed )
+void JobPrivate::slotSpeed(KJob *, unsigned long speed)
 {
-    //kDebug(7007) << speed;
-    q_func()->emitSpeed( speed );
+    // kDebug(7007) << speed;
+    q_func()->emitSpeed(speed);
 }
 
 //Job::errorString is implemented in global.cpp
 
-
 bool Job::isInteractive() const
 {
-  return uiDelegate() != 0;
+    return uiDelegate() != 0;
 }
 
-void Job::setParentJob(Job* job)
+void Job::setParentJob(Job *job)
 {
-  Q_D(Job);
-  Q_ASSERT(d->m_parentJob == 0L);
-  Q_ASSERT(job);
-  d->m_parentJob = job;
+    Q_D(Job);
+    Q_ASSERT(d->m_parentJob == 0L);
+    Q_ASSERT(job);
+    d->m_parentJob = job;
 }
 
 Job* Job::parentJob() const
 {
-  return d_func()->m_parentJob;
+    return d_func()->m_parentJob;
 }
 
 MetaData Job::metaData() const
@@ -222,25 +224,26 @@ void Job::setMetaData( const KIO::MetaData &metaData)
     d->m_outgoingMetaData = metaData;
 }
 
-void Job::addMetaData( const QString &key, const QString &value)
+void Job::addMetaData(const QString &key, const QString &value)
 {
     d_func()->m_outgoingMetaData.insert(key, value);
 }
 
-void Job::addMetaData( const MetaData &values)
+void Job::addMetaData(const MetaData &values)
 {
     d_func()->m_outgoingMetaData += values;
 }
 
-void Job::mergeMetaData( const MetaData &values)
+void Job::mergeMetaData(const MetaData &values)
 {
     Q_D(Job);
     QMapIterator<QString,QString> it(values);
     while(it.hasNext()) {
         it.next();
         // there's probably a faster way
-        if ( !d->m_outgoingMetaData.contains( it.key() ) )
-            d->m_outgoingMetaData.insert( it.key(), it.value() );
+        if (!d->m_outgoingMetaData.contains( it.key())) {
+            d->m_outgoingMetaData.insert(it.key(), it.value());
+        }
     }
 }
 
@@ -278,16 +281,18 @@ bool SimpleJob::doKill()
 bool SimpleJob::doSuspend()
 {
     Q_D(SimpleJob);
-    if ( d->m_slave )
+    if (d->m_slave) {
         d->m_slave->suspend();
+    }
     return Job::doSuspend();
 }
 
 bool SimpleJob::doResume()
 {
     Q_D(SimpleJob);
-    if ( d->m_slave )
+    if (d->m_slave) {
         d->m_slave->resume();
+    }
     return Job::doResume();
 }
 
@@ -323,64 +328,78 @@ void SimpleJobPrivate::start(SlaveInterface *slave)
     m_slave = slave;
 
     // SlaveInterface::setJob can send us metadata if there is a persistent connection
-    q->connect( slave, SIGNAL(metaData(KIO::MetaData)),
-                SLOT(slotMetaData(KIO::MetaData)) );
+    q->connect(
+        slave, SIGNAL(metaData(KIO::MetaData)),
+        SLOT(slotMetaData(KIO::MetaData))
+    );
 
     slave->setJob(q);
 
-    q->connect( slave, SIGNAL(error(int,QString)),
-                SLOT(slotError(int,QString)) );
+    q->connect(
+        slave, SIGNAL(error(int,QString)),
+        SLOT(slotError(int,QString))
+    );
 
-    q->connect( slave, SIGNAL(warning(QString)),
-                SLOT(slotWarning(QString)) );
+    q->connect(
+        slave, SIGNAL(warning(QString)),
+        SLOT(slotWarning(QString))
+    );
 
-    q->connect( slave, SIGNAL(infoMessage(QString)),
-                SLOT(_k_slotSlaveInfoMessage(QString)) );
+    q->connect(
+        slave, SIGNAL(infoMessage(QString)),
+        SLOT(_k_slotSlaveInfoMessage(QString))
+    );
 
-    q->connect( slave, SIGNAL(finished()),
-                SLOT(slotFinished()) );
+    q->connect(
+        slave, SIGNAL(finished()),
+        SLOT(slotFinished())
+    );
 
-    if ((m_extraFlags & EF_TransferJobDataSent) == 0) // this is a "get" job
-    {
-        q->connect( slave, SIGNAL(totalSize(KIO::filesize_t)),
-                    SLOT(slotTotalSize(KIO::filesize_t)) );
+    if ((m_extraFlags & EF_TransferJobDataSent) == 0) {
+        // this is a "get" job
+        q->connect(
+            slave, SIGNAL(totalSize(KIO::filesize_t)),
+            SLOT(slotTotalSize(KIO::filesize_t))
+        );
 
-        q->connect( slave, SIGNAL(processedSize(KIO::filesize_t)),
-                    SLOT(slotProcessedSize(KIO::filesize_t)) );
+        q->connect(
+            slave, SIGNAL(processedSize(KIO::filesize_t)),
+            SLOT(slotProcessedSize(KIO::filesize_t))
+        );
 
-        q->connect( slave, SIGNAL(speed(ulong)),
-                    SLOT(slotSpeed(ulong)) );
+        q->connect(
+            slave, SIGNAL(speed(ulong)),
+            SLOT(slotSpeed(ulong))
+        );
     }
 
-    if (ui() && ui()->window())
-    {
+    if (ui() && ui()->window()) {
         m_outgoingMetaData.insert("window-id", QString::number((qptrdiff)ui()->window()->winId()));
     }
 
-    if (ui() && ui()->userTimestamp())
-    {
+    if (ui() && ui()->userTimestamp()) {
         m_outgoingMetaData.insert("user-timestamp", QString::number(ui()->userTimestamp()));
     }
 
-    if (ui() == 0)              // not interactive
-    {
+    if (ui() == 0) {
+        // not interactive
         m_outgoingMetaData.insert("no-auth-prompt", "true");
     }
 
-    if (!m_outgoingMetaData.isEmpty())
-    {
+    if (!m_outgoingMetaData.isEmpty()) {
         KIO_ARGS << m_outgoingMetaData;
-        slave->send( CMD_META_DATA, packedArgs );
+        slave->send(CMD_META_DATA, packedArgs);
     }
 
-    slave->send( m_command, m_packedArgs );
+    slave->send(m_command, m_packedArgs);
 }
 
 void SimpleJobPrivate::slaveDone()
 {
     Q_Q(SimpleJob);
     if (m_slave) {
-        q->disconnect(m_slave); // Remove all signals between slave and job
+        // Remove all signals between slave and job
+        q->disconnect(m_slave);
     }
     // only finish a job once; Scheduler::jobFinished() resets schedSerial to zero.
     if (m_schedSerial) {
@@ -388,31 +407,28 @@ void SimpleJobPrivate::slaveDone()
     }
 }
 
-void SimpleJob::slotFinished( )
+void SimpleJob::slotFinished()
 {
     Q_D(SimpleJob);
     // Return slave to the scheduler
     d->slaveDone();
 
-    if (!hasSubjobs())
-    {
-        if ( !error() && (d->m_command == CMD_MKDIR || d->m_command == CMD_RENAME ) )
-        {
-            if ( d->m_command == CMD_MKDIR )
-            {
-                KUrl urlDir( url() );
-                urlDir.setPath( urlDir.directory() );
-                org::kde::KDirNotify::emitFilesAdded( urlDir.url() );
-            }
-            else /*if ( m_command == CMD_RENAME )*/
-            {
+    if (!hasSubjobs()) {
+        if (!error() && (d->m_command == CMD_MKDIR || d->m_command == CMD_RENAME)) {
+            if (d->m_command == CMD_MKDIR) {
+                KUrl urlDir(url());
+                urlDir.setPath(urlDir.directory());
+                org::kde::KDirNotify::emitFilesAdded(urlDir.url());
+            } else /*if ( m_command == CMD_RENAME )*/ {
                 KUrl src, dst;
-                QDataStream str( d->m_packedArgs );
+                QDataStream str(d->m_packedArgs);
                 str >> src >> dst;
-                if( src.directory() == dst.directory() ) // For the user, moving isn't renaming. Only renaming is.
-                    org::kde::KDirNotify::emitFileRenamed( src.url(), dst.url() );
+                if (src.directory() == dst.directory()) {
+                    // For the user, moving isn't renaming. Only renaming is.
+                    org::kde::KDirNotify::emitFileRenamed(src.url(), dst.url());
+                }
 
-                org::kde::KDirNotify::emitFileMoved( src.url(), dst.url() );
+                org::kde::KDirNotify::emitFileMoved(src.url(), dst.url());
                 ClipboardUpdater::update(src, dst);
             }
         }
@@ -420,47 +436,47 @@ void SimpleJob::slotFinished( )
     }
 }
 
-void SimpleJob::slotError( int err, const QString & errorText )
+void SimpleJob::slotError(int err, const QString &errorText)
 {
     Q_D(SimpleJob);
-    setError( err );
-    setErrorText( errorText );
-    if ((error() == ERR_UNKNOWN_HOST) && d->m_url.host().isEmpty())
-       setErrorText( QString() );
+    setError(err);
+    setErrorText(errorText);
+    if (error() == ERR_UNKNOWN_HOST && d->m_url.host().isEmpty()) {
+        setErrorText(QString());
+    }
     // error terminates the job
     slotFinished();
 }
 
-void SimpleJob::slotWarning( const QString & errorText )
+void SimpleJob::slotWarning(const QString &errorText)
 {
-    emit warning( this, errorText );
+    emit warning(this, errorText);
 }
 
-void SimpleJobPrivate::_k_slotSlaveInfoMessage( const QString & msg )
+void SimpleJobPrivate::_k_slotSlaveInfoMessage(const QString &msg)
 {
-    emit q_func()->infoMessage( q_func(), msg );
+    emit q_func()->infoMessage(q_func(), msg );
 }
 
-void SimpleJobPrivate::slotTotalSize( KIO::filesize_t size )
+void SimpleJobPrivate::slotTotalSize(KIO::filesize_t size)
 {
     Q_Q(SimpleJob);
-    if (size != q->totalAmount(KJob::Bytes))
-    {
+    if (size != q->totalAmount(KJob::Bytes)) {
         q->setTotalAmount(KJob::Bytes, size);
     }
 }
 
-void SimpleJobPrivate::slotProcessedSize( KIO::filesize_t size )
+void SimpleJobPrivate::slotProcessedSize(KIO::filesize_t size)
 {
     Q_Q(SimpleJob);
-    //kDebug(7007) << KIO::number(size);
+    // kDebug(7007) << KIO::number(size);
     q->setProcessedAmount(KJob::Bytes, size);
 }
 
-void SimpleJobPrivate::slotSpeed( unsigned long speed )
+void SimpleJobPrivate::slotSpeed(unsigned long speed)
 {
     //kDebug(7007) << speed;
-    q_func()->emitSpeed( speed );
+    q_func()->emitSpeed(speed);
 }
 
 void SimpleJobPrivate::restartAfterRedirection(KUrl *redirectionUrl)
@@ -477,22 +493,24 @@ void SimpleJobPrivate::restartAfterRedirection(KUrl *redirectionUrl)
     }
 }
 
-int SimpleJobPrivate::requestMessageBox(int _type, const QString& text, const QString& caption,
-                                       const QString& buttonYes, const QString& buttonNo,
-                                       const QString& iconYes, const QString& iconNo,
-                                       const QString& dontAskAgainName)
+int SimpleJobPrivate::requestMessageBox(int _type, const QString &text, const QString &caption,
+                                        const QString &buttonYes, const QString &buttonNo,
+                                        const QString &iconYes, const QString &iconNo,
+                                        const QString &dontAskAgainName)
 {
     JobUiDelegate* delegate = ui();
     if (delegate) {
-      const JobUiDelegate::MessageBoxType type = static_cast<JobUiDelegate::MessageBoxType>(_type);
-      return delegate->requestMessageBox(type, text, caption, buttonYes, buttonNo,
-                                         iconYes, iconNo, dontAskAgainName);
+        const JobUiDelegate::MessageBoxType type = static_cast<JobUiDelegate::MessageBoxType>(_type);
+        return delegate->requestMessageBox(
+            type, text, caption, buttonYes, buttonNo,
+            iconYes, iconNo, dontAskAgainName
+        );
     }
     kWarning(7007) << "JobUiDelegate not set! Returing -1";
     return -1;
 }
 
-void SimpleJob::slotMetaData( const KIO::MetaData &metaData )
+void SimpleJob::slotMetaData(const KIO::MetaData &metaData)
 {
     Q_D(SimpleJob);
     d->m_incomingMetaData += metaData;
@@ -502,9 +520,11 @@ void SimpleJob::slotMetaData( const KIO::MetaData &metaData )
 class KIO::MkdirJobPrivate: public SimpleJobPrivate
 {
 public:
-    MkdirJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
+    MkdirJobPrivate(const KUrl &url, int command, const QByteArray &packedArgs)
         : SimpleJobPrivate(url, command, packedArgs)
-        { }
+    {
+    }
+
     KUrl m_redirectionURL;
     void slotRedirection(const KUrl &url);
 
@@ -514,11 +534,11 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start( SlaveInterface *slave );
+    virtual void start(SlaveInterface *slave);
 
     Q_DECLARE_PUBLIC(MkdirJob)
 
-    static inline MkdirJob *newJob(const KUrl& url, int command, const QByteArray &packedArgs)
+    static inline MkdirJob *newJob(const KUrl &url, int command, const QByteArray &packedArgs)
     {
         MkdirJob *job = new MkdirJob(*new MkdirJobPrivate(url, command, packedArgs));
         job->setUiDelegate(new JobUiDelegate);
@@ -538,14 +558,16 @@ MkdirJob::~MkdirJob()
 void MkdirJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(MkdirJob);
-    q->connect( slave, SIGNAL(redirection(KUrl)),
-                SLOT(slotRedirection(KUrl)) );
+    q->connect(
+        slave, SIGNAL(redirection(KUrl)),
+        SLOT(slotRedirection(KUrl))
+    );
 
     SimpleJobPrivate::start(slave);
 }
 
 // Slave got a redirection request
-void MkdirJobPrivate::slotRedirection( const KUrl &url)
+void MkdirJobPrivate::slotRedirection(const KUrl &url)
 {
      Q_Q(MkdirJob);
      kDebug(7007) << url;
@@ -558,18 +580,16 @@ void MkdirJob::slotFinished()
 {
     Q_D(MkdirJob);
 
-    if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() )
-    {
+    if (!d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid()) {
         //kDebug(7007) << "MkdirJob: Redirection to " << m_redirectionURL;
-        if ( d->m_redirectionHandlingEnabled )
-        {
+        if (d->m_redirectionHandlingEnabled) {
             KUrl dummyUrl;
             int permissions;
-            QDataStream istream( d->m_packedArgs );
+            QDataStream istream(d->m_packedArgs);
             istream >> dummyUrl >> permissions;
 
             d->m_packedArgs.truncate(0);
-            QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
+            QDataStream stream(&d->m_packedArgs, QIODevice::WriteOnly);
             stream << d->m_redirectionURL << permissions;
 
             d->restartAfterRedirection(&d->m_redirectionURL);
@@ -581,57 +601,57 @@ void MkdirJob::slotFinished()
     SimpleJob::slotFinished();
 }
 
-SimpleJob *KIO::mkdir( const KUrl& url, int permissions )
+SimpleJob *KIO::mkdir(const KUrl &url, int permissions)
 {
     //kDebug(7007) << "mkdir " << url;
     KIO_ARGS << url << permissions;
     return MkdirJobPrivate::newJob(url, CMD_MKDIR, packedArgs);
 }
 
-SimpleJob *KIO::rmdir( const KUrl& url )
+SimpleJob *KIO::rmdir(const KUrl &url)
 {
-    //kDebug(7007) << "rmdir " << url;
+    // kDebug(7007) << "rmdir " << url;
     KIO_ARGS << url << qint8(false); // isFile is false
     return SimpleJobPrivate::newJob(url, CMD_DEL, packedArgs);
 }
 
-SimpleJob *KIO::chmod( const KUrl& url, int permissions )
+SimpleJob *KIO::chmod(const KUrl &url, int permissions)
 {
-    //kDebug(7007) << "chmod " << url;
+    // kDebug(7007) << "chmod " << url;
     KIO_ARGS << url << permissions;
     return SimpleJobPrivate::newJob(url, CMD_CHMOD, packedArgs);
 }
 
-SimpleJob *KIO::chown( const KUrl& url, const QString& owner, const QString& group )
+SimpleJob *KIO::chown(const KUrl &url, const QString &owner, const QString &group)
 {
     KIO_ARGS << url << owner << group;
     return SimpleJobPrivate::newJob(url, CMD_CHOWN, packedArgs);
 }
 
-SimpleJob *KIO::setModificationTime( const KUrl& url, const QDateTime& mtime )
+SimpleJob *KIO::setModificationTime(const KUrl &url, const QDateTime &mtime)
 {
-    //kDebug(7007) << "setModificationTime " << url << " " << mtime;
+    // kDebug(7007) << "setModificationTime " << url << " " << mtime;
     KIO_ARGS << url << mtime;
     return SimpleJobPrivate::newJobNoUi(url, CMD_SETMODIFICATIONTIME, packedArgs);
 }
 
 SimpleJob *KIO::rename( const KUrl& src, const KUrl & dest, JobFlags flags )
 {
-    //kDebug(7007) << "rename " << src << " " << dest;
+    // kDebug(7007) << "rename " << src << " " << dest;
     KIO_ARGS << src << dest << (qint8) (flags & Overwrite);
     return SimpleJobPrivate::newJob(src, CMD_RENAME, packedArgs);
 }
 
-SimpleJob *KIO::symlink( const QString& target, const KUrl & dest, JobFlags flags )
+SimpleJob *KIO::symlink(const QString &target, const KUrl &dest, JobFlags flags)
 {
-    //kDebug(7007) << "symlink target=" << target << " " << dest;
+    // kDebug(7007) << "symlink target=" << target << " " << dest;
     KIO_ARGS << target << dest << (qint8) (flags & Overwrite);
     return SimpleJobPrivate::newJob(dest, CMD_SYMLINK, packedArgs, flags);
 }
 
-SimpleJob *KIO::special(const KUrl& url, const QByteArray & data, JobFlags flags)
+SimpleJob *KIO::special(const KUrl &url, const QByteArray &data, JobFlags flags)
 {
-    //kDebug(7007) << "special " << url;
+    // kDebug(7007) << "special " << url;
     return SimpleJobPrivate::newJob(url, CMD_SPECIAL, data, flags);
 }
 
@@ -640,16 +660,17 @@ SimpleJob *KIO::special(const KUrl& url, const QByteArray & data, JobFlags flags
 class KIO::StatJobPrivate: public SimpleJobPrivate
 {
 public:
-    inline StatJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
+    inline StatJobPrivate(const KUrl &url, int command, const QByteArray &packedArgs)
         : SimpleJobPrivate(url, command, packedArgs), m_bSource(true), m_details(2)
-        {}
+    {
+    }
 
     UDSEntry m_statResult;
     KUrl m_redirectionURL;
     bool m_bSource;
     short int m_details;
-    void slotStatEntry( const KIO::UDSEntry & entry );
-    void slotRedirection( const KUrl &url);
+    void slotStatEntry(const KIO::UDSEntry &entry);
+    void slotRedirection(const KUrl &url);
 
     /**
      * @internal
@@ -657,12 +678,11 @@ public:
      * work on this job.
      * @param slave the slave that starts working on this job
      */
-    virtual void start( SlaveInterface *slave );
+    virtual void start(SlaveInterface *slave);
 
     Q_DECLARE_PUBLIC(StatJob)
 
-    static inline StatJob *newJob(const KUrl& url, int command, const QByteArray &packedArgs,
-        JobFlags flags )
+    static inline StatJob *newJob(const KUrl &url, int command, const QByteArray &packedArgs, JobFlags flags)
     {
         StatJob *job = new StatJob(*new StatJobPrivate(url, command, packedArgs));
         job->setUiDelegate(new JobUiDelegate);
@@ -684,7 +704,7 @@ StatJob::~StatJob()
 }
 
 
-void StatJob::setSide( StatSide side )
+void StatJob::setSide(StatSide side)
 {
     d_func()->m_bSource = side == SourceSide;
 }
@@ -694,7 +714,7 @@ void StatJob::setDetails( short int details )
     d_func()->m_details = details;
 }
 
-const UDSEntry & StatJob::statResult() const
+const UDSEntry& StatJob::statResult() const
 {
     return d_func()->m_statResult;
 }
@@ -703,9 +723,10 @@ KUrl StatJob::mostLocalUrl() const
 {
     if (!url().isLocalFile()) {
         const UDSEntry& udsEntry = d_func()->m_statResult;
-        const QString path = udsEntry.stringValue( KIO::UDSEntry::UDS_LOCAL_PATH );
-        if (!path.isEmpty())
+        const QString path = udsEntry.stringValue(KIO::UDSEntry::UDS_LOCAL_PATH);
+        if (!path.isEmpty()) {
             return KUrl(path);
+        }
     }
     return url();
 }
@@ -713,25 +734,29 @@ KUrl StatJob::mostLocalUrl() const
 void StatJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(StatJob);
-    m_outgoingMetaData.insert( "statSide", m_bSource ? "source" : "dest" );
-    m_outgoingMetaData.insert( "details", QString::number(m_details) );
+    m_outgoingMetaData.insert("statSide", m_bSource ? "source" : "dest");
+    m_outgoingMetaData.insert("details", QString::number(m_details));
 
-    q->connect( slave, SIGNAL(statEntry(KIO::UDSEntry)),
-             SLOT(slotStatEntry(KIO::UDSEntry)) );
-    q->connect( slave, SIGNAL(redirection(KUrl)),
-             SLOT(slotRedirection(KUrl)) );
+    q->connect(
+        slave, SIGNAL(statEntry(KIO::UDSEntry)),
+        SLOT(slotStatEntry(KIO::UDSEntry))
+    );
+    q->connect(
+        slave, SIGNAL(redirection(KUrl)),
+        SLOT(slotRedirection(KUrl))
+    );
 
     SimpleJobPrivate::start(slave);
 }
 
-void StatJobPrivate::slotStatEntry( const KIO::UDSEntry & entry )
+void StatJobPrivate::slotStatEntry(const KIO::UDSEntry &entry)
 {
-    //kDebug(7007);
+    // kDebug(7007);
     m_statResult = entry;
 }
 
 // Slave got a redirection request
-void StatJobPrivate::slotRedirection( const KUrl &url)
+void StatJobPrivate::slotRedirection(const KUrl &url)
 {
      Q_Q(StatJob);
      kDebug(7007) << m_url << "->" << url;
@@ -744,13 +769,11 @@ void StatJob::slotFinished()
 {
     Q_D(StatJob);
 
-    if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() )
-    {
-        //kDebug(7007) << "StatJob: Redirection to " << m_redirectionURL;
-        if ( d->m_redirectionHandlingEnabled )
-        {
+    if (!d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid()) {
+        // kDebug(7007) << "StatJob: Redirection to " << m_redirectionURL;
+        if (d->m_redirectionHandlingEnabled) {
             d->m_packedArgs.truncate(0);
-            QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
+            QDataStream stream(&d->m_packedArgs, QIODevice::WriteOnly);
             stream << d->m_redirectionURL;
 
             d->restartAfterRedirection(&d->m_redirectionURL);
@@ -762,15 +785,15 @@ void StatJob::slotFinished()
     SimpleJob::slotFinished();
 }
 
-StatJob *KIO::stat(const KUrl& url, JobFlags flags)
+StatJob* KIO::stat(const KUrl &url, JobFlags flags)
 {
     // Assume sideIsSource. Gets are more common than puts.
-    return stat( url, StatJob::SourceSide, 2, flags );
+    return stat(url, StatJob::SourceSide, 2, flags);
 }
 
-StatJob *KIO::mostLocalUrl(const KUrl& url, JobFlags flags)
+StatJob *KIO::mostLocalUrl(const KUrl &url, JobFlags flags)
 {
-    StatJob* job = stat( url, StatJob::SourceSide, 2, flags );
+    StatJob* job = stat(url, StatJob::SourceSide, 2, flags);
     if (url.isLocalFile()) {
         QTimer::singleShot(0, job, SLOT(slotFinished()));
         Scheduler::cancelJob(job); // deletes the slave if not 0
@@ -779,13 +802,13 @@ StatJob *KIO::mostLocalUrl(const KUrl& url, JobFlags flags)
 }
 
 
-StatJob *KIO::stat(const KUrl& url, KIO::StatJob::StatSide side, short int details, JobFlags flags )
+StatJob* KIO::stat(const KUrl &url, KIO::StatJob::StatSide side, short int details, JobFlags flags)
 {
     //kDebug(7007) << "stat" << url;
     KIO_ARGS << url;
-    StatJob * job = StatJobPrivate::newJob(url, CMD_STAT, packedArgs, flags);
-    job->setSide( side );
-    job->setDetails( details );
+    StatJob* job = StatJobPrivate::newJob(url, CMD_STAT, packedArgs, flags);
+    job->setSide(side);
+    job->setDetails(details);
     return job;
 }
 
@@ -805,7 +828,7 @@ TransferJob::~TransferJob()
 }
 
 // Slave sends data
-void TransferJob::slotData( const QByteArray &_data)
+void TransferJob::slotData(const QByteArray &_data)
 {
     Q_D(TransferJob);
     if (d->m_command == CMD_GET && !d->m_isMimetypeEmitted) {
@@ -834,14 +857,11 @@ void TransferJob::slotRedirection( const KUrl &url)
     // Some websites keep redirecting to themselves where each redirection
     // acts as the stage in a state-machine. We define "endless redirections"
     // as 5 redirections to the same URL.
-    if (d->m_redirectionList.count(url) > 5)
-    {
+    if (d->m_redirectionList.count(url) > 5) {
        kDebug(7007) << "CYCLIC REDIRECTION!";
        setError( ERR_CYCLIC_LINK );
        setErrorText( d->m_url.pathOrUrl() );
-    }
-    else
-    {
+    } else {
        d->m_redirectionURL = url; // We'll remember that when the job finishes
        d->m_redirectionList.append(url);
        // Tell the user that we haven't finished yet
@@ -855,8 +875,7 @@ void TransferJob::slotFinished()
 
     kDebug(7007) << d->m_url;
     if (!d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid()) {
-
-        //kDebug(7007) << "Redirection to" << m_redirectionURL;
+        // kDebug(7007) << "Redirection to" << m_redirectionURL;
         if (d->m_redirectionHandlingEnabled) {
             // Honour the redirection
             // We take the approach of "redirecting this same job"
@@ -868,16 +887,17 @@ void TransferJob::slotFinished()
                 d->m_outgoingMetaData.remove(QLatin1String("content-type"));
             }
             d->m_incomingMetaData.clear();
-            if (queryMetaData("cache") != "reload")
+            if (queryMetaData("cache") != "reload") {
                 addMetaData("cache","refresh");
+            }
             d->m_internalSuspended = false;
             // The very tricky part is the packed arguments business
-            switch( d->m_command ) {
+            switch(d->m_command) {
                 case CMD_GET:
                 case CMD_STAT:
                 case CMD_DEL: {
                     d->m_packedArgs.truncate(0);
-                    QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
+                    QDataStream stream(&d->m_packedArgs, QIODevice::WriteOnly);
                     stream << d->m_redirectionURL;
                     break;
                 }
@@ -885,10 +905,10 @@ void TransferJob::slotFinished()
                     int permissions;
                     qint8 iOverwrite, iResume;
                     KUrl dummyUrl;
-                    QDataStream istream( d->m_packedArgs );
+                    QDataStream istream(d->m_packedArgs);
                     istream >> dummyUrl >> iOverwrite >> iResume >> permissions;
                     d->m_packedArgs.truncate(0);
-                    QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
+                    QDataStream stream(&d->m_packedArgs, QIODevice::WriteOnly);
                     stream << d->m_redirectionURL << iOverwrite << iResume << permissions;
                     break;
                 }
@@ -916,24 +936,24 @@ void TransferJob::slotDataReq()
 
     static const int max_size = 14 * 1024 * 1024;
     if (dataForSlave.size() > max_size) {
-       kWarning(7007) << "send " << dataForSlave.size() / 1024 / 1024 << "MB of data in TransferJob::dataReq. This needs to be splitted, which requires a copy.";
+        kWarning(7007) << "send " << dataForSlave.size() / 1024 / 1024 << "MB of data in TransferJob::dataReq. This needs to be splitted, which requires a copy.";
     }
 
-    d->m_slave->send( MSG_DATA, dataForSlave );
-    if (d->m_extraFlags & JobPrivate::EF_TransferJobDataSent) // put job -> emit progress
-    {
-       KIO::filesize_t size = processedAmount(KJob::Bytes)+dataForSlave.size();
-       setProcessedAmount(KJob::Bytes, size);
+    d->m_slave->send(MSG_DATA, dataForSlave);
+    if (d->m_extraFlags & JobPrivate::EF_TransferJobDataSent) {
+        // put job -> emit progress 
+        KIO::filesize_t size = processedAmount(KJob::Bytes)+dataForSlave.size();
+        setProcessedAmount(KJob::Bytes, size);
     }
 
     if (d->m_subJob) {
-       // Bitburger protocol in action
-       d->internalSuspend(); // Wait for more data from subJob.
-       d->m_subJob->d_func()->internalResume(); // Ask for more!
+        // Bitburger protocol in action
+        d->internalSuspend(); // Wait for more data from subJob.
+        d->m_subJob->d_func()->internalResume(); // Ask for more!
     }
 }
 
-void TransferJob::slotMimetype( const QString& type )
+void TransferJob::slotMimetype(const QString &type)
 {
     Q_D(TransferJob);
     d->m_mimetype = type;
@@ -942,31 +962,35 @@ void TransferJob::slotMimetype( const QString& type )
                        << d->m_url;
     }
     d->m_isMimetypeEmitted = true;
-    emit mimetype( this, type );
+    emit mimetype(this, type);
 }
 
 
 void TransferJobPrivate::internalSuspend()
 {
     m_internalSuspended = true;
-    if (m_slave)
-       m_slave->suspend();
+    if (m_slave) {
+        m_slave->suspend();
+    }
 }
 
 void TransferJobPrivate::internalResume()
 {
     m_internalSuspended = false;
-    if ( m_slave && !suspended )
+    if (m_slave && !suspended) {
         m_slave->resume();
+    }
 }
 
 bool TransferJob::doResume()
 {
     Q_D(TransferJob);
-    if ( !SimpleJob::doResume() )
+    if (!SimpleJob::doResume()) {
         return false;
-    if ( d->m_internalSuspended )
+    }
+    if (d->m_internalSuspended) {
         d->internalSuspend();
+    }
     return true;
 }
 
@@ -975,83 +999,94 @@ void TransferJobPrivate::start(SlaveInterface *slave)
     Q_Q(TransferJob);
     Q_ASSERT(slave);
     JobPrivate::emitTransferring(q, m_url);
-    q->connect( slave, SIGNAL(data(QByteArray)),
-                SLOT(slotData(QByteArray)) );
+    q->connect(
+        slave, SIGNAL(data(QByteArray)),
+        SLOT(slotData(QByteArray))
+    );
 
-    q->connect( slave, SIGNAL(dataReq()),
-                SLOT(slotDataReq()) );
+    q->connect(
+        slave, SIGNAL(dataReq()),
+        SLOT(slotDataReq())
+    );
 
-    q->connect( slave, SIGNAL(redirection(KUrl)),
-             SLOT(slotRedirection(KUrl)) );
+    q->connect(
+        slave, SIGNAL(redirection(KUrl)),
+        SLOT(slotRedirection(KUrl))
+    );
 
-    q->connect( slave, SIGNAL(mimeType(QString)),
-                SLOT(slotMimetype(QString)) );
+    q->connect(
+        slave, SIGNAL(mimeType(QString)),
+        SLOT(slotMimetype(QString))
+    );
 
-    q->connect( slave, SIGNAL(canResume(KIO::filesize_t)),
-                SLOT(slotCanResume(KIO::filesize_t)) );
+    q->connect(
+        slave, SIGNAL(canResume(KIO::filesize_t)),
+        SLOT(slotCanResume(KIO::filesize_t))
+    );
 
-    if (slave->suspended())
-    {
+    if (slave->suspended()) {
        m_mimetype = "unknown";
        // WABA: The slave was put on hold. Resume operation.
        slave->resume();
     }
 
     SimpleJobPrivate::start(slave);
-    if (m_internalSuspended)
-       slave->suspend();
+    if (m_internalSuspended) {
+        slave->suspend();
+    }
 }
 
-void TransferJobPrivate::slotCanResume( KIO::filesize_t offset )
+void TransferJobPrivate::slotCanResume(KIO::filesize_t offset)
 {
     Q_Q(TransferJob);
     emit q->canResume(q, offset);
 }
 
-void TransferJob::slotResult( KJob *job)
+void TransferJob::slotResult(KJob *job)
 {
     Q_D(TransferJob);
     // This can only be our subjob.
     Q_ASSERT(job == d->m_subJob);
 
-   SimpleJob::slotResult( job );
+   SimpleJob::slotResult(job);
 
-   if (!error() && job == d->m_subJob)
-   {
+   if (!error() && job == d->m_subJob) {
       d->m_subJob = 0; // No action required
       d->internalResume(); // Make sure we get the remaining data.
    }
 }
 
-void TransferJob::setModificationTime( const QDateTime& mtime )
+void TransferJob::setModificationTime(const QDateTime &mtime)
 {
-    addMetaData( "modified", mtime.toString( Qt::ISODate ) );
+    addMetaData("modified", mtime.toString(Qt::ISODate));
 }
 
-TransferJob *KIO::get( const KUrl& url, LoadType reload, JobFlags flags )
+TransferJob* KIO::get(const KUrl &url, LoadType reload, JobFlags flags)
 {
     // Send decoded path and encoded query
     KIO_ARGS << url;
-    TransferJob * job = TransferJobPrivate::newJob(url, CMD_GET, packedArgs, flags);
-    if (reload == Reload)
-       job->addMetaData("cache", "reload");
+    TransferJob* job = TransferJobPrivate::newJob(url, CMD_GET, packedArgs, flags);
+    if (reload == Reload) {
+        job->addMetaData("cache", "reload");
+    }
     return job;
 }
 
 class KIO::StoredTransferJobPrivate: public TransferJobPrivate
 {
 public:
-    StoredTransferJobPrivate(const KUrl& url, int command,
+    StoredTransferJobPrivate(const KUrl &url, int command,
                              const QByteArray &packedArgs)
         : TransferJobPrivate(url, command, packedArgs),
-          m_uploadOffset( 0 )
-        {}
+          m_uploadOffset(0)
+    {
+    }
 
     QByteArray m_data;
     int m_uploadOffset;
 
-    void slotStoredData( KIO::Job *job, const QByteArray &data );
-    void slotStoredDataReq( KIO::Job *job, QByteArray &data );
+    void slotStoredData(KIO::Job *job, const QByteArray &data);
+    void slotStoredDataReq(KIO::Job *job, QByteArray &data);
 
     Q_DECLARE_PUBLIC(StoredTransferJob)
 
@@ -1059,18 +1094,20 @@ public:
                                             const QByteArray &packedArgs,
                                             JobFlags flags)
     {
-        StoredTransferJob *job = new StoredTransferJob(
-            *new StoredTransferJobPrivate(url, command, packedArgs));
+        StoredTransferJob* job = new StoredTransferJob(
+            *new StoredTransferJobPrivate(url, command, packedArgs)
+        );
         job->setUiDelegate(new JobUiDelegate);
-        if (!(flags & HideProgressInfo))
+        if (!(flags & HideProgressInfo)) {
             KIO::getJobTracker()->registerJob(job);
+        }
         return job;
     }
 };
 
-TransferJob *KIO::put( const KUrl& url, int permissions, JobFlags flags )
+TransferJob *KIO::put(const KUrl& url, int permissions, JobFlags flags)
 {
-    KIO_ARGS << url << qint8( (flags & Overwrite) ? 1 : 0 ) << qint8( (flags & Resume) ? 1 : 0 ) << permissions;
+    KIO_ARGS << url << qint8((flags & Overwrite) ? 1 : 0 ) << qint8((flags & Resume) ? 1 : 0 ) << permissions;
     return TransferJobPrivate::newJob(url, CMD_PUT, packedArgs, flags);
 }
 
@@ -1079,23 +1116,27 @@ TransferJob *KIO::put( const KUrl& url, int permissions, JobFlags flags )
 StoredTransferJob::StoredTransferJob(StoredTransferJobPrivate &dd)
     : TransferJob(dd)
 {
-    connect( this, SIGNAL(data(KIO::Job*,QByteArray)),
-             SLOT(slotStoredData(KIO::Job*,QByteArray)) );
-    connect( this, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
-             SLOT(slotStoredDataReq(KIO::Job*,QByteArray&)) );
+    connect(
+        this, SIGNAL(data(KIO::Job*,QByteArray)),
+        SLOT(slotStoredData(KIO::Job*,QByteArray))
+    );
+    connect(
+        this, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
+        SLOT(slotStoredDataReq(KIO::Job*,QByteArray&))
+    );
 }
 
 StoredTransferJob::~StoredTransferJob()
 {
 }
 
-void StoredTransferJob::setData( const QByteArray& arr )
+void StoredTransferJob::setData(const QByteArray &arr)
 {
     Q_D(StoredTransferJob);
-    Q_ASSERT( d->m_data.isNull() ); // check that we're only called once
-    Q_ASSERT( d->m_uploadOffset == 0 ); // no upload started yet
+    Q_ASSERT(d->m_data.isNull()); // check that we're only called once
+    Q_ASSERT(d->m_uploadOffset == 0); // no upload started yet
     d->m_data = arr;
-    setTotalSize( d->m_data.size() );
+    setTotalSize(d->m_data.size());
 }
 
 QByteArray StoredTransferJob::data() const
@@ -1103,17 +1144,18 @@ QByteArray StoredTransferJob::data() const
     return d_func()->m_data;
 }
 
-void StoredTransferJobPrivate::slotStoredData( KIO::Job *, const QByteArray &data )
+void StoredTransferJobPrivate::slotStoredData(KIO::Job *, const QByteArray &data)
 {
-  // check for end-of-data marker:
-  if ( data.size() == 0 )
-    return;
-  unsigned int oldSize = m_data.size();
-  m_data.resize( oldSize + data.size() );
-  memcpy( m_data.data() + oldSize, data.data(), data.size() );
+    // check for end-of-data marker:
+    if (data.size() == 0) {
+        return;
+    }
+    unsigned int oldSize = m_data.size();
+    m_data.resize(oldSize + data.size());
+    ::memcpy(m_data.data() + oldSize, data.data(), data.size());
 }
 
-void StoredTransferJobPrivate::slotStoredDataReq( KIO::Job *, QByteArray &data )
+void StoredTransferJobPrivate::slotStoredDataReq(KIO::Job *, QByteArray &data)
 {
   // Inspired from kmail's KMKernel::byteArrayToRemoteFile
   // send the data in 64 KB chunks
