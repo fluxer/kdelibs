@@ -22,9 +22,11 @@
 #ifndef PLASMA_APPLET_H
 #define PLASMA_APPLET_H
 
-#include <QtGui/QGraphicsItem>
-#include <QtGui/QGraphicsWidget>
-#include <QtGui/QIcon>
+#include <QGraphicsItem>
+#include <QGraphicsWidget>
+#include <QIcon>
+#include <QWidget>
+#include <QGraphicsView>
 
 #include <kconfiggroup.h>
 #include <kplugininfo.h>
@@ -37,10 +39,7 @@
 #include <plasma/animator.h>
 #include <plasma/framesvg.h>
 
-#include <QWidget>
-
 class KConfigDialog;
-#include <QGraphicsView>
 class KActionCollection;
 
 namespace Plasma
