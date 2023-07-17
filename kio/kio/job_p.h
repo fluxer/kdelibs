@@ -140,8 +140,6 @@ namespace KIO {
         int m_schedSerial;
         bool m_redirectionHandlingEnabled;
 
-        void simpleJobInit();
-
         /**
          * Forward signal from the slave.
          * @param data_size the processed size in bytes

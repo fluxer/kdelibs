@@ -252,23 +252,16 @@ MetaData Job::outgoingMetaData() const
 SimpleJob::SimpleJob(SimpleJobPrivate &dd)
   : Job(dd)
 {
-    d_func()->simpleJobInit();
-}
-
-void SimpleJobPrivate::simpleJobInit()
-{
-    Q_Q(SimpleJob);
-    if (!m_url.isValid())
-    {
-        q->setError( ERR_MALFORMED_URL );
-        q->setErrorText( m_url.url() );
-        QTimer::singleShot(0, q, SLOT(slotFinished()) );
+    Q_D(SimpleJob);
+    if (!d->m_url.isValid()) {
+        setError(ERR_MALFORMED_URL);
+        setErrorText(d->m_url.url());
+        QTimer::singleShot(0, this, SLOT(slotFinished()));
         return;
     }
 
-    Scheduler::doJob(q);
+    Scheduler::doJob(this);
 }
-
 
 bool SimpleJob::doKill()
 {
