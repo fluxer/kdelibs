@@ -921,33 +921,6 @@ void TransferJob::slotFinished()
     SimpleJob::slotFinished();
 }
 
-void TransferJob::setAsyncDataEnabled(bool enabled)
-{
-    Q_D(TransferJob);
-    if (enabled)
-        d->m_extraFlags |= JobPrivate::EF_TransferJobAsync;
-    else
-        d->m_extraFlags &= ~JobPrivate::EF_TransferJobAsync;
-}
-
-void TransferJob::sendAsyncData(const QByteArray &dataForSlave)
-{
-    Q_D(TransferJob);
-    if (d->m_extraFlags & JobPrivate::EF_TransferJobNeedData)
-    {
-       d->m_slave->send( MSG_DATA, dataForSlave );
-       if (d->m_extraFlags & JobPrivate::EF_TransferJobDataSent) // put job -> emit progress
-       {
-           KIO::filesize_t size = processedAmount(KJob::Bytes)+dataForSlave.size();
-           setProcessedAmount(KJob::Bytes, size);
-       }
-    }
-
-    d->m_extraFlags &= ~JobPrivate::EF_TransferJobNeedData;
-}
-
-
-
 QString TransferJob::mimetype() const
 {
     return d_func()->m_mimetype;
@@ -959,20 +932,19 @@ void TransferJob::slotDataReq()
     Q_D(TransferJob);
     QByteArray dataForSlave;
 
-    d->m_extraFlags |= JobPrivate::EF_TransferJobNeedData;
-
     emit dataReq(this, dataForSlave);
-
-    if (d->m_extraFlags & JobPrivate::EF_TransferJobAsync) {
-      return;
-    }
 
     static const int max_size = 14 * 1024 * 1024;
     if (dataForSlave.size() > max_size) {
        kWarning(7007) << "send " << dataForSlave.size() / 1024 / 1024 << "MB of data in TransferJob::dataReq. This needs to be splitted, which requires a copy.";
     }
 
-    sendAsyncData(dataForSlave);
+    d->m_slave->send( MSG_DATA, dataForSlave );
+    if (d->m_extraFlags & JobPrivate::EF_TransferJobDataSent) // put job -> emit progress
+    {
+       KIO::filesize_t size = processedAmount(KJob::Bytes)+dataForSlave.size();
+       setProcessedAmount(KJob::Bytes, size);
+    }
 
     if (d->m_subJob) {
        // Bitburger protocol in action

@@ -74,10 +74,8 @@ namespace KIO {
          * private d pointer.
          */
         enum {
-            EF_TransferJobAsync    = (1 << 0),
-            EF_TransferJobNeedData = (1 << 1),
-            EF_TransferJobDataSent = (1 << 2),
-            EF_KillCalled          = (1 << 3)
+            EF_TransferJobDataSent = (1 << 0),
+            EF_KillCalled          = (1 << 1)
         };
 
         // Maybe we could use the QObject parent/child mechanism instead

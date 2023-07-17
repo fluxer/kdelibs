@@ -494,21 +494,6 @@ namespace KIO {
         void setModificationTime( const QDateTime& mtime );
 
         /**
-         * Enable the async data mode.
-         * When async data is enabled, data should be provided to the job by
-         * calling sendAsyncData() instead of returning data in the
-         * dataReq() signal.
-         */
-        void setAsyncDataEnabled(bool enabled);
-
-        /**
-         * Provide data to the job when async data is enabled.
-         * Should be called exactly once after receiving a dataReq signal
-         * Sending an empty block indicates end of data.
-         */
-        void sendAsyncData(const QByteArray &data);
-
-        /**
          * Call this in the slot connected to result,
          * and only after making sure no error happened.
          * @return the mimetype of the URL
