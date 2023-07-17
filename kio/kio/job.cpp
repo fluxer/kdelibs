@@ -1150,9 +1150,7 @@ void StoredTransferJobPrivate::slotStoredData(KIO::Job *, const QByteArray &data
     if (data.size() == 0) {
         return;
     }
-    unsigned int oldSize = m_data.size();
-    m_data.resize(oldSize + data.size());
-    ::memcpy(m_data.data() + oldSize, data.data(), data.size());
+    m_data.append(data.constData(), data.size());
 }
 
 void StoredTransferJobPrivate::slotStoredDataReq(KIO::Job *, QByteArray &data)
