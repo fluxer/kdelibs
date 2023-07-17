@@ -29,8 +29,6 @@
 #include "jobuidelegate.h"
 #include "kjobtrackerinterface.h"
 
-#include <QtCore/qpointer.h>
-
 #define KIO_ARGS QByteArray packedArgs; QDataStream stream( &packedArgs, QIODevice::WriteOnly ); stream
 
 namespace KIO {
@@ -262,29 +260,18 @@ namespace KIO {
     class TransferJobPrivate: public SimpleJobPrivate
     {
     public:
-        inline TransferJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs,
-                                  const QByteArray &_staticData)
+        inline TransferJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
             : SimpleJobPrivate(url, command, packedArgs),
               m_internalSuspended(false),
-              staticData(_staticData), m_isMimetypeEmitted(false), m_subJob(0)
-            { }
-
-        inline TransferJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs,
-                                  QIODevice* ioDevice)
-            : SimpleJobPrivate(url, command, packedArgs),
-              m_internalSuspended(false),
-              m_isMimetypeEmitted(false), m_subJob(0),
-              m_outgoingDataSource(ioDevice)
+              m_isMimetypeEmitted(false), m_subJob(0)
             { }
 
         bool m_internalSuspended;
-        QByteArray staticData;
         KUrl m_redirectionURL;
         KUrl::List m_redirectionList;
         QString m_mimetype;
         bool m_isMimetypeEmitted;
         TransferJob *m_subJob;
-        QPointer<QIODevice> m_outgoingDataSource;
 
         /**
          * Flow control. Suspend data processing from the slave.
@@ -301,35 +288,15 @@ namespace KIO {
          * @param slave the slave that works on the job
          */
         virtual void start( KIO::SlaveInterface *slave );
-        /**
-         * @internal
-         * Called when the ioslave needs the data to send the server. This slot
-         * is invoked when the data is to be sent is read from a QIODevice rather
-         * instead of a QByteArray buffer.
-         */
-        virtual void slotDataReqFromDevice();
 
         void slotCanResume( KIO::filesize_t offset );
 
         Q_DECLARE_PUBLIC(TransferJob)
         static inline TransferJob *newJob(const KUrl& url, int command,
                                           const QByteArray &packedArgs,
-                                          const QByteArray &_staticData,
                                           JobFlags flags)
         {
-            TransferJob *job = new TransferJob(*new TransferJobPrivate(url, command, packedArgs, _staticData));
-            job->setUiDelegate(new JobUiDelegate);
-            if (!(flags & HideProgressInfo))
-                KIO::getJobTracker()->registerJob(job);
-            return job;
-        }
-
-        static inline TransferJob *newJob(const KUrl& url, int command,
-                                          const QByteArray &packedArgs,
-                                          QIODevice* ioDevice,
-                                          JobFlags flags)
-        {
-            TransferJob *job = new TransferJob(*new TransferJobPrivate(url, command, packedArgs, ioDevice));
+            TransferJob *job = new TransferJob(*new TransferJobPrivate(url, command, packedArgs));
             job->setUiDelegate(new JobUiDelegate);
             if (!(flags & HideProgressInfo))
                 KIO::getJobTracker()->registerJob(job);

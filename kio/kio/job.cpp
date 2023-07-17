@@ -887,7 +887,6 @@ void TransferJob::slotFinished()
                 d->m_command = CMD_GET;
                 d->m_outgoingMetaData.remove(QLatin1String("content-type"));
             }
-            d->staticData.truncate(0);
             d->m_incomingMetaData.clear();
             if (queryMetaData("cache") != "reload")
                 addMetaData("cache","refresh");
@@ -911,19 +910,6 @@ void TransferJob::slotFinished()
                     d->m_packedArgs.truncate(0);
                     QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
                     stream << d->m_redirectionURL << iOverwrite << iResume << permissions;
-                    break;
-                }
-                case CMD_SPECIAL: {
-                    int specialcmd;
-                    QDataStream istream( d->m_packedArgs );
-                    istream >> specialcmd;
-                    if (specialcmd == 1) { // HTTP POST
-                      d->m_packedArgs.truncate(0);
-                      QDataStream stream(&d->m_packedArgs, QIODevice::WriteOnly);
-                      Q_ASSERT(d->m_outgoingDataSource);
-                      d->m_outgoingDataSource->reset();
-                      stream << specialcmd << d->m_redirectionURL << d->m_outgoingDataSource->size();
-                    }
                     break;
                 }
             }
@@ -975,31 +961,20 @@ void TransferJob::slotDataReq()
 
     d->m_extraFlags |= JobPrivate::EF_TransferJobNeedData;
 
-    if (!d->staticData.isEmpty())
-    {
-       dataForSlave = d->staticData;
-       d->staticData.clear();
-    }
-    else
-    {
-       emit dataReq( this, dataForSlave);
+    emit dataReq(this, dataForSlave);
 
-       if (d->m_extraFlags & JobPrivate::EF_TransferJobAsync)
-          return;
+    if (d->m_extraFlags & JobPrivate::EF_TransferJobAsync) {
+      return;
     }
 
     static const int max_size = 14 * 1024 * 1024;
-    if (dataForSlave.size() > max_size)
-    {
-       kDebug(7007) << "send " << dataForSlave.size() / 1024 / 1024 << "MB of data in TransferJob::dataReq. This needs to be splitted, which requires a copy. Fix the application.\n";
-       d->staticData = QByteArray(dataForSlave.data() + max_size ,  dataForSlave.size() - max_size);
-       dataForSlave.truncate(max_size);
+    if (dataForSlave.size() > max_size) {
+       kWarning(7007) << "send " << dataForSlave.size() / 1024 / 1024 << "MB of data in TransferJob::dataReq. This needs to be splitted, which requires a copy.";
     }
 
     sendAsyncData(dataForSlave);
 
-    if (d->m_subJob)
-    {
+    if (d->m_subJob) {
        // Bitburger protocol in action
        d->internalSuspend(); // Wait for more data from subJob.
        d->m_subJob->d_func()->internalResume(); // Ask for more!
@@ -1049,23 +1024,19 @@ void TransferJobPrivate::start(SlaveInterface *slave)
     Q_ASSERT(slave);
     JobPrivate::emitTransferring(q, m_url);
     q->connect( slave, SIGNAL(data(QByteArray)),
-             SLOT(slotData(QByteArray)) );
+                SLOT(slotData(QByteArray)) );
 
-    if (m_outgoingDataSource)
-        q->connect( slave, SIGNAL(dataReq()),
-                SLOT(slotDataReqFromDevice()) );
-    else
-        q->connect( slave, SIGNAL(dataReq()),
+    q->connect( slave, SIGNAL(dataReq()),
                 SLOT(slotDataReq()) );
 
     q->connect( slave, SIGNAL(redirection(KUrl)),
              SLOT(slotRedirection(KUrl)) );
 
     q->connect( slave, SIGNAL(mimeType(QString)),
-             SLOT(slotMimetype(QString)) );
+                SLOT(slotMimetype(QString)) );
 
     q->connect( slave, SIGNAL(canResume(KIO::filesize_t)),
-             SLOT(slotCanResume(KIO::filesize_t)) );
+                SLOT(slotCanResume(KIO::filesize_t)) );
 
     if (slave->suspended())
     {
@@ -1083,34 +1054,6 @@ void TransferJobPrivate::slotCanResume( KIO::filesize_t offset )
 {
     Q_Q(TransferJob);
     emit q->canResume(q, offset);
-}
-
-void TransferJobPrivate::slotDataReqFromDevice()
-{
-    Q_Q(TransferJob);
-
-    QByteArray dataForSlave;
-
-    m_extraFlags |= JobPrivate::EF_TransferJobNeedData;
-
-    if (m_outgoingDataSource)
-        dataForSlave = m_outgoingDataSource->read(MAX_READ_BUF_SIZE);
-
-    if (dataForSlave.isEmpty())
-    {
-        emit q->dataReq(q, dataForSlave);
-        if (m_extraFlags & JobPrivate::EF_TransferJobAsync)
-            return;
-    }
-
-    q->sendAsyncData(dataForSlave);
-
-    if (m_subJob)
-    {
-       // Bitburger protocol in action
-       internalSuspend(); // Wait for more data from subJob.
-       m_subJob->d_func()->internalResume(); // Ask for more!
-    }
 }
 
 void TransferJob::slotResult( KJob *job)
@@ -1137,8 +1080,7 @@ TransferJob *KIO::get( const KUrl& url, LoadType reload, JobFlags flags )
 {
     // Send decoded path and encoded query
     KIO_ARGS << url;
-    TransferJob * job = TransferJobPrivate::newJob(url, CMD_GET, packedArgs,
-                                                   QByteArray(), flags);
+    TransferJob * job = TransferJobPrivate::newJob(url, CMD_GET, packedArgs, flags);
     if (reload == Reload)
        job->addMetaData("cache", "reload");
     return job;
@@ -1148,15 +1090,8 @@ class KIO::StoredTransferJobPrivate: public TransferJobPrivate
 {
 public:
     StoredTransferJobPrivate(const KUrl& url, int command,
-                             const QByteArray &packedArgs,
-                             const QByteArray &_staticData)
-        : TransferJobPrivate(url, command, packedArgs, _staticData),
-          m_uploadOffset( 0 )
-        {}
-    StoredTransferJobPrivate(const KUrl& url, int command,
-                             const QByteArray &packedArgs,
-                             QIODevice* ioDevice)
-        : TransferJobPrivate(url, command, packedArgs, ioDevice),
+                             const QByteArray &packedArgs)
+        : TransferJobPrivate(url, command, packedArgs),
           m_uploadOffset( 0 )
         {}
 
@@ -1170,22 +1105,10 @@ public:
 
     static inline StoredTransferJob *newJob(const KUrl &url, int command,
                                             const QByteArray &packedArgs,
-                                            const QByteArray &staticData, JobFlags flags)
+                                            JobFlags flags)
     {
         StoredTransferJob *job = new StoredTransferJob(
-            *new StoredTransferJobPrivate(url, command, packedArgs, staticData));
-        job->setUiDelegate(new JobUiDelegate);
-        if (!(flags & HideProgressInfo))
-            KIO::getJobTracker()->registerJob(job);
-        return job;
-    }
-
-    static inline StoredTransferJob *newJob(const KUrl &url, int command,
-                                            const QByteArray &packedArgs,
-                                            QIODevice* ioDevice, JobFlags flags)
-    {
-        StoredTransferJob *job = new StoredTransferJob(
-            *new StoredTransferJobPrivate(url, command, packedArgs, ioDevice));
+            *new StoredTransferJobPrivate(url, command, packedArgs));
         job->setUiDelegate(new JobUiDelegate);
         if (!(flags & HideProgressInfo))
             KIO::getJobTracker()->registerJob(job);
@@ -1196,7 +1119,7 @@ public:
 TransferJob *KIO::put( const KUrl& url, int permissions, JobFlags flags )
 {
     KIO_ARGS << url << qint8( (flags & Overwrite) ? 1 : 0 ) << qint8( (flags & Resume) ? 1 : 0 ) << permissions;
-    return TransferJobPrivate::newJob(url, CMD_PUT, packedArgs, QByteArray(), flags);
+    return TransferJobPrivate::newJob(url, CMD_PUT, packedArgs, flags);
 }
 
 //////////
@@ -1263,7 +1186,7 @@ StoredTransferJob *KIO::storedGet( const KUrl& url, LoadType reload, JobFlags fl
 {
     // Send decoded path and encoded query
     KIO_ARGS << url;
-    StoredTransferJob * job = StoredTransferJobPrivate::newJob(url, CMD_GET, packedArgs, QByteArray(), flags);
+    StoredTransferJob * job = StoredTransferJobPrivate::newJob(url, CMD_GET, packedArgs, flags);
     if (reload == Reload)
        job->addMetaData("cache", "reload");
     return job;
@@ -1273,7 +1196,7 @@ StoredTransferJob *KIO::storedPut( const QByteArray& arr, const KUrl& url, int p
                                    JobFlags flags )
 {
     KIO_ARGS << url << qint8( (flags & Overwrite) ? 1 : 0 ) << qint8( (flags & Resume) ? 1 : 0 ) << permissions;
-    StoredTransferJob * job = StoredTransferJobPrivate::newJob(url, CMD_PUT, packedArgs, QByteArray(), flags );
+    StoredTransferJob * job = StoredTransferJobPrivate::newJob(url, CMD_PUT, packedArgs, flags );
     job->setData( arr );
     return job;
 }
@@ -1284,7 +1207,7 @@ class KIO::MimetypeJobPrivate: public KIO::TransferJobPrivate
 {
 public:
     MimetypeJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
-        : TransferJobPrivate(url, command, packedArgs, QByteArray())
+        : TransferJobPrivate(url, command, packedArgs)
         {}
 
     Q_DECLARE_PUBLIC(MimetypeJob)
@@ -1331,7 +1254,6 @@ void MimetypeJob::slotFinished( )
         //kDebug(7007) << "Redirection to " << m_redirectionURL;
         if (d->m_redirectionHandlingEnabled)
         {
-            d->staticData.truncate(0);
             d->m_internalSuspended = false;
             d->m_packedArgs.truncate(0);
             QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
@@ -2206,15 +2128,13 @@ const KUrl& ListJob::redirectionUrl() const
 
 class KIO::SpecialJobPrivate: public TransferJobPrivate
 {
-    SpecialJobPrivate(const KUrl& url, int command,
-                             const QByteArray &packedArgs,
-                             const QByteArray &_staticData)
-        : TransferJobPrivate(url, command, packedArgs, _staticData)
+    SpecialJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
+        : TransferJobPrivate(url, command, packedArgs)
     {}
 };
 
 SpecialJob::SpecialJob(const KUrl &url, const QByteArray &packedArgs)
-    : TransferJob(*new TransferJobPrivate(url, CMD_SPECIAL, packedArgs, QByteArray()))
+    : TransferJob(*new TransferJobPrivate(url, CMD_SPECIAL, packedArgs))
 {
 }
 
