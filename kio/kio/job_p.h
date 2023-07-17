@@ -96,8 +96,6 @@ namespace KIO {
         static void emitDeleting(KIO::Job*, const KUrl &url);
         static void emitStating(KIO::Job*, const KUrl &url);
         static void emitTransferring(KIO::Job*, const KUrl &url);
-        static void emitMounting(KIO::Job*, const QString &dev, const QString &point);
-        static void emitUnmounting(KIO::Job*, const QString &point);
 
         Q_DECLARE_PUBLIC(Job)
     };

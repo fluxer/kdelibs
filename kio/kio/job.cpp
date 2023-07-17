@@ -147,19 +147,6 @@ void JobPrivate::emitTransferring(KIO::Job *job, const KUrl &url)
                           qMakePair(i18nc("The source of a file operation", "Source"), url.pathOrUrl()));
 }
 
-void JobPrivate::emitMounting(KIO::Job * job, const QString &dev, const QString &point)
-{
-    emit job->description(job, i18nc("@title job","Mounting"),
-                          qMakePair(i18n("Device"), dev),
-                          qMakePair(i18n("Mountpoint"), point));
-}
-
-void JobPrivate::emitUnmounting(KIO::Job * job, const QString &point)
-{
-    emit job->description(job, i18nc("@title job","Unmounting"),
-                          qMakePair(i18n("Mountpoint"), point));
-}
-
 bool Job::doKill()
 {
   // kill all subjobs, without triggering their result slot
