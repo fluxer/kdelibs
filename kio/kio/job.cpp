@@ -1155,41 +1155,42 @@ void StoredTransferJobPrivate::slotStoredData(KIO::Job *, const QByteArray &data
 
 void StoredTransferJobPrivate::slotStoredDataReq(KIO::Job *, QByteArray &data)
 {
-  // Inspired from kmail's KMKernel::byteArrayToRemoteFile
-  // send the data in 64 KB chunks
-  const int MAX_CHUNK_SIZE = 64*1024;
-  int remainingBytes = m_data.size() - m_uploadOffset;
-  if( remainingBytes > MAX_CHUNK_SIZE ) {
-    // send MAX_CHUNK_SIZE bytes to the receiver (deep copy)
-    data = QByteArray( m_data.data() + m_uploadOffset, MAX_CHUNK_SIZE );
-    m_uploadOffset += MAX_CHUNK_SIZE;
-    //kDebug() << "Sending " << MAX_CHUNK_SIZE << " bytes ("
-    //                << remainingBytes - MAX_CHUNK_SIZE << " bytes remain)\n";
-  } else {
-    // send the remaining bytes to the receiver (deep copy)
-    data = QByteArray( m_data.data() + m_uploadOffset, remainingBytes );
-    m_data = QByteArray();
-    m_uploadOffset = 0;
-    //kDebug() << "Sending " << remainingBytes << " bytes\n";
-  }
+    // Inspired from kmail's KMKernel::byteArrayToRemoteFile
+    // send the data in 64 KB chunks
+    const int MAX_CHUNK_SIZE = (64 * 1024);
+    int remainingBytes = (m_data.size() - m_uploadOffset);
+    if (remainingBytes > MAX_CHUNK_SIZE) {
+        // send MAX_CHUNK_SIZE bytes to the receiver (deep copy)
+        data = QByteArray(m_data.data() + m_uploadOffset, MAX_CHUNK_SIZE);
+        m_uploadOffset += MAX_CHUNK_SIZE;
+        // kDebug() << "Sending " << MAX_CHUNK_SIZE << " bytes ("
+        //          << remainingBytes - MAX_CHUNK_SIZE << " bytes remain)\n";
+    } else {
+        // send the remaining bytes to the receiver (deep copy)
+        data = QByteArray(m_data.data() + m_uploadOffset, remainingBytes);
+        m_data = QByteArray();
+        m_uploadOffset = 0;
+        //kDebug() << "Sending " << remainingBytes << " bytes\n";
+    }
 }
 
-StoredTransferJob *KIO::storedGet( const KUrl& url, LoadType reload, JobFlags flags )
+StoredTransferJob *KIO::storedGet(const KUrl &url, LoadType reload, JobFlags flags)
 {
     // Send decoded path and encoded query
     KIO_ARGS << url;
     StoredTransferJob * job = StoredTransferJobPrivate::newJob(url, CMD_GET, packedArgs, flags);
-    if (reload == Reload)
-       job->addMetaData("cache", "reload");
+    if (reload == KIO::Reload) {
+        job->addMetaData("cache", "reload");
+    }
     return job;
 }
 
-StoredTransferJob *KIO::storedPut( const QByteArray& arr, const KUrl& url, int permissions,
-                                   JobFlags flags )
+StoredTransferJob *KIO::storedPut(const QByteArray &arr, const KUrl &url, int permissions,
+                                  JobFlags flags)
 {
-    KIO_ARGS << url << qint8( (flags & Overwrite) ? 1 : 0 ) << qint8( (flags & Resume) ? 1 : 0 ) << permissions;
-    StoredTransferJob * job = StoredTransferJobPrivate::newJob(url, CMD_PUT, packedArgs, flags );
-    job->setData( arr );
+    KIO_ARGS << url << qint8( (flags & Overwrite) ? 1 : 0 ) << qint8((flags & Resume) ? 1 : 0) << permissions;
+    StoredTransferJob* job = StoredTransferJobPrivate::newJob(url, CMD_PUT, packedArgs, flags);
+    job->setData(arr);
     return job;
 }
 
@@ -1198,13 +1199,14 @@ StoredTransferJob *KIO::storedPut( const QByteArray& arr, const KUrl& url, int p
 class KIO::MimetypeJobPrivate: public KIO::TransferJobPrivate
 {
 public:
-    MimetypeJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
+    MimetypeJobPrivate(const KUrl &url, int command, const QByteArray &packedArgs)
         : TransferJobPrivate(url, command, packedArgs)
-        {}
+    {
+    }
 
     Q_DECLARE_PUBLIC(MimetypeJob)
 
-    static inline MimetypeJob *newJob(const KUrl& url, int command, const QByteArray &packedArgs,
+    static inline MimetypeJob *newJob(const KUrl &url, int command, const QByteArray &packedArgs,
                                       JobFlags flags)
     {
         MimetypeJob *job = new MimetypeJob(*new MimetypeJobPrivate(url, command, packedArgs));
@@ -1226,29 +1228,26 @@ MimetypeJob::~MimetypeJob()
 {
 }
 
-void MimetypeJob::slotFinished( )
+void MimetypeJob::slotFinished()
 {
     Q_D(MimetypeJob);
-    //kDebug(7007);
-    if ( error() == KIO::ERR_IS_DIRECTORY )
-    {
+    // kDebug(7007);
+    if (error() == KIO::ERR_IS_DIRECTORY) {
         // It is in fact a directory. This happens when HTTP redirects to FTP.
         // Due to the "protocol doesn't support listing" code in KRun, we
         // assumed it was a file.
         kDebug(7007) << "It is in fact a directory!";
         d->m_mimetype = QString::fromLatin1("inode/directory");
-        emit TransferJob::mimetype( this, d->m_mimetype );
-        setError( 0 );
+        emit TransferJob::mimetype(this, d->m_mimetype);
+        setError(0);
     }
 
-    if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() && !error() )
-    {
+    if (!d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() && !error()) {
         //kDebug(7007) << "Redirection to " << m_redirectionURL;
-        if (d->m_redirectionHandlingEnabled)
-        {
+        if (d->m_redirectionHandlingEnabled) {
             d->m_internalSuspended = false;
             d->m_packedArgs.truncate(0);
-            QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );
+            QDataStream stream(&d->m_packedArgs, QIODevice::WriteOnly);
             stream << d->m_redirectionURL;
 
             d->restartAfterRedirection(&d->m_redirectionURL);
@@ -1260,7 +1259,7 @@ void MimetypeJob::slotFinished( )
     TransferJob::slotFinished();
 }
 
-MimetypeJob *KIO::mimetype(const KUrl& url, JobFlags flags)
+MimetypeJob *KIO::mimetype(const KUrl &url, JobFlags flags)
 {
     KIO_ARGS << url;
     return MimetypeJobPrivate::newJob(url, CMD_MIMETYPE, packedArgs, flags);
@@ -1271,9 +1270,10 @@ MimetypeJob *KIO::mimetype(const KUrl& url, JobFlags flags)
 class KIO::DirectCopyJobPrivate: public KIO::SimpleJobPrivate
 {
 public:
-    DirectCopyJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
+    DirectCopyJobPrivate(const KUrl &url, int command, const QByteArray &packedArgs)
         : SimpleJobPrivate(url, command, packedArgs)
-        {}
+    {
+    }
 
     /**
      * @internal
@@ -1289,22 +1289,24 @@ public:
 DirectCopyJob::DirectCopyJob(const KUrl &url, const QByteArray &packedArgs)
     : SimpleJob(*new DirectCopyJobPrivate(url, CMD_COPY, packedArgs))
 {
-    setUiDelegate(new JobUiDelegate);
+    setUiDelegate(new JobUiDelegate());
 }
 
 DirectCopyJob::~DirectCopyJob()
 {
 }
 
-void DirectCopyJobPrivate::start( SlaveInterface* slave )
+void DirectCopyJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(DirectCopyJob);
-    q->connect( slave, SIGNAL(canResume(KIO::filesize_t)),
-             SLOT(slotCanResume(KIO::filesize_t)) );
+    q->connect(
+        slave, SIGNAL(canResume(KIO::filesize_t)),
+        SLOT(slotCanResume(KIO::filesize_t))
+    );
     SimpleJobPrivate::start(slave);
 }
 
-void DirectCopyJob::slotCanResume( KIO::filesize_t offset )
+void DirectCopyJob::slotCanResume(KIO::filesize_t offset)
 {
     emit canResume(this, offset);
 }
@@ -1315,13 +1317,17 @@ void DirectCopyJob::slotCanResume( KIO::filesize_t offset )
 class KIO::FileCopyJobPrivate: public KIO::JobPrivate
 {
 public:
-    FileCopyJobPrivate(const KUrl& src, const KUrl& dest, int permissions,
+    FileCopyJobPrivate(const KUrl &src, const KUrl &dest, int permissions,
                        bool move, JobFlags flags)
-        : m_sourceSize(filesize_t(-1)), m_src(src), m_dest(dest), m_moveJob(0), m_copyJob(0), m_delJob(0),
-          m_chmodJob(0), m_getJob(0), m_putJob(0), m_permissions(permissions),
-          m_move(move), m_mustChmod(0), m_flags(flags)
-        {
-        }
+        : m_sourceSize(filesize_t(-1)), m_src(src), m_dest(dest),
+        m_moveJob(nullptr), m_copyJob(nullptr), m_delJob(nullptr),
+        m_chmodJob(nullptr), m_getJob(nullptr), m_putJob(nullptr),
+        m_permissions(permissions),
+        m_move(move), m_canResume(false), m_resumeAnswerSent(false), m_mustChmod(false),
+        m_flags(flags)
+    {
+    }
+
     KIO::filesize_t m_sourceSize;
     QDateTime m_modificationTime;
     KUrl m_src;
@@ -1334,10 +1340,10 @@ public:
     TransferJob *m_getJob;
     TransferJob *m_putJob;
     int m_permissions;
-    bool m_move:1;
-    bool m_canResume:1;
-    bool m_resumeAnswerSent:1;
-    bool m_mustChmod:1;
+    bool m_move;
+    bool m_canResume;
+    bool m_resumeAnswerSent;
+    bool m_mustChmod;
     JobFlags m_flags;
 
     void startBestCopyMethod();
@@ -1345,36 +1351,36 @@ public:
     void startCopyJob(const KUrl &slave_url);
     void startRenameJob(const KUrl &slave_url);
     void startDataPump();
-    void connectSubjob( SimpleJob * job );
+    void connectSubjob(SimpleJob *job);
 
     void slotStart();
-    void slotData( KIO::Job *, const QByteArray &data);
-    void slotDataReq( KIO::Job *, QByteArray &data);
-    void slotMimetype( KIO::Job*, const QString& type );
+    void slotData(KIO::Job *, const QByteArray &data);
+    void slotDataReq(KIO::Job *, QByteArray &data);
+    void slotMimetype(KIO::Job*, const QString &type);
     /**
      * Forward signal from subjob
      * @param job the job that emitted this signal
      * @param size the processed size in bytes
      */
-    void slotProcessedSize( KJob *job, qulonglong size );
+    void slotProcessedSize(KJob *job, qulonglong size);
     /**
      * Forward signal from subjob
      * @param job the job that emitted this signal
      * @param size the total size
      */
-    void slotTotalSize( KJob *job, qulonglong size );
+    void slotTotalSize(KJob *job, qulonglong size);
     /**
      * Forward signal from subjob
      * @param job the job that emitted this signal
      * @param pct the percentage
      */
-    void slotPercent( KJob *job, unsigned long pct );
+    void slotPercent(KJob *job, unsigned long pct);
     /**
      * Forward signal from subjob
      * @param job the job that emitted this signal
      * @param offset the offset to resume from
      */
-    void slotCanResume( KIO::Job *job, KIO::filesize_t offset );
+    void slotCanResume(KIO::Job *job, KIO::filesize_t offset);
 
     Q_DECLARE_PUBLIC(FileCopyJob)
 
@@ -1383,11 +1389,13 @@ public:
     {
         //kDebug(7007) << src << "->" << dest;
         FileCopyJob *job = new FileCopyJob(
-            *new FileCopyJobPrivate(src, dest, permissions, move, flags));
+            *new FileCopyJobPrivate(src, dest, permissions, move, flags)
+        );
         job->setProperty("destUrl", dest.url());
         job->setUiDelegate(new JobUiDelegate);
-        if (!(flags & HideProgressInfo))
+        if (!(flags & HideProgressInfo)) {
             KIO::getJobTracker()->registerJob(job);
+        }
         return job;
     }
 };
