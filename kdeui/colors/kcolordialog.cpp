@@ -1504,11 +1504,7 @@ void KColorDialog::KColorDialogPrivate::slotColorSelected(const QColor &color, c
     _setColor(color, name);
 }
 
-void KColorDialog::KColorDialogPrivate::slotColorDoubleClicked
-(
-    const QColor  & color,
-    const QString & name
-)
+void KColorDialog::KColorDialogPrivate::slotColorDoubleClicked(const QColor &color, const QString &name)
 {
     _setColor(color, name);
     q->accept();
@@ -1517,12 +1513,14 @@ void KColorDialog::KColorDialogPrivate::slotColorDoubleClicked
 void KColorDialog::KColorDialogPrivate::_setColor(const QColor &color, const QString &name)
 {
     if (color.isValid()) {
-        if (cbDefaultColor && cbDefaultColor->isChecked())
+        if (cbDefaultColor && cbDefaultColor->isChecked()) {
             cbDefaultColor->setChecked(false);
+        }
         selColor = color;
     } else {
-        if (cbDefaultColor && cbDefaultColor->isChecked())
+        if (cbDefaultColor && cbDefaultColor->isChecked()) {
             cbDefaultColor->setChecked(true);
+        }
         selColor = defaultColor;
     }
 
@@ -1536,10 +1534,11 @@ void KColorDialog::KColorDialogPrivate::showColor(const QColor &color, const QSt
 {
     bRecursion = true;
 
-    if (name.isEmpty())
+    if (name.isEmpty()) {
         colorName->setText(i18n("-unnamed-"));
-    else
+    } else {
         colorName->setText(name);
+    }
 
     patch->setColor(color);
 
@@ -1585,10 +1584,7 @@ void KColorDialog::KColorDialogPrivate::showColor(const QColor &color, const QSt
     bRecursion = false;
 }
 
-
-
-void
-KColorDialog::KColorDialogPrivate::slotColorPicker()
+void KColorDialog::KColorDialogPrivate::slotColorPicker()
 {
     bColorPicking = true;
 #ifdef Q_WS_X11
@@ -1599,8 +1595,7 @@ KColorDialog::KColorDialogPrivate::slotColorPicker()
     q->grabKeyboard();
 }
 
-void
-KColorDialog::mouseMoveEvent(QMouseEvent *e)
+void KColorDialog::mouseMoveEvent(QMouseEvent *e)
 {
     if (d->bColorPicking) {
         d->_setColor(grabColor(e->globalPos()));
@@ -1610,8 +1605,7 @@ KColorDialog::mouseMoveEvent(QMouseEvent *e)
     KDialog::mouseMoveEvent(e);
 }
 
-void
-KColorDialog::mouseReleaseEvent(QMouseEvent *e)
+void KColorDialog::mouseReleaseEvent(QMouseEvent *e)
 {
     if (d->bColorPicking) {
         d->bColorPicking = false;
@@ -1627,13 +1621,10 @@ KColorDialog::mouseReleaseEvent(QMouseEvent *e)
     KDialog::mouseReleaseEvent(e);
 }
 
-QColor
-KColorDialog::grabColor(const QPoint &p)
+QColor KColorDialog::grabColor(const QPoint &p)
 {
 #ifdef Q_WS_X11
-    // we use the X11 API directly in this case as we are not getting back a valid
-    // return from QPixmap::grabWindow in the case where the application is using
-    // an argb visual
+    // use the X11 API directly for performance reasons
     if( !qApp->desktop()->geometry().contains( p ))
         return QColor();
     Window root = RootWindow(QX11Info::display(), QX11Info::appScreen());
@@ -1655,8 +1646,7 @@ KColorDialog::grabColor(const QPoint &p)
 #endif
 }
 
-void
-KColorDialog::keyPressEvent(QKeyEvent *e)
+void KColorDialog::keyPressEvent(QKeyEvent *e)
 {
     if (d->bColorPicking) {
         if (e->key() == Qt::Key_Escape) {
@@ -1687,15 +1677,11 @@ void KColorDialog::KColorDialogPrivate::setRgbEdit(const QColor &col)
 
 void KColorDialog::KColorDialogPrivate::setHtmlEdit(const QColor &col)
 {
-    if (bEditHtml) return;
-    int r, g, b;
-    col.getRgb(&r, &g, &b);
-    QString num;
-
-    num.sprintf("#%02X%02X%02X", r, g, b);
-    htmlName->setText(num);
+    if (bEditHtml) {
+        return;
+    }
+    htmlName->setText(col.name());
 }
-
 
 void KColorDialog::KColorDialogPrivate::setHsvEdit(const QColor &col)
 {
