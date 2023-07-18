@@ -34,9 +34,8 @@ KFileMetaDataFreetypePlugin::~KFileMetaDataFreetypePlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataFreetypePlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataFreetypePlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
     FT_Library ftlibrary;

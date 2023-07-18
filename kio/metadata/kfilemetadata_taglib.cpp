@@ -35,9 +35,8 @@ KFileMetaDataTagLibPlugin::~KFileMetaDataTagLibPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
     TagLib::FileRef taglibfile(urlpath);

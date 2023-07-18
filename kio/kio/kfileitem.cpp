@@ -1227,7 +1227,7 @@ void KFileItem::setMetaInfo( const KFileMetaInfo & info ) const
     d->m_metaInfo = info;
 }
 
-KFileMetaInfo KFileItem::metaInfo(bool autoget, int what) const
+KFileMetaInfo KFileItem::metaInfo(bool autoget) const
 {
     if (!d)
         return KFileMetaInfo();
@@ -1235,7 +1235,7 @@ KFileMetaInfo KFileItem::metaInfo(bool autoget, int what) const
     if (isFile() && autoget && !d->m_metaInfo.isValid())
     {
         KUrl url(mostLocalUrl());
-        d->m_metaInfo = KFileMetaInfo(url.toLocalFile(), (KFileMetaInfo::What)what);
+        d->m_metaInfo = KFileMetaInfo(url.toLocalFile());
     }
     return d->m_metaInfo;
 }

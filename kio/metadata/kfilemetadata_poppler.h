@@ -28,7 +28,7 @@ public:
     KFileMetaDataPopplerPlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataPopplerPlugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
+    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
 };
 
 #endif // KFILEMETADATA_POPPLER_H

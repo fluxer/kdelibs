@@ -59,14 +59,14 @@ public:
     KFileMetaInfoItemList items;
     KUrl m_url;
 
-    void init(const QString &filename, const KUrl& url, KFileMetaInfo::WhatFlags w);
-    void operator=(const KFileMetaInfoPrivate& kfmip) {
+    void init(const QString &filename, const KUrl& url);
+    void operator=(const KFileMetaInfoPrivate &kfmip) {
         items = kfmip.items;
         m_url = kfmip.m_url;
     }
 };
 
-void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileMetaInfo::WhatFlags w)
+void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url)
 {
     m_url = url;
 
@@ -96,7 +96,7 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
                     kDebug() << "Extracting metadata via" << kfmdname;
                     KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
                     if (kfmdplugininstance) {
-                        items.append(kfmdplugininstance->metaData(url, w));
+                        items.append(kfmdplugininstance->metaData(url));
                         delete kfmdplugininstance;
                     } else {
                         kWarning() << "Could not create KFileMetaDataPlugin instance";
@@ -135,21 +135,21 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
     items.append(kfmi2);
 }
 
-KFileMetaInfo::KFileMetaInfo(const QString& path, KFileMetaInfo::WhatFlags w)
+KFileMetaInfo::KFileMetaInfo(const QString& path)
     : d(new KFileMetaInfoPrivate())
 {
     QFileInfo fileinfo(path);
     // only open the file if it is not a pipe
     if (fileinfo.isFile() || fileinfo.isDir() || fileinfo.isSymLink()) {
-        d->init(fileinfo.fileName(), KUrl(path), w);
+        d->init(fileinfo.fileName(), KUrl(path));
     }
 }
 
-KFileMetaInfo::KFileMetaInfo(const KUrl& url, KFileMetaInfo::WhatFlags w)
+KFileMetaInfo::KFileMetaInfo(const KUrl& url)
     : d(new KFileMetaInfoPrivate())
 {
     const QString filename = QFileInfo(url.toLocalFile()).fileName();
-    d->init(filename, url, w);
+    d->init(filename, url);
 }
 
 KFileMetaInfo::KFileMetaInfo()
@@ -157,12 +157,12 @@ KFileMetaInfo::KFileMetaInfo()
 {
 }
 
-KFileMetaInfo::KFileMetaInfo(const KFileMetaInfo& kfmi)
+KFileMetaInfo::KFileMetaInfo(const KFileMetaInfo &kfmi)
     : d(kfmi.d)
 {
 }
 
-KFileMetaInfo& KFileMetaInfo::operator=(KFileMetaInfo const& kfmi)
+KFileMetaInfo& KFileMetaInfo::operator=(const KFileMetaInfo &kfmi)
 {
     d = kfmi.d;
     return *this;

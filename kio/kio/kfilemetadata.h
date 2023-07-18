@@ -46,7 +46,7 @@ public:
     KFileMetaDataPlugin(QObject *parent = nullptr);
     ~KFileMetaDataPlugin();
 
-    virtual QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags);
+    virtual QList<KFileMetaInfoItem> metaData(const KUrl &url);
 };
 
 #endif // KFILEMETADATA_H

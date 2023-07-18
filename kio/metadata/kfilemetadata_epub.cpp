@@ -53,9 +53,8 @@ KFileMetaDataEPubPlugin::~KFileMetaDataEPubPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataEPubPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataEPubPlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
     struct epub *epubdocument = epub_open(urlpath.constData(), 1);

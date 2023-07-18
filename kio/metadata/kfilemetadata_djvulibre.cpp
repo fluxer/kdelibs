@@ -39,9 +39,8 @@ KFileMetaDataDjVuLibrePlugin::~KFileMetaDataDjVuLibrePlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataDjVuLibrePlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataDjVuLibrePlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toUtf8();
     ddjvu_context_t* djvuctx = ddjvu_context_create("kfilemetadata_djvulibre");

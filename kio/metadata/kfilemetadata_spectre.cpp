@@ -32,9 +32,8 @@ KFileMetaDataSpectrePlugin::~KFileMetaDataSpectrePlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
     SpectreDocument *spectredocument = spectre_document_new();

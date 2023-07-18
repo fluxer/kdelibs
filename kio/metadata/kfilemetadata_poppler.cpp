@@ -57,9 +57,8 @@ KFileMetaDataPopplerPlugin::~KFileMetaDataPopplerPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
     poppler::document *popplerdocument = poppler::document::load_from_file(std::string(urlpath.constData(), urlpath.size()));

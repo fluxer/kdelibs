@@ -28,7 +28,7 @@ public:
     KFileMetaDataSpectrePlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataSpectrePlugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
+    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
 };
 
 #endif // KFILEMETADATA_SPECTRE_H

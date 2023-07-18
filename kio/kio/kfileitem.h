@@ -486,13 +486,9 @@ public:
     /**
      * Returns the metainfo of this item.
      *
-     * (since 4.4.3) By default it uses the KFileMetaInfo::ContentInfo | KFileMetaInfo::TechnicalInfo.
-     * If you need more information, create your own KFileMetaInfo object and set it using setMetaInfo()
      * @param autoget if true, the metainfo will automatically be created
-     * @param what how much metainfo you need to retrieve from the file (KFileMetaInfo::WhatFlag)
      */
-    KFileMetaInfo metaInfo(bool autoget = true,
-                           int what = KFileMetaInfo::ContentInfo | KFileMetaInfo::TechnicalInfo) const;
+    KFileMetaInfo metaInfo(bool autoget = true) const;
 
     /**
      * Tries to give a local URL for this file item if possible.

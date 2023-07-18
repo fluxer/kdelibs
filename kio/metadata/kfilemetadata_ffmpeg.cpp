@@ -42,9 +42,8 @@ KFileMetaDataFFmpegPlugin::~KFileMetaDataFFmpegPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
     AVFormatContext *ffmpegcontext = NULL;

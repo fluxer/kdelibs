@@ -28,7 +28,7 @@ public:
     KFileMetaDataEPubPlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataEPubPlugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
+    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
 };
 
 #endif // KFILEMETADATA_EPUB_H

@@ -28,7 +28,7 @@ public:
     KFileMetaDataDjVuLibrePlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataDjVuLibrePlugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
+    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
 };
 
 #endif // KFILEMETADATA_DJVULIBRE_H

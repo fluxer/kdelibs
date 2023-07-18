@@ -33,45 +33,25 @@ class KFileMetaInfoPrivate;
  * will be retrieved and stored in the instance. The data can be inspected
  * through KFileMetaInfoItem objects.
  **/
-class KIO_EXPORT KFileMetaInfo {
+class KIO_EXPORT KFileMetaInfo
+{
 public:
-    /**
-     * This is used to specify what a KFileMetaInfo object should read, so
-     * you can specify if you want to read "expensive" items or not.
-     * This is like a preset which can be customized by passing additional
-     * parameters to constructors.
-     */
-    enum What {
-        TechnicalInfo = 0x1,   /** extract technical details about the file, like
-                                 e.g. play time, resolution or a compression type */
-        ContentInfo = 0x2,     /** read information about the content of the file
-                                 like comments or id3 tags */
-        ExternalSources = 0x4, /** read external metadata sources such as
-                                 filesystem based extended attributes if
-                                 they are supported for the filesystem;
-                                 RDF storages etc */
-        Everything = TechnicalInfo | ContentInfo | ExternalSources // read everything, even if it might take a while
-
-    };
-    Q_DECLARE_FLAGS(WhatFlags, What)
-
     /**
      * @brief Construct a KFileMetaInfo that contains metainformation about
      * the resource pointed to by @p path.
      *
-     * When w is not Everything, a limit of 64kbytes is imposed on the file size.
      * @note The path must be full (start with a slash) or relative, e.g.
      * "/home/joe/pic.png" or "../joe/pic.png". If it starts with a URL scheme,
      * e.g. "file:///home/joe/pic.png" it will be considered invalid. If it may
      * start with URL scheme use the constructor that takes KUrl.
      **/
-    explicit KFileMetaInfo(const QString& path, WhatFlags w = Everything);
+    explicit KFileMetaInfo(const QString &path);
     /**
      * @brief Construct a KFileMetaInfo that contains metainformation about
      * the resource pointed to by @p url.
      * @note that c'tor is not thread-safe
      **/
-    KFileMetaInfo(const KUrl& url, WhatFlags w = Everything);
+    KFileMetaInfo(const KUrl &url);
     /**
      * @brief Construct an empty, invalid KFileMetaInfo instance.
      **/
@@ -79,7 +59,7 @@ public:
     /**
      * @brief Construct a KFileMetaInfo instance from another one.
      **/
-    KFileMetaInfo(const KFileMetaInfo& kfmi);
+    KFileMetaInfo(const KFileMetaInfo &kfmi);
     /**
      * @brief Destructor.
      **/
@@ -87,13 +67,14 @@ public:
     /**
      * @brief Copy a KFileMetaInfo instance from another one.
      **/
-    KFileMetaInfo& operator=(KFileMetaInfo const& kfmi);
+    KFileMetaInfo& operator=(const KFileMetaInfo &kfmi);
+
     /**
      * @brief Retrieve all the items.
      **/
     const KFileMetaInfoItemList& items() const;
-    KFileMetaInfoItem& item(const QString& key);
-    const KFileMetaInfoItem& item(const QString& key) const;
+    KFileMetaInfoItem& item(const QString &key);
+    const KFileMetaInfoItem& item(const QString &key) const;
     bool isValid() const;
     QStringList preferredKeys() const;
     QStringList keys() const;
@@ -106,11 +87,9 @@ public:
     /**
      * @brief Returns localized name of @p key
      **/
-    static QString name(const QString& key);
+    static QString name(const QString &key);
 private:
     QSharedDataPointer<KFileMetaInfoPrivate> d;
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KFileMetaInfo::WhatFlags)
 
 #endif // KFILEMETAINFO_H

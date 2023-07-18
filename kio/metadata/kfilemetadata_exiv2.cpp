@@ -32,9 +32,8 @@ KFileMetaDataExiv2Plugin::~KFileMetaDataExiv2Plugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
+QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url)
 {
-    Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const KExiv2 kexiv2(url.toLocalFile());
     foreach (const KExiv2Property &kexiv2property, kexiv2.metadata()) {

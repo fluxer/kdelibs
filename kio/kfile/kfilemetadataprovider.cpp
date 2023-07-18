@@ -60,7 +60,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
                 m_data.append(KFileMetaInfoItem("kfileitem#size", itemCountString));
             }
         } else {
-            const KFileMetaInfo metaInfo(item.url(), KFileMetaInfo::TechnicalInfo);
+            const KFileMetaInfo metaInfo(item.url());
             m_data = metaInfo.items();
 
             m_data.append(KFileMetaInfoItem("kfileitem#size", KIO::convertSize(item.size())));
