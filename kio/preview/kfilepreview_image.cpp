@@ -20,7 +20,7 @@
 #include "kpluginfactory.h"
 #include "kdebug.h"
 
-KFilePreviewImagePlugin::KFilePreviewImagePlugin(QObject* parent, const QVariantList &args)
+KFilePreviewImagePlugin::KFilePreviewImagePlugin(QObject *parent, const QVariantList &args)
     : KFilePreviewPlugin(parent)
 {
     Q_UNUSED(args);

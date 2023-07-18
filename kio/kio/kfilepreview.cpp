@@ -23,15 +23,22 @@
 #include "kservicetypetrader.h"
 #include "kservice.h"
 #include "kiconloader.h"
+#include "kglobal.h"
+#include "kstandarddirs.h"
 #include "kdebug.h"
 
 #include <QPainter>
+#include <QCryptographicHash>
+#include <QImageWriter>
 
 enum PreviewDefaults {
     MaxLocalSize = 20, // 20 MB
     MaxRemoteSize = 5, // 5 MB
     IconAlpha = 125
 };
+
+static const QByteArray s_previewimageformat = QImageWriter::defaultImageFormat();
+static const QSize s_previewcachesize = QSize(256, 256);
 
 // NOTE: same as kdelibs/kio/kio/kfilemetainfo.cpp except the service string
 static QStringList kPreviewGlobMimeTypes(const QStringList &servicetypes)
@@ -55,6 +62,36 @@ static void kPreviewOverlay(QImage &preview, const QImage &overlay, const int ov
     const int y = qMax(preview.height() - overlay.height() - 4, 0);
     painter.setOpacity(qreal(overlayalpha) / qreal(255.0));
     painter.drawImage(x, y, overlay);
+}
+
+static QString kPreviewId(const KFileItem &item)
+{
+    const QByteArray itemurlbytes = QFile::encodeName(item.url().prettyUrl());
+    const QByteArray itemhash = QCryptographicHash::hash(itemurlbytes, QCryptographicHash::KAT).toHex();
+    QString result = QString::fromLatin1(itemhash.constData(), itemhash.size());
+    result.append(QLatin1Char('_'));
+    result.append(QString::number(item.time(KFileItem::ModificationTime).toTime_t()));
+    return result;
+}
+
+static QString kPreviewCachePath(const KFileItem &item)
+{
+    QString result = KGlobal::dirs()->saveLocation("cache", "thumbnails/");
+    result.append(kPreviewId(item));
+    result.append(QLatin1Char('.'));
+    result.append(QString::fromLatin1(s_previewimageformat.constData(), s_previewimageformat.size()));
+    return result;
+}
+
+static QImage kPreviewScale(const QImage &preview, const QSize &size)
+{
+    return preview.scaled(size, Qt::KeepAspectRatio);
+}
+
+// QSize lacks operator
+static bool kSizeLessOrEqual(const QSize &size, const QSize &size2)
+{
+    return (size.width() <= size2.width() && size.height() <= size2.height());
 }
 
 class KFilePreviewPrivate
@@ -110,7 +147,13 @@ QStringList KFilePreview::supportedMimeTypes()
 
 QImage KFilePreview::preview(const KFileItem &item, const QSize &size)
 {
-    // TODO: caching of previews the size of which is equal or less than 256x256
+    const QString cachedthumbnail = kPreviewCachePath(item);
+    const bool issizecacheble = kSizeLessOrEqual(size, s_previewcachesize);
+    if (QFile::exists(cachedthumbnail) && issizecacheble) {
+        kDebug() << "Using cached preview for" << item.url();
+        const QImage result(cachedthumbnail, s_previewimageformat);
+        return kPreviewScale(result, size);
+    }
 
     const KMimeType::Ptr itemmimetype = item.determineMimeType();
     foreach (const KService::Ptr &plugin, d->plugins) {
@@ -155,7 +198,7 @@ QImage KFilePreview::preview(const KFileItem &item, const QSize &size)
                 kDebug() << "Creating preview via" << pluginname;
                 KFilePreviewPlugin *plugininstance = plugin->createInstance<KFilePreviewPlugin>();
                 if (plugininstance) {
-                    QImage result = plugininstance->preview(item.url(), size);
+                    QImage result = plugininstance->preview(item.url(), issizecacheble ? s_previewcachesize : size);
                     const bool kfpiconoverlay = plugin->property("X-KDE-IconOverlay", QVariant::Bool).toBool();
                     if (kfpiconoverlay && itemmimetype && KIconLoader::global()->alphaBlending(KIconLoader::Desktop)) {
                         const QPixmap iconoverlay = KIconLoader::global()->loadMimeTypeIcon(
@@ -164,7 +207,12 @@ QImage KFilePreview::preview(const KFileItem &item, const QSize &size)
                         kPreviewOverlay(result, iconoverlay.toImage(), d->iconalpha);
                     }
                     delete plugininstance;
-                    return result;
+                    const bool plugincachethumbnail = plugin->property("X-KDE-CacheThumbnail", QVariant::Bool).toBool();
+                    if (issizecacheble && plugincachethumbnail) {
+                        kDebug() << "Caching preview for" << item.url();
+                        result.save(cachedthumbnail, s_previewimageformat);
+                    }
+                    return kPreviewScale(result, size);
                 } else {
                     kWarning() << "Could not create KFilePreviewPlugin instance";
                 }

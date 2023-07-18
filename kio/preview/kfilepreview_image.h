@@ -25,7 +25,7 @@ class KFilePreviewImagePlugin : public KFilePreviewPlugin
 {
     Q_OBJECT
 public:
-    KFilePreviewImagePlugin(QObject* parent, const QVariantList &args);
+    KFilePreviewImagePlugin(QObject *parent, const QVariantList &args);
     ~KFilePreviewImagePlugin();
 
     QImage preview(const KUrl &url, const QSize &size) final;
