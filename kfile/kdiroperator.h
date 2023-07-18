@@ -62,7 +62,7 @@ class DeleteJob;
  * show either a simple or detailed view and additionally a preview widget
  * (see setPreviewWidget()). KImageFilePreview is one implementation
  * of a preview widget, that displays previews for all supported filetypes
- * utilizing KIO::PreviewJob.
+ * utilizing KFilePreviewJob.
  *
  * Currently, those classes don't support Drag&Drop out of the box -- there
  * you have to use your own view-classes. You can use some DnD-aware views
@@ -668,7 +668,7 @@ protected:
     void prepareCompletionObjects();
 
     /**
-     * Checks if there support from KIO::PreviewJob for the currently
+     * Checks if there support from KFIlePreviewJob for the currently
      * shown files, taking mimeFilter() and nameFilter() into account
      * Enables/disables the preview-action accordingly.
      */

@@ -32,6 +32,8 @@ class KFilePreviewJobPrivate : public QThread
 public:
     KFilePreviewJobPrivate(const KFileItemList &items, const QSize &size, QObject *parent);
 
+    void interrupt();
+
 Q_SIGNALS:
     void failed(const KFileItem &item);
     void preview(const KFileItem &item, const QPixmap &preview);
@@ -42,13 +44,20 @@ protected:
 private:
     KFileItemList m_items;
     QSize m_size;
+    bool m_interrupt;
 };
 
 KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const QSize &size, QObject *parent)
     : QThread(parent),
     m_items(items),
-    m_size(size)
+    m_size(size),
+    m_interrupt(false)
 {
+}
+
+void KFilePreviewJobPrivate::interrupt()
+{
+    m_interrupt = true;
 }
 
 void KFilePreviewJobPrivate::run()
@@ -56,6 +65,9 @@ void KFilePreviewJobPrivate::run()
     kDebug() << "creating previews";
     KFilePreview kfilepreview;
     foreach (const KFileItem &item, m_items) {
+        if (m_interrupt) {
+            break;
+        }
         const QImage result = kfilepreview.preview(item, m_size);
         if (result.isNull()) {
             emit failed(item);
@@ -72,6 +84,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
 {
     qRegisterMetaType<KFileItem>();
     setUiDelegate(new KIO::JobUiDelegate());
+    setCapabilities(KJob::Killable);
 
     KFileItemList localitems;
     foreach (const KFileItem &item, items) {
@@ -117,8 +130,14 @@ void KFilePreviewJob::start()
 
 KFilePreviewJob::~KFilePreviewJob()
 {
-    KIO::getJobTracker()->unregisterJob(this);
+    // KIO::getJobTracker()->unregisterJob(this);
     delete d;
+}
+
+bool KFilePreviewJob::doKill()
+{
+    d->interrupt();
+    return d->wait();
 }
 
 void KFilePreviewJob::slotFinished()

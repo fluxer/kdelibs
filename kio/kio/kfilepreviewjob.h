@@ -47,6 +47,9 @@ Q_SIGNALS:
     void failed(const KFileItem &item);
     void gotPreview(const KFileItem &item, const QPixmap &preview);
 
+protected:
+    bool doKill() final;
+
 private Q_SLOTS:
     void slotFinished();
     void slotResult(KJob *job);
