@@ -70,54 +70,57 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url)
 {
     m_url = url;
 
-    KConfig config("kmetainformationrc", KConfig::NoGlobals);
-    KConfigGroup pluginsgroup = config.group("Plugins");
-    const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
-    const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
-    foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
-        const QString kfmdname = kfmdplugin->desktopEntryName();
-        const bool enable = pluginsgroup.readEntry(kfmdname, true);
-        if (enable) {
-            // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdname;
-            foreach (const QString &kfmdpluginmime, kMetaGlobMimeTypes(kfmdplugin->serviceTypes())) {
-                bool mimematches = false;
-                if (kfmdpluginmime.endsWith('*')) {
-                    const QString kfmdpluginmimeglob = kfmdpluginmime.mid(0, kfmdpluginmime.size() - 1);
-                    if (filemimetype && filemimetype->name().startsWith(kfmdpluginmimeglob)) {
+    // none of the plugins supports remote files
+    if (url.isLocalFile()) {
+        KConfig config("kmetainformationrc", KConfig::NoGlobals);
+        KConfigGroup pluginsgroup = config.group("Plugins");
+        const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
+        const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
+        foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
+            const QString kfmdname = kfmdplugin->desktopEntryName();
+            const bool enable = pluginsgroup.readEntry(kfmdname, true);
+            if (enable) {
+                // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdname;
+                foreach (const QString &kfmdpluginmime, kMetaGlobMimeTypes(kfmdplugin->serviceTypes())) {
+                    bool mimematches = false;
+                    if (kfmdpluginmime.endsWith('*')) {
+                        const QString kfmdpluginmimeglob = kfmdpluginmime.mid(0, kfmdpluginmime.size() - 1);
+                        if (filemimetype && filemimetype->name().startsWith(kfmdpluginmimeglob)) {
+                            mimematches = true;
+                        }
+                    }
+
+                    if (!mimematches && filemimetype->is(kfmdpluginmime)) {
                         mimematches = true;
                     }
-                }
 
-                if (!mimematches && filemimetype->is(kfmdpluginmime)) {
-                    mimematches = true;
-                }
-
-                if (mimematches) {
-                    kDebug() << "Extracting metadata via" << kfmdname;
-                    KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-                    if (kfmdplugininstance) {
-                        items.append(kfmdplugininstance->metaData(url));
-                        delete kfmdplugininstance;
-                    } else {
-                        kWarning() << "Could not create KFileMetaDataPlugin instance";
+                    if (mimematches) {
+                        kDebug() << "Extracting metadata via" << kfmdname;
+                        KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
+                        if (kfmdplugininstance) {
+                            items.append(kfmdplugininstance->metaData(url));
+                            delete kfmdplugininstance;
+                        } else {
+                            kWarning() << "Could not create KFileMetaDataPlugin instance";
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
-    }
 
-    // remove duplicates. first comes, first serves
-    KFileMetaInfoItemList::iterator it = items.begin();
-    QStringList itemkeys;
-    itemkeys.reserve(items.size());
-    while (it != items.end()) {
-        if (!itemkeys.contains(it->key())) {
-            itemkeys.append(it->key());
-            it++;
-        } else {
-            kDebug() << "Multiple entries for the same key" << it->key();
-            it = items.erase(it);
+        // remove duplicates. first comes, first serves
+        KFileMetaInfoItemList::iterator it = items.begin();
+        QStringList itemkeys;
+        itemkeys.reserve(items.size());
+        while (it != items.end()) {
+            if (!itemkeys.contains(it->key())) {
+                itemkeys.append(it->key());
+                it++;
+            } else {
+                kDebug() << "Multiple entries for the same key" << it->key();
+                it = items.erase(it);
+            }
         }
     }
 
@@ -127,15 +130,14 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url)
         filename
     );
     items.append(kfmi);
-    const QString kfmiurl = url.prettyUrl();
     const KFileMetaInfoItem kfmi2(
         QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url"),
-        kfmiurl
+        url.prettyUrl()
     );
     items.append(kfmi2);
 }
 
-KFileMetaInfo::KFileMetaInfo(const QString& path)
+KFileMetaInfo::KFileMetaInfo(const QString &path)
     : d(new KFileMetaInfoPrivate())
 {
     QFileInfo fileinfo(path);
@@ -145,11 +147,10 @@ KFileMetaInfo::KFileMetaInfo(const QString& path)
     }
 }
 
-KFileMetaInfo::KFileMetaInfo(const KUrl& url)
+KFileMetaInfo::KFileMetaInfo(const KUrl &url)
     : d(new KFileMetaInfoPrivate())
 {
-    const QString filename = QFileInfo(url.toLocalFile()).fileName();
-    d->init(filename, url);
+    d->init(url.fileName(), url);
 }
 
 KFileMetaInfo::KFileMetaInfo()
