@@ -20,6 +20,7 @@
 #include "kfilepreview.h"
 #include "kio/global.h"
 #include "kio/job.h"
+#include "kio/jobuidelegate.h"
 #include "kjobtrackerinterface.h"
 #include "kdebug.h"
 
@@ -70,7 +71,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
     d(nullptr)
 {
     qRegisterMetaType<KFileItem>();
-    KIO::getJobTracker()->registerJob(this);
+    setUiDelegate(new KIO::JobUiDelegate());
 
     KFileItemList localitems;
     foreach (const KFileItem &item, items) {
@@ -79,6 +80,9 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
             emit failed(item);
             continue;
 #if 0
+            if (!item.isLocalFile()) {
+                KIO::getJobTracker()->registerJob(this);
+            }
             kDebug() << "directory item" << item.url();
             KIO::ListJob* listjob = KIO::listDir(item.url(), KIO::HideProgressInfo);
             addSubjob(listjob);
@@ -91,6 +95,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
             emit failed(item);
             continue;
 #if 0
+            KIO::getJobTracker()->registerJob(this);
             kDebug() << "remote item" << item.url();
             KIO::TransferJob* getjob = KIO::get(item.url(), KIO::NoReload, KIO::HideProgressInfo);
             addSubjob(getjob);
