@@ -51,6 +51,7 @@ private:
     QSize m_size;
     bool m_interrupt;
     bool m_suspend;
+    KFilePreview* m_filepreview;
 };
 
 KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const KFileItemList &localitems, const QSize &size, QObject *parent)
@@ -59,8 +60,10 @@ KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const
     m_localitems(localitems),
     m_size(size),
     m_interrupt(false),
-    m_suspend(false)
+    m_suspend(false),
+    m_filepreview(nullptr)
 {
+    m_filepreview = new KFilePreview(this);
 }
 
 void KFilePreviewJobPrivate::interrupt()
@@ -86,7 +89,6 @@ KFileItemList KFilePreviewJobPrivate::items() const
 void KFilePreviewJobPrivate::run()
 {
     kDebug() << "creating previews";
-    KFilePreview kfilepreview;
     foreach (const KFileItem &item, m_localitems) {
         if (m_interrupt) {
             kDebug() << "interrupted creation of previews";
@@ -95,7 +97,7 @@ void KFilePreviewJobPrivate::run()
         while (m_suspend) {
             QThread::msleep(500);
         }
-        const QImage result = kfilepreview.preview(item, m_size);
+        const QImage result = m_filepreview->preview(item, m_size);
         if (result.isNull()) {
             emit failed(item);
         } else {
@@ -116,7 +118,6 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
     KFileItemList localitems;
     foreach (const KFileItem &item, items) {
         if (item.isDir()) {
-            kWarning() << "directories not supported";
 #if 0
             if (!item.isLocalFile()) {
                 KIO::getJobTracker()->registerJob(this);
@@ -129,7 +130,6 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
             kDebug() << "local item" << item.url();
             localitems.append(item);
         } else {
-            kWarning() << "remote items not supported";
 #if 0
             KIO::getJobTracker()->registerJob(this);
             kDebug() << "remote item" << item.url();
@@ -170,7 +170,6 @@ KFilePreviewJob::~KFilePreviewJob()
 
 bool KFilePreviewJob::doKill()
 {
-    qDebug() << Q_FUNC_INFO;
     d->interrupt();
     return true;
 }
