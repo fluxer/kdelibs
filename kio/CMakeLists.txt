@@ -65,14 +65,12 @@ set(kiocore_STAT_SRCS
     kio/netaccess.cpp
     kio/paste.cpp
     kio/pastedialog.cpp
-    kio/previewjob.cpp
     kio/renamedialog.cpp
     kio/scheduler.cpp
     kio/skipdialog.cpp
     kio/slavebase.cpp
     kio/slaveconfig.cpp
     kio/slaveinterface.cpp
-    kio/thumbcreator.cpp
     kio/udsentry.cpp
     kio/usernotificationhandler.cpp
     kio/clipboardupdater.cpp
@@ -191,8 +189,6 @@ install(
     kio/chmodjob.h
     kio/authinfo.h
     kio/ioslave_defaults.h
-    kio/previewjob.h
-    kio/thumbcreator.h
     kio/directorysizejob.h
     kio/renamedialog.h
     kio/skipdialog.h

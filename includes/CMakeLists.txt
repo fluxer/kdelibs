@@ -102,6 +102,9 @@ install(
     KDirWatch
     KDualAction
     KFilePreviewGenerator
+    KFilePreview
+    KFilePreviewJob
+    KFilePreviewPlugin
     KFilePlacesView
     KFileWidget
     KDiskFreeSpaceInfo
@@ -333,7 +336,6 @@ install(
     NETRootInfo
     NETWinInfo
     OrgKdeKDirNotifyInterface
-    ThumbCreator
     KCategorizedView
     KCategoryDrawer
     KCategorizedSortFilterProxyModel
@@ -382,7 +384,6 @@ install(
     KIO/MimetypeJob
     KIO/NetAccess
     KIO/NetRC
-    KIO/PreviewJob
     KIO/RenameDialog
     KIO/Scheduler
     KIO/SimpleJob

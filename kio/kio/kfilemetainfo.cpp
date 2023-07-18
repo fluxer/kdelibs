@@ -36,7 +36,7 @@
 static const KFileMetaInfoItem nullitem;
 static KFileMetaInfoItem mutablenullitem;
 
-// NOTE: same as kdelibs/kio/kio/previewjob.cpp except the service string
+// NOTE: same as kdelibs/kio/kio/kfilepreview.cpp except the service string
 static QStringList kMetaGlobMimeTypes(const QStringList &servicetypes)
 {
     static const QString kfimetadatapluginservice("KFileMetaData/Plugin");

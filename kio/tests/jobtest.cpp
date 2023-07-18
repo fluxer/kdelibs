@@ -25,7 +25,6 @@
 
 #include <kurl.h>
 #include <kio/netaccess.h>
-#include <kio/previewjob.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>

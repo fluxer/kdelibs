@@ -23,27 +23,12 @@
 #include <klocale.h>
 #include <kfileitem.h>
 #include <kpixmapsequenceoverlaypainter.h>
-#include <kio/previewjob.h>
+#include <kio/kfilepreview.h>
 #include <kio/kfilepreviewjob.h>
 #include <kconfiggroup.h>
 
 #include <config-kfile.h>
 
-#if 0
-static KIO::PreviewJob* createJob(const KUrl &url, int w, int h)
-{
-    if (url.isValid()) {
-        KFileItemList items;
-        items.append(KFileItem(KFileItem::Unknown, KFileItem::Unknown, url, true));
-        static const QStringList plugins = KIO::PreviewJob::availablePlugins();
-
-        KIO::PreviewJob *previewJob = KIO::filePreview(items, QSize(w, h), &plugins);
-        previewJob->setScaleType(KIO::PreviewJob::Scaled);
-        return previewJob;
-    }
-    return nullptr;
-}
-#else
 static KFilePreviewJob* createJob(const KUrl &url, int w, int h)
 {
     if (url.isValid()) {
@@ -54,7 +39,6 @@ static KFilePreviewJob* createJob(const KUrl &url, int w, int h)
     }
     return nullptr;
 }
-#endif
 
 
 /**** KImageFilePreviewPrivate ****/
@@ -71,11 +55,7 @@ public:
     KUrl lastShownURL;
     QLabel *imageLabel;
     KPixmapSequenceOverlayPainter *busyPainter;
-#if 0
-    KIO::PreviewJob *m_job;
-#else
     KFilePreviewJob *m_job;
-#endif
 };
 
 KImageFilePreviewPrivate::KImageFilePreviewPrivate()
@@ -129,7 +109,7 @@ KImageFilePreview::KImageFilePreview(QWidget *parent)
     d->busyPainter->setWidget(d->imageLabel);
     d->busyPainter->stop();
 
-    setSupportedMimeTypes(KIO::PreviewJob::supportedMimeTypes());
+    setSupportedMimeTypes(KFilePreview::supportedMimeTypes());
     setMinimumWidth(50);
 }
 
@@ -188,6 +168,7 @@ void KImageFilePreview::showPreview(const KUrl& url)
         d->m_job, SIGNAL(failed(KFileItem)),
         this, SLOT(_k_slotFailed(KFileItem))
     );
+    d->m_job->start();
 }
 
 void KImageFilePreview::resizeEvent(QResizeEvent *event)

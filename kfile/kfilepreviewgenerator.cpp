@@ -23,7 +23,7 @@
 #include <kconfiggroup.h>
 #include <kfileitem.h>
 #include <kiconeffect.h>
-#include <kio/previewjob.h>
+#include <kio/kfilepreviewjob.h>
 #include <kdirlister.h>
 #include <kdirmodel.h>
 #include <ksharedconfig.h>
@@ -382,8 +382,6 @@ public:
 
     KFileItemList m_resolvedMimeTypes;
 
-    QStringList m_enabledPlugins;
-
     TileSet* m_tileSet;
 
 private:
@@ -413,7 +411,6 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
     m_pendingItems(),
     m_dispatchedItems(),
     m_resolvedMimeTypes(),
-    m_enabledPlugins(),
     m_tileSet(0),
     q(parent)
 {
@@ -463,18 +460,6 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
     m_changedItemsTimer->setInterval(5000);
     connect(m_changedItemsTimer, SIGNAL(timeout()),
             q, SLOT(delayedIconUpdate()));
-
-    QStringList enabledByDefault;
-    const KService::List plugins = KServiceTypeTrader::self()->query(QLatin1String("ThumbCreator"));
-    foreach (const KSharedPtr<KService>& service, plugins) {
-        const bool enabled = service->property("X-KDE-PluginInfo-EnabledByDefault", QVariant::Bool).toBool();
-        if (enabled) {
-            enabledByDefault << service->desktopEntryName();
-        }
-    }
-
-    KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
-    m_enabledPlugins = globalConfig.readEntry("Plugins", enabledByDefault);
 }
 
 KFilePreviewGenerator::Private::~Private()
@@ -950,13 +935,13 @@ void KFilePreviewGenerator::Private::createPreviews(const KFileItemList& items)
 void KFilePreviewGenerator::Private::startPreviewJob(const KFileItemList& items, int width, int height)
 {
     if (items.count() > 0) {
-        KIO::PreviewJob* job = KIO::filePreview(items, QSize(width, height), &m_enabledPlugins);
-
+        KFilePreviewJob* job = new KFilePreviewJob(items, QSize(width, height));
         connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)),
                 q, SLOT(addToPreviewQueue(KFileItem,QPixmap)));
         connect(job, SIGNAL(finished(KJob*)),
                 q, SLOT(slotPreviewJobFinished(KJob*)));
         m_previewJobs.append(job);
+        job->start();
     }
 }
 
@@ -1179,16 +1164,6 @@ void KFilePreviewGenerator::cancelPreviews()
     d->m_pendingItems.clear();
     d->m_dispatchedItems.clear();
     updateIcons();
-}
-
-void KFilePreviewGenerator::setEnabledPlugins(const QStringList& plugins)
-{
-    d->m_enabledPlugins = plugins;
-}
-
-QStringList KFilePreviewGenerator::enabledPlugins() const
-{
-    return d->m_enabledPlugins;
 }
 
 #include "moc_kfilepreviewgenerator.cpp"

@@ -36,10 +36,10 @@ enum PreviewDefaults {
 // NOTE: same as kdelibs/kio/kio/kfilemetainfo.cpp except the service string
 static QStringList kPreviewGlobMimeTypes(const QStringList &servicetypes)
 {
-    static const QString kfppluginservice("KFilePreview/Plugin");
+    static const QString pluginservice("KFilePreview/Plugin");
     QStringList result;
     foreach (const QString &servicetype, servicetypes) {
-        if (servicetype.isEmpty() || servicetype == kfppluginservice) {
+        if (servicetype.isEmpty() || servicetype == pluginservice) {
             continue;
         }
         result.append(servicetype);
@@ -59,12 +59,30 @@ static void kPreviewOverlay(QImage &preview, const QImage &overlay, const int ov
 
 class KFilePreviewPrivate
 {
+public:
+    int iconsize;
+    int iconalpha;
+    KService::List plugins;
+    QStringList enabledplugins;
 };
 
 KFilePreview::KFilePreview(QObject *parent)
     : QObject(parent),
     d(new KFilePreviewPrivate())
 {
+    KConfig config("kfilepreviewrc", KConfig::NoGlobals);
+    KConfigGroup previewgroup = config.group("PreviewSettings");
+    d->iconsize = previewgroup.readEntry("IconSize", KIconLoader::global()->currentSize(KIconLoader::Desktop));
+    d->iconalpha = previewgroup.readEntry("IconAlpha", int(PreviewDefaults::IconAlpha));
+    d->plugins = KServiceTypeTrader::self()->query("KFilePreview/Plugin");
+    KConfigGroup pluginsgroup = config.group("Plugins");
+    foreach (const KService::Ptr &plugin, d->plugins) {
+        const QString pluginname = plugin->desktopEntryName();
+        const bool pluginenabled = pluginsgroup.readEntry(pluginname, true);
+        if (pluginenabled) {
+            d->enabledplugins.append(pluginname);
+        }
+    }       
 }
 
 KFilePreview::~KFilePreview()
@@ -77,12 +95,12 @@ QStringList KFilePreview::supportedMimeTypes()
     QStringList result;
     KConfig config("kfilepreviewrc", KConfig::NoGlobals);
     KConfigGroup pluginsgroup = config.group("Plugins");
-    const KService::List kfpplugins = KServiceTypeTrader::self()->query("KFilePreview/Plugin");
-    foreach (const KService::Ptr &kfpplugin, kfpplugins) {
-        const QString kfpname = kfpplugin->desktopEntryName();
-        const bool enable = pluginsgroup.readEntry(kfpname, true);
-        if (enable) {
-            result.append(kPreviewGlobMimeTypes(kfpplugin->serviceTypes()));
+    const KService::List plugins = KServiceTypeTrader::self()->query("KFilePreview/Plugin");
+    foreach (const KService::Ptr &plugin, plugins) {
+        const QString pluginname = plugin->desktopEntryName();
+        const bool pluginenabled = pluginsgroup.readEntry(pluginname, true);
+        if (pluginenabled) {
+            result.append(kPreviewGlobMimeTypes(plugin->serviceTypes()));
         }
     }
     result.removeDuplicates();
@@ -94,66 +112,61 @@ QImage KFilePreview::preview(const KFileItem &item, const QSize &size)
 {
     // TODO: caching of previews the size of which is equal or less than 256x256
 
-    KConfig config("kfilepreviewrc", KConfig::NoGlobals);
-    KConfigGroup previewgroup = config.group("PreviewSettings");
-    const int iconsize = previewgroup.readEntry("IconSize", KIconLoader::global()->currentSize(KIconLoader::Desktop));
-    const int iconalpha = previewgroup.readEntry("IconAlpha", int(PreviewDefaults::IconAlpha));
-    KConfigGroup pluginsgroup = config.group("Plugins");
     const KMimeType::Ptr itemmimetype = item.determineMimeType();
-    const KService::List kfpplugins = KServiceTypeTrader::self()->query("KFilePreview/Plugin");
-    foreach (const KService::Ptr &kfpplugin, kfpplugins) {
-        const QString kfpname = kfpplugin->desktopEntryName();
-        const bool enable = pluginsgroup.readEntry(kfpname, true);
-        if (enable) {
-            foreach (const QString &kfppluginmime, kPreviewGlobMimeTypes(kfpplugin->serviceTypes())) {
-                bool mimematches = false;
-                if (kfppluginmime.endsWith('*')) {
-                    const QString kfppluginmimeglob = kfppluginmime.mid(0, kfppluginmime.size() - 1);
-                    if (itemmimetype && itemmimetype->name().startsWith(kfppluginmimeglob)) {
-                        mimematches = true;
-                    }
-                }
+    foreach (const KService::Ptr &plugin, d->plugins) {
+        const QString pluginname = plugin->desktopEntryName();
+        if (!d->enabledplugins.contains(pluginname)) {
+            continue;
+        }
 
-                if (!mimematches && itemmimetype->is(kfppluginmime)) {
+        foreach (const QString &pluginmime, kPreviewGlobMimeTypes(plugin->serviceTypes())) {
+            bool mimematches = false;
+            if (pluginmime.endsWith('*')) {
+                const QString pluginmimeglob = pluginmime.mid(0, pluginmime.size() - 1);
+                if (itemmimetype && itemmimetype->name().startsWith(pluginmimeglob)) {
                     mimematches = true;
                 }
+            }
 
-                if (mimematches) {
-                    int kfpmaximumsize = 0;
-                    if (item.isLocalFile()) {
-                        kfpmaximumsize = kfpplugin->property("MaximumLocalSize", QVariant::Int).toInt();
-                        if (kfpmaximumsize <= 0) {
-                            kfpmaximumsize = (PreviewDefaults::MaxLocalSize * 1024 * 1024);
-                        }
-                    } else {
-                        kfpmaximumsize = kfpplugin->property("MaximumRemoteSize", QVariant::Int).toInt();
-                        if (kfpmaximumsize <= 0) {
-                            kfpmaximumsize = (PreviewDefaults::MaxRemoteSize * 1024 * 1024);
-                        }
+            if (!mimematches && itemmimetype->is(pluginmime)) {
+                mimematches = true;
+            }
+
+            if (mimematches) {
+                int pluginmaximumsize = 0;
+                if (item.isLocalFile()) {
+                    pluginmaximumsize = plugin->property("MaximumLocalSize", QVariant::Int).toInt();
+                    if (pluginmaximumsize <= 0) {
+                        pluginmaximumsize = (PreviewDefaults::MaxLocalSize * 1024 * 1024);
                     }
-                    if (item.size() >= KIO::filesize_t(kfpmaximumsize)) {
-                        kDebug() << "Item size too big for" << item.url() << kfpname << item.size() << kfpmaximumsize;
-                        continue;
+                } else {
+                    pluginmaximumsize = plugin->property("MaximumRemoteSize", QVariant::Int).toInt();
+                    if (pluginmaximumsize <= 0) {
+                        pluginmaximumsize = (PreviewDefaults::MaxRemoteSize * 1024 * 1024);
                     }
                 }
+                if (item.size() >= KIO::filesize_t(pluginmaximumsize)) {
+                    kDebug() << "Item size too big for" << item.url() << pluginname << item.size() << pluginmaximumsize;
+                    continue;
+                }
+            }
 
-                if (mimematches) {
-                    kDebug() << "Creating preview via" << kfpname;
-                    KFilePreviewPlugin *kfpplugininstance = kfpplugin->createInstance<KFilePreviewPlugin>();
-                    if (kfpplugininstance) {
-                        QImage result = kfpplugininstance->preview(item.url(), size);
-                        const bool kfpiconoverlay = kfpplugin->property("X-KDE-IconOverlay", QVariant::Bool).toBool();
-                        if (kfpiconoverlay && itemmimetype && KIconLoader::global()->alphaBlending(KIconLoader::Desktop)) {
-                            const QPixmap iconoverlay = KIconLoader::global()->loadMimeTypeIcon(
-                                itemmimetype->iconName(), KIconLoader::Desktop, iconsize
-                            );
-                            kPreviewOverlay(result, iconoverlay.toImage(), iconalpha);
-                        }
-                        delete kfpplugininstance;
-                        return result;
-                    } else {
-                        kWarning() << "Could not create KFilePreviewPlugin instance";
+            if (mimematches) {
+                kDebug() << "Creating preview via" << pluginname;
+                KFilePreviewPlugin *plugininstance = plugin->createInstance<KFilePreviewPlugin>();
+                if (plugininstance) {
+                    QImage result = plugininstance->preview(item.url(), size);
+                    const bool kfpiconoverlay = plugin->property("X-KDE-IconOverlay", QVariant::Bool).toBool();
+                    if (kfpiconoverlay && itemmimetype && KIconLoader::global()->alphaBlending(KIconLoader::Desktop)) {
+                        const QPixmap iconoverlay = KIconLoader::global()->loadMimeTypeIcon(
+                            itemmimetype->iconName(), KIconLoader::Desktop, d->iconsize
+                        );
+                        kPreviewOverlay(result, iconoverlay.toImage(), d->iconalpha);
                     }
+                    delete plugininstance;
+                    return result;
+                } else {
+                    kWarning() << "Could not create KFilePreviewPlugin instance";
                 }
             }
         }

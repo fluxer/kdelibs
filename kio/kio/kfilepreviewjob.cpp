@@ -76,6 +76,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
     foreach (const KFileItem &item, items) {
         if (item.isDir()) {
             kWarning() << "directories not supported";
+            emit failed(item);
             continue;
 #if 0
             kDebug() << "directory item" << item.url();
@@ -87,6 +88,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
             localitems.append(item);
         } else {
             kWarning() << "remote items not supported";
+            emit failed(item);
             continue;
 #if 0
             kDebug() << "remote item" << item.url();
@@ -101,8 +103,6 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
     connect(d, SIGNAL(failed(KFileItem)), this, SIGNAL(failed(KFileItem)));
     connect(d, SIGNAL(preview(KFileItem,QPixmap)), this, SIGNAL(gotPreview(KFileItem,QPixmap)));
     connect(d, SIGNAL(finished()), this, SLOT(slotFinished()));
-
-    start();
 }
 
 void KFilePreviewJob::start()
@@ -118,7 +118,6 @@ KFilePreviewJob::~KFilePreviewJob()
 
 void KFilePreviewJob::slotFinished()
 {
-    qDebug() << Q_FUNC_INFO << hasSubjobs();
     if (!hasSubjobs()) {
         emitResult();
     }
@@ -126,7 +125,6 @@ void KFilePreviewJob::slotFinished()
 
 void KFilePreviewJob::slotResult(KJob *job)
 {
-    qDebug() << Q_FUNC_INFO << job << hasSubjobs();
     KCompositeJob::slotResult(job);
     if (!hasSubjobs()) {
         emitResult();

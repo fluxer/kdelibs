@@ -580,7 +580,7 @@ void KMimeTypeTest::testMimeTypeParent()
 void KMimeTypeTest::testMimeTypeInheritancePerformance()
 {
     // Check performance of is(). In kde3 the list of mimetypes with previews had 63 items...
-    // We could get it with KServiceTypeTrader::self()->query("ThumbCreator") and the "MimeTypes"
+    // We could get it with KServiceTypeTrader::self()->query("foo") and the "MimeTypes"
     // property, but this would give variable results and requires other modules installed.
     QStringList mimeTypes; mimeTypes << "image/jpeg" << "image/png" << "image/tiff" << "text/plain" << "text/html";
     mimeTypes += mimeTypes;

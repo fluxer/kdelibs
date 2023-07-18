@@ -68,7 +68,7 @@
 #include <kio/jobuidelegate.h>
 #include <kio/jobclasses.h>
 #include <kio/netaccess.h>
-#include <kio/previewjob.h>
+#include <kio/kfilepreview.h>
 #include <kio/renamedialog.h>
 #include <kfilepreviewgenerator.h>
 #include <krun.h>
@@ -1294,7 +1294,7 @@ bool KDirOperator::eventFilter(QObject *watched, QEvent *event)
 
 bool KDirOperator::Private::checkPreviewInternal() const
 {
-    const QStringList supported = KIO::PreviewJob::supportedMimeTypes();
+    const QStringList supported = KFilePreview::supportedMimeTypes();
     // no preview support for directories?
     if (parent->dirOnlyMode() && supported.indexOf("inode/directory") == -1)
         return false;

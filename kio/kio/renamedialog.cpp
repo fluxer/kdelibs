@@ -40,6 +40,7 @@
 #include <kpushbutton.h>
 #include <kio/global.h>
 #include <kio/udsentry.h>
+#include <kio/kfilepreviewjob.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kglobal.h>
@@ -53,7 +54,6 @@
 #include <kguiitem.h>
 #include <ksqueezedtextlabel.h>
 #include <kfilemetadatawidget.h>
-#include <previewjob.h>
 
 using namespace KIO;
 
@@ -605,13 +605,11 @@ void RenameDialog::resizePanels()
     d->m_srcArea->setMinimumSize(halfSize.boundedTo(maxHalfSize));
     d->m_destArea->setMinimumSize(halfSize.boundedTo(maxHalfSize));
 
-    KIO::PreviewJob* srcJob = KIO::filePreview(KFileItemList() << d->srcItem,
+    KFilePreviewJob* srcJob = new KFilePreviewJob(KFileItemList() << d->srcItem,
                               QSize(d->m_srcPreview->width() * qreal(0.9), d->m_srcPreview->height()));
-    srcJob->setScaleType(KIO::PreviewJob::Unscaled);
 
-    KIO::PreviewJob* destJob = KIO::filePreview(KFileItemList() << d->destItem,
+    KFilePreviewJob* destJob = new KFilePreviewJob(KFileItemList() << d->destItem,
                                QSize(d->m_destPreview->width() * qreal(0.9), d->m_destPreview->height()));
-    destJob->setScaleType(KIO::PreviewJob::Unscaled);
 
     connect(srcJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
             this, SLOT(showSrcPreview(KFileItem,QPixmap)));
@@ -621,6 +619,8 @@ void RenameDialog::resizePanels()
             this, SLOT(showSrcIcon(KFileItem)));
     connect(destJob, SIGNAL(failed(KFileItem)),
             this, SLOT(showDestIcon(KFileItem)));
+    srcJob->start();
+    destJob->start();
 }
 
 QScrollArea* RenameDialog::createContainerLayout(QWidget* parent, const KFileItem& item, QLabel* preview)

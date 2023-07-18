@@ -18,7 +18,7 @@
  */
 
 #include "kpreviewprops.h"
-#include <kio/previewjob.h>
+#include <kio/kfilepreview.h>
 
 #include <QtGui/QLayout>
 
@@ -60,14 +60,13 @@ bool KPreviewPropsPlugin::supports(const KFileItemList &items)
         return false;
     }
     const KMimeType::Ptr itemMime = items.first().mimeTypePtr();
-    foreach(const QString &it, KIO::PreviewJob::supportedMimeTypes()) {
+    foreach(const QString &it, KFilePreview::supportedMimeTypes()) {
         if (itemMime->is(it)) {
             return true;
         }
 
         // glob match for certain thumbnailers, same matching is done in:
-        // kdelibs/kio/kio/previewjob.cpp
-        // kde-workspace/kioslave/thumbnail/thumbnail.cpp
+        // kdelibs/kio/kio/kfilepreview.cpp
         if (it.endsWith('*')) {
             const QString mimeGroup = it.left(it.length()-1);
             const QString mimeName = itemMime->name();
