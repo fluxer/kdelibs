@@ -8,3 +8,9 @@ Type=bool
 
 [PropertyDef::X-KDE-CacheThumbnail]
 Type=bool
+
+[PropertyDef::X-KDE-MaximumLocalSize]
+Type=Int
+
+[PropertyDef::X-KDE-MaximumRemoteSize]
+Type=Int

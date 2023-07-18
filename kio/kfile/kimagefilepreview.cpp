@@ -24,11 +24,12 @@
 #include <kfileitem.h>
 #include <kpixmapsequenceoverlaypainter.h>
 #include <kio/previewjob.h>
+#include <kio/kfilepreviewjob.h>
 #include <kconfiggroup.h>
 
 #include <config-kfile.h>
 
-
+#if 0
 static KIO::PreviewJob* createJob(const KUrl &url, int w, int h)
 {
     if (url.isValid()) {
@@ -42,6 +43,18 @@ static KIO::PreviewJob* createJob(const KUrl &url, int w, int h)
     }
     return nullptr;
 }
+#else
+static KFilePreviewJob* createJob(const KUrl &url, int w, int h)
+{
+    if (url.isValid()) {
+        KFileItemList items;
+        items.append(KFileItem(KFileItem::Unknown, KFileItem::Unknown, url, true));
+        KFilePreviewJob *previewJob = new KFilePreviewJob(items, QSize(w, h));
+        return previewJob;
+    }
+    return nullptr;
+}
+#endif
 
 
 /**** KImageFilePreviewPrivate ****/
@@ -58,7 +71,11 @@ public:
     KUrl lastShownURL;
     QLabel *imageLabel;
     KPixmapSequenceOverlayPainter *busyPainter;
+#if 0
     KIO::PreviewJob *m_job;
+#else
+    KFilePreviewJob *m_job;
+#endif
 };
 
 KImageFilePreviewPrivate::KImageFilePreviewPrivate()

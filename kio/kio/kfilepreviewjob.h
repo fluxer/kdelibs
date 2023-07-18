@@ -16,37 +16,44 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KFILEPREVIEW_H
-#define KFILEPREVIEW_H
+#ifndef KFILEPREVIEWJOB_H
+#define KFILEPREVIEWJOB_H
 
 #include <kio/kio_export.h>
+#include <kcompositejob.h>
 #include <kfileitem.h>
+#include <kjob.h>
 
-#include <QObject>
-#include <QImage>
+#include <QPixmap>
 
-class KFilePreviewPrivate;
+class KFilePreviewJobPrivate;
 
 /*!
-    File preview class
+    File preview job class
 
     @since 4.23
     @warning the API is subject to change
 */
-class KIO_EXPORT KFilePreview : public QObject
+class KIO_EXPORT KFilePreviewJob : public KCompositeJob
 {
     Q_OBJECT
 public:
-    KFilePreview(QObject *parent = nullptr);
-    ~KFilePreview();
+    KFilePreviewJob(const KFileItemList &items, const QSize &size, QObject *parent = nullptr);
+    ~KFilePreviewJob();
 
-    QImage preview(const KFileItem &item, const QSize &size);
+    void start() final;
 
-    static QStringList supportedMimeTypes();
+Q_SIGNALS:
+    void failed(const KFileItem &item);
+    void gotPreview(const KFileItem &item, const QPixmap &preview);
+
+private Q_SLOTS:
+    void slotFinished();
+    void slotResult(KJob *job);
 
 private:
-    Q_DISABLE_COPY(KFilePreview);
-    KFilePreviewPrivate* d;
+    Q_DISABLE_COPY(KFilePreviewJob);
+    KFilePreviewJobPrivate* d;
 };
 
-#endif // KFILEPREVIEW_H
+#endif // KFILEPREVIEWJOB_H

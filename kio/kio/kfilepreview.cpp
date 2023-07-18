@@ -47,7 +47,7 @@ static QStringList kPreviewGlobMimeTypes(const QStringList &servicetypes)
     return result;
 }
 
-static void kPreviewOverlay(QImage &preview, const QImage &overlay, const ushort overlayalpha)
+static void kPreviewOverlay(QImage &preview, const QImage &overlay, const int overlayalpha)
 {
     // TODO: ratio check
     QPainter painter(&preview);

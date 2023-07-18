@@ -61,6 +61,7 @@ set(kiocore_STAT_SRCS
     kio/khttp.cpp
     kio/kfilepreview.cpp
     kio/kfilepreviewplugin.cpp
+    kio/kfilepreviewjob.cpp
     kio/netaccess.cpp
     kio/paste.cpp
     kio/pastedialog.cpp
@@ -226,6 +227,7 @@ install(
     kio/khttp.h
     kio/kfilepreview.h
     kio/kfilepreviewplugin.h
+    kio/kfilepreviewjob.h
     kfile/kabstractfilemodule.h
     kfile/kabstractfilewidget.h
     kfile/kdiskfreespaceinfo.h
