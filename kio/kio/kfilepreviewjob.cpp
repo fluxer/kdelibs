@@ -33,6 +33,8 @@ public:
     KFilePreviewJobPrivate(const KFileItemList &items, const QSize &size, QObject *parent);
 
     void interrupt();
+    void suspend();
+    void resume();
 
 Q_SIGNALS:
     void failed(const KFileItem &item);
@@ -45,19 +47,31 @@ private:
     KFileItemList m_items;
     QSize m_size;
     bool m_interrupt;
+    bool m_suspend;
 };
 
 KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const QSize &size, QObject *parent)
     : QThread(parent),
     m_items(items),
     m_size(size),
-    m_interrupt(false)
+    m_interrupt(false),
+    m_suspend(false)
 {
 }
 
 void KFilePreviewJobPrivate::interrupt()
 {
     m_interrupt = true;
+}
+
+void KFilePreviewJobPrivate::suspend()
+{
+    m_suspend = true;
+}
+
+void KFilePreviewJobPrivate::resume()
+{
+    m_suspend = false;
 }
 
 void KFilePreviewJobPrivate::run()
@@ -67,6 +81,9 @@ void KFilePreviewJobPrivate::run()
     foreach (const KFileItem &item, m_items) {
         if (m_interrupt) {
             break;
+        }
+        while (m_suspend) {
+            QThread::msleep(500);
         }
         const QImage result = kfilepreview.preview(item, m_size);
         if (result.isNull()) {
@@ -84,7 +101,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
 {
     qRegisterMetaType<KFileItem>();
     setUiDelegate(new KIO::JobUiDelegate());
-    setCapabilities(KJob::Killable);
+    setCapabilities(KJob::Killable | KJob::Suspendable);
 
     KFileItemList localitems;
     foreach (const KFileItem &item, items) {
@@ -138,6 +155,18 @@ bool KFilePreviewJob::doKill()
 {
     d->interrupt();
     return d->wait();
+}
+
+bool KFilePreviewJob::doSuspend()
+{
+    d->suspend();
+    return true;
+}
+
+bool KFilePreviewJob::doResume()
+{
+    d->resume();
+    return true;
 }
 
 void KFilePreviewJob::slotFinished()

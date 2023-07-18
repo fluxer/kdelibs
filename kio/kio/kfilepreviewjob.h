@@ -49,6 +49,8 @@ Q_SIGNALS:
 
 protected:
     bool doKill() final;
+    bool doSuspend() final;
+    bool doResume() final;
 
 private Q_SLOTS:
     void slotFinished();
