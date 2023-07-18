@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=KFilePreview/Plugin
+Name=File Preview Plugin
+
+[PropertyDef::X-KDE-IconOverlay]
+Type=bool
+
+[PropertyDef::X-KDE-CacheThumbnail]
+Type=bool

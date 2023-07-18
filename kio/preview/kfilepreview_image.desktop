@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+Name=KFilePreviewImagePlugin
+GenericName=Image
+Comment=Creates preview for images
+MimeType=image/*
+X-KDE-Library=kfilepreview_image
+X-KDE-ServiceTypes=KFilePreview/Plugin
+X-KDE-IconOverlay=false
+X-KDE-CacheThumbnail=true

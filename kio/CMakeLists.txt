@@ -22,6 +22,7 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=7000)
 
 add_subdirectory(misc)
 add_subdirectory(metadata)
+add_subdirectory(preview)
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
@@ -58,6 +59,8 @@ set(kiocore_STAT_SRCS
     kio/kurifilter.cpp
     kio/kurlcompletion.cpp
     kio/khttp.cpp
+    kio/kfilepreview.cpp
+    kio/kfilepreviewplugin.cpp
     kio/netaccess.cpp
     kio/paste.cpp
     kio/pastedialog.cpp
@@ -157,6 +160,7 @@ install(
     kcmodule.desktop
     kcmoduleinit.desktop
     kfilemetadataplugin.desktop
+    kfilepreviewplugin.desktop
     kurifilterplugin.desktop
     kfile/kpropertiesdialogplugin.desktop
     kio/kfileitemactionplugin.desktop
@@ -220,6 +224,8 @@ install(
     kio/kurifilter.h
     kio/kurlcompletion.h
     kio/khttp.h
+    kio/kfilepreview.h
+    kio/kfilepreviewplugin.h
     kfile/kabstractfilemodule.h
     kfile/kabstractfilewidget.h
     kfile/kdiskfreespaceinfo.h
