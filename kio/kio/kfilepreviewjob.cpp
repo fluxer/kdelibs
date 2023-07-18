@@ -30,11 +30,13 @@ class KFilePreviewJobPrivate : public QThread
 {
     Q_OBJECT
 public:
-    KFilePreviewJobPrivate(const KFileItemList &items, const QSize &size, QObject *parent);
+    KFilePreviewJobPrivate(const KFileItemList &items, const KFileItemList &localitems, const QSize &size, QObject *parent);
 
     void interrupt();
     void suspend();
     void resume();
+
+    KFileItemList items() const;
 
 Q_SIGNALS:
     void failed(const KFileItem &item);
@@ -45,14 +47,16 @@ protected:
 
 private:
     KFileItemList m_items;
+    KFileItemList m_localitems;
     QSize m_size;
     bool m_interrupt;
     bool m_suspend;
 };
 
-KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const QSize &size, QObject *parent)
+KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const KFileItemList &localitems, const QSize &size, QObject *parent)
     : QThread(parent),
     m_items(items),
+    m_localitems(localitems),
     m_size(size),
     m_interrupt(false),
     m_suspend(false)
@@ -74,12 +78,18 @@ void KFilePreviewJobPrivate::resume()
     m_suspend = false;
 }
 
+KFileItemList KFilePreviewJobPrivate::items() const
+{
+    return m_items;
+}
+
 void KFilePreviewJobPrivate::run()
 {
     kDebug() << "creating previews";
     KFilePreview kfilepreview;
-    foreach (const KFileItem &item, m_items) {
+    foreach (const KFileItem &item, m_localitems) {
         if (m_interrupt) {
+            kDebug() << "interrupted creation of previews";
             break;
         }
         while (m_suspend) {
@@ -107,8 +117,6 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
     foreach (const KFileItem &item, items) {
         if (item.isDir()) {
             kWarning() << "directories not supported";
-            emit failed(item);
-            continue;
 #if 0
             if (!item.isLocalFile()) {
                 KIO::getJobTracker()->registerJob(this);
@@ -122,8 +130,6 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
             localitems.append(item);
         } else {
             kWarning() << "remote items not supported";
-            emit failed(item);
-            continue;
 #if 0
             KIO::getJobTracker()->registerJob(this);
             kDebug() << "remote item" << item.url();
@@ -133,7 +139,7 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
         }
     }
 
-    d = new KFilePreviewJobPrivate(localitems, size, this);
+    d = new KFilePreviewJobPrivate(items, localitems, size, this);
 
     connect(d, SIGNAL(failed(KFileItem)), this, SIGNAL(failed(KFileItem)));
     connect(d, SIGNAL(preview(KFileItem,QPixmap)), this, SIGNAL(gotPreview(KFileItem,QPixmap)));
@@ -142,19 +148,31 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
 
 void KFilePreviewJob::start()
 {
+    foreach (const KFileItem &item, d->items()) {
+        if (item.isDir()) {
+            kWarning() << "directories not supported";
+            emit failed(item);
+        } else if (!item.isLocalFile()) {
+            kWarning() << "remote items not supported";
+            emit failed(item);
+        }
+    }
+
     d->start();
 }
 
 KFilePreviewJob::~KFilePreviewJob()
 {
     // KIO::getJobTracker()->unregisterJob(this);
+    d->wait();
     delete d;
 }
 
 bool KFilePreviewJob::doKill()
 {
+    qDebug() << Q_FUNC_INFO;
     d->interrupt();
-    return d->wait();
+    return true;
 }
 
 bool KFilePreviewJob::doSuspend()
