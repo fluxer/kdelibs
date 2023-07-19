@@ -30,6 +30,8 @@
 
 typedef QPair<KFileItem,KFileItem> KFilePreviewPair;
 
+static const int s_previewsuspendtime = 500;
+
 class KFilePreviewJobThread : public QThread
 {
     Q_OBJECT
@@ -90,7 +92,7 @@ void KFilePreviewJobThread::run()
             break;
         }
         while (m_suspend) {
-            QThread::msleep(500);
+            QThread::msleep(s_previewsuspendtime);
         }
         const QImage result = m_filepreview->preview(itempair.first, m_size, KFilePreview::makeKey(itempair.second));
         if (result.isNull()) {
@@ -170,7 +172,7 @@ void KFilePreviewJobRunnable::run()
             break;
         }
         while (m_suspend) {
-            QThread::msleep(500);
+            QThread::msleep(s_previewsuspendtime);
         }
         const QImage result = m_filepreview->preview(item, m_size, KFilePreview::makeKey(item));
         if (result.isNull()) {
@@ -230,8 +232,10 @@ KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, 
             localitems.append(qMakePair(item, item));
         } else {
             kDebug() << "remote item" << item.url();
+            // TODO: extension for MIME glob matching
+            const KUrl desturl = KUrl::fromPath(KTemporaryFile::filePath());
             KIO::FileCopyJob* filecopyjob = KIO::file_copy(
-                item.mostLocalUrl(), KUrl::fromPath(KTemporaryFile::filePath()),
+                item.mostLocalUrl(), desturl,
                 -1, KIO::Overwrite | KIO::HideProgressInfo
             );
             // checked for by camera KIO slave
@@ -370,6 +374,8 @@ void KFilePreviewJob::slotResult(KJob *job)
         d->directorythreads.append(directorythread);
         if (!d->directorypool) {
             d->directorypool = new QThreadPool(this);
+            // two threads already (possibly) for local and remote items
+            d->directorypool->setMaxThreadCount(qMax(d->directorypool->maxThreadCount() - 2, 1));
         }
         d->directorypool->start(directorythread);
     }
