@@ -496,6 +496,7 @@ void KStandardDirs::addPrefix(const QString &_dir)
 
     if (!d->m_prefixes.contains(dir, case_sensitivity)) {
         d->m_prefixes.append(dir);
+        std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
         d->m_dircache.clear();
     }
 }
@@ -511,6 +512,7 @@ void KStandardDirs::addXdgConfigPrefix(const QString &_dir)
 
     if (!d->xdgconf_prefixes.contains(dir, case_sensitivity)) {
         d->xdgconf_prefixes.append(dir);
+        std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
         d->m_dircache.clear();
     }
 }
@@ -526,6 +528,7 @@ void KStandardDirs::addXdgDataPrefix(const QString &_dir)
 
     if (!d->xdgdata_prefixes.contains(dir, case_sensitivity)) {
         d->xdgdata_prefixes.append(dir);
+        std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
         d->m_dircache.clear();
     }
 }
@@ -562,6 +565,7 @@ bool KStandardDirs::addResourceType(const char *type,
         copy += QLatin1Char('/');
     }
 
+    std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
     QByteArray typeBa = type;
     QStringList& rels = d->m_relatives[typeBa]; // find or insert
     if (!rels.contains(copy, case_sensitivity)) {
@@ -600,6 +604,7 @@ bool KStandardDirs::addResourceDir(const char *type,
             paths.append(copy);
         }
         // clean the caches
+        std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
         d->m_dircache.remove(typeBa);
         return true;
     }
@@ -1055,6 +1060,7 @@ QString KStandardDirs::saveLocation(const char *type,
         fullPath += QLatin1Char('/');
 
     if (create && KStandardDirs::makeDir(fullPath, 0700)) {
+        std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
         d->m_dircache.remove(type);
     }
 
