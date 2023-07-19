@@ -33,6 +33,9 @@ KFilePreviewImagePlugin::~KFilePreviewImagePlugin()
 QImage KFilePreviewImagePlugin::preview(const KUrl &url, const QSize &size)
 {
     QImage result(url.toLocalFile());
+    if (result.isNull()) {
+        return result;
+    }
     return result.scaled(size, Qt::KeepAspectRatio);
 }
 

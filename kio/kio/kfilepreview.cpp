@@ -75,6 +75,9 @@ static QString kPreviewCachePath(const KFileItem &item, const QString &key)
 
 static QImage kPreviewScale(const QImage &preview, const QSize &size)
 {
+    if (preview.isNull()) {
+        return preview;
+    }
     return preview.scaled(size, Qt::KeepAspectRatio);
 }
 
