@@ -40,9 +40,11 @@ public:
     KFilePreview(QObject *parent = nullptr);
     ~KFilePreview();
 
-    QImage preview(const KFileItem &item, const QSize &size);
+    QImage preview(const KFileItem &item, const QSize &size, const QString &key);
 
     static QStringList supportedMimeTypes();
+
+    static QString makeKey(const KFileItem &item);
 
 private:
     Q_DISABLE_COPY(KFilePreview);

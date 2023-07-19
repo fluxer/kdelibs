@@ -64,20 +64,10 @@ static void kPreviewOverlay(QImage &preview, const QImage &overlay, const int ov
     painter.drawImage(x, y, overlay);
 }
 
-static QString kPreviewId(const KFileItem &item)
-{
-    const QByteArray itemurlbytes = QFile::encodeName(item.url().prettyUrl());
-    const QByteArray itemhash = QCryptographicHash::hash(itemurlbytes, QCryptographicHash::KAT).toHex();
-    QString result = QString::fromLatin1(itemhash.constData(), itemhash.size());
-    result.append(QLatin1Char('_'));
-    result.append(QString::number(item.time(KFileItem::ModificationTime).toTime_t()));
-    return result;
-}
-
-static QString kPreviewCachePath(const KFileItem &item)
+static QString kPreviewCachePath(const KFileItem &item, const QString &key)
 {
     QString result = KGlobal::dirs()->saveLocation("cache", "thumbnails/");
-    result.append(kPreviewId(item));
+    result.append(key);
     result.append(QLatin1Char('.'));
     result.append(QString::fromLatin1(s_previewimageformat.constData(), s_previewimageformat.size()));
     return result;
@@ -127,27 +117,9 @@ KFilePreview::~KFilePreview()
     delete d;
 }
 
-QStringList KFilePreview::supportedMimeTypes()
+QImage KFilePreview::preview(const KFileItem &item, const QSize &size, const QString &key)
 {
-    QStringList result;
-    KConfig config("kfilepreviewrc", KConfig::NoGlobals);
-    KConfigGroup pluginsgroup = config.group("Plugins");
-    const KService::List plugins = KServiceTypeTrader::self()->query("KFilePreview/Plugin");
-    foreach (const KService::Ptr &plugin, plugins) {
-        const QString pluginname = plugin->desktopEntryName();
-        const bool pluginenabled = pluginsgroup.readEntry(pluginname, true);
-        if (pluginenabled) {
-            result.append(kPreviewGlobMimeTypes(plugin->serviceTypes()));
-        }
-    }
-    result.removeDuplicates();
-    qSort(result);
-    return result;
-}
-
-QImage KFilePreview::preview(const KFileItem &item, const QSize &size)
-{
-    const QString cachedthumbnail = kPreviewCachePath(item);
+    const QString cachedthumbnail = kPreviewCachePath(item, key);
     const bool issizecacheble = kSizeLessOrEqual(size, s_previewcachesize);
     if (QFile::exists(cachedthumbnail) && issizecacheble) {
         kDebug() << "Using cached preview for" << item.url();
@@ -220,6 +192,34 @@ QImage KFilePreview::preview(const KFileItem &item, const QSize &size)
         }
     }
     return QImage();
+}
+
+QStringList KFilePreview::supportedMimeTypes()
+{
+    QStringList result;
+    KConfig config("kfilepreviewrc", KConfig::NoGlobals);
+    KConfigGroup pluginsgroup = config.group("Plugins");
+    const KService::List plugins = KServiceTypeTrader::self()->query("KFilePreview/Plugin");
+    foreach (const KService::Ptr &plugin, plugins) {
+        const QString pluginname = plugin->desktopEntryName();
+        const bool pluginenabled = pluginsgroup.readEntry(pluginname, true);
+        if (pluginenabled) {
+            result.append(kPreviewGlobMimeTypes(plugin->serviceTypes()));
+        }
+    }
+    result.removeDuplicates();
+    qSort(result);
+    return result;
+}
+
+QString KFilePreview::makeKey(const KFileItem &item)
+{
+    const QByteArray itemurlbytes = QFile::encodeName(item.url().prettyUrl());
+    const QByteArray itemhash = QCryptographicHash::hash(itemurlbytes, QCryptographicHash::KAT).toHex();
+    QString result = QString::fromLatin1(itemhash.constData(), itemhash.size());
+    result.append(QLatin1Char('_'));
+    result.append(QString::number(item.time(KFileItem::ModificationTime).toTime_t()));
+    return result;
 }
 
 #include "moc_kfilepreview.cpp"

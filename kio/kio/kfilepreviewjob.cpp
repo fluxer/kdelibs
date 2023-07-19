@@ -21,22 +21,22 @@
 #include "kio/global.h"
 #include "kio/job.h"
 #include "kio/jobuidelegate.h"
-#include "kjobtrackerinterface.h"
+#include "ktemporaryfile.h"
 #include "kdebug.h"
 
 #include <QThread>
 
-class KFilePreviewJobPrivate : public QThread
+typedef QPair<KFileItem,KFileItem> KFilePreviewPair;
+
+class KFilePreviewJobThread : public QThread
 {
     Q_OBJECT
 public:
-    KFilePreviewJobPrivate(const KFileItemList &items, const KFileItemList &localitems, const QSize &size, QObject *parent);
+    KFilePreviewJobThread(const QList<KFilePreviewPair> &items, const QSize &size, QObject *parent);
 
     void interrupt();
     void suspend();
     void resume();
-
-    KFileItemList items() const;
 
 Q_SIGNALS:
     void failed(const KFileItem &item);
@@ -46,18 +46,16 @@ protected:
     void run() final;
 
 private:
-    KFileItemList m_items;
-    KFileItemList m_localitems;
+    QList<KFilePreviewPair> m_items;
     QSize m_size;
     bool m_interrupt;
     bool m_suspend;
     KFilePreview* m_filepreview;
 };
 
-KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const KFileItemList &localitems, const QSize &size, QObject *parent)
+KFilePreviewJobThread::KFilePreviewJobThread(const QList<KFilePreviewPair> &items, const QSize &size, QObject *parent)
     : QThread(parent),
     m_items(items),
-    m_localitems(localitems),
     m_size(size),
     m_interrupt(false),
     m_suspend(false),
@@ -66,30 +64,25 @@ KFilePreviewJobPrivate::KFilePreviewJobPrivate(const KFileItemList &items, const
     m_filepreview = new KFilePreview(this);
 }
 
-void KFilePreviewJobPrivate::interrupt()
+void KFilePreviewJobThread::interrupt()
 {
     m_interrupt = true;
 }
 
-void KFilePreviewJobPrivate::suspend()
+void KFilePreviewJobThread::suspend()
 {
     m_suspend = true;
 }
 
-void KFilePreviewJobPrivate::resume()
+void KFilePreviewJobThread::resume()
 {
     m_suspend = false;
 }
 
-KFileItemList KFilePreviewJobPrivate::items() const
+void KFilePreviewJobThread::run()
 {
-    return m_items;
-}
-
-void KFilePreviewJobPrivate::run()
-{
-    kDebug() << "creating previews";
-    foreach (const KFileItem &item, m_localitems) {
+    qDebug() << "creating previews" << m_items;
+    foreach (const KFilePreviewPair &itempair, m_items) {
         if (m_interrupt) {
             kDebug() << "interrupted creation of previews";
             break;
@@ -97,98 +90,141 @@ void KFilePreviewJobPrivate::run()
         while (m_suspend) {
             QThread::msleep(500);
         }
-        const QImage result = m_filepreview->preview(item, m_size);
+        const QImage result = m_filepreview->preview(itempair.first, m_size, KFilePreview::makeKey(itempair.second));
         if (result.isNull()) {
-            emit failed(item);
+            qDebug() << "failed to create preview for" << itempair.first;
+            emit failed(itempair.second);
         } else {
-            emit preview(item, QPixmap::fromImage(result));
+            emit preview(itempair.second, QPixmap::fromImage(result));
         }
     }
-    kDebug() << "done creating previews";
+    qDebug() << "done creating previews" << m_items;
 }
+
+class KFilePreviewJobPrivate
+{
+public:
+    KFilePreviewJobPrivate();
+
+    KFileItemList items;
+    QList<KFilePreviewPair> remoteitems;
+    QSize size;
+    KFilePreviewJobThread* localthread;
+    KFilePreviewJobThread* remotethread;
+};
+
+KFilePreviewJobPrivate::KFilePreviewJobPrivate()
+    : localthread(nullptr),
+    remotethread(nullptr)
+{
+}
+
 
 KFilePreviewJob::KFilePreviewJob(const KFileItemList &items, const QSize &size, QObject *parent)
     : KCompositeJob(parent),
-    d(nullptr)
+    d(new KFilePreviewJobPrivate())
 {
     qRegisterMetaType<KFileItem>();
     setUiDelegate(new KIO::JobUiDelegate());
     setCapabilities(KJob::Killable | KJob::Suspendable);
 
-    KFileItemList localitems;
+    d->items = items;
+    d->size = size;
+
+    QList<KFilePreviewPair> localitems;
     foreach (const KFileItem &item, items) {
         if (item.isDir()) {
 #if 0
-            if (!item.isLocalFile()) {
-                KIO::getJobTracker()->registerJob(this);
-            }
             kDebug() << "directory item" << item.url();
             KIO::ListJob* listjob = KIO::listDir(item.url(), KIO::HideProgressInfo);
             addSubjob(listjob);
 #endif
         } else if (item.isLocalFile()) {
             kDebug() << "local item" << item.url();
-            localitems.append(item);
+            localitems.append(qMakePair(item, item));
         } else {
-#if 0
-            KIO::getJobTracker()->registerJob(this);
             kDebug() << "remote item" << item.url();
-            KIO::TransferJob* getjob = KIO::get(item.url(), KIO::NoReload, KIO::HideProgressInfo);
-            addSubjob(getjob);
-#endif
+            KIO::FileCopyJob* filecopyjob = KIO::file_copy(
+                item.mostLocalUrl(), KUrl::fromPath(KTemporaryFile::filePath()),
+                -1, KIO::Overwrite | KIO::HideProgressInfo
+            );
+            // checked for by camera KIO slave
+            filecopyjob->addMetaData("thumbnail", "1");
+            addSubjob(filecopyjob);
         }
     }
 
-    d = new KFilePreviewJobPrivate(items, localitems, size, this);
-
-    connect(d, SIGNAL(failed(KFileItem)), this, SIGNAL(failed(KFileItem)));
-    connect(d, SIGNAL(preview(KFileItem,QPixmap)), this, SIGNAL(gotPreview(KFileItem,QPixmap)));
-    connect(d, SIGNAL(finished()), this, SLOT(slotFinished()));
+    if (!localitems.isEmpty()) {
+        d->localthread = new KFilePreviewJobThread(localitems, d->size, this);
+        connect(d->localthread, SIGNAL(failed(KFileItem)), this, SIGNAL(failed(KFileItem)));
+        connect(d->localthread, SIGNAL(preview(KFileItem,QPixmap)), this, SIGNAL(gotPreview(KFileItem,QPixmap)));
+        connect(d->localthread, SIGNAL(finished()), this, SLOT(slotFinished()));
+    }
 }
 
 void KFilePreviewJob::start()
 {
-    foreach (const KFileItem &item, d->items()) {
+    foreach (const KFileItem &item, d->items) {
         if (item.isDir()) {
             kWarning() << "directories not supported";
-            emit failed(item);
-        } else if (!item.isLocalFile()) {
-            kWarning() << "remote items not supported";
             emit failed(item);
         }
     }
 
-    d->start();
+    if (d->localthread) {
+        d->localthread->start();
+    }
 }
 
 KFilePreviewJob::~KFilePreviewJob()
 {
-    // KIO::getJobTracker()->unregisterJob(this);
-    d->wait();
+    if (d->localthread) {
+        d->localthread->wait();
+    }
+    if (d->remotethread) {
+        d->remotethread->wait();
+    }
     delete d;
 }
 
 bool KFilePreviewJob::doKill()
 {
-    d->interrupt();
+    if (d->localthread) {
+        d->localthread->interrupt();
+    }
+    if (d->remotethread) {
+        d->remotethread->interrupt();
+    }
     return true;
 }
 
 bool KFilePreviewJob::doSuspend()
 {
-    d->suspend();
+    if (d->localthread) {
+        d->localthread->suspend();
+    }
+    if (d->remotethread) {
+        d->remotethread->suspend();
+    }
     return true;
 }
 
 bool KFilePreviewJob::doResume()
 {
-    d->resume();
+    if (d->localthread) {
+        d->localthread->resume();
+    }
+    if (d->remotethread) {
+        d->remotethread->resume();
+    }
     return true;
 }
 
 void KFilePreviewJob::slotFinished()
 {
-    if (!hasSubjobs()) {
+    if (!hasSubjobs()
+        && (!d->localthread || d->localthread->isFinished())
+        && (!d->remotethread || d->remotethread->isFinished())) {
         emitResult();
     }
 }
@@ -196,8 +232,18 @@ void KFilePreviewJob::slotFinished()
 void KFilePreviewJob::slotResult(KJob *job)
 {
     KCompositeJob::slotResult(job);
-    if (!hasSubjobs()) {
-        emitResult();
+    KIO::FileCopyJob* filecopyjob = qobject_cast<KIO::FileCopyJob*>(job);
+    if (filecopyjob) {
+        const KFileItem remoteitem(filecopyjob->srcUrl(), QString(), KFileItem::Unknown);
+        const KFileItem localitem(filecopyjob->destUrl(), QString(), KFileItem::Unknown);
+        d->remoteitems.append(qMakePair(localitem, remoteitem));
+    }
+    if (!hasSubjobs() && !d->remoteitems.isEmpty()) {
+        d->remotethread = new KFilePreviewJobThread(d->remoteitems, d->size, this);
+        connect(d->remotethread, SIGNAL(failed(KFileItem)), this, SIGNAL(failed(KFileItem)));
+        connect(d->remotethread, SIGNAL(preview(KFileItem,QPixmap)), this, SIGNAL(gotPreview(KFileItem,QPixmap)));
+        connect(d->remotethread, SIGNAL(finished()), this, SLOT(slotFinished()));
+        d->remotethread->start();
     }
 }
 
