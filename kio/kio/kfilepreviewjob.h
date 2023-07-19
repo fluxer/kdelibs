@@ -20,6 +20,7 @@
 #define KFILEPREVIEWJOB_H
 
 #include <kio/kio_export.h>
+#include <kio/job.h>
 #include <kcompositejob.h>
 #include <kfileitem.h>
 #include <kjob.h>
@@ -53,8 +54,10 @@ protected:
     bool doResume() final;
 
 private Q_SLOTS:
+    void slotEntries(KIO::Job *job, const KIO::UDSEntryList &entries);
     void slotFinished();
     void slotResult(KJob *job);
+
 
 private:
     Q_DISABLE_COPY(KFilePreviewJob);

@@ -220,8 +220,9 @@ QString KFilePreview::makeKey(const KFileItem &item)
     const QByteArray itemurlbytes = QFile::encodeName(item.url().prettyUrl());
     const QByteArray itemhash = QCryptographicHash::hash(itemurlbytes, QCryptographicHash::KAT).toHex();
     QString result = QString::fromLatin1(itemhash.constData(), itemhash.size());
-    result.append(QLatin1Char('_'));
-    result.append(QString::number(item.time(KFileItem::ModificationTime).toTime_t()));
+    // FIXME: crash?
+    // result.append(QLatin1Char('_'));
+    // result.append(QString::number(item.time(KFileItem::ModificationTime).toTime_t()));
     return result;
 }
 
