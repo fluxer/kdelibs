@@ -746,7 +746,11 @@ QString KFileItem::mimetype() const
         return QString();
 
     KFileItem * that = const_cast<KFileItem *>(this);
-    return that->determineMimeType()->name();
+    KMimeType::Ptr mime = that->determineMimeType();
+    if (!mime) {
+        return QString();
+    }
+    return mime->name();
 }
 
 KMimeType::Ptr KFileItem::determineMimeType() const
