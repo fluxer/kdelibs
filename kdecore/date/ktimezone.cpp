@@ -793,7 +793,7 @@ const KTimeZoneData *KTimeZone::data(bool create) const
 {
     if (!isValid())
         return 0;
-    if (create && !d->d->data && d->d->source->useZoneParse())
+    if (create && !d->d->data)
         d->d->data = d->d->source->parse(*this);
     return d->d->data;
 }
@@ -823,11 +823,8 @@ bool KTimeZone::parse() const
 {
     if (!isValid())
         return false;
-    if (d->d->source->useZoneParse())
-    {
-        delete d->d->data;
-        d->d->data = d->d->source->parse(*this);
-    }
+    delete d->d->data;
+    d->d->data = d->d->source->parse(*this);
     return d->d->data;
 }
 
@@ -975,12 +972,14 @@ class KTimeZoneSourcePrivate
 {
 public:
     KTimeZoneSourcePrivate()
-      : mUseZoneParse(true) {}
+    {
+    }
 
     KTimeZoneSourcePrivate(const QString &loc)
-      : mUseZoneParse(true), mLocation(loc) {}
+      : mLocation(loc)
+    {
+    }
 
-    bool mUseZoneParse;
     QString mLocation;
 };
 
@@ -995,12 +994,6 @@ KTimeZoneSource::KTimeZoneSource(const QString &location)
 {
     if (location.length() > 1 && location.endsWith(QLatin1Char('/')))
         d->mLocation.chop(1);
-}
-
-KTimeZoneSource::KTimeZoneSource(bool useZoneParse)
-  : d(new KTimeZoneSourcePrivate())
-{
-    d->mUseZoneParse = useZoneParse;
 }
 
 KTimeZoneSource::~KTimeZoneSource()
@@ -1220,11 +1213,6 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     delete[] transitionTimes;
 
     return data;
-}
-
-bool KTimeZoneSource::useZoneParse() const
-{
-    return d->mUseZoneParse;
 }
 
 QString KTimeZoneSource::location() const

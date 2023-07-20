@@ -1138,40 +1138,11 @@ public:
     virtual KTimeZoneData *parse(const KTimeZone &zone) const;
 
     /**
-     * Return whether the source database supports the ad hoc extraction of data for
-     * individual time zones using parse(const KTimeZone&).
-     *
-     * @return true if parse(const KTimeZone&) works, false if parsing must be
-     *         performed by other methods
-     */
-    bool useZoneParse() const;
-
-    /**
      * Returns the local directory containing the time zone definition files.
      *
      * @return path to time zone definition files
      */
     QString location() const;
-
-protected:
-    /**
-     * Constructor for use by derived classes, which specifies whether the
-     * source database supports the ad hoc extraction of data for individual
-     * time zones using parse(const KTimeZone&).
-     *
-     * If parse(const KTimeZone&) cannot be used, KTimeZone derived classes
-     * which use this KTimeZoneSource derived class must create a
-     * KTimeZoneData object at construction time so that KTimeZone::data()
-     * will always return a data object.
-     *
-     * Note the default constructor is equivalent to KTimeZoneSource(true), i.e.
-     * it is only necessary to use this constructor if parse(const KTimeZone&)
-     * does not work.
-     *
-     * @param useZoneParse true if parse(const KTimeZone&) works, false if
-     *                     parsing must be performed by other methods
-     */
-    explicit KTimeZoneSource(bool useZoneParse);
 
 private:
     KTimeZoneSourcePrivate * const d;
