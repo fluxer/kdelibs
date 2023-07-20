@@ -89,6 +89,17 @@ enum CopyJobState {
     STATE_SETTING_DIR_ATTRIBUTES
 };
 
+struct CopyInfo
+{
+    KUrl uSource;
+    KUrl uDest;
+    QString linkDest; // for symlinks only
+    int permissions;
+    time_t ctime;
+    time_t mtime;
+    KIO::filesize_t size; // 0 for dirs
+};
+
 /** @internal */
 class KIO::CopyJobPrivate: public KIO::JobPrivate
 {
@@ -780,12 +791,8 @@ void CopyJobPrivate::statCurrentSrc()
         slotReport();
 
         kDebug(7007)<<"Stating finished. To copy:"<<m_totalSize<<", available:"<<m_freeSpace;
-	//TODO warn user beforehand if space is not enough
+        // TODO: warn user beforehand if space is not enough
 
-        if (!dirs.isEmpty())
-           emit q->aboutToCreate( q, dirs );
-        if (!files.isEmpty())
-           emit q->aboutToCreate( q, files );
         // Check if we are copying a single file
         m_bSingleFileCopy = ( files.count() == 1 && dirs.isEmpty() );
         // Then start copying things
@@ -821,9 +828,6 @@ void CopyJobPrivate::startRenameJob( const KUrl& slave_url )
     info.size = (KIO::filesize_t)-1;
     info.uSource = m_currentSrcURL;
     info.uDest = dest;
-    QList<CopyInfo> files;
-    files.append(info);
-    emit q->aboutToCreate( q, files );
 
     KIO_ARGS << m_currentSrcURL << dest << (qint8) false /*no overwrite*/;
     SimpleJob * newJob = SimpleJobPrivate::newJobNoUi(slave_url, CMD_RENAME, packedArgs);
@@ -952,15 +956,7 @@ void CopyJobPrivate::slotResultCreatingDirs( KJob * job )
                                 (*renamefileit).uDest.setPath(n);
                             }
                         }
-                        if (!dirs.isEmpty()) {
-                            emit q->aboutToCreate(q, dirs);
-                        }
-                        if (!files.isEmpty()) {
-                            emit q->aboutToCreate(q, files);
-                        }
-
-                    }
-                    else {
+                    } else {
                         if (!q->isInteractive()) {
                             q->Job::slotResult(job); // will set the error and emit result(this)
                             return;
@@ -1098,10 +1094,6 @@ void CopyJobPrivate::slotResultConflictCreatingDirs( KJob * job )
                     (*renamefileit).uDest.setPath( n );
                 }
             }
-            if (!dirs.isEmpty())
-                emit q->aboutToCreate( q, dirs );
-            if (!files.isEmpty())
-                emit q->aboutToCreate( q, files );
             break;
         }
         case R_AUTO_SKIP: {
@@ -1219,12 +1211,7 @@ void CopyJobPrivate::slotResultCopyingFiles( KJob * job )
 
                     emit q->renamed(q, (*it).uDest, newUrl); // for e.g. kpropsdlg
                     (*it).uDest = newUrl;
-
-                    QList<CopyInfo> files;
-                    files.append(*it);
-                    emit q->aboutToCreate(q, files);
-                }
-                else {
+                } else {
                     if ( !q->isInteractive() ) {
                         q->Job::slotResult( job ); // will set the error and emit result(this)
                         return;
@@ -1413,10 +1400,6 @@ void CopyJobPrivate::slotResultConflictCopyingFiles( KJob * job )
             newUrl.setPath( newPath );
             emit q->renamed( q, (*it).uDest, newUrl ); // for e.g. kpropsdlg
             (*it).uDest = newUrl;
-
-            QList<CopyInfo> files;
-            files.append(*it);
-            emit q->aboutToCreate( q, files );
             break;
         }
         case R_AUTO_SKIP: {
@@ -1679,29 +1662,6 @@ void CopyJobPrivate::setNextDirAttribute()
         KIO::SimpleJob *job = KIO::setModificationTime( url, dt );
         Scheduler::setJobPriority(job, 1);
         q->addSubjob( job );
-
-
-#if 0 // ifdef Q_OS_UNIX
-        // TODO: can be removed now. Or reintroduced as a fast path for local files
-        // if launching even more jobs as done above is a performance problem.
-        //
-        QList<CopyInfo>::const_iterator it = m_directoriesCopied.constBegin();
-        for ( ; it != m_directoriesCopied.constEnd() ; ++it ) {
-            const KUrl& url = (*it).uDest;
-            if ( url.isLocalFile() && (*it).mtime != (time_t)-1 ) {
-                KDE_struct_stat statbuf;
-                if (KDE::lstat(url.path(), &statbuf) == 0) {
-                    struct utimbuf utbuf;
-                    utbuf.actime = statbuf.st_atime; // access time, unchanged
-                    utbuf.modtime = (*it).mtime; // modification time
-                    utime( path, &utbuf );
-                }
-
-            }
-        }
-        m_directoriesCopied.clear();
-        // but then we need to jump to the else part below. Maybe with a recursive call?
-#endif
     } else {
         if (m_reportTimer)
             m_reportTimer->stop();

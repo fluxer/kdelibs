@@ -32,20 +32,6 @@
 
 namespace KIO {
 
-    /// @internal
-    /// FIXME: If this is internal, why is being used in a public signal below?
-    /// (aboutToCreate, see also konq_operations.h/cpp
-    struct CopyInfo
-    {
-        KUrl uSource;
-        KUrl uDest;
-        QString linkDest; // for symlinks only
-        int permissions;
-        time_t ctime;
-        time_t mtime;
-        KIO::filesize_t size; // 0 for dirs
-    };
-
     class CopyJobPrivate;
     /**
      * CopyJob is used to move, copy or symlink files and directories.
@@ -143,15 +129,6 @@ namespace KIO {
 	 * @param dirs the total number of directories
 	 */
         void totalDirs( KJob *job, unsigned long dirs );
-
-        /**
-	 * Emitted when it is known which files / directories are going
-	 * to be created. Note that this may still change e.g. when
-	 * existing files with the same name are discovered.
-	 * @param job the job that emitted this signal
-	 * @param files a list of items that are about to be created.
-	 */
-        void aboutToCreate( KIO::Job *job, const QList<KIO::CopyInfo> &files);
 
         /**
 	 * Sends the number of processed files.
