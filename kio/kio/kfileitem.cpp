@@ -27,12 +27,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <QtCore/qdatetime.h>
-#include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QMap>
-#include <QtGui/QApplication>
-#include <QtGui/QPalette>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 
