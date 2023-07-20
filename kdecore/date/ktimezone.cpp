@@ -515,11 +515,6 @@ KTimeZoneBackend &KTimeZoneBackend::operator=(const KTimeZoneBackend &other)
     return *this;
 }
 
-QByteArray KTimeZoneBackend::type() const
-{
-    return "KTimeZone";
-}
-
 KTimeZoneBackend *KTimeZoneBackend::clone() const
 {
     return new KTimeZoneBackend(*this);

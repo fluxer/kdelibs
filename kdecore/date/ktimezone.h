@@ -1046,17 +1046,6 @@ public:
     virtual KTimeZoneBackend *clone() const;
 
     /**
-     * Returns the class name of the data represented by this instance.
-     *
-     * @note Every inherited class must reimplement type().
-     *
-     * This base class returns "KTimeZone".
-     *
-     * @return the class name
-     */
-    virtual QByteArray type() const;
-
-    /**
      * Implements KTimeZone::offsetAtZoneTime().
      *
      * @param caller calling KTimeZone object
