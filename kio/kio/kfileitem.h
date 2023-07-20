@@ -80,9 +80,9 @@ public:
      * When creating KFileItems out of the UDSEntry emitted by a KIO list job,
      * use KFileItem(entry, listjob->url(), delayedMimeTypes, true);
      */
-    KFileItem( const KIO::UDSEntry& entry, const KUrl& itemOrDirUrl,
-               bool delayedMimeTypes = false,
-               bool urlIsDirectory = false );
+    KFileItem(const KIO::UDSEntry &entry, const KUrl &itemOrDirUrl,
+              bool delayedMimeTypes = false,
+              bool urlIsDirectory = false );
 
     /**
      * Creates an item representing a file, from all the necessary info for it.
@@ -97,8 +97,8 @@ public:
      * @param delayedMimeTypes specify if the mimetype of the given URL
      *       should be determined immediately or on demand
      */
-    KFileItem( mode_t mode, mode_t permissions, const KUrl& url,
-               bool delayedMimeTypes = false );
+    KFileItem(mode_t mode, mode_t permissions, const KUrl &url,
+              bool delayedMimeTypes = false);
 
     /**
      * Creates an item representing a file, for which the mimetype is already known.
@@ -106,16 +106,16 @@ public:
      * @param mimeType the name of the file's mimetype
      * @param mode the mode (S_IFDIR...)
      */
-    KFileItem( const KUrl &url, const QString &mimeType, mode_t mode );
+    KFileItem(const KUrl &url, const QString &mimeType, mode_t mode);
 
     /**
      * Copy constructor
      */
-    KFileItem(const KFileItem& other);
+    KFileItem(const KFileItem &other);
     /**
      * Assignment operator
      */
-    KFileItem& operator=(const KFileItem& other);
+    KFileItem& operator=(const KFileItem &other);
 
     /**
      * Destructs the KFileItem. Extra data set via setExtraData()
@@ -146,7 +146,7 @@ public:
      * (used for example when an item got renamed).
      * @param url the item's URL
      */
-    void setUrl( const KUrl &url );
+    void setUrl(const KUrl &url);
 
     /**
      * Sets the item's name (i.e. the filename).
@@ -154,7 +154,7 @@ public:
      * This method is provided for some special cases like relative paths as names (KFindPart)
      * @param name the item's name
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
      * Returns the permissions of the file (stat.st_mode containing only permissions).
@@ -293,7 +293,7 @@ public:
      * @return the time asked for, (time_t)0 if not available
      * @see timeString()
      */
-    KDateTime time( FileTimes which ) const;
+    KDateTime time(FileTimes which) const;
 
     /**
      * Requests the modification, access or creation time as a string, depending
@@ -302,7 +302,7 @@ public:
      * @returns a formatted string of the requested time.
      * @see time
      */
-    QString timeString( FileTimes which = ModificationTime ) const;
+    QString timeString(FileTimes which = ModificationTime) const;
 
     /**
      * Returns true if the file is a local file.
@@ -324,7 +324,7 @@ public:
      * which is useful to speed up sorting by name, case insensitively.
      * @return the file's name
      */
-    QString name( bool lowerCase = false ) const;
+    QString name(bool lowerCase = false) const;
 
     /**
      * Returns the mimetype of the file item.
@@ -385,7 +385,7 @@ public:
      * KIconLoader::ActiveState or KIconLoader::DisabledState.
      * @return the pixmap
      */
-    QPixmap pixmap( int _size, int _state=0 ) const;
+    QPixmap pixmap(int _size, int _state = 0) const;
 
     /**
      * Returns the overlays (bitfield of KIconLoader::*Overlay flags) that are used
@@ -414,7 +414,7 @@ public:
      * Let's "KRun" this file !
      * (e.g. when file is clicked or double-clicked or return is pressed)
      */
-    void run( QWidget* parentWidget = 0 ) const;
+    void run(QWidget *parentWidget = nullptr) const;
 
     /**
      * Returns the UDS entry. Used by the tree view to access all details
@@ -454,17 +454,17 @@ public:
      * @param item the item to compare
      * @return true if all values are equal
      */
-    bool cmp( const KFileItem & item ) const;
+    bool cmp(const KFileItem &item) const;
 
     /**
      * Returns true if both items share the same URL.
      */
-    bool operator==(const KFileItem& other) const;
+    bool operator==(const KFileItem &other) const;
 
     /**
      * Returns true if both items do not share the same URL.
      */
-    bool operator!=(const KFileItem& other) const;
+    bool operator!=(const KFileItem &other) const;
 
 
     /**
@@ -495,8 +495,8 @@ private:
     QSharedDataPointer<KFileItemPrivate> d;
 
 private:
-    KIO_EXPORT friend QDataStream & operator<< ( QDataStream & s, const KFileItem & a );
-    KIO_EXPORT friend QDataStream & operator>> ( QDataStream & s, KFileItem & a );
+    KIO_EXPORT friend QDataStream& operator<<(QDataStream &s, const KFileItem &a);
+    KIO_EXPORT friend QDataStream& operator>>(QDataStream &s, KFileItem &a);
 
     friend class KFileItemTest;
 };
@@ -512,45 +512,45 @@ inline uint qHash(const KFileItem& item){ return qHash(item.url().url()); }
 class KIO_EXPORT KFileItemList : public QList<KFileItem>
 {
 public:
-  /// Creates an empty list of file items.
-  KFileItemList();
+    /// Creates an empty list of file items.
+    KFileItemList();
 
-  /// Creates a new KFileItemList from a QList of file @p items.
-  KFileItemList( const QList<KFileItem> &items );
+    /// Creates a new KFileItemList from a QList of file @p items.
+    KFileItemList(const QList<KFileItem> &items);
 
-  /**
-   * Find a KFileItem by name and return it.
-   * @return the item with the given name, or a null-item if none was found
-   *         (see KFileItem::isNull())
-   */
-  KFileItem findByName( const QString& fileName ) const;
+    /**
+     * Find a KFileItem by name and return it.
+     * @return the item with the given name, or a null-item if none was found
+     *         (see KFileItem::isNull())
+     */
+    KFileItem findByName(const QString &fileName) const;
 
-  /**
-   * Find a KFileItem by URL and return it.
-   * @return the item with the given URL, or a null-item if none was found
-   *         (see KFileItem::isNull())
-   */
-  KFileItem findByUrl( const KUrl& url ) const;
+    /**
+     * Find a KFileItem by URL and return it.
+     * @return the item with the given URL, or a null-item if none was found
+     *         (see KFileItem::isNull())
+     */
+    KFileItem findByUrl(const KUrl &url) const;
 
-  /// @return the list of URLs that those items represent
-  KUrl::List urlList() const;
+    /// @return the list of URLs that those items represent
+    KUrl::List urlList() const;
 
-  /// @return the list of target URLs that those items represent
-  /// @since 4.2
-  KUrl::List targetUrlList() const;
+    /// @return the list of target URLs that those items represent
+    /// @since 4.2
+    KUrl::List targetUrlList() const;
 
-  // TODO KDE-5 add d pointer here so that we can merge KFileItemListProperties into KFileItemList
+    // TODO KDE-5 add d pointer here so that we can merge KFileItemListProperties into KFileItemList
 };
 
 Q_DECLARE_METATYPE(KFileItemList)
 
-KIO_EXPORT QDataStream & operator<< ( QDataStream & s, const KFileItem & a );
-KIO_EXPORT QDataStream & operator>> ( QDataStream & s, KFileItem & a );
+KIO_EXPORT QDataStream& operator<<(QDataStream &s, const KFileItem &a);
+KIO_EXPORT QDataStream& operator>>(QDataStream &s, KFileItem &a);
 
 /**
- * Support for qDebug() << aFileItem
+ * Support for qDebug() << KFileItem
  * \since 4.4
  */
-KIO_EXPORT QDebug operator<<(QDebug stream, const KFileItem& item);
+KIO_EXPORT QDebug operator<<(QDebug stream, const KFileItem &item);
 
 #endif

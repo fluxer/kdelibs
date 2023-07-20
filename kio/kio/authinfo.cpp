@@ -22,7 +22,7 @@
 
 #include <config.h>
 
-#include <sys/stat.h> // don't move it down the include order, it breaks compilation on MSVC
+#include <sys/stat.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -128,7 +128,7 @@ public:
 NetRC* NetRC::instance = 0L;
 
 NetRC::NetRC()
-    : d( new NetRCPrivate )
+    : d( new NetRCPrivate() )
 {
 }
 
