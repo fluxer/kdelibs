@@ -81,7 +81,6 @@ public:
           m_bMimeTypeKnown( false ),
           m_delayedMimeTypes( delayedMimeTypes ),
           m_useIconNameCache(false),
-          m_hidden(Auto),
           m_slow(SlowUnknown)
     {
         if (entry.count() != 0) {
@@ -182,9 +181,6 @@ public:
     /** True if m_iconName should be used as cache. */
     mutable bool m_useIconNameCache:1;
 
-    // Auto: check leading dot.
-    enum { Auto, Hidden, Shown } m_hidden:3;
-
     // Slow? (nfs/smb/ssh)
     mutable enum { SlowUnknown, Fast, Slow } m_slow:3;
 
@@ -265,9 +261,6 @@ void KFileItemPrivate::readUDSEntry( bool _urlIsDirectory )
 
     m_guessedMimeType = m_entry.stringValue( KIO::UDSEntry::UDS_GUESSED_MIME_TYPE );
     m_bLink = !m_entry.stringValue( KIO::UDSEntry::UDS_LINK_DEST ).isEmpty(); // we don't store the link dest
-
-    const int hiddenVal = m_entry.numberValue( KIO::UDSEntry::UDS_HIDDEN, -1 );
-    m_hidden = hiddenVal == 1 ? Hidden : ( hiddenVal == 0 ? Shown : Auto );
 
     // avoid creating these QStrings again and again
     static const QString dot = QString::fromLatin1(".");
@@ -369,7 +362,6 @@ void KFileItem::refresh()
 
     d->m_fileMode = KFileItem::Unknown;
     d->m_permissions = KFileItem::Unknown;
-    d->m_hidden = KFileItemPrivate::Auto;
     refreshMimeType();
 
     // Basically, we can't trust any information we got while listing.
@@ -947,10 +939,6 @@ bool KFileItem::isHidden() const
     if (!d)
         return false;
 
-    // The kioslave can specify explicitly that a file is hidden or shown
-    if ( d->m_hidden != KFileItemPrivate::Auto )
-        return d->m_hidden == KFileItemPrivate::Hidden;
-
     // Prefer the filename that is part of the URL, in case the display name is different.
     QString fileName = d->m_url.fileName();
     if (fileName.isEmpty()) // e.g. "trash:/"
@@ -1042,7 +1030,6 @@ bool KFileItem::cmp( const KFileItem & item ) const
     kDebug() << " UDS_ACL_STRING" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ));
     kDebug() << " UDS_DEFAULT_ACL_STRING" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ));
     kDebug() << " m_bLink" << (d->m_bLink == item.d->m_bLink);
-    kDebug() << " m_hidden" << (d->m_hidden == item.d->m_hidden);
     kDebug() << " size" << (size() == item.size());
     kDebug() << " ModificationTime" << (d->time(KFileItem::ModificationTime) == item.d->time(KFileItem::ModificationTime));
     kDebug() << " UDS_ICON_NAME" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ));
@@ -1057,7 +1044,6 @@ bool KFileItem::cmp( const KFileItem & item ) const
              && d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING )
              && d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING )
              && d->m_bLink == item.d->m_bLink
-             && d->m_hidden == item.d->m_hidden
              && size() == item.size()
              && d->time(KFileItem::ModificationTime) == item.d->time(KFileItem::ModificationTime) // TODO only if already known!
              && d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME )
@@ -1188,11 +1174,8 @@ KUrl KFileItem::mostLocalUrl(bool &local) const
         url.setPath(local_path);
         return url;
     }
-    else
-    {
-        local = d->m_bIsLocalUrl;
-        return d->m_url;
-    }
+    local = d->m_bIsLocalUrl;
+    return d->m_url;
 }
 
 KUrl KFileItem::mostLocalUrl() const

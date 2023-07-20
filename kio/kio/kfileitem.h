@@ -55,7 +55,6 @@ public:
         ModificationTime = 0,
         AccessTime = 1,
         CreationTime = 2
-        //ChangeTime
     };
 
     /**

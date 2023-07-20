@@ -162,78 +162,75 @@ namespace KIO
             /// A local file path if the ioslave display files sitting
             /// on the local filesystem (but in another hierarchy, e.g. settings:/ or remote:/)
             UDS_LOCAL_PATH = 6 | UDS_STRING,
-            /// Treat the file as a hidden file (if set to 1) or as a normal file (if set to 0).
-            /// This field overrides the default behavior (the check for a leading dot in the filename).
-            UDS_HIDDEN = 7 | UDS_NUMBER,
             /// Access permissions (part of the mode returned by stat)
-            UDS_ACCESS = 8 | UDS_NUMBER,
+            UDS_ACCESS = 7 | UDS_NUMBER,
             /// The last time the file was modified
-            UDS_MODIFICATION_TIME = 9 | UDS_TIME,
+            UDS_MODIFICATION_TIME = 8 | UDS_TIME,
             /// The last time the file was opened
-            UDS_ACCESS_TIME = 10 | UDS_TIME,
+            UDS_ACCESS_TIME = 9 | UDS_TIME,
             /// The time the file was created
-            UDS_CREATION_TIME = 11 | UDS_TIME,
+            UDS_CREATION_TIME = 10 | UDS_TIME,
             /// File type, part of the mode returned by stat
             /// (for a link, this returns the file type of the pointed item)
             /// check UDS_LINK_DEST to know if this is a link
-            UDS_FILE_TYPE = 12 | UDS_NUMBER,
+            UDS_FILE_TYPE = 11 | UDS_NUMBER,
             /// Name of the file where the link points to
             /// Allows to check for a symlink (don't use S_ISLNK !)
-            UDS_LINK_DEST = 13 | UDS_STRING,
+            UDS_LINK_DEST = 12 | UDS_STRING,
             /// An alternative URL (If different from the caption).
             /// Can be used to mix different hierarchies.
             ///
             /// Use UDS_DISPLAY_NAME if you simply want to customize the user-visible filenames, or use
             /// UDS_TARGET_URL if you want "links" to unrelated urls.
-            UDS_URL = 14 | UDS_STRING,
+            UDS_URL = 13 | UDS_STRING,
             /// A mime type; the slave should set it if it's known.
-            UDS_MIME_TYPE = 15 | UDS_STRING,
+            UDS_MIME_TYPE = 14 | UDS_STRING,
             /// A mime type to be used for displaying only.
             /// But when 'running' the file, the mimetype is re-determined
             /// This is for special cases like symlinks in FTP; you probably don't want to use this one.
-            UDS_GUESSED_MIME_TYPE = 16 | UDS_STRING,
+            UDS_GUESSED_MIME_TYPE = 15 | UDS_STRING,
 
             /// Indicates that the entry has extended ACL entries
-            UDS_EXTENDED_ACL = 17 | UDS_NUMBER,
+            UDS_EXTENDED_ACL = 16 | UDS_NUMBER,
             /// The access control list serialized into a single string.
-            UDS_ACL_STRING = 18 | UDS_STRING,
+            UDS_ACL_STRING = 17 | UDS_STRING,
             /// The default access control list serialized into a single string.
             /// Only available for directories.
-            UDS_DEFAULT_ACL_STRING = 19 | UDS_STRING,
+            UDS_DEFAULT_ACL_STRING = 18 | UDS_STRING,
 
             /// If set, contains the label to display instead of
             /// the 'real name' in UDS_NAME
             /// @since 4.1
-            UDS_DISPLAY_NAME = 20 | UDS_STRING,
+            UDS_DISPLAY_NAME = 19 | UDS_STRING,
             /// This file is a shortcut or mount, pointing to an
             /// URL in a different hierarchy
             /// @since 4.1
-            UDS_TARGET_URL = 21 | UDS_STRING,
+            UDS_TARGET_URL = 20 | UDS_STRING,
 
             /// User-readable type of file (if not specified,
             /// the mimetype's description is used)
             /// @since 4.4
-            UDS_DISPLAY_TYPE = 22 | UDS_STRING,
+            UDS_DISPLAY_TYPE = 21 | UDS_STRING,
 
             /// A comma-separated list of supplementary icon overlays
             /// which will be added to the list of overlays created
             /// by KFileItem.
             ///
             /// @since 4.5
-            UDS_ICON_OVERLAY_NAMES = 23 | UDS_STRING,
+            UDS_ICON_OVERLAY_NAMES = 22 | UDS_STRING,
 
             /// A comment which will be displayed as is to the user. The string
             /// value may contain plain text or Qt-style rich-text extensions.
             ///
             /// @since 4.6
-            UDS_COMMENT = 24 | UDS_STRING,
+            UDS_COMMENT = 23 | UDS_STRING,
 
             /// Device number for this file, used to detect hardlinks
             /// @since 4.7.3
-            UDS_DEVICE_ID = 25 | UDS_NUMBER,
+            UDS_DEVICE_ID = 24 | UDS_NUMBER,
             /// Inode number for this file, used to detect hardlinks
             /// @since 4.7.3
-            UDS_INODE = 26 | UDS_NUMBER
+            UDS_INODE = 25 | UDS_NUMBER
         };
 
     private:
