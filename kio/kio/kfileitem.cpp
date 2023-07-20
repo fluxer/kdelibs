@@ -712,12 +712,11 @@ QString KFileItem::mimeComment() const
     if (!displayType.isEmpty())
         return displayType;
 
-    KMimeType::Ptr mType = determineMimeType();
+    KMimeType::Ptr mime = determineMimeType();
 
     bool isLocalUrl = false;
     KUrl url = mostLocalUrl(isLocalUrl);
 
-    KMimeType::Ptr mime = mimeTypePtr();
     // This cannot move to kio_file (with UDS_DISPLAY_TYPE) because it needs
     // the mimetype to be determined, which is done here, and possibly delayed...
     if (isLocalUrl && !d->isSlow() && mime->is("application/x-desktop")) {
@@ -727,12 +726,11 @@ QString KFileItem::mimeComment() const
             return comment;
     }
 
-    QString comment = d->isSlow() ? mType->comment() : mType->comment(url);
+    QString comment = d->isSlow() ? mime->comment() : mime->comment(url);
     //kDebug() << "finding comment for " << url.url() << " : " << d->m_pMimeType->name();
     if (!comment.isEmpty())
         return comment;
-    else
-        return mType->name();
+    return mime->name();
 }
 
 static QString iconFromDesktopFile(const QString& path)
