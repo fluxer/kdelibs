@@ -107,10 +107,8 @@ public:
     void init();
 
     QString localPath() const;
-    KIO::filesize_t size() const;
     KDateTime time( KFileItem::FileTimes which ) const;
     void setTime(KFileItem::FileTimes which, long long time_t_val) const;
-    bool cmp( const KFileItemPrivate & item ) const;
     QString user() const;
     QString group() const;
     bool isSlow() const;
@@ -279,24 +277,6 @@ void KFileItemPrivate::readUDSEntry( bool _urlIsDirectory )
     m_iconName.clear();
 }
 
-inline //because it is used only in one place
-KIO::filesize_t KFileItemPrivate::size() const
-{
-    // Extract it from the KIO::UDSEntry
-    long long fieldVal = m_entry.numberValue( KIO::UDSEntry::UDS_SIZE, -1 );
-    if ( fieldVal != -1 ) {
-        return fieldVal;
-    }
-
-    // If not in the KIO::UDSEntry, or if UDSEntry empty, use stat() [if local URL]
-    if ( m_bIsLocalUrl ) {
-        KDE_struct_stat buf;
-        if ( KDE::stat( m_url.toLocalFile(KUrl::RemoveTrailingSlash), &buf ) == 0 )
-            return buf.st_size;
-    }
-    return 0;
-}
-
 void KFileItemPrivate::setTime(KFileItem::FileTimes mappedWhich, long long time_t_val) const
 {
     m_time[mappedWhich].setTime_t(time_t_val);
@@ -339,46 +319,6 @@ KDateTime KFileItemPrivate::time( KFileItem::FileTimes mappedWhich ) const
         }
     }
     return KDateTime();
-}
-
-inline //because it is used only in one place
-bool KFileItemPrivate::cmp( const KFileItemPrivate & item ) const
-{
-#if 0
-    kDebug() << "Comparing" << m_url << "and" << item.m_url;
-    kDebug() << " name" << (m_strName == item.m_strName);
-    kDebug() << " local" << (m_bIsLocalUrl == item.m_bIsLocalUrl);
-    kDebug() << " mode" << (m_fileMode == item.m_fileMode);
-    kDebug() << " perm" << (m_permissions == item.m_permissions);
-    kDebug() << " UDS_USER" << (user() == item.user());
-    kDebug() << " UDS_GROUP" << (group() == item.group());
-    kDebug() << " UDS_EXTENDED_ACL" << (m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL ));
-    kDebug() << " UDS_ACL_STRING" << (m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ));
-    kDebug() << " UDS_DEFAULT_ACL_STRING" << (m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ));
-    kDebug() << " m_bLink" << (m_bLink == item.m_bLink);
-    kDebug() << " m_hidden" << (m_hidden == item.m_hidden);
-    kDebug() << " size" << (size() == item.size());
-    kDebug() << " ModificationTime" << (time(KFileItem::ModificationTime) == item.time(KFileItem::ModificationTime));
-    kDebug() << " UDS_ICON_NAME" << (m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ));
-#endif
-    return ( m_strName == item.m_strName
-             && m_bIsLocalUrl == item.m_bIsLocalUrl
-             && m_fileMode == item.m_fileMode
-             && m_permissions == item.m_permissions
-             && user() == item.user()
-             && group() == item.group()
-             && m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL )
-             && m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING )
-             && m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING )
-             && m_bLink == item.m_bLink
-             && m_hidden == item.m_hidden
-             && size() == item.size()
-             && time(KFileItem::ModificationTime) == item.time(KFileItem::ModificationTime) // TODO only if already known!
-             && m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ) == item.m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME )
-        );
-
-    // Don't compare the mimetypes here. They might not be known, and we don't want to
-    // do the slow operation of determining them here.
 }
 
 ///////
@@ -522,7 +462,19 @@ KIO::filesize_t KFileItem::size() const
     if (!d)
         return 0;
 
-    return d->size();
+    // Extract it from the KIO::UDSEntry
+    long long fieldVal = d->m_entry.numberValue( KIO::UDSEntry::UDS_SIZE, -1 );
+    if ( fieldVal != -1 ) {
+        return fieldVal;
+    }
+
+    // If not in the KIO::UDSEntry, or if UDSEntry empty, use stat() [if local URL]
+    if ( d->m_bIsLocalUrl ) {
+        KDE_struct_stat buf;
+        if ( KDE::stat( d->m_url.toLocalFile(KUrl::RemoveTrailingSlash), &buf ) == 0 )
+            return buf.st_size;
+    }
+    return 0;
 }
 
 bool KFileItem::hasExtendedACL() const
@@ -1078,7 +1030,41 @@ bool KFileItem::cmp( const KFileItem & item ) const
     if (!d || !item.d)
         return false;
 
-    return d->cmp(*item.d);
+#if 0
+    kDebug() << "Comparing" << d->m_url << "and" << item.d->m_url;
+    kDebug() << " name" << (d->m_strName == item.d->m_strName);
+    kDebug() << " local" << (d->m_bIsLocalUrl == item.d->m_bIsLocalUrl);
+    kDebug() << " mode" << (d->m_fileMode == item.d->m_fileMode);
+    kDebug() << " perm" << (d->m_permissions == item.d->m_permissions);
+    kDebug() << " UDS_USER" << (d->user() == item.d->user());
+    kDebug() << " UDS_GROUP" << (d->group() == item.d->group());
+    kDebug() << " UDS_EXTENDED_ACL" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL ));
+    kDebug() << " UDS_ACL_STRING" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ));
+    kDebug() << " UDS_DEFAULT_ACL_STRING" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ));
+    kDebug() << " m_bLink" << (d->m_bLink == item.d->m_bLink);
+    kDebug() << " m_hidden" << (d->m_hidden == item.d->m_hidden);
+    kDebug() << " size" << (size() == item.size());
+    kDebug() << " ModificationTime" << (d->time(KFileItem::ModificationTime) == item.d->time(KFileItem::ModificationTime));
+    kDebug() << " UDS_ICON_NAME" << (d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ));
+#endif
+    return ( d->m_strName == item.d->m_strName
+             && d->m_bIsLocalUrl == item.d->m_bIsLocalUrl
+             && d->m_fileMode == item.d->m_fileMode
+             && d->m_permissions == item.d->m_permissions
+             && d->user() == item.d->user()
+             && d->group() == item.d->group()
+             && d->m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_EXTENDED_ACL )
+             && d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ACL_STRING )
+             && d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_DEFAULT_ACL_STRING )
+             && d->m_bLink == item.d->m_bLink
+             && d->m_hidden == item.d->m_hidden
+             && size() == item.size()
+             && d->time(KFileItem::ModificationTime) == item.d->time(KFileItem::ModificationTime) // TODO only if already known!
+             && d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME ) == item.d->m_entry.stringValue( KIO::UDSEntry::UDS_ICON_NAME )
+        );
+
+    // Don't compare the mimetypes here. They might not be known, and we don't want to
+    // do the slow operation of determining them here.
 }
 
 bool KFileItem::operator==(const KFileItem& other) const
