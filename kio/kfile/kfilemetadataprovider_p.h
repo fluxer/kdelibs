@@ -21,6 +21,7 @@
 #define KFILEMETADATAMODEL_H
 
 #include <kfileitem.h>
+#include <kfilemetainfo.h>
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>

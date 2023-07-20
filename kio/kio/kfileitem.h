@@ -27,7 +27,6 @@
 #include <kurl.h>
 #include <kacl.h>
 #include <kmimetype.h>
-#include <kfilemetainfo.h>
 #include <kdatetime.h>
 
 class KFileItemPrivate;
@@ -474,21 +473,6 @@ public:
      * in QVariant() constructor
      */
     operator QVariant() const;
-
-    /**
-     * Sets the metainfo of this item to @p info.
-     *
-     * Made const to avoid deep copy.
-     * @param info the new meta info
-     */
-    void setMetaInfo( const KFileMetaInfo & info ) const;
-
-    /**
-     * Returns the metainfo of this item.
-     *
-     * @param autoget if true, the metainfo will automatically be created
-     */
-    KFileMetaInfo metaInfo(bool autoget = true) const;
 
     /**
      * Tries to give a local URL for this file item if possible.

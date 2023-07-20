@@ -37,7 +37,6 @@
 #include <QtDBus/QDBusReply>
 
 #include <kdebug.h>
-#include <kfilemetainfo.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -204,7 +203,6 @@ public:
     // For special case like link to dirs over FTP
     QString m_guessedMimeType;
     mutable QString m_access;
-    mutable KFileMetaInfo m_metaInfo;
 
     enum { NumFlags = KFileItem::CreationTime + 1 };
     mutable KDateTime m_time[3];
@@ -213,7 +211,6 @@ public:
 void KFileItemPrivate::init()
 {
     m_access.clear();
-    //  metaInfo = KFileMetaInfo();
 
     // determine mode and/or permissions if unknown
     // TODO: delay this until requested
@@ -522,7 +519,6 @@ void KFileItem::refresh()
 
     d->m_fileMode = KFileItem::Unknown;
     d->m_permissions = KFileItem::Unknown;
-    d->m_metaInfo = KFileMetaInfo();
     d->m_hidden = KFileItemPrivate::Auto;
     refreshMimeType();
 
@@ -1221,29 +1217,6 @@ QString KFileItem::timeString( FileTimes which ) const
 
     return KGlobal::locale()->formatDateTime( d->time(which) );
 }
-
-
-void KFileItem::setMetaInfo( const KFileMetaInfo & info ) const
-{
-    if (!d)
-        return;
-
-    d->m_metaInfo = info;
-}
-
-KFileMetaInfo KFileItem::metaInfo(bool autoget) const
-{
-    if (!d)
-        return KFileMetaInfo();
-
-    if (isFile() && autoget && !d->m_metaInfo.isValid())
-    {
-        KUrl url(mostLocalUrl());
-        d->m_metaInfo = KFileMetaInfo(url.toLocalFile());
-    }
-    return d->m_metaInfo;
-}
-
 
 KUrl KFileItem::mostLocalUrl(bool &local) const
 {
