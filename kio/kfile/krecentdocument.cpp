@@ -78,11 +78,11 @@ QStringList KRecentDocument::recentDocuments()
             // http://bugreports.qt.nokia.com/browse/QTBUG-11223
             pathDesktop = KRecentDocument::recentDocumentDirectory() + it;
         } else {
-           pathDesktop = d.absoluteFilePath( it );
+           pathDesktop = d.absoluteFilePath(it);
         }
-        KDesktopFile tmpDesktopFile( pathDesktop );
+        KDesktopFile tmpDesktopFile(pathDesktop);
         KUrl urlDesktopFile(tmpDesktopFile.desktopGroup().readPathEntry("URL", QString()));
-        if (urlDesktopFile.isLocalFile() && !QFile(urlDesktopFile.toLocalFile()).exists()) {
+        if (urlDesktopFile.isLocalFile() && !QFile::exists(urlDesktopFile.toLocalFile())) {
             d.remove(pathDesktop);
         } else {
             fullList.append(pathDesktop);
@@ -107,7 +107,7 @@ void KRecentDocument::add(const KUrl &url, const QString &desktopEntryName)
     }
 
     QString openStr = url.url();
-    openStr.replace( QRegExp("\\$"), "$$" ); // Desktop files with type "Link" are $-variable expanded
+    openStr.replace(QRegExp("\\$"), "$$"); // Desktop files with type "Link" are $-variable expanded
 
     KConfigGroup config = KGlobal::config()->group(QByteArray("RecentDocuments"));
     bool useRecent = config.readEntry(QLatin1String("UseRecent"), true);

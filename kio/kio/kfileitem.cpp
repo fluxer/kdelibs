@@ -330,8 +330,9 @@ KFileItem::KFileItem( const KUrl &url, const QString &mimeType, mode_t mode)
     : d(new KFileItemPrivate(KIO::UDSEntry(), mode, KFileItem::Unknown, url, false, false))
 {
     d->m_bMimeTypeKnown = !mimeType.isEmpty();
-    if (d->m_bMimeTypeKnown)
+    if (d->m_bMimeTypeKnown) {
         d->m_pMimeType = KMimeType::mimeType(mimeType);
+    }
 }
 
 
