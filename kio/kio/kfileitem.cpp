@@ -1450,6 +1450,7 @@ KFileItem KFileItemList::findByUrl( const KUrl& url ) const {
 
 KUrl::List KFileItemList::urlList() const {
     KUrl::List lst;
+    lst.reserve(size());
     const_iterator it = begin();
     const const_iterator itend = end();
     for ( ; it != itend ; ++it ) {
@@ -1460,6 +1461,7 @@ KUrl::List KFileItemList::urlList() const {
 
 KUrl::List KFileItemList::targetUrlList() const {
     KUrl::List lst;
+    lst.reserve(size());
     const_iterator it = begin();
     const const_iterator itend = end();
     for ( ; it != itend ; ++it ) {
