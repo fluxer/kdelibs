@@ -127,11 +127,6 @@ public:
     void readUDSEntry( bool _urlIsDirectory );
 
     /**
-     * Parses the given permission set and provides it for access()
-     */
-    QString parsePermissions( mode_t perm ) const;
-
-    /**
      * The UDSEntry that contains the data for this fileitem, if it came from a directory listing.
      */
     mutable KIO::UDSEntry m_entry;
@@ -202,16 +197,12 @@ public:
 
     // For special case like link to dirs over FTP
     QString m_guessedMimeType;
-    mutable QString m_access;
 
-    enum { NumFlags = KFileItem::CreationTime + 1 };
     mutable KDateTime m_time[3];
 };
 
 void KFileItemPrivate::init()
 {
-    m_access.clear();
-
     // determine mode and/or permissions if unknown
     // TODO: delay this until requested
     if ( m_fileMode == KFileItem::Unknown || m_permissions == KFileItem::Unknown )
@@ -394,82 +385,6 @@ bool KFileItemPrivate::cmp( const KFileItemPrivate & item ) const
     // Don't compare the mimetypes here. They might not be known, and we don't want to
     // do the slow operation of determining them here.
 }
-
-inline //because it is used only in one place
-QString KFileItemPrivate::parsePermissions(mode_t perm) const
-{
-    char buffer[ 12 ];
-
-    char uxbit,gxbit,oxbit;
-
-    if ( (perm & (S_IXUSR|S_ISUID)) == (S_IXUSR|S_ISUID) )
-        uxbit = 's';
-    else if ( (perm & (S_IXUSR|S_ISUID)) == S_ISUID )
-        uxbit = 'S';
-    else if ( (perm & (S_IXUSR|S_ISUID)) == S_IXUSR )
-        uxbit = 'x';
-    else
-        uxbit = '-';
-
-    if ( (perm & (S_IXGRP|S_ISGID)) == (S_IXGRP|S_ISGID) )
-        gxbit = 's';
-    else if ( (perm & (S_IXGRP|S_ISGID)) == S_ISGID )
-        gxbit = 'S';
-    else if ( (perm & (S_IXGRP|S_ISGID)) == S_IXGRP )
-        gxbit = 'x';
-    else
-        gxbit = '-';
-
-    if ( (perm & (S_IXOTH|S_ISVTX)) == (S_IXOTH|S_ISVTX) )
-        oxbit = 't';
-    else if ( (perm & (S_IXOTH|S_ISVTX)) == S_ISVTX )
-        oxbit = 'T';
-    else if ( (perm & (S_IXOTH|S_ISVTX)) == S_IXOTH )
-        oxbit = 'x';
-    else
-        oxbit = '-';
-
-    // Include the type in the first char like kde3 did; people are more used to seeing it,
-    // even though it's not really part of the permissions per se.
-    if (m_bLink)
-        buffer[0] = 'l';
-    else if (m_fileMode != KFileItem::Unknown) {
-        if (S_ISDIR(m_fileMode))
-            buffer[0] = 'd';
-        else if (S_ISSOCK(m_fileMode))
-            buffer[0] = 's';
-        else if (S_ISCHR(m_fileMode))
-            buffer[0] = 'c';
-        else if (S_ISBLK(m_fileMode))
-            buffer[0] = 'b';
-        else if (S_ISFIFO(m_fileMode))
-            buffer[0] = 'p';
-        else
-            buffer[0] = '-';
-    } else {
-        buffer[0] = '-';
-    }
-
-    buffer[1] = ((( perm & S_IRUSR ) == S_IRUSR ) ? 'r' : '-' );
-    buffer[2] = ((( perm & S_IWUSR ) == S_IWUSR ) ? 'w' : '-' );
-    buffer[3] = uxbit;
-    buffer[4] = ((( perm & S_IRGRP ) == S_IRGRP ) ? 'r' : '-' );
-    buffer[5] = ((( perm & S_IWGRP ) == S_IWGRP ) ? 'w' : '-' );
-    buffer[6] = gxbit;
-    buffer[7] = ((( perm & S_IROTH ) == S_IROTH ) ? 'r' : '-' );
-    buffer[8] = ((( perm & S_IWOTH ) == S_IWOTH ) ? 'w' : '-' );
-    buffer[9] = oxbit;
-    // if (hasExtendedACL())
-    if (m_entry.contains(KIO::UDSEntry::UDS_EXTENDED_ACL)) {
-        buffer[10] = '+';
-        buffer[11] = 0;
-    } else {
-        buffer[10] = 0;
-    }
-
-    return QString::fromLatin1(buffer);
-}
-
 
 ///////
 
@@ -1189,24 +1104,86 @@ bool KFileItem::operator!=(const KFileItem& other) const
     return !operator==(other);
 }
 
-
 KFileItem::operator QVariant() const
 {
     return qVariantFromValue(*this);
 }
-
-
-
 
 QString KFileItem::permissionsString() const
 {
     if (!d)
         return QString();
 
-    if (d->m_access.isNull() && d->m_permissions != KFileItem::Unknown)
-        d->m_access = d->parsePermissions( d->m_permissions );
+    char buffer[ 12 ];
 
-    return d->m_access;
+    char uxbit,gxbit,oxbit;
+
+    if ( (d->m_permissions & (S_IXUSR|S_ISUID)) == (S_IXUSR|S_ISUID) )
+        uxbit = 's';
+    else if ( (d->m_permissions & (S_IXUSR|S_ISUID)) == S_ISUID )
+        uxbit = 'S';
+    else if ( (d->m_permissions & (S_IXUSR|S_ISUID)) == S_IXUSR )
+        uxbit = 'x';
+    else
+        uxbit = '-';
+
+    if ( (d->m_permissions & (S_IXGRP|S_ISGID)) == (S_IXGRP|S_ISGID) )
+        gxbit = 's';
+    else if ( (d->m_permissions & (S_IXGRP|S_ISGID)) == S_ISGID )
+        gxbit = 'S';
+    else if ( (d->m_permissions & (S_IXGRP|S_ISGID)) == S_IXGRP )
+        gxbit = 'x';
+    else
+        gxbit = '-';
+
+    if ( (d->m_permissions & (S_IXOTH|S_ISVTX)) == (S_IXOTH|S_ISVTX) )
+        oxbit = 't';
+    else if ( (d->m_permissions & (S_IXOTH|S_ISVTX)) == S_ISVTX )
+        oxbit = 'T';
+    else if ( (d->m_permissions & (S_IXOTH|S_ISVTX)) == S_IXOTH )
+        oxbit = 'x';
+    else
+        oxbit = '-';
+
+    // Include the type in the first char like kde3 did; people are more used to seeing it,
+    // even though it's not really part of the permissions per se.
+    if (d->m_bLink)
+        buffer[0] = 'l';
+    else if (d->m_fileMode != KFileItem::Unknown) {
+        if (S_ISDIR(d->m_fileMode))
+            buffer[0] = 'd';
+        else if (S_ISSOCK(d->m_fileMode))
+            buffer[0] = 's';
+        else if (S_ISCHR(d->m_fileMode))
+            buffer[0] = 'c';
+        else if (S_ISBLK(d->m_fileMode))
+            buffer[0] = 'b';
+        else if (S_ISFIFO(d->m_fileMode))
+            buffer[0] = 'p';
+        else
+            buffer[0] = '-';
+    } else {
+        buffer[0] = '-';
+    }
+
+    buffer[1] = ((( d->m_permissions & S_IRUSR ) == S_IRUSR ) ? 'r' : '-' );
+    buffer[2] = ((( d->m_permissions & S_IWUSR ) == S_IWUSR ) ? 'w' : '-' );
+    buffer[3] = uxbit;
+    buffer[4] = ((( d->m_permissions & S_IRGRP ) == S_IRGRP ) ? 'r' : '-' );
+    buffer[5] = ((( d->m_permissions & S_IWGRP ) == S_IWGRP ) ? 'w' : '-' );
+    buffer[6] = gxbit;
+    buffer[7] = ((( d->m_permissions & S_IROTH ) == S_IROTH ) ? 'r' : '-' );
+    buffer[8] = ((( d->m_permissions & S_IWOTH ) == S_IWOTH ) ? 'w' : '-' );
+    buffer[9] = oxbit;
+    // if (hasExtendedACL())
+    if (d->m_entry.contains(KIO::UDSEntry::UDS_EXTENDED_ACL)) {
+        buffer[10] = '+';
+        buffer[11] = 0;
+    } else {
+        buffer[10] = 0;
+    }
+
+    return QString::fromLatin1(buffer);
 }
 
 // check if we need to cache this
