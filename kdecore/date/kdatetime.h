@@ -43,7 +43,19 @@ public:
     KDateTime(const QDateTime &other);
     KDateTime(const KDateTime &other);
 
+    /**
+     * Returns the time zone for the date and time according to the time
+     * specification type as follows:
+     * - @c Qt::LocalTime  : the local time zone is returned.
+     * - @c Qt::UTC        : the UTC time zone is returned.
+     *
+     * @return time zone as defined above, or invalid in all other cases
+     */
     KTimeZone timeZone() const;
+    /**
+     * @return @c true if date represents night time of the day, @c false otherwise
+     * @since 4.20
+     */
     bool isNightTime() const;
 
     static QDate currentLocalDate();
