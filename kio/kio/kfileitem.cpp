@@ -266,7 +266,7 @@ void KFileItemPrivate::init()
 void KFileItemPrivate::setTime(KFileItem::FileTimes mappedWhich, long long time_t_val) const
 {
     m_time[mappedWhich].setTime_t(time_t_val);
-    m_time[mappedWhich] = m_time[mappedWhich].toLocalZone(); // #160979
+    m_time[mappedWhich] = m_time[mappedWhich].toLocalTime(); // #160979
 }
 
 KDateTime KFileItemPrivate::time(KFileItem::FileTimes mappedWhich) const

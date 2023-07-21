@@ -70,7 +70,7 @@ void KCupsOptionsJobWidget::setupCupsOptions( QStringList &cupsOptions )
                             //Check if time is for tomorrow in case of DST change overnight
                             if ( jobHoldTime() < localDateTime.time() ) localDateTime.addDays(1);
                             localDateTime.setTime( jobHoldTime() );
-                            setCupsOption( cupsOptions, "job-hold-until", localDateTime.toUtc().time().toString("HH:mm") );
+                            setCupsOption( cupsOptions, "job-hold-until", localDateTime.toUTC().time().toString("HH:mm") );
                             break;
     }
 

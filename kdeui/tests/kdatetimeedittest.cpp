@@ -213,10 +213,6 @@ void KDateTimeEditTest::testTimeSpec()
     QCOMPARE(m_edit->timeSpec(), KDateTime::currentLocalDateTime().timeSpec());
     QCOMPARE(m_edit->timeZones(), KSystemTimeZones::zones());
 
-    KDateTime::Spec spec = KDateTime::Spec::OffsetFromUTC(3600);
-    m_edit->setTimeSpec(spec);
-    QCOMPARE(m_edit->timeSpec(), spec);
-
     KTimeZones::ZoneMap map;
     map.insert("Africa/Cairo", KSystemTimeZones::zone("Africa/Cairo"));
     m_edit->setTimeZones(map);

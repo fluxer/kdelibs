@@ -441,8 +441,8 @@ void FileUndoManagerPrivate::slotResult(KJob *job)
         time_t mtime = statJob->statResult().numberValue(KIO::UDSEntry::UDS_MODIFICATION_TIME, -1);
         if (mtime != op.m_mtime) {
             kDebug() << op.m_dst << " was modified after being copied!";
-            KDateTime srcTime; srcTime.setTime_t(op.m_mtime); srcTime = srcTime.toLocalZone();
-            KDateTime destTime; destTime.setTime_t(mtime); destTime = destTime.toLocalZone();
+            KDateTime srcTime; srcTime.setTime_t(op.m_mtime); srcTime = srcTime.toLocalTime();
+            KDateTime destTime; destTime.setTime_t(mtime); destTime = destTime.toLocalTime();
             if (!m_uiInterface->copiedFileWasModified(op.m_src, op.m_dst, srcTime, destTime)) {
                 stopUndo(false);
             }

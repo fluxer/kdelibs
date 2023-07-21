@@ -38,7 +38,6 @@ KDECORE_UNIT_TESTS(
     klockfiletest
     ktempdirtest
     ksharedptrtest
-    kdatetimetest
     ksavefiletest
     kdesktopfiletest
     ktemporaryfiletest

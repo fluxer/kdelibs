@@ -134,7 +134,7 @@ public:
      *
      * @return the currently selected time spec
      */
-    KDateTime::Spec timeSpec() const;
+    Qt::TimeSpec timeSpec() const;
 
     /**
      * Returns the list of Calendar Systems displayed.
@@ -367,7 +367,7 @@ Q_SIGNALS:
      *
      * @param timeSpec the new time spec
      */
-    void timeSpecEntered(const KDateTime::Spec &spec);
+    void timeSpecEntered(const Qt::TimeSpec spec);
 
     /**
      * Signal if the time spec has been changed either manually by the user
@@ -375,7 +375,7 @@ Q_SIGNALS:
      *
      * @param timeSpec the new time spec
      */
-    void timeSpecChanged(const KDateTime::Spec &spec);
+    void timeSpecChanged(const Qt::TimeSpec spec);
 
 public Q_SLOTS:
 
@@ -430,7 +430,7 @@ public Q_SLOTS:
      *
      * @param spec the new spec
      */
-    void setTimeSpec(const KDateTime::Spec &spec);
+    void setTimeSpec(const Qt::TimeSpec spec);
 
     /**
      * Set the minimum and maximum date and time range
@@ -633,7 +633,7 @@ protected:
      *
      * @param spec the new time spec
      */
-    void assignTimeSpec(const KDateTime::Spec &spec);
+    void assignTimeSpec(const Qt::TimeSpec spec);
 
 private:
 

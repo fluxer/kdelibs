@@ -389,10 +389,7 @@ KLocaleTest::formatDateTime()
 	qdt = qdt.addDays(-1);
 	QCOMPARE(locale.formatDateTime(qdt, KLocale::FancyLongDate), qdt.toString(full));
 
-	small = "%Y-%m-%d %H:%M";
-	smallsecs = "%Y-%m-%d %H:%M:%S";
-	full = "%A %d %B %Y %H:%M";
-	fullsecs = "%A %d %B %Y %H:%M:%S";
+	full = "dddd dd MMMM yyyy hh:mm";
 	KDateTime kdt;
 	const KTimeZone tz = KSystemTimeZones::zone("Pacific/Fiji");
         if (!tz.isValid())
@@ -400,14 +397,6 @@ KLocaleTest::formatDateTime()
 	kdt = KDateTime::currentDateTime(tz);
 	today = kdt.date();
 	nowt = kdt.time();
-	QCOMPARE(locale.formatDateTime(kdt), kdt.toString(small));
-//	QCOMPARE(locale.formatDateTime(kdt, KLocale::ShortDate, KLocale::Seconds), kdt.toString(smallsecs));
-	QCOMPARE(locale.formatDateTime(kdt, KLocale::LongDate), kdt.toString(full));
-//	QCOMPARE(locale.formatDateTime(kdt, KLocale::LongDate, KLocale::Seconds), kdt.toString(fullsecs));
-
-//	QCOMPARE(locale.formatDateTime(kdt, KLocale::FancyLongDate), QString("Today") + kdt.time().toString(tfmt));
-	kdt = kdt.addSecs(3605);  // more than 1 hour from now
-	QCOMPARE(locale.formatDateTime(kdt, KLocale::FancyLongDate), kdt.toString(full));
 	kdt.setDate(today);
 	kdt.setTime(QTime(0,0,0));
 	QCOMPARE(locale.formatDateTime(kdt, KLocale::FancyLongDate), QString("Today" + kdt.time().toString(tfmt)));

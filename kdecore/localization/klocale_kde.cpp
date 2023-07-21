@@ -2184,35 +2184,10 @@ QString KLocalePrivate::formatDateTime(const QDateTime &dateTime, KLocale::DateF
 QString KLocalePrivate::formatDateTime(const KDateTime &dateTime, KLocale::DateFormat format,
                                        KLocale::DateTimeFormatOptions options)
 {
-    QString dt;
-
-    if (dateTime.isDateOnly()) {
-        dt = formatDate(dateTime.date(), format);
-    } else {
-        KDateTime now = KDateTime::currentDateTime(dateTime.timeSpec());
-        int daysTo = dateTime.date().daysTo(now.date());
-        int secsTo = now.secsTo(dateTime);
-        dt = KLocalePrivate::formatDateTime(q, dateTime.dateTime(), format, (options & KLocale::Seconds), daysTo, secsTo);
-    }
-
-    if (options & KLocale::TimeZone) {
-        QString tz;
-        switch (dateTime.timeType()) {
-        case KDateTime::OffsetFromUTC:
-            tz = i18n(dateTime.toString(QString::fromLatin1("%z")).toUtf8());
-            break;
-        case KDateTime::UTC:
-        case KDateTime::TimeZone:
-            tz = i18n(dateTime.toString(QString::fromLatin1((format == KLocale::ShortDate) ? "%Z" : "%:Z")).toUtf8());
-            break;
-        case KDateTime::ClockTime:
-        default:
-            break;
-        }
-        return i18nc("concatenation of date/time and time zone", "%1 %2", dt, tz);
-    }
-
-    return dt;
+    QDateTime now = QDateTime::currentDateTime();
+    int daysTo = dateTime.toLocalTime().date().daysTo(now.date());
+    int secsTo = now.secsTo(dateTime);
+    return KLocalePrivate::formatDateTime(q, dateTime, format, (options & KLocale::Seconds), daysTo, secsTo);
 }
 
 bool KLocalePrivate::useDefaultLanguage() const

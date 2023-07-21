@@ -223,9 +223,7 @@ void KDateTimeEditPrivate::selectTimeZone(int index)
 
 void KDateTimeEditPrivate::enterTimeZone(const QString &zone)
 {
-    q->setTimeSpec(m_zones.value(zone));
-    emit q->dateTimeEntered(m_dateTime);
-    emit q->timeSpecEntered(m_dateTime.timeSpec());
+    q->setDateTime(KDateTime::currentDateTime(m_zones.value(zone)));
 }
 
 void KDateTimeEditPrivate::warnDateTime()
@@ -308,7 +306,7 @@ QTime KDateTimeEdit::time() const
     return d->m_dateTime.time();
 }
 
-KDateTime::Spec KDateTimeEdit::timeSpec() const
+Qt::TimeSpec KDateTimeEdit::timeSpec() const
 {
     return d->m_dateTime.timeSpec();
 }
@@ -428,9 +426,9 @@ void KDateTimeEdit::assignTime(const QTime &time)
     d->ui.m_timeCombo->setTime(time);
 }
 
-void KDateTimeEdit::setTimeSpec(const KDateTime::Spec &spec)
+void KDateTimeEdit::setTimeSpec(const Qt::TimeSpec spec)
 {
-    if (spec == d->m_dateTime.timeSpec() || !spec.isValid()) {
+    if (spec == d->m_dateTime.timeSpec()) {
         return;
     }
 
@@ -439,7 +437,7 @@ void KDateTimeEdit::setTimeSpec(const KDateTime::Spec &spec)
     emit timeSpecChanged(d->m_dateTime.timeSpec());
 }
 
-void KDateTimeEdit::assignTimeSpec(const KDateTime::Spec &spec)
+void KDateTimeEdit::assignTimeSpec(const Qt::TimeSpec spec)
 {
     d->m_dateTime.setTimeSpec(spec);
     d->updateTimeSpecWidget();

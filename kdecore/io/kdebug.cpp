@@ -636,10 +636,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
 
 QDebug operator<<(QDebug s, const KDateTime &time)
 {
-    if ( time.isDateOnly() )
-        s.nospace() << "KDateTime(" << qPrintable(time.toString(KDateTime::QtTextDate)) << ")";
-    else
-        s.nospace() << "KDateTime(" << qPrintable(time.toString(KDateTime::ISODate)) << ")";
+    s.nospace() << "KDateTime(" << time.toString() << ")";
     return s.space();
 }
 

@@ -231,8 +231,8 @@ bool KDirSortFilterProxyModel::subSortLessThan(const QModelIndex& left,
     }
 
     case KDirModel::ModifiedTime: {
-        KDateTime leftModifiedTime = leftFileItem.time(KFileItem::ModificationTime).toLocalZone();
-        KDateTime rightModifiedTime = rightFileItem.time(KFileItem::ModificationTime).toLocalZone();
+        KDateTime leftModifiedTime = leftFileItem.time(KFileItem::ModificationTime).toLocalTime();
+        KDateTime rightModifiedTime = rightFileItem.time(KFileItem::ModificationTime).toLocalTime();
 
         if (leftModifiedTime == rightModifiedTime) {
             return d->compare(leftFileItem.text(), rightFileItem.text(), sortCaseSensitivity()) < 0;
