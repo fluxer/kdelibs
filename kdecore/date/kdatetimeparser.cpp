@@ -29,10 +29,6 @@ KDateTimeParser::KDateTimeParser()
 {
 }
 
-KDateTimeParser::~KDateTimeParser()
-{
-}
-
 // Parse a DateTime input string and return just the Date component
 QDate KDateTimeParser::parseDate(const QString &inputString,
                                  const QString &formatString,
@@ -43,7 +39,7 @@ QDate KDateTimeParser::parseDate(const QString &inputString,
 {
     DateTimeComponents result;
     if (formatStandard == KLocale::UnicodeFormat) {
-        result = parseDateUnicode(inputString, formatString, calendar, locale, digitSet);
+        result = parseDateUnicode(inputString, formatString);
     } else {
         result = parseDatePosix(inputString, formatString, calendar, locale, digitSet, formatStandard);
     }
@@ -319,14 +315,8 @@ DateTimeComponents KDateTimeParser::parseDatePosix(const QString &inputString,
 
 // Parse an input string to match a UNICODE DateTime format string and return any components found
 DateTimeComponents KDateTimeParser::parseDateUnicode(const QString &inputString,
-                                                     const QString &formatString,
-                                                     const KCalendarSystem *calendar,
-                                                     const KLocale *locale,
-                                                     KLocale::DigitSet digitSet) const
+                                                     const QString &formatString) const
 {
-    Q_UNUSED(calendar);
-    Q_UNUSED(locale);
-    Q_UNUSED(digitSet);
     QString str = inputString.simplified().toLower();
     QString fmt = formatString.simplified();
     int dd = -1;

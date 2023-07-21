@@ -50,28 +50,28 @@ KDayPeriodPrivate::KDayPeriodPrivate(const QString &periodCode,
                                      const QTime &periodEnd,
                                      int offsetFromStart,
                                      int offsetIfZero)
-                 : QSharedData(),
-                   m_periodCode(periodCode),
-                   m_longName(longName),
-                   m_shortName(shortName),
-                   m_narrowName(narrowName),
-                   m_periodStart(periodStart),
-                   m_periodEnd(periodEnd),
-                   m_offsetFromStart(offsetFromStart),
-                   m_offsetIfZero(offsetIfZero)
+    : QSharedData(),
+    m_periodCode(periodCode),
+    m_longName(longName),
+    m_shortName(shortName),
+    m_narrowName(narrowName),
+    m_periodStart(periodStart),
+    m_periodEnd(periodEnd),
+    m_offsetFromStart(offsetFromStart),
+    m_offsetIfZero(offsetIfZero)
 {
 }
 
 KDayPeriodPrivate::KDayPeriodPrivate(const KDayPeriodPrivate &other)
-                 : QSharedData(other),
-                   m_periodCode(other.m_periodCode),
-                   m_longName(other.m_longName),
-                   m_shortName(other.m_shortName),
-                   m_narrowName(other.m_narrowName),
-                   m_periodStart(other.m_periodStart),
-                   m_periodEnd(other.m_periodEnd),
-                   m_offsetFromStart(other.m_offsetFromStart),
-                   m_offsetIfZero(other.m_offsetIfZero)
+    : QSharedData(other),
+    m_periodCode(other.m_periodCode),
+    m_longName(other.m_longName),
+    m_shortName(other.m_shortName),
+    m_narrowName(other.m_narrowName),
+    m_periodStart(other.m_periodStart),
+    m_periodEnd(other.m_periodEnd),
+    m_offsetFromStart(other.m_offsetFromStart),
+    m_offsetIfZero(other.m_offsetIfZero)
 {
 }
 
@@ -87,24 +87,24 @@ KDayPeriod::KDayPeriod(const QString &periodCode,
                        const QTime &periodEnd,
                        int offsetFromStart,
                        int offsetIfZero)
-          : d(new KDayPeriodPrivate(periodCode,
-                                    longName,
-                                    shortName,
-                                    narrowName,
-                                    periodStart,
-                                    periodEnd,
-                                    offsetFromStart,
-                                    offsetIfZero))
+    : d(new KDayPeriodPrivate(periodCode,
+                              longName,
+                              shortName,
+                              narrowName,
+                              periodStart,
+                              periodEnd,
+                              offsetFromStart,
+                              offsetIfZero))
 {
 }
 
 KDayPeriod::KDayPeriod()
-          : d(new KDayPeriodPrivate(QString(), QString(), QString(), QString(), QTime(), QTime(), -1, -1))
+    : d(new KDayPeriodPrivate(QString(), QString(), QString(), QString(), QTime(), QTime(), -1, -1))
 {
 }
 
 KDayPeriod::KDayPeriod(const KDayPeriod &rhs)
-          : d(rhs.d)
+    : d(rhs.d)
 {
 }
 
@@ -141,9 +141,8 @@ QString KDayPeriod::periodName(KLocale::DateTimeComponentFormat format) const
         return d->m_longName;
     } else if (format == KLocale::NarrowName) {
         return d->m_narrowName;
-    } else {
-        return d->m_shortName;
     }
+    return d->m_shortName;
 }
 
 int KDayPeriod::hourInPeriod(const QTime &time) const
@@ -173,12 +172,11 @@ QTime KDayPeriod::time(int hip, int minute, int second, int millisecond) const
         } else {
             hour = hip;
         }
-        time =  QTime(hour, minute, second, millisecond);
+        time = QTime(hour, minute, second, millisecond);
         if (time.isValid() && isValid(time)) {
             return time;
-        } else {
-            return QTime();
         }
+        return QTime();
     }
     return time;
 }
@@ -195,12 +193,10 @@ bool KDayPeriod::isValid(const QTime &time) const
     if (isValid()) {
         if (periodStart() <= periodEnd()) {
             return time >= periodStart() && time <= periodEnd();
-        } else {
-            return ((time >= periodStart() && time <= QTime(23, 59, 59, 999)) ||
-                    (time >= QTime(0, 0, 0) && time <= periodEnd()));
         }
-    } else {
-        return false;
+        return ((time >= periodStart() && time <= QTime(23, 59, 59, 999)) ||
+                (time >= QTime(0, 0, 0) && time <= periodEnd()));
     }
+    return false;
 }
 

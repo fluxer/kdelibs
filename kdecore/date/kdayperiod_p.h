@@ -78,7 +78,7 @@ public:
     /**
      * Constructs a null KDayPeriod
      */
-    explicit KDayPeriod();
+    KDayPeriod();
 
     /**
      * Copy Constructor
@@ -91,7 +91,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~KDayPeriod();
+    ~KDayPeriod();
 
     /**
      * Assignment operator

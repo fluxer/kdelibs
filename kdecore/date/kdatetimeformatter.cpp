@@ -32,8 +32,8 @@
 #include "kdebug.h"
 
 KDateTimeFormatter::KDateTimeFormatter()
-    : m_englishLocale(0),
-      m_englishCalendar(0)
+    : m_englishLocale(nullptr),
+      m_englishCalendar(nullptr)
 {
 }
 
