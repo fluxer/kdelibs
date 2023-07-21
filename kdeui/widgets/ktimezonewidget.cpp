@@ -56,7 +56,7 @@ static bool timeZoneLocaleLessThan (const QString &a, const QString &b)
     return QString::localeAwareCompare(a, b) < 0;
 }
 
-KTimeZoneWidget::KTimeZoneWidget( QWidget *parent, KTimeZones *db )
+KTimeZoneWidget::KTimeZoneWidget( QWidget *parent )
   : QTreeWidget( parent ),
     d(new KTimeZoneWidget::Private)
 {
@@ -68,18 +68,7 @@ KTimeZoneWidget::KTimeZoneWidget( QWidget *parent, KTimeZones *db )
   QStringList cities;
   QHash<QString, KTimeZone> zonesByCity;
 
-  if (!db) {
-      db = KSystemTimeZones::timeZones();
-
-      // add UTC to the defaults default
-      KTimeZone utc = KTimeZone::utc();
-      cities.append(utc.name());
-      zonesByCity.insert(utc.name(), utc);
-  }
-
-  const KTimeZones::ZoneMap zones = db->zones();
-  for ( KTimeZones::ZoneMap::ConstIterator it = zones.begin(); it != zones.end(); ++it ) {
-    const KTimeZone zone = it.value();
+  foreach (const KTimeZone &zone, KSystemTimeZones::zones()) {
     const QString continentCity = displayName( zone );
     const int separator = continentCity.lastIndexOf('/');
     // Make up the localized key that will be used for sorting.

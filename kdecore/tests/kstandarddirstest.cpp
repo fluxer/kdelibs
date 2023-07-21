@@ -312,13 +312,13 @@ void KStandarddirsTest::testAddResourceType()
 void KStandarddirsTest::testAddResourceDir()
 {
     const QString dir = QString::fromLatin1(KDESRCDIR);
-    const QString file = "Cairo";
+    const QString file = "kstandarddirstest.cpp";
     QString ret = KStandardDirs::locate( "here", file );
     QCOMPARE(ret, QString()); // not set up yet
 
     KGlobal::dirs()->addResourceDir("here", dir);
     ret = KStandardDirs::locate( "here", file );
-    QCOMPARE_PATHS(ret, KGlobal::dirs()->realPath(dir) + "Cairo");
+    QCOMPARE_PATHS(ret, KGlobal::dirs()->realPath(dir) + "kstandarddirstest.cpp");
 }
 
 void KStandarddirsTest::testSetXdgDataDirs()

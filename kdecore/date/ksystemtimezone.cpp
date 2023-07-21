@@ -102,15 +102,17 @@ static QList<float> splitZoneTabCoordinates(const QByteArray &zonetabcoordinates
     return result;
 }
 
-class KSystemTimeZonesPrivate : public QObject, public KTimeZones
+class KSystemTimeZonesPrivate : public QObject
 {
     Q_OBJECT
 public:
     KSystemTimeZonesPrivate();
 
+    KTimeZone findZone(const QString &name) const;
+
+    KTimeZoneList m_zones;
     KTimeZone m_localtz;
     QString m_zoneinfoDir;
-    KTimeZoneSource* m_tzfileSource;
 
 private Q_SLOTS:
     void update(const QString &path);
@@ -120,10 +122,19 @@ private:
 };
 
 KSystemTimeZonesPrivate::KSystemTimeZonesPrivate()
-    : m_tzfileSource(nullptr),
-    m_watcher(nullptr)
+    : m_watcher(nullptr)
 {
     update(QString());
+}
+
+KTimeZone KSystemTimeZonesPrivate::findZone(const QString &name) const
+{
+    foreach (const KTimeZone &zone, m_zones) {
+        if (zone.name() == name) {
+            return zone;
+        }
+    }
+    return KTimeZone();
 }
 
 void KSystemTimeZonesPrivate::update(const QString &path)
@@ -141,10 +152,10 @@ void KSystemTimeZonesPrivate::update(const QString &path)
     if (m_zoneinfoDir.isEmpty()) {
         m_zoneinfoDir = zoneinfoDir();
     }
-    delete m_tzfileSource;
-    m_tzfileSource = new KTimeZoneSource(m_zoneinfoDir);
 
-    KTimeZones::clear();
+    m_zones.clear();
+    // UTC is used as fallback, should be there in any case
+    m_zones.append(m_localtz);
 
     const QString zonetab = m_zoneinfoDir + QLatin1String("/zone.tab");
     QFile zonetabfile(zonetab);
@@ -204,19 +215,18 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         }
 
         const KTimeZone ktimezone(
-            m_tzfileSource,
             QString::fromLatin1(zonename),
             QString::fromLatin1(zonecode),
             zonetabcoordinates.at(0), zonetabcoordinates.at(1),
             QString::fromLatin1(zonecomment)
         );
-        KTimeZones::add(ktimezone);
+        m_zones.append(ktimezone);
     }
 
     if (localtimeinfo.isSymLink()) {
         const int zonediroffset = (m_zoneinfoDir.size() + 1);
         const QString localtz = reallocaltime.mid(zonediroffset, reallocaltime.size() - zonediroffset);
-        m_localtz = KTimeZones::zone(localtz);
+        m_localtz = findZone(localtz);
 #ifndef NDEBUG
         kDebug() << "Zones update took" << updatetimer.elapsed() << "ms";
 #endif
@@ -233,11 +243,11 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 #else
     const QByteArray localtz(tzname[t->tm_isdst]);
 #endif
-    const KTimeZones::ZoneMap allzones = KTimeZones::zones();
-    KTimeZones::ZoneMap::const_iterator it = allzones.constBegin();
-    while (it != allzones.constEnd()) {
-        if (it.value().abbreviations().contains(localtz)) {
-            m_localtz = KTimeZones::zone(it.key());
+    KTimeZoneList::const_iterator it = m_zones.constBegin();
+    while (it != m_zones.constEnd()) {
+        const KTimeZone zone = *it;
+        if (zone.abbreviations().contains(localtz)) {
+            m_localtz = zone;
 #ifndef NDEBUG
             kDebug() << "Zones update took" << updatetimer.elapsed() << "ms";
 #endif
@@ -269,24 +279,14 @@ QString KSystemTimeZones::zoneinfoDir()
     return s_systemzones->m_zoneinfoDir;
 }
 
-KTimeZones *KSystemTimeZones::timeZones()
+const KTimeZoneList KSystemTimeZones::zones()
 {
-    return s_systemzones;
-}
-
-KTimeZone KSystemTimeZones::readZone(const QString &name)
-{
-    return KTimeZone(s_systemzones->m_tzfileSource, name);
-}
-
-const KTimeZones::ZoneMap KSystemTimeZones::zones()
-{
-    return s_systemzones->zones();
+    return s_systemzones->m_zones;
 }
 
 KTimeZone KSystemTimeZones::zone(const QString &name)
 {
-    return s_systemzones->zone(name);
+    return s_systemzones->findZone(name);
 }
 
 #include "ksystemtimezone.moc"

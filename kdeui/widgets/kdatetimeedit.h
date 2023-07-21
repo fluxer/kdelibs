@@ -206,7 +206,7 @@ public:
      *
      * @param zones the time zones to display
      */
-    KTimeZones::ZoneMap timeZones() const;
+    KTimeZoneList timeZones() const;
 
     /**
      * Return if the current user input is valid
@@ -579,7 +579,7 @@ public Q_SLOTS:
      *
      * @param zones the time zones to display
      */
-    void setTimeZones(const KTimeZones::ZoneMap &zones);
+    void setTimeZones(const KTimeZoneList &zones);
 
 protected:
 

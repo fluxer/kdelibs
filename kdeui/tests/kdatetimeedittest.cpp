@@ -213,10 +213,10 @@ void KDateTimeEditTest::testTimeSpec()
     QCOMPARE(m_edit->timeSpec(), KDateTime::currentLocalDateTime().timeSpec());
     QCOMPARE(m_edit->timeZones(), KSystemTimeZones::zones());
 
-    KTimeZones::ZoneMap map;
-    map.insert("Africa/Cairo", KSystemTimeZones::zone("Africa/Cairo"));
-    m_edit->setTimeZones(map);
-    QCOMPARE(m_edit->timeZones(), map);
+    KTimeZoneList list;
+    list.append(KSystemTimeZones::zone("Africa/Cairo"));
+    m_edit->setTimeZones(list);
+    QCOMPARE(m_edit->timeZones(), list);
 
     delete m_edit;
 }

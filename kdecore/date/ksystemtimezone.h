@@ -18,115 +18,68 @@
    Boston, MA 02110-1301, USA.
 */
 
-/** @file
- * System time zone functions
- * @author David Jarvie <djarvie@kde.org>.
- * @author S.R.Haque <srhaque@iee.org>.
- */
-
 #ifndef KSYSTEMTIMEZONE_H
 #define KSYSTEMTIMEZONE_H
 
 #include "ktimezone.h"
 
 /**
- * The KSystemTimeZones class represents the system time zone database, consisting
- * of a collection of individual system time zone definitions, indexed by name.
- * Each individual time zone is defined in a KTimeZone instance.
+ * The KSystemTimeZones class represents the system time zone database. Each individual time zone
+ * is defined in a KTimeZone instance.
  *
- * At initialisation, KSystemTimeZones on UNIX systems reads the zone.tab file
- * to obtain the list of system time zones and creates a KTimeZone instance for
- * each one.
+ * At initialisation, KSystemTimeZones on UNIX systems reads the zone.tab file to obtain the list
+ * of system time zones and creates a KTimeZone instance for each one.
  *
- * @note KSystemTimeZones gets the system's time zone configuration, including
- * the current local system time zone and the location of zone.tab. If the local
- * timezone cannot be determinted, KSystemTimeZones will only know about the UTC
- * time zone.
+ * @note KSystemTimeZones gets the system's time zone configuration, including the current local
+ * system time zone and the location of zone.tab. If the local timezone cannot be determinted,
+ * KSystemTimeZones will only know about the UTC time zone.
  *
- * Note that KSystemTimeZones is not derived from KTimeZones, but instead contains
- * a KTimeZones instance which holds the system time zone database. Convenience
- * static methods are defined to access its data, or alternatively you can access
- * the KTimeZones instance directly via the timeZones() method.
+ * Convenience static methods are defined to access its data, alternatively you can access the
+ * KTimeZone list instance directly via the zones() method.
  *
- * As an example, find the local time in Oman corresponding to the local system
- * time of 12:15:00 on 13th November 1999:
- * \code
- * QDateTime sampleTime(QDate(1999,11,13), QTime(12,15,0), Qt::LocalTime);
- * KTimeZone local = KSystemTimeZones::local();
- * KTimeZone oman  = KSystemTimeZones::zone("Asia/Muscat");
- * QDateTime omaniTime = local.convert(oman, sampleTime);
- * \endcode
  *
  * @short System time zone access
- * @see KTimeZone, KTimeZones
+ * @see KTimeZone
  * @ingroup timezones
- * @author David Jarvie <djarvie@kde.org>.
- * @author S.R.Haque <srhaque@iee.org>.
+ * @author Ivailo Monev <xakepa10@gmail.com>.
  */
 class KDECORE_EXPORT KSystemTimeZones
 {
 public:
     /**
-     * Returns the unique KTimeZones instance containing the system time zones
-     * collection. It is first created if it does not already exist.
+     * Returns all the system time zones.
      *
-     * @return time zones.
+     * @return time zone list
      */
-    static KTimeZones *timeZones();
-
-    /**
-     * Returns all the time zones defined in this collection.
-     *
-     * @return time zone collection
-     */
-    static const KTimeZones::ZoneMap zones();
+    static const KTimeZoneList zones();
 
     /**
      * Returns the time zone with the given name.
      *
-     * The time zone definition is obtained using system library calls, and may
-     * not contain historical data. If you need historical time change data,
-     * use the potentially slower method readZone().
+     * The time zone instance is is a cached one.
      *
      * @param name name of time zone
-     * @return time zone (usually a KTimeZone instance), or invalid if not found
-     * @see readZone()
+     * @return time zone, or invalid KTimeZone instance if not found
+     * @see zones()
      */
     static KTimeZone zone(const QString &name);
 
     /**
-     * Returns the time zone with the given name, containing the full time zone
-     * definition read directly from the system time zone database. This may
-     * incur a higher overhead than zone(), but will provide whatever historical
-     * data the system holds.
-     *
-     * @param name name of time zone
-     * @return time zone (usually a KTimeZone instance), or invalid if not found
-     * @see zone()
-     */
-    static KTimeZone readZone(const QString &name);
-
-    /**
      * Returns the current local system time zone.
      *
-     * The idea of this routine is to provide a robust lookup of the local time
-     * zone. On Unix systems, there are a variety of mechanisms for setting this
-     * information, and no well defined way of getting it. For example, if you
-     * set your time zone to "Europe/London", then the tzname[] maintained by
-     * tzset() typically returns { "GMT", "BST" }. The function of this routine
-     * is to actually return "Europe/London" (or rather, the corresponding
-     * KTimeZone).
+     * The idea of this routine is to provide a robust lookup of the local time zone. On Unix
+     * systems, there are a variety of mechanisms for setting this information, and no well defined
+     * way of getting it. For example, if you set your time zone to "Europe/London", then the
+     * tzname[] maintained by tzset() typically returns { "GMT", "BST" }. The function of this
+     * routine is to actually return "Europe/London" (or rather, the corresponding KTimeZone).
      *
-     * Note that depending on how the system stores its current time zone, this
-     * routine may return a synonym of the expected time zone. For example,
-     * "Europe/London", "Europe/Guernsey" and some other time zones are all
-     * identical and there may be no way for the routine to distinguish which
-     * of these is the correct zone name from the user's point of view.
+     * Note that depending on how the system stores its current time zone, this routine may return
+     * a synonym of the expected time zone. For example, "Europe/London", "Europe/Guernsey" and
+     * some other time zones are all identical and there may be no way for the routine to
+     * distinguish which of these is the correct zone name from the user's point of view.
      *
-     * @return local system time zone. If necessary, we will use a series of
-     *         heuristics which end by returning UTC. We will never return NULL.
-     *         Note that if UTC is returned as a default, it may not belong to the
-     *         the collection returned by KSystemTimeZones::zones().
+     * @return local system time zone. We will never return invalid KTimeZone, the fallback is to
+               return the UTC time zone.
      */
     static KTimeZone local();
 

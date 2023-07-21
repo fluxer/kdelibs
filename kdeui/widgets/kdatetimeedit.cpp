@@ -73,7 +73,7 @@ public:
     QString m_maxWarnMsg;
 
     QList<KLocale::CalendarSystem> m_calendarSystems;
-    KTimeZones::ZoneMap m_zones;
+    KTimeZoneList m_zones;
 
     Ui::KDateTimeEdit ui;
 };
@@ -194,15 +194,13 @@ void KDateTimeEditPrivate::initTimeSpecWidget()
     ui.m_timeSpecCombo->clear();
     ui.m_timeSpecCombo->addItem(i18nc("UTC time zone", "UTC"), "UTC");
     ui.m_timeSpecCombo->addItem(i18nc("No specific time zone", "Floating"), "Floating");
-    QStringList keys = m_zones.keys();
-    QMap<QString, QString> names;
-    foreach (const QString &key, keys) {
-        names.insert(i18n(key.toUtf8()).replace('_', ' '), key);
-    }
-    QMapIterator<QString, QString> i(names);
-    while (i.hasNext()) {
-        i.next();
-        ui.m_timeSpecCombo->addItem(i.key(), i.value());
+    foreach (const KTimeZone &zone, m_zones) {
+        if (zone.name() == QLatin1String("UTC")) {
+            // already added above as the first item
+            continue;
+        }
+        const QString zonename = i18n(zone.name().toUtf8()).replace('_', ' ');
+        ui.m_timeSpecCombo->addItem(zonename, zone.name());
     }
     ui.m_timeSpecCombo->setVisible((m_options &KDateTimeEdit::ShowTimeSpec) == KDateTimeEdit::ShowTimeSpec);
     ui.m_timeSpecCombo->setEnabled((m_options &KDateTimeEdit::SelectTimeSpec) == KDateTimeEdit::SelectTimeSpec);
@@ -223,7 +221,12 @@ void KDateTimeEditPrivate::selectTimeZone(int index)
 
 void KDateTimeEditPrivate::enterTimeZone(const QString &zone)
 {
-    q->setDateTime(KDateTime::currentDateTime(m_zones.value(zone)));
+    foreach (const KTimeZone &it, m_zones) {
+        if (it.name() == zone) {
+            q->setDateTime(KDateTime::currentDateTime(it));
+            break;
+        }
+    }
 }
 
 void KDateTimeEditPrivate::warnDateTime()
@@ -562,7 +565,7 @@ QList<QTime> KDateTimeEdit::timeList() const
     return d->ui.m_timeCombo->timeList();
 }
 
-void KDateTimeEdit::setTimeZones(const KTimeZones::ZoneMap &zones)
+void KDateTimeEdit::setTimeZones(const KTimeZoneList &zones)
 {
     if (zones != d->m_zones) {
         d->m_zones = zones;
@@ -570,7 +573,7 @@ void KDateTimeEdit::setTimeZones(const KTimeZones::ZoneMap &zones)
     }
 }
 
-KTimeZones::ZoneMap KDateTimeEdit::timeZones() const
+KTimeZoneList KDateTimeEdit::timeZones() const
 {
     return d->m_zones;
 }

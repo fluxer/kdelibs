@@ -20,7 +20,6 @@
 #include "qtest_kde.h"
 #include <ktimezonewidget.h>
 #include <kconfiggroup.h>
-#include "../../kdecore/tests/ktimezonestest_p.h"
 
 class KTimeZoneWidgetTest : public QObject
 {
@@ -33,12 +32,10 @@ private Q_SLOTS:
 
     void initTestCase()
     {
-        //mTestData.setupTimeZoneTest(); // see ktimezonestest_p.h
     }
 
     void cleanupTestCase()
     {
-        //mTestData.cleanupTimeZoneTest();
     }
 
     void testSetSelected()
@@ -92,9 +89,6 @@ private Q_SLOTS:
         tzw.setSelected("America/Los_Angeles", true);
         QCOMPARE(tzw.selection(), QStringList() << "America/Los_Angeles" << "Europe/Paris");
     }
-private:
-    // Because we don't use a separate KDEHOME, we can't use TimeZoneTestData.
-    //TimeZoneTestData mTestData;
 };
 
 // Tricky problem. The kded module writes out a config file, but unit tests have

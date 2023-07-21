@@ -28,33 +28,11 @@ class KTimeZonesTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void ktimezones();
-    void refcount();
+
     void utc();
     void local();
     void zone();
     void zoneinfoDir();
-    void zonetabChange();
-    void currentOffset();
-    void offsetAtUtc();
-    void offsetAtZoneTime();
-    void abbreviation();
-    void timet();
-    void toUtc();
-    void toZoneTime();
-    void convert();
-    void tzfile();
-    void tzfileDstShifts();
-    void tzfileToZoneTime();
-    void tzfileOffsetAtUtc();
-    void tzfileOffsetAtZoneTime();
-    void tzfileUtcOffsets();
-    void tzfileAbbreviation();
-    void tzfileTransitions();
-private:
-    void removeDir(const QString &subdir);
-    void writeZoneTab(bool testcase);
-    QString mDataDir;
 };
 
 #endif

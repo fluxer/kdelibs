@@ -67,10 +67,8 @@ class KDEUI_EXPORT KTimeZoneWidget : public QTreeWidget
      * Constructs a time zone selection widget.
      *
      * @param parent The parent widget.
-     * @param timeZones The time zone database to use. If 0, the system time zone
-     *                  database is used.
      */
-    explicit KTimeZoneWidget( QWidget *parent = 0, KTimeZones *timeZones = 0 );
+    explicit KTimeZoneWidget( QWidget *parent = 0 );
 
     /**
      * Destroys the time zone selection widget.
