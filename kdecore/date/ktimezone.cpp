@@ -230,7 +230,7 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
             abbreviationindex, qstrlen(abbreviationsbuffer.constData() + abbreviationindex)
         );
 #ifdef KTIMEZONE_DUMP
-        qDebug() << "Transition for" << tzfile.fileName();
+        qDebug() << "  Transition for" << tzfile.fileName();
         qDebug() << "    -> time =" << transitions[i].trasitiontime.toString();
         qDebug() << "    -> offset = " << transitions[i].utcoffset;
         qDebug() << "    -> abbreviation = " << transitions[i].abbreviation;
@@ -261,23 +261,23 @@ KTimeZoneTransition KTimeZonePrivate::findTransition(const QDateTime &datetime) 
 
 /******************************************************************************/
 
-const int    KTimeZone::InvalidOffset = 0x80000000;
-const float  KTimeZone::UNKNOWN = 1000.0;
+const int   KTimeZone::InvalidOffset = 0x80000000;
+const float KTimeZone::UNKNOWN = 1000.0;
 
 KTimeZone::KTimeZone()
-  : d(new KTimeZonePrivate())
+    : d(new KTimeZonePrivate())
 {
 }
 
 KTimeZone::KTimeZone(const QString &name,
                      const QString &countryCode, float latitude, float longitude,
                      const QString &comment)
-  : d(new KTimeZonePrivate(name, countryCode, latitude, longitude, comment))
+    : d(new KTimeZonePrivate(name, countryCode, latitude, longitude, comment))
 {
 }
 
 KTimeZone::KTimeZone(const KTimeZone &tz)
-  : d(new KTimeZonePrivate(*tz.d))
+    : d(new KTimeZonePrivate(*tz.d))
 {
 }
 
@@ -318,7 +318,7 @@ bool KTimeZone::isValid() const
     }
     // any other check would be way too expensive (e.g. parsing the time zone file to verify it is
     // valid) but the check bellow will make sure KTimeZone("foo") is not valid and (possibly) mark
-    // no longer existing time zones as invalid (due to system tzdata file changes)
+    // no longer existing time zones (due to system tzdata file changes) as invalid
     return QFile::exists(zoneinfoDir() + QDir::separator() + d->name);
 }
 
