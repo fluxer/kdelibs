@@ -226,8 +226,13 @@ bool KTimeZone::operator==(const KTimeZone &rhs) const
 
 bool KTimeZone::isValid() const
 {
-    // TODO: just because the name is not empty does not mean the time zone is valid
-    return !d->name.isEmpty();
+    if (d->name.isEmpty()) {
+        return false;
+    }
+    // any other check would be way too expensive (e.g. parsing the time zone file to verify it is
+    // valid) but the check bellow will make sure KTimeZone("foo") is not valid and (possibly) mark
+    // no longer existing time zones as invalid (due to system tzdata file changes)
+    return QFile::exists(zoneinfoDir() + QDir::separator() + d->name);
 }
 
 QString KTimeZone::countryCode() const
