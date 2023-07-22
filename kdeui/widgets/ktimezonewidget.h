@@ -25,7 +25,6 @@
 #include <QtGui/QTreeWidget>
 
 class KTimeZone;
-class KTimeZones;
 
 /**
  * @brief A time zone selection widget.
