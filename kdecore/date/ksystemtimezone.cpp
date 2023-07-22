@@ -242,9 +242,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 #else
     const QByteArray localtz(tzname[t->tm_isdst]);
 #endif
-    KTimeZoneList::const_iterator it = m_zones.constBegin();
-    while (it != m_zones.constEnd()) {
-        const KTimeZone zone = *it;
+    foreach (const KTimeZone &zone, m_zones) {
         if (zone.abbreviations().contains(localtz)) {
             m_localtz = zone;
 #ifndef NDEBUG
@@ -252,7 +250,6 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 #endif
             break;
         }
-        it++;
     }
 }
 

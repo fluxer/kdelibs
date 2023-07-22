@@ -132,7 +132,7 @@ public:
     QList<QByteArray> abbreviations() const;
 
     /**
-     * Returns the time zone abbreviation current at a specified time.
+     * Returns the time zone abbreviation at a specified time.
      *
      * @param utcDateTime UTC date/time. An error occurs if @p utcDateTime.timeSpec() is not
                           @p Qt::UTC.

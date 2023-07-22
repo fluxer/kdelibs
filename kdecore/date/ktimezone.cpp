@@ -108,7 +108,8 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
     tzstream >> tzh_typecnt;
     tzstream >> tzh_charcnt;
 
-    if (tzh_typecnt <= 0) {
+    // NOTE: should not be less than or or equal to zero
+    if (Q_UNLIKELY(tzh_typecnt <= 0)) {
         kWarning() << "Invalid number of local time types" << tzfile.fileName();
         return;
     }
@@ -119,7 +120,7 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
     );
     tzstream.skipRawData(toskip);
 
-    // get local time type
+    // get local time
     qint32 tt_utoff = 0;
     quint8 tt_isdst = 0;
     quint8 tt_desigidx = 0;
@@ -133,7 +134,7 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
     }
 
     // get the zone abbreviations
-    QByteArray abbreviationsbuffer(tzh_charcnt + 1, Qt::Uninitialized);
+    QByteArray abbreviationsbuffer(tzh_charcnt + 1, '\0');
     tzstream.readRawData(abbreviationsbuffer.data(), abbreviationsbuffer.size());
     foreach (const QByteArray &abbreviation, abbreviationsbuffer.split('\0')) {
         if (abbreviation.isEmpty()) {
@@ -264,6 +265,7 @@ QByteArray KTimeZone::abbreviation(const QDateTime &utcDateTime) const
     if (utcDateTime.timeSpec() != Qt::UTC) {
         return QByteArray();
     }
+    // TODO: actually check the date
     return d->abbreviations[0];
 }
 
