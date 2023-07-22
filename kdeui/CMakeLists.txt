@@ -206,12 +206,8 @@ set(kdeui_LIB_SRCS
     widgets/kcmodule.cpp
     widgets/kcombobox.cpp
     widgets/kcompletionbox.cpp
-    widgets/kdatecombobox.cpp
     widgets/kdatepicker.cpp
     widgets/kdatetable.cpp
-    widgets/kdatetimeedit.cpp
-    widgets/kdatetimewidget.cpp
-    widgets/kdatewidget.cpp
     widgets/keditlistwidget.cpp
     widgets/khbox.cpp
     widgets/khelpmenu.cpp
@@ -240,7 +236,6 @@ set(kdeui_LIB_SRCS
     widgets/ktabbar.cpp
     widgets/ktabwidget.cpp
     widgets/ktextedit.cpp
-    widgets/ktimecombobox.cpp
     widgets/ktimezonewidget.cpp
     widgets/ktitlewidget.cpp
     widgets/ktoolbar.cpp
@@ -511,17 +506,13 @@ install(
     util/kpixmapsequencewidget.h
     util/kimageio.h
     widgets/kactionselector.h
-    widgets/kdatecombobox.h
     widgets/kdatepicker.h
+    widgets/kdatetable.h
     widgets/kcapacitybar.h
     widgets/kcmodule.h
     widgets/kcombobox.h
     widgets/kcompletionbox.h
     widgets/kbuttongroup.h
-    widgets/kdatetable.h
-    widgets/kdatetimeedit.h
-    widgets/kdatetimewidget.h
-    widgets/kdatewidget.h
     widgets/kdialogbuttonbox.h
     widgets/keditlistwidget.h
     widgets/khbox.h
@@ -545,7 +536,6 @@ install(
     widgets/kseparator.h
     widgets/ksqueezedtextlabel.h
     widgets/ktextedit.h
-    widgets/ktimecombobox.h
     widgets/ktimezonewidget.h
     widgets/ktitlewidget.h
     widgets/ktabbar.h

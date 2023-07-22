@@ -58,9 +58,6 @@ KDEUI_UNIT_TESTS(
     krichtextedittest
     kselectaction_unittest
     klistwidgetsearchlinetest
-    ktimecomboboxtest
-    kdatecomboboxtest
-    kdatetimeedittest
     kconfigdialog_unittest
     kcolorbuttontest
     kglobalshortcuttest

@@ -80,14 +80,10 @@ install(
     KDebug
     KDEDModule
     KDEPrintDialog
-    KDateComboBox
     KDatePicker
     KDateTable
     KDateTime
-    KDateTimeEdit
-    KDateTimeWidget
     KDateValidator
-    KDateWidget
     KDBusMenuExporter
     KDBusMenuImporter
     KDesktopFile
@@ -284,12 +280,8 @@ install(
     KTempDir
     KTemporaryFile
     KTextEdit
-    KTimeComboBox
     KTimeZone
-    KTimeZoneData
-    KTimeZoneSource
     KTimeZoneWidget
-    KTimeZones
     KTipDatabase
     KTipDialog
     KTitleWidget
