@@ -34,6 +34,7 @@ private Q_SLOTS:
     void local();
     void zone();
     void zoneinfoDir();
+    void abbreviation();
 };
 
 #endif

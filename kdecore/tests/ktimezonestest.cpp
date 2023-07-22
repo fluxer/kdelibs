@@ -21,6 +21,7 @@
 #include "ktimezonestest.h"
 #include "ksystemtimezone.h"
 #include "qtest_kde.h"
+#include "kdebug.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
@@ -90,6 +91,24 @@ void KTimeZonesTest::zoneinfoDir()
 {
     const QString zoneinfo = KSystemTimeZones::zoneinfoDir();
     QVERIFY(!zoneinfo.isEmpty());
+}
+
+void KTimeZonesTest::abbreviation()
+{
+    QDateTime gmt(QDate(2006, 3, 26), QTime(0, 59, 0), Qt::UTC);
+    QDateTime bst(QDate(2006, 3, 26), QTime(1, 0, 0), Qt::UTC);
+
+    KTimeZone london = KSystemTimeZones::zone("Europe/London");
+    QVERIFY(london.isValid());
+    QCOMPARE(london.abbreviation(gmt), QByteArray("GMT"));
+    QCOMPARE(london.abbreviation(bst), QByteArray("BST"));
+
+    KTimeZone losAngeles = KSystemTimeZones::zone("America/Los_Angeles");
+    QVERIFY(losAngeles.isValid());
+    QDateTime pdt(QDate(2012, 11, 4), QTime(8, 59, 59), Qt::UTC);
+    QDateTime pst(QDate(2012, 11, 4), QTime(9, 0, 0), Qt::UTC);
+    QCOMPARE(losAngeles.abbreviation(pdt), QByteArray("PDT"));
+    QCOMPARE(losAngeles.abbreviation(pst), QByteArray("PST"));
 }
 
 #include "moc_ktimezonestest.cpp"

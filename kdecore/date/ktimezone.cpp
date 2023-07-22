@@ -25,12 +25,85 @@
 #include <QFile>
 #include <QDir>
 
-extern QString zoneinfoDir(); // in ksystemtimezone.cpp
-
 // for reference:
 // https://man7.org/linux/man-pages/man5/tzfile.5.html
 
+extern QString zoneinfoDir(); // in ksystemtimezone.cpp
+
+// #define KTIMEZONE_DUMP
+
 /******************************************************************************/
+
+class KTimeZoneTransition
+{
+public:
+    KTimeZoneTransition();
+    KTimeZoneTransition(const KTimeZoneTransition &other);
+
+    QDateTime trasitiontime;
+    quint8 transitionindex;
+    qint32 utcoffset;
+    QByteArray abbreviation;
+
+    bool operator==(const KTimeZoneTransition &other) const
+    {
+        return (
+            trasitiontime == other.trasitiontime
+            && transitionindex == other.transitionindex
+            && utcoffset == other.utcoffset
+            && abbreviation == other.abbreviation
+        );
+    }
+};
+
+KTimeZoneTransition::KTimeZoneTransition()
+    : trasitiontime(QDate(1970, 1, 1)),
+    transitionindex(0),
+    utcoffset(KTimeZone::InvalidOffset)
+{
+}
+
+KTimeZoneTransition::KTimeZoneTransition(const KTimeZoneTransition &other)
+    : trasitiontime(other.trasitiontime),
+    transitionindex(other.transitionindex),
+    utcoffset(other.utcoffset),
+    abbreviation(other.abbreviation)
+{
+}
+
+class KTimeZoneLocalTime
+{
+public:
+    KTimeZoneLocalTime();
+    KTimeZoneLocalTime(const KTimeZoneLocalTime &other);
+
+    qint32 tt_utoff;
+    quint8 tt_isdst;
+    quint8 tt_desigidx;
+
+    bool operator==(const KTimeZoneLocalTime &other) const
+    {
+        return (
+            tt_utoff == other.tt_utoff
+            && tt_isdst == other.tt_isdst
+            && tt_desigidx == other.tt_desigidx
+        );
+    }
+};
+
+KTimeZoneLocalTime::KTimeZoneLocalTime()
+    : tt_utoff(KTimeZone::InvalidOffset),
+    tt_isdst(0),
+    tt_desigidx(0)
+{
+}
+
+KTimeZoneLocalTime::KTimeZoneLocalTime(const KTimeZoneLocalTime &other)
+    : tt_utoff(other.tt_utoff),
+    tt_isdst(other.tt_isdst),
+    tt_desigidx(other.tt_desigidx)
+{
+}
 
 class KTimeZonePrivate
 {
@@ -40,19 +113,19 @@ public:
                      const QString &country, float lat, float lon, const QString &cmnt);
     KTimeZonePrivate(const KTimeZonePrivate &rhs);
 
+    KTimeZoneTransition findTransition(const QDateTime &datetime) const;
+
     QString name;
     QString countryCode;
     QString comment;
     float latitude;
     float longitude;
-    int currentOffset;
-    QList<QByteArray> abbreviations;
+    QVector<KTimeZoneTransition> transitions;
 };
 
 KTimeZonePrivate::KTimeZonePrivate()
     : latitude(KTimeZone::UNKNOWN),
-    longitude(KTimeZone::UNKNOWN),
-    currentOffset(KTimeZone::InvalidOffset)
+    longitude(KTimeZone::UNKNOWN)
 {
 }
 
@@ -108,55 +181,61 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
     tzstream >> tzh_typecnt;
     tzstream >> tzh_charcnt;
 
-    // NOTE: should not be less than or or equal to zero
+    // NOTE: should not be less than or equal to zero
     if (Q_UNLIKELY(tzh_typecnt <= 0)) {
         kWarning() << "Invalid number of local time types" << tzfile.fileName();
         return;
     }
 
-    // skip transitions
-    const int toskip = (
-        (tzh_timecnt * (sizeof(quint32) + sizeof(quint8)))
-    );
-    tzstream.skipRawData(toskip);
+    // get transitions
+    qint32 tt_time = 0;
+    transitions.resize(tzh_timecnt);
+    for (quint32 i = 0; i < tzh_timecnt; i++) {
+        tzstream >> tt_time;
+        transitions[i].trasitiontime = transitions[i].trasitiontime.addSecs(tt_time);
+    }
+    quint8 tt_index = 0;
+    for (quint32 i = 0; i < tzh_timecnt; i++) {
+        tzstream >> tt_index;
+        transitions[i].transitionindex = tt_index;
+    }
 
     // get local time
+    QVector<KTimeZoneLocalTime> localtimes(tzh_typecnt);
     qint32 tt_utoff = 0;
     quint8 tt_isdst = 0;
     quint8 tt_desigidx = 0;
-    quint8 abbreviationindex = 0;
     for (quint32 i = 0; i < tzh_typecnt; i++) {
         tzstream >> tt_utoff >> tt_isdst >> tt_desigidx;
-        if (!tt_isdst) {
-            currentOffset = tt_utoff;
-            abbreviationindex = tt_desigidx;
-        }
+        localtimes[i].tt_utoff = tt_utoff;
+        localtimes[i].tt_isdst = tt_isdst;
+        localtimes[i].tt_desigidx = tt_desigidx;
     }
 
     // get the zone abbreviations
-    QByteArray abbreviationsbuffer(tzh_charcnt + 1, '\0');
+    QByteArray abbreviationsbuffer(tzh_charcnt, '\0');
     tzstream.readRawData(abbreviationsbuffer.data(), abbreviationsbuffer.size());
-    foreach (const QByteArray &abbreviation, abbreviationsbuffer.split('\0')) {
-        if (abbreviation.isEmpty()) {
-            continue;
-        }
-        abbreviations.append(abbreviation);
-    }
-    if (abbreviationindex >= 0 && abbreviationindex < abbreviationsbuffer.size()) {
-        QByteArray timetabbreviation = abbreviationsbuffer.mid(
+
+#ifdef KTIMEZONE_DUMP
+    qDebug() << "Transitions for" << tzfile.fileName() << transitions.size();
+#endif
+    for (quint32 i = 0; i < transitions.size(); i++) {
+        const int localtimeindex = transitions[i].transitionindex;
+
+        const KTimeZoneLocalTime localtime = localtimes[localtimeindex];
+        transitions[i].utcoffset = localtime.tt_utoff;
+
+        const int abbreviationindex = localtime.tt_desigidx;
+        transitions[i].abbreviation = abbreviationsbuffer.mid(
             abbreviationindex, qstrlen(abbreviationsbuffer.constData() + abbreviationindex)
         );
-        // move the chosen local time abbreviation to the front, if not there already
-        for (int i = 1; i < abbreviations.size(); i++) {
-            if (abbreviations.at(i) == timetabbreviation) {
-                abbreviations.move(i, 0);
-                break;
-            }
-        }
-    } else {
-        kWarning() << "Invalid abbreviation index" << tzfile.fileName() << abbreviationindex << abbreviationsbuffer.size();
+#ifdef KTIMEZONE_DUMP
+        qDebug() << "Transition for" << tzfile.fileName();
+        qDebug() << "    -> time =" << transitions[i].trasitiontime.toString();
+        qDebug() << "    -> offset = " << transitions[i].utcoffset;
+        qDebug() << "    -> abbreviation = " << transitions[i].abbreviation;
+#endif
     }
-    // qDebug() << Q_FUNC_INFO << tzfile.fileName() << currentOffset << abbreviationindex << abbreviations;
 }
 
 KTimeZonePrivate::KTimeZonePrivate(const KTimeZonePrivate &rhs)
@@ -165,9 +244,19 @@ KTimeZonePrivate::KTimeZonePrivate(const KTimeZonePrivate &rhs)
     comment(rhs.comment),
     latitude(rhs.latitude),
     longitude(rhs.longitude),
-    currentOffset(rhs.currentOffset),
-    abbreviations(rhs.abbreviations)
+    transitions(rhs.transitions)
 {
+}
+
+KTimeZoneTransition KTimeZonePrivate::findTransition(const QDateTime &datetime) const
+{
+    for (int i = transitions.size(); i > 0; i--) {
+        const KTimeZoneTransition transition = transitions[i - 1];
+        if (datetime >= transition.trasitiontime) {
+            return transition;
+        }
+    }
+    return KTimeZoneTransition();
 }
 
 /******************************************************************************/
@@ -205,8 +294,7 @@ KTimeZone &KTimeZone::operator=(const KTimeZone &tz)
         d->comment = tz.comment();
         d->latitude = tz.latitude();
         d->longitude = tz.longitude();
-        d->currentOffset = tz.currentOffset();
-        d->abbreviations = tz.abbreviations();
+        d->transitions = tz.d->transitions;
     }
     return *this;
 }
@@ -219,8 +307,7 @@ bool KTimeZone::operator==(const KTimeZone &rhs) const
         && comment() == rhs.comment()
         && latitude() == rhs.latitude()
         && longitude() == rhs.longitude()
-        && currentOffset() == rhs.currentOffset()
-        && abbreviations() == rhs.abbreviations()
+        && d->transitions == rhs.d->transitions
     );
 }
 
@@ -262,7 +349,13 @@ QString KTimeZone::name() const
 
 QList<QByteArray> KTimeZone::abbreviations() const
 {
-    return d->abbreviations;
+    QList<QByteArray> result;
+    foreach (const KTimeZoneTransition &transition, d->transitions) {
+        if (!result.contains(transition.abbreviation)) {
+            result.append(transition.abbreviation);
+        }
+    }
+    return result;
 }
 
 QByteArray KTimeZone::abbreviation(const QDateTime &utcDateTime) const
@@ -270,8 +363,8 @@ QByteArray KTimeZone::abbreviation(const QDateTime &utcDateTime) const
     if (utcDateTime.timeSpec() != Qt::UTC) {
         return QByteArray();
     }
-    // TODO: actually check the date
-    return d->abbreviations[0];
+    const KTimeZoneTransition transition = d->findTransition(utcDateTime);
+    return transition.abbreviation;
 }
 
 QDateTime KTimeZone::toUtc(const QDateTime &zoneDateTime) const
@@ -279,11 +372,13 @@ QDateTime KTimeZone::toUtc(const QDateTime &zoneDateTime) const
     if (!zoneDateTime.isValid() || zoneDateTime.timeSpec() != Qt::LocalTime) {
         return QDateTime();
     }
-    const int offset = currentOffset();
-    if (offset == KTimeZone::InvalidOffset) {
-        return QDateTime();
+    const KTimeZoneTransition transition = d->findTransition(zoneDateTime.toUTC());
+    if (transition.utcoffset == KTimeZone::InvalidOffset) {
+        QDateTime dt = zoneDateTime;
+        dt.setTimeSpec(Qt::UTC);
+        return dt;
     }
-    QDateTime dt = zoneDateTime.addSecs(-offset);
+    QDateTime dt = zoneDateTime.addSecs(-transition.utcoffset);
     dt.setTimeSpec(Qt::UTC);
     return dt;
 }
@@ -295,14 +390,20 @@ QDateTime KTimeZone::toZoneTime(const QDateTime &utcDateTime) const
         dt.setTimeSpec(Qt::LocalTime);
         return dt;
     }
-    QDateTime dt = utcDateTime.addSecs(currentOffset());
+    const KTimeZoneTransition transition = d->findTransition(utcDateTime);
+    if (transition.utcoffset == KTimeZone::InvalidOffset) {
+        QDateTime dt = utcDateTime;
+        dt.setTimeSpec(Qt::LocalTime);
+        return dt;
+    }
+    QDateTime dt = utcDateTime.addSecs(transition.utcoffset);
     dt.setTimeSpec(Qt::LocalTime);
     return dt;
 }
 
 int KTimeZone::currentOffset() const
 {
-    return d->currentOffset;
+    return toZoneTime(QDateTime::currentDateTimeUtc()).utcOffset();
 }
 
 KTimeZone KTimeZone::utc()
