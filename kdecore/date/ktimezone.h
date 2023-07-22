@@ -34,8 +34,6 @@ class KTimeZonePrivate;
  * The KTimeZone base class contains general descriptive data about the time zone and to translate
  * between UTC and local time.
  *
- * KTimeZone instances are often grouped into KTimeZones collections.
- *
  * @short class representing a time zone
  * @ingroup timezones
  * @author Ivailo Monev <xakepa10@gmail.com>.
@@ -175,23 +173,18 @@ public:
     /**
      * Returns a standard UTC time zone, with name "UTC".
      *
-     * @note The KTimeZone returned by this method does not belong to any
-     * KTimeZones collection. Any KTimeZones instance may contain its own UTC
-     * KTimeZone defined by its time zone source data, but that will be a
-     * different instance than this KTimeZone.
-     *
      * @return UTC time zone
      */
     static KTimeZone utc();
 
-    /** Indicates an invalid UTC offset. This is returned by currentOffset() when
-     *  the local time does not occur due to a shift to daylight savings time.
+    /**
+     * Indicates an invalid UTC offset. This is the offset for invalid time zones.
      */
     static const int InvalidOffset;
 
     /**
-     * A representation for unknown locations; this is a float
-     * that does not represent a real latitude or longitude.
+     * A representation for unknown locations, this is a float that does not represent a real
+     * latitude or longitude.
      */
     static const float UNKNOWN;
 
