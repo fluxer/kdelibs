@@ -29,7 +29,7 @@ class KCalendarSystemQDatePrivate;
 /**
  * @internal
  * This is the QDate calendar implementation which combines the Julian and Gregorian
- * calculations into a single calendar.  It should always be used by default in Qt
+ * calculations into a single calendar.  It should always be used by default in Katie
  * applications for consistency.
  *
  * @b license GNU-LGPL v.2+

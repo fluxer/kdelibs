@@ -35,6 +35,7 @@ private Q_SLOTS:
     void zone();
     void zoneinfoDir();
     void abbreviation();
+    void fromAndTo();
 };
 
 #endif

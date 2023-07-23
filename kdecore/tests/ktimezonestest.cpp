@@ -97,17 +97,38 @@ void KTimeZonesTest::abbreviation()
 {
     KTimeZone london = KSystemTimeZones::zone("Europe/London");
     QVERIFY(london.isValid());
-    QDateTime gmt(QDate(2006, 3, 26), QTime(0, 59, 0), Qt::UTC);
-    QDateTime bst(QDate(2006, 3, 26), QTime(1, 0, 0), Qt::UTC);
+    const QDateTime gmt = QDateTime(QDate(2006, 3, 26), QTime(0, 59, 0), Qt::UTC);
+    const QDateTime bst = QDateTime(QDate(2006, 3, 26), QTime(1, 0, 0), Qt::UTC);
     QCOMPARE(london.abbreviation(gmt), QByteArray("GMT"));
     QCOMPARE(london.abbreviation(bst), QByteArray("BST"));
 
     KTimeZone losAngeles = KSystemTimeZones::zone("America/Los_Angeles");
     QVERIFY(losAngeles.isValid());
-    QDateTime pdt(QDate(2012, 11, 4), QTime(8, 59, 59), Qt::UTC);
-    QDateTime pst(QDate(2012, 11, 4), QTime(9, 0, 0), Qt::UTC);
+    const QDateTime pdt = QDateTime(QDate(2012, 11, 4), QTime(8, 59, 59), Qt::UTC);
+    const QDateTime pst = QDateTime(QDate(2012, 11, 4), QTime(9, 0, 0), Qt::UTC);
     QCOMPARE(losAngeles.abbreviation(pdt), QByteArray("PDT"));
     QCOMPARE(losAngeles.abbreviation(pst), QByteArray("PST"));
+}
+
+void KTimeZonesTest::fromAndTo()
+{
+    const QDateTime utc = QDateTime(QDate(2018, 2, 10), QTime(4, 0, 0), Qt::UTC);
+
+    KTimeZone london = KSystemTimeZones::zone("Europe/London");
+    QVERIFY(london.isValid());
+    QDateTime result = london.toZoneTime(utc);
+    // was GMT so same date
+    const QDateTime londonDate = QDateTime(QDate(2018, 2, 10), QTime(4, 0, 0), Qt::LocalTime);
+    QCOMPARE(result, londonDate);
+    QCOMPARE(london.toUtc(result), utc);
+
+    KTimeZone losAngeles = KSystemTimeZones::zone("America/Los_Angeles");
+    QVERIFY(losAngeles.isValid());
+    result = losAngeles.toZoneTime(utc);
+    // gmtoff=-28800
+    const QDateTime losAngelesDate = QDateTime(QDate(2018, 2, 9), QTime(20, 0, 0), Qt::LocalTime);
+    QCOMPARE(result, losAngelesDate);
+    QCOMPARE(losAngeles.toUtc(result), utc);
 }
 
 #include "moc_ktimezonestest.cpp"
