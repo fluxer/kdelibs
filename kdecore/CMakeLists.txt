@@ -51,18 +51,9 @@ set(kdecore_LIB_SRCS
     config/ksettings.cpp
     date/kcalendarera.cpp
     date/kcalendarsystem.cpp
-    date/kcalendarsystemcoptic.cpp
-    date/kcalendarsystemethiopian.cpp
     date/kcalendarsystemqdate.cpp
     date/kcalendarsystemgregorian.cpp
-    date/kcalendarsystemislamiccivil.cpp
-    date/kcalendarsystemhebrew.cpp
-    date/kcalendarsystemindiannational.cpp
-    date/kcalendarsystemjalali.cpp
-    date/kcalendarsystemjapanese.cpp
     date/kcalendarsystemjulian.cpp
-    date/kcalendarsystemminguo.cpp
-    date/kcalendarsystemthai.cpp
     date/kdatetime.cpp
     date/kdatetimeformatter.cpp
     date/kdatetimeparser.cpp

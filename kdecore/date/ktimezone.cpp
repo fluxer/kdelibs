@@ -318,7 +318,7 @@ bool KTimeZone::isValid() const
     }
     // any other check would be way too expensive (e.g. parsing the time zone file to verify it is
     // valid) but the check bellow will make sure KTimeZone("foo") is not valid and (possibly) mark
-    // no longer existing time zones (due to system tzdata file changes) as invalid
+    // no longer existing time zones (due to system tzdata files removal) as invalid
     return QFile::exists(zoneinfoDir() + QDir::separator() + d->name);
 }
 

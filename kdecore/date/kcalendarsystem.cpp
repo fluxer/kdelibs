@@ -31,18 +31,9 @@
 #include "kdatetimeformatter_p.h"
 #include "kdatetimeparser_p.h"
 #include "kcalendarera_p.h"
-#include "kcalendarsystemcoptic_p.h"
-#include "kcalendarsystemethiopian_p.h"
 #include "kcalendarsystemgregorian_p.h"
-#include "kcalendarsystemhebrew_p.h"
-#include "kcalendarsystemindiannational_p.h"
-#include "kcalendarsystemislamiccivil_p.h"
-#include "kcalendarsystemjalali_p.h"
-#include "kcalendarsystemjapanese_p.h"
 #include "kcalendarsystemjulian_p.h"
-#include "kcalendarsystemminguo_p.h"
 #include "kcalendarsystemqdate_p.h"
-#include "kcalendarsystemthai_p.h"
 
 KCalendarSystem *KCalendarSystem::create(KLocale::CalendarSystem calendarSystem, const KLocale *locale)
 {
@@ -56,28 +47,10 @@ KCalendarSystem *KCalendarSystem::create(KLocale::CalendarSystem calendarSystem,
     switch (calendarSystem) {
     case KLocale::QDateCalendar:
         return new KCalendarSystemQDate(config, locale);
-    case KLocale::CopticCalendar:
-        return new KCalendarSystemCoptic(config, locale);
-    case KLocale::EthiopianCalendar:
-        return new KCalendarSystemEthiopian(config, locale);
     case KLocale::GregorianCalendar:
         return new KCalendarSystemGregorian(config, locale);
-    case KLocale::HebrewCalendar:
-        return new KCalendarSystemHebrew(config, locale);
-    case KLocale::IndianNationalCalendar:
-        return new KCalendarSystemIndianNational(config, locale);
-    case KLocale::IslamicCivilCalendar:
-        return new KCalendarSystemIslamicCivil(config, locale);
-    case KLocale::JalaliCalendar:
-        return new KCalendarSystemJalali(config, locale);
-    case KLocale::JapaneseCalendar:
-        return new KCalendarSystemJapanese(config, locale);
     case KLocale::JulianCalendar:
         return new KCalendarSystemJulian(config, locale);
-    case KLocale::MinguoCalendar:
-        return new KCalendarSystemMinguo(config, locale);
-    case KLocale::ThaiCalendar:
-        return new KCalendarSystemThai(config, locale);
     default:
         return new KCalendarSystemQDate(config, locale);
     }
@@ -88,17 +61,8 @@ QList<KLocale::CalendarSystem> KCalendarSystem::calendarSystemsList()
     QList<KLocale::CalendarSystem> list;
 
     list.append(KLocale::QDateCalendar);
-    list.append(KLocale::CopticCalendar);
-    list.append(KLocale::EthiopianCalendar);
     list.append(KLocale::GregorianCalendar);
-    list.append(KLocale::HebrewCalendar);
-    list.append(KLocale::IslamicCivilCalendar);
-    list.append(KLocale::IndianNationalCalendar);
-    list.append(KLocale::JalaliCalendar);
-    list.append(KLocale::JapaneseCalendar);
     list.append(KLocale::JulianCalendar);
-    list.append(KLocale::MinguoCalendar);
-    list.append(KLocale::ThaiCalendar);
 
     return list;
 }
@@ -108,28 +72,10 @@ QString KCalendarSystem::calendarLabel(KLocale::CalendarSystem calendarSystem, c
     switch (calendarSystem) {
     case KLocale::QDateCalendar:
         return ki18nc("@item Calendar system", "Gregorian").toString(locale);
-    case KLocale::CopticCalendar:
-        return ki18nc("@item Calendar system", "Coptic").toString(locale);
-    case KLocale::EthiopianCalendar:
-        return ki18nc("@item Calendar system", "Ethiopian").toString(locale);
     case KLocale::GregorianCalendar:
         return ki18nc("@item Calendar system", "Gregorian (Proleptic)").toString(locale);
-    case KLocale::HebrewCalendar:
-        return ki18nc("@item Calendar system", "Hebrew").toString(locale);
-    case KLocale::IslamicCivilCalendar:
-        return ki18nc("@item Calendar system", "Islamic / Hijri (Civil)").toString(locale);
-    case KLocale::IndianNationalCalendar:
-        return ki18nc("@item Calendar system", "Indian National").toString(locale);
-    case KLocale::JalaliCalendar:
-        return ki18nc("@item Calendar system", "Jalali").toString(locale);
-    case KLocale::JapaneseCalendar:
-        return ki18nc("@item Calendar system", "Japanese").toString(locale);
     case KLocale::JulianCalendar:
         return ki18nc("@item Calendar system", "Julian").toString(locale);
-    case KLocale::MinguoCalendar:
-        return ki18nc("@item Calendar system", "Taiwanese").toString(locale);
-    case KLocale::ThaiCalendar:
-        return ki18nc("@item Calendar system", "Thai").toString(locale);
     }
 
     return ki18nc("@item Calendar system", "Invalid Calendar Type").toString(locale);
@@ -137,30 +83,12 @@ QString KCalendarSystem::calendarLabel(KLocale::CalendarSystem calendarSystem, c
 
 KLocale::CalendarSystem KCalendarSystem::calendarSystem(const QString &calendarType )
 {
-    if (calendarType == QLatin1String("coptic")) {
-        return KLocale::CopticCalendar;
-    } else if (calendarType == QLatin1String("ethiopian")) {
-        return KLocale::EthiopianCalendar;
-    } else if (calendarType == QLatin1String("gregorian")) {
+    if (calendarType == QLatin1String("gregorian")) {
         return KLocale::QDateCalendar;
     } else if (calendarType == QLatin1String("gregorian-proleptic")) {
         return KLocale::GregorianCalendar;
-    } else if (calendarType == QLatin1String("hebrew")) {
-        return KLocale::HebrewCalendar;
-    } else if (calendarType == QLatin1String("hijri")) {
-        return KLocale::IslamicCivilCalendar;
-    } else if (calendarType == QLatin1String("indian-national")) {
-        return KLocale::IndianNationalCalendar;
-    } else if (calendarType == QLatin1String("jalali")) {
-        return KLocale::JalaliCalendar;
-    } else if (calendarType == QLatin1String("japanese")) {
-        return KLocale::JapaneseCalendar;
     } else if (calendarType == QLatin1String("julian")) {
         return KLocale::JulianCalendar;
-    } else if (calendarType == QLatin1String("minguo")) {
-        return KLocale::MinguoCalendar;
-    } else if (calendarType == QLatin1String("thai")) {
-        return KLocale::ThaiCalendar;
     } else {
         return KLocale::QDateCalendar;
     }
@@ -170,28 +98,10 @@ QString KCalendarSystem::calendarType(KLocale::CalendarSystem calendarSystem)
 {
     if (calendarSystem == KLocale::QDateCalendar) {
         return QLatin1String("gregorian");
-    } else if (calendarSystem == KLocale::CopticCalendar) {
-        return QLatin1String("coptic");
-    } else if (calendarSystem == KLocale::EthiopianCalendar) {
-        return QLatin1String("ethiopian");
     } else if (calendarSystem == KLocale::GregorianCalendar) {
         return QLatin1String("gregorian-proleptic");
-    } else if (calendarSystem == KLocale::HebrewCalendar) {
-        return QLatin1String("hebrew");
-    } else if (calendarSystem == KLocale::IndianNationalCalendar) {
-        return QLatin1String("indian-national");
-    } else if (calendarSystem == KLocale::IslamicCivilCalendar) {
-        return QLatin1String("hijri");
-    } else if (calendarSystem == KLocale::JalaliCalendar) {
-        return QLatin1String("jalali");
-    } else if (calendarSystem == KLocale::JapaneseCalendar) {
-        return QLatin1String("japanese");
     } else if (calendarSystem == KLocale::JulianCalendar) {
         return QLatin1String("julian");
-    } else if (calendarSystem == KLocale::MinguoCalendar) {
-        return QLatin1String("minguo");
-    } else if (calendarSystem == KLocale::ThaiCalendar) {
-        return QLatin1String("thai");
     } else {
         return QLatin1String("gregorian");
     }

@@ -563,29 +563,9 @@ public:
      * @see calendarSystem()
      */
     enum CalendarSystem {
-        QDateCalendar = 1, /**< KDE Default, hybrid of Gregorian and Julian as used by QDate */
-        //BahaiCalendar = 2, /**< Baha'i Calendar */
-        //BuddhistLunarCalendar = 3, /**< Buddhist Lunar Calendar*/
-        //ChineseCalendar = 4, /**< Chinese Calendar */
-        CopticCalendar = 5, /**< Coptic Calendar as used Coptic Church and some parts of Egypt */
-        EthiopianCalendar = 6, /**< Ethiopian Calendar, aka Ethiopic Calendar */
-        //EthiopianAmeteAlemCalendar = 7, /**< Ethiopian Amete Alem version, aka Ethiopic Amete Alem */
-        GregorianCalendar = 8, /**< Gregorian Calendar, pure proleptic implementation */
-        HebrewCalendar = 9, /**< Hebrew Calendar, aka Jewish Calendar */
-        //HinduCalendar = 10, /**< Hindu Lunar Calendar */
-        //IslamicLunarCalendar = 11, /**< Islamic Lunar Calendar */
-        IslamicCivilCalendar = 12, /**< Islamic Civil Calendar, aka Hijri, not the Lunar Calendar */
-        //IslamicUmAlQuraCalendar = 13, /**< Islamic Lunar Calendar, Um Al Qura varient used in Saudi Arabia */
-        IndianNationalCalendar = 14, /**< Indian National Calendar, not the Lunar Calendar */
-        //Iso8601Calendar = 15, /**< ISO 8601 Standard Calendar */
-        JalaliCalendar = 16, /**< Jalali Calendar, aka Persian or Iranian, also used in Afghanistan */
-        //JalaliBirashkCalendar = 17, /**< Jalali Calendar, Birashk Algorythm variant */
-        //Jalali33YearCalendar = 18, /**< Jalali Calendar, 33 Year cycle variant */
-        JapaneseCalendar= 19, /**< Japanese Calendar, Gregorian calculation using Japanese Era (Nengô) */
-        //JucheCalendar = 20, /**< Juche Calendar, used in North Korea */
-        JulianCalendar = 21, /**< Julian Calendar, as used in Orthodox Churches */
-        MinguoCalendar= 22, /**< Minguo Calendar, aka ROC, Republic of China or Taiwanese */
-        ThaiCalendar = 23 /**< Thai Calendar, aka Buddhist or Thai Buddhist */
+        QDateCalendar     = 1, /**< KDE Default, hybrid of Gregorian and Julian as used by QDate */
+        GregorianCalendar = 2, /**< Gregorian Calendar, pure proleptic implementation */
+        JulianCalendar    = 3  /**< Julian Calendar, as used in Orthodox Churches */
     };
 
     /**
