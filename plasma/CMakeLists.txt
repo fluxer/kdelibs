@@ -138,6 +138,7 @@ set(plasma_LIB_SRCS
     widgets/textbrowser.cpp
     widgets/treeview.cpp
     widgets/textedit.cpp
+    widgets/calendarwidget.cpp
 )
 
 set_source_files_properties(
@@ -256,6 +257,7 @@ install(
     widgets/textbrowser.h
     widgets/treeview.h
     widgets/textedit.h
+    widgets/calendarwidget.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/widgets
 )
 

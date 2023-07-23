@@ -539,6 +539,7 @@ install(
     Plasma/ToolTipContent
     Plasma/ToolTipManager
     Plasma/TreeView
+    Plasma/CalendarWidget
     Plasma/Version
     Plasma/View
     Plasma/Wallpaper
