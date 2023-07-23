@@ -22,11 +22,15 @@
 #include <kdeui_export.h>
 
 #include <QCalendarWidget>
+#include <kcalendarsystem.h>
+
+class KCalendarWidgetPrivate;
 
 /*!
     Class to pick a date.
 
     @since 4.23
+    @warning the API is subject to change
 */
 class KDEUI_EXPORT KCalendarWidget: public QCalendarWidget
 {
@@ -34,6 +38,14 @@ class KDEUI_EXPORT KCalendarWidget: public QCalendarWidget
 public:
     KCalendarWidget(QWidget *parent = nullptr);
     KCalendarWidget(const QDate &date, QWidget *parent = nullptr);
+    ~KCalendarWidget();
+
+    const KCalendarSystem* calendar() const;
+    void setCalendar(const KCalendarSystem *calendar);
+
+private:
+    Q_DISABLE_COPY(KCalendarWidget);
+    KCalendarWidgetPrivate *d;
 };
 
 #endif //  KCALENDARWIDGET_H

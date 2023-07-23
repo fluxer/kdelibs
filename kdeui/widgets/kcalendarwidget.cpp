@@ -35,16 +35,53 @@ static void setupCalendarWidget(KCalendarWidget *kcalendarwidget, const QDate &d
 
     kcalendarwidget->setLocale(calendarlocale);
     kcalendarwidget->setSelectedDate(date);
+    kcalendarwidget->setCalendar(KGlobal::locale()->calendar());
+}
+
+class KCalendarWidgetPrivate
+{
+public:
+    KCalendarWidgetPrivate();
+
+    const KCalendarSystem *calendar;
+};
+
+KCalendarWidgetPrivate::KCalendarWidgetPrivate()
+    : calendar(nullptr)
+{
 }
 
 KCalendarWidget::KCalendarWidget(QWidget *parent)
-    : QCalendarWidget(parent)
+    : QCalendarWidget(parent),
+    d(new KCalendarWidgetPrivate())
 {
     setupCalendarWidget(this, QDate::currentDate());
 }
 
 KCalendarWidget::KCalendarWidget(const QDate &date, QWidget *parent)
-    : QCalendarWidget(parent)
+    : QCalendarWidget(parent),
+    d(new KCalendarWidgetPrivate())
 {
     setupCalendarWidget(this, date);
+}
+
+KCalendarWidget::~KCalendarWidget()
+{
+    delete d;
+}
+
+const KCalendarSystem* KCalendarWidget::calendar() const
+{
+    return d->calendar;
+}
+
+void KCalendarWidget::setCalendar(const KCalendarSystem *calendar)
+{
+    d->calendar = calendar;
+    if (!calendar) {
+        kWarning() << "Attempting to set KCalendarWidget calendar to null";
+        return;
+    }
+    setMinimumDate(calendar->earliestValidDate());
+    setMaximumDate(calendar->latestValidDate());
 }
