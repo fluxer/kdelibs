@@ -20,6 +20,9 @@
 #include "calendarwidget.h"
 #include "private/style_p.h"
 #include "kcalendarwidget.h"
+#include "kdebug.h"
+
+#include <QToolButton>
 
 namespace Plasma
 {
@@ -38,13 +41,19 @@ CalendarWidget::CalendarWidget(QGraphicsWidget *parent)
     setWidget(native);
     native->setWindowIcon(QIcon());
     native->setAttribute(Qt::WA_NoSystemBackground);
-    // the popup of the navigation bar does not inherit the WA_NoSystemBackground attribute
-    native->setNavigationBarVisible(false);
     connect(native, SIGNAL(clicked(QDate)), this, SIGNAL(clicked(QDate)));
     connect(native, SIGNAL(activated(QDate)), this, SIGNAL(activated(QDate)));
 
     d->style = Plasma::Style::sharedStyle();
     native->setStyle(d->style.data());
+
+    QToolButton* nativemonthbutton = native->findChild<QToolButton*>("qt_calendar_monthbutton");
+    if (nativemonthbutton) {
+        // FIXME: the popup menu outside color is not transparent
+        nativemonthbutton->hide();
+    } else {
+        kWarning() << "Could not find the QCalendarWidget month button" << native;
+    }
 }
 
 CalendarWidget::~CalendarWidget()
