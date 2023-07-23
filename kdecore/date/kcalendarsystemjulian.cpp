@@ -489,11 +489,6 @@ QString KCalendarSystemJulian::weekDayName(const QDate &date, WeekDayNameFormat 
     return KCalendarSystem::weekDayName(date, format);
 }
 
-int KCalendarSystemJulian::weekDayOfPray() const
-{
-    return 7; // sunday
-}
-
 bool KCalendarSystemJulian::isLunar() const
 {
     return false;

@@ -479,11 +479,6 @@ QString KCalendarSystemIndianNational::weekDayName(const QDate &date, WeekDayNam
     return KCalendarSystem::weekDayName(date, format);
 }
 
-int KCalendarSystemIndianNational::weekDayOfPray() const
-{
-    return 7; // JPL ???
-}
-
 bool KCalendarSystemIndianNational::isLunar() const
 {
     return false;

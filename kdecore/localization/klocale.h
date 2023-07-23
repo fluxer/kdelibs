@@ -555,17 +555,6 @@ public:
     QString prettyFormatDuration(unsigned long mSec) const;
 
     /**
-     * @deprecated
-     *
-     * Use this to determine whether nouns are declined in
-     * locale's language. This property should remain
-     * read-only (no setter function)
-     *
-     * @return If nouns are declined
-     */
-    KDECORE_DEPRECATED bool nounDeclension() const;
-
-    /**
      * @since 4.6
      *
      * Available Calendar Systems
@@ -869,30 +858,6 @@ public:
     int weekStartDay() const;
 
     /**
-     * Use this to determine which day is the first working day of the week.
-     *
-     * @since 4.2
-     * @return an integer (Monday=1..Sunday=7)
-     */
-    int workingWeekStartDay() const;
-
-    /**
-     * Use this to determine which day is the last working day of the week.
-     *
-     * @since 4.2
-     * @return an integer (Monday=1..Sunday=7)
-     */
-    int workingWeekEndDay() const;
-
-    /**
-     * Use this to determine which day is reserved for religious observance
-     *
-     * @since 4.2
-     * @return day number (None = 0, Monday = 1, ..., Sunday = 7)
-     */
-    int weekDayOfPray() const;
-
-    /**
      * Returns a pointer to the calendar system object.
      *
      * @return the current calendar system instance
@@ -1143,26 +1108,6 @@ public:
     QString country() const;
 
     /**
-     * @since 4.6
-     *
-     * Returns the Country Division Code of the Country where the user lives.
-     * When no value is set, then the Country Code will be returned.
-     *
-     * The returned code complies with the ISO 3166-2 standard.
-     * See http://en.wikipedia.org/wiki/ISO_3166-2 for details.
-     *
-     * Note that unlike country() this method will return the correct case,
-     * i.e. normally uppercase..
-     *
-     * In KDE 4.6 it is the apps responsibility to obtain a translation for the
-     * code, translation and other services will be priovided in KDE 4.7.
-     *
-     * @return the Country Division Code for the user
-     * @see setCountryDivisionCode
-     */
-    QString countryDivisionCode() const;
-
-    /**
      * Returns the language codes selected by user, ordered by decreasing
      * priority.
      *
@@ -1267,30 +1212,6 @@ public:
      * @param day first day of the week (Monday=1..Sunday=7) as integer
      */
     void setWeekStartDay(int day);
-
-    /**
-     * Changes how KLocale defines the first working day in week.
-     *
-     * @since 4.2
-     * @param day first working day of the week (Monday=1..Sunday=7) as integer
-     */
-    void setWorkingWeekStartDay(int day);
-
-    /**
-     * Changes how KLocale defines the last working day in week.
-     *
-     * @since 4.2
-     * @param day last working day of the week (Monday=1..Sunday=7) as integer
-     */
-    void setWorkingWeekEndDay(int day);
-
-    /**
-     * Changes how KLocale defines the day reserved for religious observance.
-     *
-     * @since 4.2
-     * @param day day of the week for religious observance (None=0,Monday=1..Sunday=7) as integer
-     */
-    void setWeekDayOfPray(int day);
 
     /**
      * Returns the currently selected date format.
@@ -1581,23 +1502,6 @@ public:
      * @return @c true on success, @c false on failure
      */
     bool setCountry(const QString & country, KConfig *config);
-
-    /**
-     * @since 4.6
-     *
-     * Sets the Country Division Code of the Country where the user lives.
-     *
-     * The code must comply with the ISO 3166-2 standard.
-     * See http://en.wikipedia.org/wiki/ISO_3166-2 for details.
-     *
-     * In KDE 4.6 it is the apps responsibility to validate the input,
-     * full validation and other services will be provided in KDE 4.7.
-     *
-     * @param countryDivision the Country Division Code for the user
-     * @return @c true on success, @c false on failure
-     * @see countryDivisionCode
-     */
-    bool setCountryDivisionCode(const QString & countryDivision);
 
     /**
      * Changes the current language. The current language will be left

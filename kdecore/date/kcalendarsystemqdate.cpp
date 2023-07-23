@@ -516,11 +516,6 @@ QString KCalendarSystemQDate::weekDayName(const QDate &date, WeekDayNameFormat f
     return KCalendarSystem::weekDayName(date, format);
 }
 
-int KCalendarSystemQDate::weekDayOfPray() const
-{
-    return 7; // sunday
-}
-
 bool KCalendarSystemQDate::isLunar() const
 {
     return false;

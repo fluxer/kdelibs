@@ -148,14 +148,12 @@ void KLocalePrivate::copy(const KLocalePrivate &rhs)
 
     // Country settings
     m_country = rhs.m_country;
-    m_countryDivisionCode = rhs.m_countryDivisionCode;
 
     // Language settings
     m_language = rhs.m_language;
     m_languages = 0;
     m_languageList = rhs.m_languageList;
     m_languageSensitiveDigits = rhs.m_languageSensitiveDigits;
-    m_nounDeclension = rhs.m_nounDeclension;
 
     // Catalog settings
     m_catalogName = rhs.m_catalogName;
@@ -167,9 +165,6 @@ void KLocalePrivate::copy(const KLocalePrivate &rhs)
     m_calendarSystem = rhs.m_calendarSystem;
     m_calendar = 0;
     m_weekStartDay = rhs.m_weekStartDay;
-    m_workingWeekStartDay = rhs.m_workingWeekStartDay;
-    m_workingWeekEndDay = rhs.m_workingWeekEndDay;
-    m_weekDayOfPray = rhs.m_weekDayOfPray;
 
     // Date/Time settings
     m_dateFormat = rhs.m_dateFormat;
@@ -441,9 +436,6 @@ void KLocalePrivate::initFormat()
         save = (type)entry.readEntry(key, int(default)); \
         save = (type)cg.readEntry(key, int(save));
 
-    // Country settings
-    readConfigEntry("CountryDivisionCode", QString(), m_countryDivisionCode);
-
     // Numeric formats
     readConfigNumEntry("DecimalPlaces", 2, m_decimalPlaces, int);
 
@@ -470,9 +462,6 @@ void KLocalePrivate::initFormat()
     readConfigEntry("DateFormat", "%A %d %B %Y", m_dateFormat);
     readConfigEntry("DateFormatShort", "%Y-%m-%d", m_dateFormatShort);
     readConfigNumEntry("WeekStartDay", 1, m_weekStartDay, int);                //default to Monday
-    readConfigNumEntry("WorkingWeekStartDay", 1, m_workingWeekStartDay, int);  //default to Monday
-    readConfigNumEntry("WorkingWeekEndDay", 5, m_workingWeekEndDay, int);      //default to Friday
-    readConfigNumEntry("WeekDayOfPray", 7, m_weekDayOfPray, int);              //default to Sunday
     readConfigNumEntry("DateTimeDigitSet", KLocale::ArabicDigits,
                        m_dateTimeDigitSet, KLocale::DigitSet);
     readConfigNumEntry("WeekNumberSystem", KLocale::IsoWeekNumber,
@@ -496,7 +485,6 @@ void KLocalePrivate::initFormat()
         save = lang.readEntry(key, save); \
         save = cg.readEntry(key, save);
 
-    read3ConfigBoolEntry("NounDeclension", false, m_nounDeclension);
     read3ConfigBoolEntry("DateMonthNamePossessive", false, m_dateMonthNamePossessive);
 
     initDayPeriods(cg);
@@ -560,12 +548,6 @@ bool KLocalePrivate::setCountry(const QString &country, KConfig *newConfig)
     // Init all the settings
     initFormat();
 
-    return true;
-}
-
-bool KLocalePrivate::setCountryDivisionCode(const QString &countryDivisionCode)
-{
-    m_countryDivisionCode = countryDivisionCode;
     return true;
 }
 
@@ -701,15 +683,6 @@ QString KLocalePrivate::language() const
 QString KLocalePrivate::country() const
 {
     return m_country;
-}
-
-QString KLocalePrivate::countryDivisionCode() const
-{
-    if (m_countryDivisionCode.isEmpty()) {
-        return country().toUpper();
-    } else {
-        return m_countryDivisionCode;
-    }
 }
 
 void KLocalePrivate::insertCatalog(const QString &catalog)
@@ -1052,11 +1025,6 @@ QString KLocalePrivate::toArabicDigits(const QString &str)
     return nstr;
 }
 
-bool KLocalePrivate::nounDeclension() const
-{
-    return m_nounDeclension;
-}
-
 bool KLocalePrivate::dateMonthNamePossessive() const
 {
     return m_dateMonthNamePossessive;
@@ -1065,21 +1033,6 @@ bool KLocalePrivate::dateMonthNamePossessive() const
 int KLocalePrivate::weekStartDay() const
 {
     return m_weekStartDay;
-}
-
-int KLocalePrivate::workingWeekStartDay() const
-{
-    return m_workingWeekStartDay;
-}
-
-int KLocalePrivate::workingWeekEndDay() const
-{
-    return m_workingWeekEndDay;
-}
-
-int KLocalePrivate::weekDayOfPray() const
-{
-    return m_weekDayOfPray;
 }
 
 int KLocalePrivate::decimalPlaces() const
@@ -2219,27 +2172,6 @@ void KLocalePrivate::setWeekStartDay(int day)
 {
     if (day >= 1 && day <= calendar()->daysInWeek(QDate())) {
         m_weekStartDay = day;
-    }
-}
-
-void KLocalePrivate::setWorkingWeekStartDay(int day)
-{
-    if (day >= 1 && day <= calendar()->daysInWeek(QDate())) {
-        m_workingWeekStartDay = day;
-    }
-}
-
-void KLocalePrivate::setWorkingWeekEndDay(int day)
-{
-    if (day >= 1 && day <= calendar()->daysInWeek(QDate())) {
-        m_workingWeekEndDay = day;
-    }
-}
-
-void KLocalePrivate::setWeekDayOfPray(int day)
-{
-    if (day >= 0 && day <= calendar()->daysInWeek(QDate())) { // 0 = None
-        m_weekDayOfPray = day;
     }
 }
 

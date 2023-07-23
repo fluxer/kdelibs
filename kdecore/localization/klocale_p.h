@@ -148,18 +148,6 @@ public:
      */
     QString countryCodeToName(const QString &country) const;
 
-    /**
-     * @internal Sets the Country Division Code
-     * The worker of the same-name KLocale API function.
-     */
-    bool setCountryDivisionCode(const QString & countryDivision);
-
-    /**
-     * @internal Returns the Country Division Code
-     * The worker of the same-name KLocale API function.
-     */
-    QString countryDivisionCode() const;
-
     /**************************
      **  Language settings   **
      **************************/
@@ -241,13 +229,6 @@ public:
      * The worker of the same-name KLocale API function.
      */
     QString languageCodeToName(const QString &language);
-
-    /**
-     * @deprecated
-     * @internal Returns if nouns are declined in the locale language.
-     * The worker of the same-name KLocale API function.
-     */
-    bool nounDeclension() const;
 
     /**************************
      **   Catalog settings   **
@@ -378,42 +359,6 @@ public:
      * The worker of the same-name KLocale API function.
      */
     int weekStartDay() const;
-
-    /**
-     * @internal Changes how KLocale defines the first working day in week.
-     * The worker of the same-name KLocale API function.
-     */
-    void setWorkingWeekStartDay(int day);
-
-    /**
-     * @internal Returns which day is the first working day of the week.
-     * The worker of the same-name KLocale API function.
-     */
-    int workingWeekStartDay() const;
-
-    /**
-     * @internal Changes how KLocale defines the last working day in week.
-     * The worker of the same-name KLocale API function.
-     */
-    void setWorkingWeekEndDay(int day);
-
-    /**
-     * @internal Returns which day is the last working day of the week.
-     * The worker of the same-name KLocale API function.
-     */
-    int workingWeekEndDay() const;
-
-    /**
-     * @internal Changes how KLocale defines the day reserved for religious observance.
-     * The worker of the same-name KLocale API function.
-     */
-    void setWeekDayOfPray(int day);
-
-    /**
-     * @internal Returns which day is reserved for religious observance
-     * The worker of the same-name KLocale API function.
-     */
-    int weekDayOfPray() const;
 
     /***************************
      **  Date/Time settings   **
@@ -885,14 +830,12 @@ private:
 
     // Country settings
     QString m_country;
-    QString m_countryDivisionCode;
 
     // Language settings
     QString      m_language;
     KConfig     *m_languages;
     QStringList  m_languageList;
     bool         m_languageSensitiveDigits;  // FIXME: Temporary until full language-sensitivity implemented.
-    bool         m_nounDeclension;
 
     // Catalog settings
     QString             m_catalogName;          // catalogName ("app name") used by this KLocale object
@@ -905,9 +848,6 @@ private:
     KCalendarSystem *m_calendar;
     KLocale::WeekNumberSystem m_weekNumberSystem;
     int              m_weekStartDay;
-    int              m_workingWeekStartDay;
-    int              m_workingWeekEndDay;
-    int              m_weekDayOfPray;
 
     // Date/Time settings
     QString           m_dateFormat;

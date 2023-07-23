@@ -57,11 +57,6 @@ bool KLocale::setCountry(const QString &country, KConfig *config)
     return d->setCountry(country, config);
 }
 
-bool KLocale::setCountryDivisionCode(const QString &countryDivisionCode)
-{
-    return d->setCountryDivisionCode(countryDivisionCode);
-}
-
 bool KLocale::setLanguage(const QString &language, KConfig *config)
 {
     return d->setLanguage(language, config);
@@ -91,11 +86,6 @@ QString KLocale::language() const
 QString KLocale::country() const
 {
     return d->country();
-}
-
-QString KLocale::countryDivisionCode() const
-{
-    return d->countryDivisionCode();
 }
 
 void KLocale::insertCatalog(const QString &catalog)
@@ -155,11 +145,6 @@ QString KLocale::convertDigits(const QString &str, DigitSet digitSet, bool ignor
     return d->convertDigits(str, digitSet, ignoreContext);
 }
 
-bool KLocale::nounDeclension() const
-{
-    return d->nounDeclension();
-}
-
 bool KLocale::dateMonthNamePossessive() const
 {
     return d->dateMonthNamePossessive();
@@ -168,21 +153,6 @@ bool KLocale::dateMonthNamePossessive() const
 int KLocale::weekStartDay() const
 {
     return d->weekStartDay();
-}
-
-int KLocale::workingWeekStartDay() const
-{
-    return d->workingWeekStartDay();
-}
-
-int KLocale::workingWeekEndDay() const
-{
-    return d->workingWeekEndDay();
-}
-
-int KLocale::weekDayOfPray() const
-{
-    return d->weekDayOfPray();
 }
 
 int KLocale::decimalPlaces() const
@@ -367,21 +337,6 @@ void KLocale::setTimeFormat(const QString &format)
 void KLocale::setWeekStartDay(int day)
 {
     d->setWeekStartDay(day);
-}
-
-void KLocale::setWorkingWeekStartDay(int day)
-{
-    d->setWorkingWeekStartDay(day);
-}
-
-void KLocale::setWorkingWeekEndDay(int day)
-{
-    d->setWorkingWeekEndDay(day);
-}
-
-void KLocale::setWeekDayOfPray(int day)
-{
-    d->setWeekDayOfPray(day);
 }
 
 QString KLocale::dateFormat() const

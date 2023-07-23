@@ -37,7 +37,6 @@ private Q_SLOTS:
     void readTime();
     void testDayPeriods();
     void testCalendarSystemType();
-    void testCountryDivision();
     void prettyFormatDuration();
     void formatByteSize();
     void weekDays();

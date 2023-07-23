@@ -713,14 +713,6 @@ void KLocaleTest::testCalendarSystemType()
     QCOMPARE( locale.calendarType(),   QString("gregorian") );
 }
 
-void KLocaleTest::testCountryDivision()
-{
-    KLocale locale(*KGlobal::locale());
-    QCOMPARE( locale.countryDivisionCode(), locale.country().toUpper() );
-    QVERIFY( locale.setCountryDivisionCode( "US-NY" ) );
-    QCOMPARE( locale.countryDivisionCode(), QString( "US-NY" ) );
-}
-
 void
 KLocaleTest::prettyFormatDuration()
 {
@@ -779,34 +771,6 @@ void  KLocaleTest::weekDays()
     QCOMPARE(locale.weekStartDay(), 3);
     locale.setWeekStartDay(8);
     QCOMPARE(locale.weekStartDay(), 3);
-
-    //Test setting of workingWeekStartDay
-    locale.setWorkingWeekStartDay(3);
-    locale.setWorkingWeekEndDay(6);
-    QCOMPARE(locale.workingWeekStartDay(), 3);
-    locale.setWorkingWeekStartDay(0);
-    QCOMPARE(locale.workingWeekStartDay(), 3);
-    locale.setWorkingWeekStartDay(8);
-    QCOMPARE(locale.workingWeekStartDay(), 3);
-
-    //Test setting of workingWeekEndDay
-    locale.setWorkingWeekStartDay(3);
-    locale.setWorkingWeekEndDay(6);
-    QCOMPARE(locale.workingWeekEndDay(), 6);
-    locale.setWorkingWeekEndDay(0);
-    QCOMPARE(locale.workingWeekEndDay(), 6);
-    locale.setWorkingWeekEndDay(8);
-    QCOMPARE(locale.workingWeekEndDay(), 6);
-
-    //Test setting of weekStartDay
-    locale.setWeekDayOfPray(3);
-    QCOMPARE(locale.weekDayOfPray(), 3);
-    locale.setWeekDayOfPray(-1);
-    QCOMPARE(locale.weekDayOfPray(), 3);
-    locale.setWeekDayOfPray(8);
-    QCOMPARE(locale.weekDayOfPray(), 3);
-    locale.setWeekDayOfPray(0);
-    QCOMPARE(locale.weekDayOfPray(), 0);
 }
 
 void
