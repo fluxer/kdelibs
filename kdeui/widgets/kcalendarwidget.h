@@ -22,7 +22,6 @@
 #include <kdeui_export.h>
 
 #include <QCalendarWidget>
-#include <klocale.h>
 
 /*!
     Class to pick a date.
