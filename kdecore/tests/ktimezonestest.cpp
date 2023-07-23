@@ -95,11 +95,10 @@ void KTimeZonesTest::zoneinfoDir()
 
 void KTimeZonesTest::abbreviation()
 {
-    QDateTime gmt(QDate(2006, 3, 26), QTime(0, 59, 0), Qt::UTC);
-    QDateTime bst(QDate(2006, 3, 26), QTime(1, 0, 0), Qt::UTC);
-
     KTimeZone london = KSystemTimeZones::zone("Europe/London");
     QVERIFY(london.isValid());
+    QDateTime gmt(QDate(2006, 3, 26), QTime(0, 59, 0), Qt::UTC);
+    QDateTime bst(QDate(2006, 3, 26), QTime(1, 0, 0), Qt::UTC);
     QCOMPARE(london.abbreviation(gmt), QByteArray("GMT"));
     QCOMPARE(london.abbreviation(bst), QByteArray("BST"));
 

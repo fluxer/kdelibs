@@ -80,8 +80,7 @@ install(
     KDebug
     KDEDModule
     KDEPrintDialog
-    KDatePicker
-    KDateTable
+    KCalendarWidget
     KDateTime
     KDateValidator
     KDBusMenuExporter

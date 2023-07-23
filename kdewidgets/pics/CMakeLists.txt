@@ -24,7 +24,7 @@ install(
     kgradientselector.png
     kdualcolorbutton.png
     kpushbutton.png
-    kdatepicker.png
+    kcalendarwidget.png
     kdialog.png
     keditlistbox.png
     kfontcombo.png
@@ -36,7 +36,5 @@ install(
     kkeybutton.png
     kpalettetable.png
     kactionselector.png
-    kdatetable.png
-    kdatetimewidget.png
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdewidgets/pics
 )

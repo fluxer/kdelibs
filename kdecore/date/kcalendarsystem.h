@@ -1353,7 +1353,6 @@ private:
     friend class KLocalizedDate;
     friend class KLocalizedDatePrivate;
     friend class KDateTimeParser;
-    friend class KDateTable;
 
     // Era functions needed by friends, may be made public later if needed in KCM
     QList<KCalendarEra> *eraList() const;

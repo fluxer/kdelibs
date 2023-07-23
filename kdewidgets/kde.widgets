@@ -54,13 +54,9 @@ Group=Input (KDE)
 ToolTip=Combo Box (KDE)
 Group=Input (KDE)
 
-[KDatePicker]
+[KCalendarWidget]
 ToolTip=A date selection widget (KDE)
 WhatsThis=Provides a widget for calendar date input
-Group=Date/Time (KDE)
-
-[KDateTable]
-IncludeFile=kdatetable.h
 Group=Date/Time (KDE)
 
 [KDialog]

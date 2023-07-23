@@ -206,8 +206,7 @@ set(kdeui_LIB_SRCS
     widgets/kcmodule.cpp
     widgets/kcombobox.cpp
     widgets/kcompletionbox.cpp
-    widgets/kdatepicker.cpp
-    widgets/kdatetable.cpp
+    widgets/kcalendarwidget.cpp
     widgets/keditlistwidget.cpp
     widgets/khbox.cpp
     widgets/khelpmenu.cpp
@@ -506,8 +505,7 @@ install(
     util/kpixmapsequencewidget.h
     util/kimageio.h
     widgets/kactionselector.h
-    widgets/kdatepicker.h
-    widgets/kdatetable.h
+    widgets/kcalendarwidget.h
     widgets/kcapacitybar.h
     widgets/kcmodule.h
     widgets/kcombobox.h
