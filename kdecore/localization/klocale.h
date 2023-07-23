@@ -651,7 +651,6 @@ public:
      * generation of Date Formats.
      *
      * @see KCalendarSystem
-     * @see KLocalizedDate
      * @see DateTimeComponentFormat
      */
     enum DateTimeComponent {

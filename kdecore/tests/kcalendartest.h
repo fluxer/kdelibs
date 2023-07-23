@@ -119,7 +119,6 @@ private Q_SLOTS:
     void testQDateDayOfYear();
     void testQDateDayOfWeek();
     void testQDateIsLeapYear();
-    void testKLocalizedDate();
     void testWeekNumberSystem();
 };
 

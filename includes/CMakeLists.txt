@@ -169,7 +169,6 @@ install(
     KListWidget
     KListWidgetSearchLine
     KLocale
-    KLocalizedDate
     KLocalizedString
     KLockFile
     KMacroExpanderBase

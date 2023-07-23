@@ -1350,8 +1350,6 @@ private:
     friend class KCalendarSystemQDate;
     friend class KCalendarSystemThai;
     //Other friends that need access to protected/private functions
-    friend class KLocalizedDate;
-    friend class KLocalizedDatePrivate;
     friend class KDateTimeParser;
 
     // Era functions needed by friends, may be made public later if needed in KCM

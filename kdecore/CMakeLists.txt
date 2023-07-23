@@ -67,7 +67,6 @@ set(kdecore_LIB_SRCS
     date/kdatetimeformatter.cpp
     date/kdatetimeparser.cpp
     date/kdayperiod.cpp
-    date/klocalizeddate.cpp
     date/ktimezone.cpp
     date/ksystemtimezone.cpp
     io/kdebug.cpp
@@ -219,7 +218,6 @@ install(
     config/ksettings.h
     date/kcalendarsystem.h
     date/kdatetime.h
-    date/klocalizeddate.h
     date/ksystemtimezone.h
     date/ktimezone.h
     io/kdebug.h
