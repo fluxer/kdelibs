@@ -30,7 +30,7 @@ static void setupCalendarWidget(KCalendarWidget *kcalendarwidget, const QDate &d
     const QLocale systemlocale = QLocale::system();
     if (calendarlocale.name() == QLatin1String("C") && calendarlocale.name() != systemlocale.name()) {
         calendarlocale = systemlocale;
-        kWarning() << "Could not create locale for" << klocalelanguage;
+        kWarning() << "Could not create KCalendarWidget locale for" << klocalelanguage;
     }
 
     kcalendarwidget->setLocale(calendarlocale);
@@ -84,4 +84,20 @@ void KCalendarWidget::setCalendar(const KCalendarSystem *calendar)
     }
     setMinimumDate(calendar->earliestValidDate());
     setMaximumDate(calendar->latestValidDate());
+}
+
+void KCalendarWidget::changeEvent(QEvent *event)
+{
+    switch (event->type()) {
+        // NOTE: QCalendarWidget adapts on QEvent::LocaleChange, KSwitchLanguageDialog sends
+        // QEvent::LanguageChange event
+        case QEvent::LocaleChange:
+        case QEvent::LanguageChange: {
+            setupCalendarWidget(this, selectedDate());
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }

@@ -22,6 +22,7 @@
 #include <kdeui_export.h>
 
 #include <QCalendarWidget>
+#include <QEvent>
 #include <kcalendarsystem.h>
 
 class KCalendarWidgetPrivate;
@@ -42,6 +43,10 @@ public:
 
     const KCalendarSystem* calendar() const;
     void setCalendar(const KCalendarSystem *calendar);
+
+protected:
+    // QWidget reimplementation (not reimplemented by QCalendarWidget)
+    virtual void changeEvent(QEvent *event);
 
 private:
     Q_DISABLE_COPY(KCalendarWidget);
