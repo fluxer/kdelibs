@@ -27,8 +27,9 @@ static void setupCalendarWidget(KCalendarWidget *kcalendarwidget, const QDate &d
 {
     const QString klocalelanguage = KGlobal::locale()->language();
     QLocale calendarlocale = QLocale(klocalelanguage);
-    if (calendarlocale.name() == QLatin1String("C")) {
-        calendarlocale = QLocale::system();
+    const QLocale systemlocale = QLocale::system();
+    if (calendarlocale.name() == QLatin1String("C") && calendarlocale.name() != systemlocale.name()) {
+        calendarlocale = systemlocale;
         kWarning() << "Could not create locale for" << klocalelanguage;
     }
 
