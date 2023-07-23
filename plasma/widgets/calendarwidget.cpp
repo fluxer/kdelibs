@@ -19,6 +19,8 @@
 
 #include "calendarwidget.h"
 #include "private/style_p.h"
+#include "private/themedwidgetinterface_p.h"
+
 #include "kcalendarwidget.h"
 #include "kdebug.h"
 
@@ -27,15 +29,20 @@
 namespace Plasma
 {
 
-class CalendarWidgetPrivate
+class CalendarWidgetPrivate: public ThemedWidgetInterface<CalendarWidget>
 {
 public:
+    CalendarWidgetPrivate(CalendarWidget *calendarwidget)
+        : ThemedWidgetInterface<CalendarWidget>(calendarwidget)
+    {
+    }
+
     Plasma::Style::Ptr style;
 };
 
 CalendarWidget::CalendarWidget(QGraphicsWidget *parent)
     : QGraphicsProxyWidget(parent),
-      d(new CalendarWidgetPrivate())
+      d(new CalendarWidgetPrivate(this))
 {
     KCalendarWidget *native = new KCalendarWidget();
     setWidget(native);
@@ -50,7 +57,8 @@ CalendarWidget::CalendarWidget(QGraphicsWidget *parent)
     QToolButton* nativemonthbutton = native->findChild<QToolButton*>("qt_calendar_monthbutton");
     if (nativemonthbutton) {
         // FIXME: the popup menu outside color is not transparent
-        nativemonthbutton->hide();
+        nativemonthbutton->setEnabled(false);
+        nativemonthbutton->setMenu(nullptr);
     } else {
         kWarning() << "Could not find the QCalendarWidget month button" << native;
     }

@@ -83,6 +83,8 @@ Q_SIGNALS:
     void activated(QDate);
 
 private:
+    Q_PRIVATE_SLOT(d, void setPalette())
+
     CalendarWidgetPrivate *const d;
 };
 
