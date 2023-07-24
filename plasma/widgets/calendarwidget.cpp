@@ -97,6 +97,15 @@ KCalendarWidget* CalendarWidget::nativeWidget() const
     return static_cast<KCalendarWidget*>(widget());
 }
 
+void CalendarWidget::focusInEvent(QFocusEvent *event)
+{
+    QGraphicsProxyWidget::focusInEvent(event);
+    if (!nativeWidget()->hasFocus()) {
+        // as of Qt 4.7, apparently we have a bug here in QGraphicsProxyWidget
+        nativeWidget()->setFocus(event->reason());
+    }
+}
+
 }
 
 #include "moc_calendarwidget.cpp"

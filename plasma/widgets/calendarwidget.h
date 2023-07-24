@@ -82,6 +82,9 @@ Q_SIGNALS:
     void clicked(QDate);
     void activated(QDate);
 
+protected:
+    void focusInEvent(QFocusEvent *event);
+
 private:
     Q_PRIVATE_SLOT(d, void setPalette())
 
