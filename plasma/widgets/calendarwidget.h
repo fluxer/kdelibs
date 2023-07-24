@@ -57,7 +57,7 @@ public:
     /**
      * Sets the selected data
      *
-     * @param model the model to display
+     * @param date the date to display
      */
     void setSelectedDate(const QDate &date);
 
