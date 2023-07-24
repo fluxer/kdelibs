@@ -211,16 +211,7 @@ public:
      * @see KLocalizedString
      */
     void translateRaw(const char *ctxt, const char *singular, const char *plural,
-                          unsigned long n, QString *lang, QString *trans) const;
-
-    /**
-     * Changes the current encoding.
-     *
-     * @param mibEnum The mib of the preferred codec
-     *
-     * @return True on success.
-     */
-    bool setEncoding(int mibEnum);
+                      unsigned long n, QString *lang, QString *trans) const;
 
     /**
      * @since 4.3
