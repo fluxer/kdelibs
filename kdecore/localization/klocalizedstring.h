@@ -25,7 +25,6 @@
 #include <QtCore/qstringlist.h>
 
 class KLocale;
-struct KCatalogName;
 class KLocalizedStringPrivate;
 
 /**
@@ -508,8 +507,7 @@ public:
     /**
      * @internal Called from KLocale on addition or removal of catalogs.
      */
-    static void notifyCatalogsUpdated (const QStringList &languages,
-                                       const QList<KCatalogName> &catalogs);
+    static void notifyCatalogsUpdated (const QStringList &languages);
 
 private:
     KLocalizedString (const char *ctxt,

@@ -23,7 +23,6 @@
 
 #include <QCalendarWidget>
 #include <QEvent>
-#include <kcalendarsystem.h>
 
 class KCalendarWidgetPrivate;
 
@@ -39,18 +38,10 @@ class KDEUI_EXPORT KCalendarWidget: public QCalendarWidget
 public:
     KCalendarWidget(QWidget *parent = nullptr);
     KCalendarWidget(const QDate &date, QWidget *parent = nullptr);
-    ~KCalendarWidget();
-
-    const KCalendarSystem* calendar() const;
-    void setCalendar(const KCalendarSystem *calendar);
 
 protected:
     // QWidget reimplementation (not reimplemented by QCalendarWidget)
     virtual void changeEvent(QEvent *event);
-
-private:
-    Q_DISABLE_COPY(KCalendarWidget);
-    KCalendarWidgetPrivate *d;
 };
 
 #endif //  KCALENDARWIDGET_H

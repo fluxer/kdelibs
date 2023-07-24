@@ -1,20 +1,19 @@
-/* This file is part of the KDE libraries
-   Copyright (c) 2001 Hans Petter Bieker <bieker@kde.org>
+/*  This file is part of the KDE libraries
+    Copyright (C) 2022 Ivailo Monev <xakepa10@gmail.com>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2, as published by the Free Software Foundation.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #include "kcatalog_p.h"
@@ -77,7 +76,7 @@ KCatalog::KCatalog(const KCatalog &rhs)
 #endif
 }
 
-KCatalog & KCatalog::operator=(const KCatalog & rhs)
+KCatalog & KCatalog::operator=(const KCatalog &rhs)
 {
     d->language = rhs.d->language;
     d->name = rhs.d->name;
@@ -125,16 +124,7 @@ QString KCatalog::language() const
     return d->language;
 }
 
-QString KCatalog::translate(const char * msgid) const
-{
-#ifndef QT_NO_TRANSLATION
-    return d->translator->translate(nullptr, msgid);
-#else
-    return QString::fromUtf8(msgid);
-#endif
-}
-
-QString KCatalog::translate(const char * msgctxt, const char * msgid) const
+QString KCatalog::translate(const char *msgctxt, const char *msgid) const
 {
 #ifndef QT_NO_TRANSLATION
     return d->translator->translate(msgctxt, msgid);
@@ -144,34 +134,14 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid) const
 #endif
 }
 
-QString KCatalog::translate(const char * msgid, const char * msgid_plural,
-                            unsigned long n) const
-{
-#ifndef QT_NO_TRANSLATION
-    return (n == 1 ? d->translator->translate(nullptr, msgid) : d->translator->translate(nullptr, msgid_plural));
-#else
-    return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
-#endif
-}
-
-QString KCatalog::translate(const char * msgctxt, const char * msgid,
-                            const char * msgid_plural, unsigned long n) const
+QString KCatalog::translate(const char *msgctxt, const char *msgid,
+                            const char *msgid_plural, unsigned long n) const
 {
 #ifndef QT_NO_TRANSLATION
     return (n == 1 ? d->translator->translate(msgctxt, msgid) : d->translator->translate(msgctxt, msgid_plural));
 #else
     Q_UNUSED(msgctxt);
     return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
-#endif
-}
-
-QString KCatalog::translateStrict(const char * msgid) const
-{
-#ifndef QT_NO_TRANSLATION
-    return d->translator->translateStrict(nullptr, msgid);
-#else
-    Q_UNUSED(msgid);
-    return QString();
 #endif
 }
 
@@ -186,21 +156,8 @@ QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) cons
 #endif
 }
 
-QString KCatalog::translateStrict(const char * msgid, const char * msgid_plural,
-                                  unsigned long n) const
-{
-#ifndef QT_NO_TRANSLATION
-    return (n == 1 ? d->translator->translateStrict(nullptr, msgid) : d->translator->translateStrict(nullptr, msgid_plural));
-#else
-    Q_UNUSED(msgid);
-    Q_UNUSED(msgid_plural);
-    Q_UNUSED(n);
-    return QString();
-#endif
-}
-
-QString KCatalog::translateStrict(const char * msgctxt, const char * msgid,
-                                  const char * msgid_plural, unsigned long n) const
+QString KCatalog::translateStrict(const char *msgctxt, const char *msgid,
+                                  const char *msgid_plural, unsigned long n) const
 {
 #ifndef QT_NO_TRANSLATION
     return (n == 1 ? d->translator->translateStrict(msgctxt, msgid) : d->translator->translateStrict(msgctxt, msgid_plural));

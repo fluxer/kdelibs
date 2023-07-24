@@ -1,9 +1,9 @@
-/* This file is part of the KDE libraries
-    Copyright (c) 2005 Thomas Braxton <brax108@cox.net>
+/*  This file is part of the KDE libraries
+    Copyright (C) 2023 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License version 2 as published by the Free Software Foundation.
+    License version 2, as published by the Free Software Foundation.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,21 +27,6 @@ class KLocaleTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void languages();
-    void formatNumbers();
-    void formatNumberStrings();
-    void readNumber();
-    void formatDate();
-    void readDate();
-    void formatTime();
-    void formatDateTime();
-    void readTime();
-    void testDayPeriods();
-    void testCalendarSystemType();
-    void prettyFormatDuration();
-    void formatByteSize();
-    void weekDays();
-    void removeAcceleratorMarker();
-    void formatByteSize2();
 };
 
 #endif // KLOCALETEST_H

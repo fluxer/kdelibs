@@ -49,15 +49,7 @@ set(kdecore_LIB_SRCS
     config/ksharedconfig.cpp
     config/kcoreconfigskeleton.cpp
     config/ksettings.cpp
-    date/kcalendarera.cpp
-    date/kcalendarsystem.cpp
-    date/kcalendarsystemqdate.cpp
-    date/kcalendarsystemgregorian.cpp
-    date/kcalendarsystemjulian.cpp
     date/kdatetime.cpp
-    date/kdatetimeformatter.cpp
-    date/kdatetimeparser.cpp
-    date/kdayperiod.cpp
     date/ktimezone.cpp
     date/ksystemtimezone.cpp
     io/kdebug.cpp
@@ -106,7 +98,6 @@ set(kdecore_LIB_SRCS
     localization/kcatalog.cpp
     localization/kcharsets.cpp
     localization/klocale.cpp
-    localization/klocale_kde.cpp
     localization/klocalizedstring.cpp
     localization/kuitsemantics.cpp
     localization/common_helpers.cpp
@@ -207,7 +198,6 @@ install(
     config/ksharedconfig.h
     config/kcoreconfigskeleton.h
     config/ksettings.h
-    date/kcalendarsystem.h
     date/kdatetime.h
     date/ksystemtimezone.h
     date/ktimezone.h

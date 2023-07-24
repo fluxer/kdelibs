@@ -218,17 +218,18 @@ QValidator::State KDoubleValidator::validate(QString &input, int &p) const
 {
     QString s = input;
     if (acceptLocalizedNumbers()) {
-        KLocale * l = KGlobal::locale();
+        KLocale* l = KGlobal::locale();
+        const QLocale ll = l->toLocale();
         // ok, we have to re-format the number to have:
-        // 1. decimalSymbol == '.'
+        // 1. decimalPoint == '.'
         // 2. negativeSign  == '-'
         // 3. positiveSign  == <empty>
-        // 4. thousandsSeparator() == <empty> (we don't check that there
+        // 4. groupSeparator() == <empty> (we don't check that there
         //    are exactly three decimals between each separator):
-        QString d = l->decimalSymbol();
-        QString n = l->negativeSign();
-        QString p = l->positiveSign();
-        QString t = l->thousandsSeparator();
+        QString d = ll.decimalPoint();
+        QString n = ll.negativeSign();
+        QString p = ll.positiveSign();
+        QString t = ll.groupSeparator();
         // first, delete p's and t's:
         if (!p.isEmpty()) {
             for (int idx = s.indexOf(p); idx >= 0; idx = s.indexOf(p, idx)) {

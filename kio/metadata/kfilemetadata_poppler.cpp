@@ -44,7 +44,7 @@ static QString getString(const poppler::ustring &popplerstring)
 static QString getTime(const popplertimetype &popplertime)
 {
     const KDateTime kdatetime(QDateTime::fromTime_t(popplertime));
-    return KGlobal::locale()->formatDateTime(kdatetime, KLocale::FancyLongDate);
+    return KGlobal::locale()->formatDateTime(kdatetime, QLocale::NarrowFormat);
 }
 
 KFileMetaDataPopplerPlugin::KFileMetaDataPopplerPlugin(QObject* parent, const QVariantList &args)

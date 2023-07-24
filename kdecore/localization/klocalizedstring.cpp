@@ -24,10 +24,8 @@
 #include <kglobal.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <klocale_p.h>
 #include <kstandarddirs.h>
 #include <kuitsemantics_p.h>
-#include "kcatalogname_p.h"
 
 #include <QtCore/qmutex.h>
 #include <QStringList>
@@ -147,8 +145,6 @@ QString KLocalizedString::toString (const KLocale *locale) const
 
 QString KLocalizedStringPrivate::toString (const KLocale *locale) const
 {
-    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
-
     // Assure the message has been supplied.
     if (msg.isEmpty())
     {
@@ -166,7 +162,7 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale) const
                               .arg(shortenMessage(QString::fromUtf8(msg)));
 
     // Get raw translation.
-    QString rawtrans, lang, ctry;
+    QString rawtrans, lang;
     if (locale != NULL) {
         if (!ctxt.isEmpty() && !plural.isEmpty()) {
             locale->translateRaw(ctxt, msg, plural, number, &lang, &rawtrans);
@@ -177,10 +173,8 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale) const
         } else {
             locale->translateRaw(msg, &lang, &rawtrans);
         }
-        ctry = locale->country();
     } else {
         lang = KLocale::defaultLanguage();
-        ctry = QLatin1Char('C');
         rawtrans = selectForEnglish();
     }
 
@@ -506,8 +500,7 @@ KLocalizedString ki18ncp (const char* ctxt,
     return KLocalizedString(ctxt, singular, plural);
 }
 
-void KLocalizedString::notifyCatalogsUpdated (const QStringList &languages,
-                                              const QList<KCatalogName> &catalogs)
+void KLocalizedString::notifyCatalogsUpdated (const QStringList &languages)
 {
     QMutexLocker lock(staticsKLSPMutex());
     if (staticsKLSP.isDestroyed()) {

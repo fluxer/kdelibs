@@ -25,65 +25,20 @@
 
 static void setupCalendarWidget(KCalendarWidget *kcalendarwidget, const QDate &date)
 {
-    const QString klocalelanguage = KGlobal::locale()->language();
-    QLocale calendarlocale = QLocale(klocalelanguage);
-    const QLocale systemlocale = QLocale::system();
-    if (calendarlocale.name() == QLatin1String("C") && calendarlocale.name() != systemlocale.name()) {
-        calendarlocale = systemlocale;
-        kWarning() << "Could not create KCalendarWidget locale for" << klocalelanguage;
-    }
-
-    kcalendarwidget->setLocale(calendarlocale);
+    kcalendarwidget->setLocale(KGlobal::locale()->toLocale());
     kcalendarwidget->setSelectedDate(date);
-    kcalendarwidget->setCalendar(KGlobal::locale()->calendar());
-}
-
-class KCalendarWidgetPrivate
-{
-public:
-    KCalendarWidgetPrivate();
-
-    const KCalendarSystem *calendar;
-};
-
-KCalendarWidgetPrivate::KCalendarWidgetPrivate()
-    : calendar(nullptr)
-{
 }
 
 KCalendarWidget::KCalendarWidget(QWidget *parent)
-    : QCalendarWidget(parent),
-    d(new KCalendarWidgetPrivate())
+    : QCalendarWidget(parent)
 {
     setupCalendarWidget(this, QDate::currentDate());
 }
 
 KCalendarWidget::KCalendarWidget(const QDate &date, QWidget *parent)
-    : QCalendarWidget(parent),
-    d(new KCalendarWidgetPrivate())
+    : QCalendarWidget(parent)
 {
     setupCalendarWidget(this, date);
-}
-
-KCalendarWidget::~KCalendarWidget()
-{
-    delete d;
-}
-
-const KCalendarSystem* KCalendarWidget::calendar() const
-{
-    return d->calendar;
-}
-
-void KCalendarWidget::setCalendar(const KCalendarSystem *calendar)
-{
-    d->calendar = calendar;
-    if (!calendar) {
-        kWarning() << "Attempting to set KCalendarWidget calendar to null";
-        return;
-    }
-    setMinimumDate(calendar->earliestValidDate());
-    setMaximumDate(calendar->latestValidDate());
 }
 
 void KCalendarWidget::changeEvent(QEvent *event)

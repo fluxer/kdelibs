@@ -23,7 +23,6 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kmessagebox.h>
-#include <kcalendarsystem.h>
 #include <kemailsettings.h>
 #include <kuser.h>
 #include <kdebug.h>
@@ -72,23 +71,24 @@ bool TemplateInterface::insertTemplateText(const Cursor& insertPosition, const Q
   }
 
   if (templateString.contains(QLatin1String("%{date}"))) {
-    enhancedInitValues["date"] = KGlobal::locale()->formatDate(date, KLocale::ShortDate);
+    enhancedInitValues["date"] = KGlobal::locale()->formatDate(date, QLocale::ShortFormat);
   }
 
   if (templateString.contains(QLatin1String("%{time}"))) {
-    enhancedInitValues["time"] = KGlobal::locale()->formatTime(time, true, false);
+    enhancedInitValues["time"] = KGlobal::locale()->formatTime(time, QLocale::ShortFormat);
   }
 
+  const QLocale locale = KGlobal::locale()->toLocale();
   if (templateString.contains(QLatin1String("%{year}"))) {
-    enhancedInitValues["year"] = KGlobal::locale()->calendar()->formatDate(date, KLocale::Year, KLocale::LongNumber);
+    enhancedInitValues["year"] = locale.toString(date, "yyyy");
   }
 
   if (templateString.contains(QLatin1String("%{month}"))) {
-    enhancedInitValues["month"] = QString::number(KGlobal::locale()->calendar()->month(date));
+    enhancedInitValues["month"] = locale.toString(date, "MM");
   }
 
   if (templateString.contains(QLatin1String("%{day}"))) {
-    enhancedInitValues["day"] = QString::number(KGlobal::locale()->calendar()->day(date));
+    enhancedInitValues["day"] = locale.toString(date, "dd");
   }
 
   if (templateString.contains(QLatin1String("%{hostname}"))) {

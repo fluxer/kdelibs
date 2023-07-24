@@ -32,12 +32,13 @@
 #include <kprotocolinfo.h>
 
 
-#include <QtCore/qhash.h>
-#include <QtCore/qcoreapplication.h>
-#include <QtCore/qthread.h>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusInterface>
-#include <QtGui/qwidget.h>
+#include <QHash>
+#include <QTextCodec>
+#include <QCoreApplication>
+#include <QThread>
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QWidget>
 
 #include <assert.h>
 

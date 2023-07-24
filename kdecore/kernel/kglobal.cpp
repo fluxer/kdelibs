@@ -211,7 +211,7 @@ KCharsets *KGlobal::charsets()
 {
     PRIVATE_DATA;
     if (d->charsets == 0) {
-        d->charsets = new KCharsets;
+        d->charsets = new KCharsets();
     }
 
     return d->charsets;

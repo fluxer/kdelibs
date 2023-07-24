@@ -434,7 +434,7 @@ void KWidgetJobTracker::Private::ProgressWidget::speed(unsigned long value)
         if (totalSizeKnown) {
             const int remaining = 1000*(totalSize - processedSize)/value;
             speedLabel->setText(i18np("%2/s (%3 remaining)", "%2/s (%3 remaining)", remaining, speedStr,
-                                      KGlobal::locale()->prettyFormatDuration(remaining)));
+                                      KGlobal::locale()->formatDuration(remaining)));
         } else { // total size is not known (#24228)
             speedLabel->setText(i18nc("speed in bytes per second", "%1/s", speedStr));
         }

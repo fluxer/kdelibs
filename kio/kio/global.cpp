@@ -80,17 +80,7 @@ KIO_EXPORT unsigned int KIO::calculateRemainingSeconds( KIO::filesize_t totalSiz
 
 KIO_EXPORT QString KIO::convertSeconds( unsigned int seconds )
 {
-  unsigned int days  = seconds / 86400;
-  unsigned int hours = (seconds - (days * 86400)) / 3600;
-  unsigned int mins  = (seconds - (days * 86400) - (hours * 3600)) / 60;
-  seconds            = (seconds - (days * 86400) - (hours * 3600) - (mins * 60));
-
-  const QTime time(hours, mins, seconds);
-  const QString timeStr( KGlobal::locale()->formatTime(time, true /*with seconds*/, true /*duration*/) );
-  if ( days > 0 )
-    return i18np("1 day %2", "%1 days %2", days, timeStr);
-  else
-    return timeStr;
+  return KGlobal::locale()->formatDuration(seconds * 1000);
 }
 
 
@@ -358,8 +348,7 @@ KIO_EXPORT QStringList KIO::Job::detailedErrorStrings( const KUrl *reqUrl ) cons
     url = i18nc("@info url", "(unknown)" );
   }
 
-  datetime = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime(),
-                                                KLocale::LongDate );
+  datetime = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
 
   ret << errorName;
   ret << i18nc( "@info %1 error name, %2 description",
@@ -419,8 +408,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
     protocol = i18nc("@info protocol", "(unknown)" );
   }
 
-  datetime = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime(),
-                                                KLocale::LongDate );
+  datetime = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
 
   QString errorName, techName, description;
   QStringList causes, solutions;

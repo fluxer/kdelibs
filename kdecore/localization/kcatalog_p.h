@@ -1,20 +1,19 @@
-/* This file is part of the KDE libraries
-   Copyright (c) 2001 Hans Petter Bieker <bieker@kde.org>
+/*  This file is part of the KDE libraries
+    Copyright (C) 2022 Ivailo Monev <xakepa10@gmail.com>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2, as published by the Free Software Foundation.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #ifndef KCATALOG_H
@@ -99,17 +98,6 @@ public:
   QString language() const;
 
   /**
-   * Retrieves a translation of the specified message id.
-   *
-   * Do not pass 0 or "" strings as message id.
-   *
-   * @param msgid The message id
-   *
-   * @return The translated message, or @p msgid if not found
-   */
-  QString translate( const char * msgid ) const;
-
-  /**
    * Retrieves a translation of the specified message id with given context.
    *
    * Do not pass 0 or "" strings as message id or context.
@@ -119,22 +107,7 @@ public:
    *
    * @return The translated message, or @p msgid if not found
    */
-  QString translate( const char * msgctxt, const char * msgid ) const;
-
-  /**
-   * Retrieves a proper plural form of translation for the specified English
-   * singular and plural message ids.
-   *
-   * Do not pass 0 or "" strings as message ids.
-   *
-   * @param msgid The singular message id
-   * @param msgid_plural The plural message id
-   * @param n The number to which the plural form applies
-   *
-   * @return The translated message, or proper English form if not found
-   */
-  QString translate( const char * msgid, const char * msgid_plural,
-                     unsigned long n ) const;
+  QString translate( const char *msgctxt, const char *msgid) const;
 
   /**
    * Retrieves a proper plural form of translation for the specified English
@@ -149,20 +122,8 @@ public:
    *
    * @return The translated message, or proper English form if not found
    */
-  QString translate( const char * msgctxt, const char * msgid,
-                     const char * msgid_plural, unsigned long n ) const;
-
-  /**
-   * Retrieves a translation of the specified message id,
-   * returning empty if the translation was not found.
-   *
-   * Do not pass 0 or "" strings as message id.
-   *
-   * @param msgid The message id
-   *
-   * @return The translated message, or QString() if not found
-   */
-  QString translateStrict( const char * msgid ) const;
+  QString translate(const char *msgctxt, const char *msgid,
+                    const char *msgid_plural, unsigned long n) const;
 
   /**
    * Retrieves a translation of the specified message id with given context,
@@ -175,23 +136,7 @@ public:
    *
    * @return The translated message, or QString() if not found
    */
-  QString translateStrict( const char * msgctxt, const char * msgid ) const;
-
-  /**
-   * Retrieves a proper plural form of translation for the specified English
-   * singular and plural message ids,
-   * returning empty if the translation was not found.
-   *
-   * Do not pass 0 or "" strings as message ids.
-   *
-   * @param msgid The singular message id
-   * @param msgid_plural The plural message id
-   * @param n The number to which the plural form applies
-   *
-   * @return The translated message, or QString() if not found
-   */
-  QString translateStrict( const char * msgid, const char * msgid_plural,
-                           unsigned long n ) const;
+  QString translateStrict(const char *msgctxt, const char *msgid) const;
 
   /**
    * Retrieves a proper plural form of translation for the specified English
@@ -207,8 +152,8 @@ public:
    *
    * @return The translated message, or QString() if not found
    */
-  QString translateStrict( const char * msgctxt, const char * msgid,
-                           const char * msgid_plural, unsigned long n ) const;
+  QString translateStrict(const char *msgctxt, const char *msgid,
+                          const char *msgid_plural, unsigned long n) const;
 
   friend QDebug operator<<(QDebug debug, const KCatalog &c);
 

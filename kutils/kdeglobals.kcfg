@@ -419,17 +419,11 @@
  </group>
 
  <group name="Locale" >
-  <entry key="Country" type="String" >
-   <label>What country</label>
-   <whatsthis>Used to determine how to display numbers, currency and time/date, for example</whatsthis>
-   <default>C</default>
-  </entry>
   <entry key="Language" type="String" >
-   <label>What language to use to display text</label>
+   <label>What language to use for displaying date, time and numbers</label>
   </entry>
-  <entry key="PositiveSign" type="String" >
-   <label>Character used for indicating positive numbers</label>
-   <whatsthis>Most countries have no character for this</whatsthis>
+  <entry key="Translations" type="StringList" >
+   <label>What language to use particularly for displaying text</label>
   </entry>
  </group>
  <group name="PreviewSettings" >

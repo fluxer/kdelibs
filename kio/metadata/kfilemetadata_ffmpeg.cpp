@@ -159,14 +159,11 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url)
         }
     }
     if (ffmpegcontext->duration > 0) {
-        const QString ffmpegduration = KGlobal::locale()->formatTime(
-            QTime().addSecs((ffmpegcontext->duration / AV_TIME_BASE)),
-            true, true
-        );
+        const int ffmpegduration = (ffmpegcontext->duration / AV_TIME_BASE);
         result.append(
             KFileMetaInfoItem(
                 QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration"),
-                ffmpegduration
+                KGlobal::locale()->formatDuration(ffmpegduration * 1000)
             )
         );
     }

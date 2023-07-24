@@ -28,8 +28,6 @@ KDECORE_UNIT_TESTS(
     cplusplustest
     ksortablelisttest
     kcharsetstest
-    # FIXME: utterly broken right now
-    # kcalendartest
     kmacroexpandertest
     kshelltest
     ktimezonestest
@@ -75,13 +73,6 @@ target_link_libraries(kdecore-kentrymaptest ${QT_QTTEST_LIBRARY} kdecore)
 set(klocaletest_SRCS klocaletest.cpp ../date/kdayperiod.cpp)
 kde4_add_test(kdecore-klocaletest ${klocaletest_SRCS})
 target_link_libraries(kdecore-klocaletest ${QT_QTTEST_LIBRARY} kdecore)
-
-########### kdatetimeformattertest ###############
-
-# compile KDateTimeFormatter and KDayPeriod into the test since it's not exported
-set(kdatetimeformattertest_SRCS kdatetimeformattertest.cpp ../date/kdatetimeformatter.cpp ../date/kdayperiod.cpp)
-kde4_add_test(kdecore-kdatetimeformattertest ${kdatetimeformattertest_SRCS})
-target_link_libraries(kdecore-kdatetimeformattertest ${QT_QTTEST_LIBRARY} kdecore)
 
 ########### kmimetypetest ###############
 

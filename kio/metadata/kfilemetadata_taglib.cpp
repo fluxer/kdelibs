@@ -121,10 +121,7 @@ QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url)
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration"),
-                    KGlobal::locale()->formatTime(
-                        QTime().addSecs(tagliblength),
-                        true, true
-                    )
+                    KGlobal::locale()->formatDuration(tagliblength * 1000)
                 )
             );
         }

@@ -66,7 +66,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
             m_data.append(KFileMetaInfoItem("kfileitem#size", KIO::convertSize(item.size())));
         }
         m_data.append(KFileMetaInfoItem("kfileitem#type", item.mimeComment()));
-        m_data.append(KFileMetaInfoItem("kfileitem#modified", KGlobal::locale()->formatDateTime(item.time(KFileItem::ModificationTime), KLocale::FancyLongDate)));
+        m_data.append(KFileMetaInfoItem("kfileitem#modified", KGlobal::locale()->formatDateTime(item.time(KFileItem::ModificationTime), QLocale::NarrowFormat)));
         m_data.append(KFileMetaInfoItem("kfileitem#owner", item.user()));
         m_data.append(KFileMetaInfoItem("kfileitem#permissions", item.permissionsString()));
         m_data.append(KFileMetaInfoItem("kfileitem#mimetype", item.mimetype()));

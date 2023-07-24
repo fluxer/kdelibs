@@ -42,7 +42,6 @@ install(
     KPasswdStore
     KHTTP
     KDNSSD
-    KCalendarSystem
     KCharMacroExpander
     KCharsets
     KCmdLineArgs
