@@ -76,7 +76,7 @@ public:
     /**
      * @return the native widget wrapped by this CalendarWidget
      */
-    KCalendarWidget *nativeWidget() const;
+    KCalendarWidget* nativeWidget() const;
 
 Q_SIGNALS:
     void clicked(QDate);

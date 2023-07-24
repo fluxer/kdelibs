@@ -54,6 +54,8 @@ CalendarWidget::CalendarWidget(QGraphicsWidget *parent)
     d->style = Plasma::Style::sharedStyle();
     native->setStyle(d->style.data());
 
+    d->initTheming();
+
     QToolButton* nativemonthbutton = native->findChild<QToolButton*>("qt_calendar_monthbutton");
     if (nativemonthbutton) {
         // FIXME: the popup menu outside color is not transparent
@@ -90,7 +92,7 @@ QString CalendarWidget::styleSheet()
     return widget()->styleSheet();
 }
 
-KCalendarWidget *CalendarWidget::nativeWidget() const
+KCalendarWidget* CalendarWidget::nativeWidget() const
 {
     return static_cast<KCalendarWidget*>(widget());
 }
