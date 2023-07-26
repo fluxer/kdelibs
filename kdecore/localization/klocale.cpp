@@ -483,13 +483,8 @@ void KLocale::translateRaw(const char *msg, QString *lang, QString *trans) const
 
 void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const
 {
-    if (lang) {
-        *lang = KLocale::defaultLanguage();
-    }
-    *trans = QString::fromUtf8(msg);
-    QString result;
     foreach (const KCatalog &catalog, d->catalogs) {
-        result = catalog.translateStrict(ctxt, msg);
+        QString result = catalog.translateStrict(ctxt, msg);
         if (!result.isEmpty()) {
             *trans = result;
             if (lang) {
@@ -498,6 +493,10 @@ void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QSt
             return;
         }
     }
+    if (lang) {
+        *lang = KLocale::defaultLanguage();
+    }
+    *trans = QString::fromUtf8(msg);
 }
 
 void KLocale::translateRaw(const char *singular, const char *plural, unsigned long n, QString *lang,
@@ -509,6 +508,16 @@ void KLocale::translateRaw(const char *singular, const char *plural, unsigned lo
 void KLocale::translateRaw(const char *ctxt, const char *singular, const char *plural,
                            unsigned long n, QString *lang, QString *trans) const
 {
+    foreach (const KCatalog &catalog, d->catalogs) {
+        QString result = catalog.translateStrict(ctxt, singular, plural, n);
+        if (!result.isEmpty()) {
+            *trans = result;
+            if (lang) {
+                *lang = catalog.language();
+            }
+            return;
+        }
+    }
     if (lang) {
         *lang = KLocale::defaultLanguage();
     }
@@ -519,17 +528,6 @@ void KLocale::translateRaw(const char *ctxt, const char *singular, const char *p
             *trans = QString::fromUtf8(singular);
         } else {
             *trans = QString::fromUtf8(plural);
-        }
-    }
-    QString result;
-    foreach (const KCatalog &catalog, d->catalogs) {
-        result = catalog.translateStrict(ctxt, singular, plural, n);
-        if (!result.isEmpty()) {
-            *trans = result;
-            if (lang) {
-                *lang = catalog.language();
-            }
-            return;
         }
     }
 }
@@ -544,7 +542,7 @@ QString KLocale::translateQt(const char *context, const char *sourceText) const
     foreach (const KCatalog &catalog, d->catalogs) {
         result = catalog.translateStrict(context, sourceText);
         if (!result.isEmpty()) {
-            return result;
+            break;
         }
     }
     return result;

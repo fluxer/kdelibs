@@ -395,7 +395,7 @@ public:
      *
      * @param catalog The catalog to add.
      */
-    void insertCatalog(const QString& catalog);
+    void insertCatalog(const QString &catalog);
 
     /**
      * Removes a catalog for translation lookup.
