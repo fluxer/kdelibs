@@ -9,6 +9,7 @@
 # KDE4_BOOL_TO_01
 # KDE4_OPTIONAL_ADD_SUBDIRECTORY
 # KDE4_OPTIONAL_FIND_PACKAGE
+# KDE4_TRANSLATE
 
 # Copyright (c) 2006-2010 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -315,7 +316,7 @@ macro(KDE4_OPTIONAL_FIND_PACKAGE _PACKAGE)
    endif ()
 endmacro(KDE4_OPTIONAL_FIND_PACKAGE)
 
-# KDE4_OPTIONAL_FIND_PACKAGE(<LANGUAGE> FILE1.po ... FILEN.po)
+# KDE4_TRANSLATE(<LANGUAGE> FILE1.po ... FILEN.po)
 #    This macro is will create and install translation files
 macro(KDE4_TRANSLATE _LANGUAGE)
     foreach(_pofile ${ARGN})
