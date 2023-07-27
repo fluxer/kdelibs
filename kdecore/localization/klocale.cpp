@@ -30,6 +30,14 @@
 #include <QCoreApplication>
 #include <qmath.h>
 
+enum KLocaleDuration
+{
+    KDurationMilisecond = 0,
+    KDurationSecond = 1,
+    KDurationMinute = 2,
+    KDurationHour = 3
+};
+
 static bool isDefaultLocale(const KLocale *locale)
 {
     return (locale->language() == KLocale::defaultLanguage());
@@ -43,6 +51,32 @@ static QStringList s_defaultCatalogs = QStringList()
     << QString::fromLatin1("solid_qt");
 
 static const QLatin1String s_localenamec = QLatin1String("C");
+
+static QString getDuration(const KLocaleDuration which, const int duration)
+{
+    switch (which) {
+        case KLocaleDuration::KDurationHour: {
+            return i18ncp("@item:intext", "1 hour", "%1 hours", duration);
+        }
+        case KLocaleDuration::KDurationMinute: {
+            return i18ncp("@item:intext", "1 minute", "%1 minutes", duration);
+        }
+        case KLocaleDuration::KDurationSecond: {
+            return i18ncp("@item:intext", "1 second", "%1 seconds", duration);
+        }
+        case KLocaleDuration::KDurationMilisecond: {
+            return i18ncp("@item:intext", "1 milisecond", "%1 miliseconds", duration);
+        }
+    }
+    Q_ASSERT(false);
+    return QString();
+}
+
+static QString getMultiDuration(const KLocaleDuration which, const int duration,
+                                const KLocaleDuration which2, const int duration2)
+{
+    return i18nc("@item:intext", "%1 and %2", getDuration(which, duration), getDuration(which2, duration2));
+}
 
 class KLocalePrivate
 {
@@ -379,28 +413,44 @@ QString KLocale::formatByteSize(double size) const
 
 QString KLocale::formatDuration(unsigned long mSec) const
 {
-    if (mSec >= 24*3600000) {
-        return i18nc(
-            "@item:intext %1 is a real number, e.g. 1.23 days", "%1 days",
-            formatNumber(mSec / (24 * 3600000.0), 2)
+    QTime durationtime;
+    durationtime = durationtime.addMSecs(mSec);
+    const int hours = durationtime.hour();
+    const int minutes = durationtime.minute();
+    const int seconds = durationtime.second();
+    const int miliseconds = durationtime.msec();
+
+    if (hours && minutes) {
+        return getMultiDuration(
+            KLocaleDuration::KDurationHour, hours,
+            KLocaleDuration::KDurationMinute, minutes
         );
-    } else if (mSec >= 3600000) {
-        return i18nc(
-            "@item:intext %1 is a real number, e.g. 1.23 hours", "%1 hours",
-            formatNumber(mSec / 3600000.0, 2)
+    } else if (hours) {
+        return getDuration(
+            KLocaleDuration::KDurationHour, hours
         );
-    } else if (mSec >= 60000) {
-        return i18nc(
-            "@item:intext %1 is a real number, e.g. 1.23 minutes", "%1 minutes",
-            formatNumber(mSec / 60000.0, 2)
+    } else if (minutes && seconds) {
+        return getMultiDuration(
+            KLocaleDuration::KDurationMinute, minutes,
+            KLocaleDuration::KDurationSecond, seconds
         );
-    } else if (mSec >= 1000) {
-        return i18nc(
-            "@item:intext %1 is a real number, e.g. 1.23 seconds", "%1 seconds",
-            formatNumber(mSec / 1000.0, 2)
+    } else if (minutes) {
+        return getDuration(
+            KLocaleDuration::KDurationMinute, minutes
+        );
+    } else if (seconds && miliseconds) {
+        return getMultiDuration(
+            KLocaleDuration::KDurationSecond, seconds,
+            KLocaleDuration::KDurationMilisecond, miliseconds
+        );
+    } else if (seconds) {
+        return getDuration(
+            KLocaleDuration::KDurationSecond, seconds
         );
     }
-    return i18ncp("@item:intext", "%1 millisecond", "%1 milliseconds", mSec);
+    return getDuration(
+        KLocaleDuration::KDurationMilisecond, miliseconds
+    );
 }
 
 QString KLocale::formatDate(const QDate &date, QLocale::FormatType format) const

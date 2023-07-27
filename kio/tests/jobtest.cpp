@@ -965,12 +965,12 @@ void JobTest::calculateRemainingSeconds()
     unsigned int seconds = KIO::calculateRemainingSeconds( 2 * 86400 - 60, 0, 1 );
     QCOMPARE( seconds, static_cast<unsigned int>( 2 * 86400 - 60 ) );
     QString text = KIO::convertSeconds( seconds );
-    QCOMPARE( text, i18n( "1 day 23:59:00" ) );
+    QCOMPARE( text, i18n( "23 hours and 59 minutes" ) );
 
     seconds = KIO::calculateRemainingSeconds( 520, 20, 10 );
     QCOMPARE( seconds, static_cast<unsigned int>( 50 ) );
     text = KIO::convertSeconds( seconds );
-    QCOMPARE( text, i18n( "00:00:50" ) );
+    QCOMPARE( text, i18n( "50 seconds" ) );
 }
 
 void JobTest::getInvalidUrl()
