@@ -160,7 +160,6 @@ install(
     KJobTrackerInterface
     KJobUiDelegate
     KKeySequenceWidget
-    KLanguageButton
     KLed
     KLineEdit
     KLinkItemSelectionModel

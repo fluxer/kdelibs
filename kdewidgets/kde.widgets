@@ -151,12 +151,6 @@ WhatsThis=A widget to pick a QKeySequence.
 IncludeFile=kkeysequencewidget.h
 Group=Buttons (KDE)
 
-[KLanguageButton]
-ToolTip=Language Button (KDE)
-WhatsThis=KDE's language button.
-IncludeFile=klanguagebutton.h
-Group=Buttons (KDE)
-
 [KLed]
 ToolTip=LED Widget (KDE)
 WhatsThis=A widget showing a light emitter diode

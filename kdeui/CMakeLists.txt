@@ -212,7 +212,6 @@ set(kdeui_LIB_SRCS
     widgets/khelpmenu.cpp
     widgets/khistorycombobox.cpp
     widgets/kkeysequencewidget.cpp
-    widgets/klanguagebutton.cpp
     widgets/kled.cpp
     widgets/klineedit.cpp
     widgets/kmainwindow.cpp
@@ -517,7 +516,6 @@ install(
     widgets/khelpmenu.h
     widgets/khistorycombobox.h
     widgets/kkeysequencewidget.h
-    widgets/klanguagebutton.h
     widgets/kled.h
     widgets/klineedit.h
     widgets/kmainwindow.h
