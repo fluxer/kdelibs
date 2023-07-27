@@ -18,7 +18,6 @@ ENDMACRO(KDECORE_EXECUTABLE_TESTS)
 ########### next target ###############
 
 KDECORE_UNIT_TESTS(
-    klocaletimeformattest
     klocalizedstringtest
     kmountpointtest
     kstandarddirstest
@@ -69,8 +68,7 @@ target_link_libraries(kdecore-kentrymaptest ${QT_QTTEST_LIBRARY} kdecore)
 
 ########### klocaletest ###############
 
-# compile into the test since it's not exported
-set(klocaletest_SRCS klocaletest.cpp ../date/kdayperiod.cpp)
+set(klocaletest_SRCS klocaletest.cpp)
 kde4_add_test(kdecore-klocaletest ${klocaletest_SRCS})
 target_link_libraries(kdecore-klocaletest ${QT_QTTEST_LIBRARY} kdecore)
 

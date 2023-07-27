@@ -53,8 +53,7 @@ private Q_SLOTS:
     void testLocale()
     {
         KGlobal::locale();
-        KGlobal::locale()->setDecimalPlaces(2);
-        QCOMPARE(KGlobal::locale()->formatNumber(70), QString("70.00"));
+        QCOMPARE(KGlobal::locale()->formatNumber(70, 2), QString("70.00"));
     }
 
     // Calling this directly aborts in KGlobal::locale(), this is intended.
