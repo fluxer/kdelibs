@@ -751,6 +751,9 @@ QStringList KLocale::allLanguagesList()
     foreach (const QLocale &locale, alllocales) {
         result.append(locale.name());
     }
+    // NOTE: the locale name does not include the script (it includes the ISO 639 language code
+    // and the ISO 3166 country code) so there are duplicates
+    result.removeDuplicates();
     return result;
 }
 
