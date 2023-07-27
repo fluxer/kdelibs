@@ -145,7 +145,7 @@ QString KCatalog::translate(const char *msgctxt, const char *msgid,
 #endif
 }
 
-QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) const
+QString KCatalog::translateStrict(const char *msgctxt, const char *msgid) const
 {
 #ifndef QT_NO_TRANSLATION
     return d->translator->translateStrict(msgctxt, msgid);

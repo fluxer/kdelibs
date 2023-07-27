@@ -107,7 +107,7 @@ public:
    *
    * @return The translated message, or @p msgid if not found
    */
-  QString translate( const char *msgctxt, const char *msgid) const;
+  QString translate(const char *msgctxt, const char *msgid) const;
 
   /**
    * Retrieves a proper plural form of translation for the specified English
