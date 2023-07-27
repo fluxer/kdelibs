@@ -26,6 +26,7 @@
 #include "kdebug.h"
 #include "common_helpers_p.h"
 
+#include <QMutex>
 #include <QFileInfo>
 #include <QCoreApplication>
 #include <qmath.h>
@@ -94,6 +95,7 @@ public:
     KLocalePrivate(const KLocalePrivate &other);
     KLocalePrivate(const QString &catalog, KSharedConfig::Ptr config);
     KLocalePrivate(const QString &catalog, const QString &language, KConfig *config);
+    ~KLocalePrivate();
 
     KLocale::BinaryUnitDialect binaryUnitDialect;
     QString dateFormats[3];
@@ -105,6 +107,7 @@ public:
     QStringList languagelist;
     QList<KCatalog> catalogs;
     KConfigGroup configgroup;
+    QMutex *mutex;
 };
 
 KLocalePrivate::KLocalePrivate(const KLocalePrivate &other)
@@ -117,14 +120,16 @@ KLocalePrivate::KLocalePrivate(const KLocalePrivate &other)
     catalog(other.catalog),
     languagelist(other.languagelist),
     catalogs(other.catalogs),
-    configgroup(other.configgroup)
+    configgroup(other.configgroup),
+    mutex(new QMutex())
 {
 }
 
 KLocalePrivate::KLocalePrivate(const QString &_catalog, KSharedConfig::Ptr config)
     : binaryUnitDialect(KLocale::IECBinaryDialect),
     measurementSystem(QLocale::MetricSystem),
-    catalog(_catalog)
+    catalog(_catalog),
+    mutex(new QMutex())
 {
     if (config) {
         configgroup = config->group("Locale");
@@ -149,7 +154,8 @@ KLocalePrivate::KLocalePrivate(const QString &_catalog, KSharedConfig::Ptr confi
 KLocalePrivate::KLocalePrivate(const QString &_catalog, const QString &language, KConfig *config)
     : binaryUnitDialect(KLocale::IECBinaryDialect),
     measurementSystem(QLocale::MetricSystem),
-    catalog(_catalog)
+    catalog(_catalog),
+    mutex(new QMutex())
 {
     locale = QLocale(language);
     // fallback to the default
@@ -162,6 +168,11 @@ KLocalePrivate::KLocalePrivate(const QString &_catalog, const QString &language,
     } else {
         configgroup = KGlobal::config()->group("Locale");
     }
+}
+
+KLocalePrivate::~KLocalePrivate()
+{
+    delete mutex;
 }
 
 KLocale::KLocale(const QString &catalog, KSharedConfig::Ptr config)
@@ -233,11 +244,6 @@ QString KLocale::formatNumber(double num, int precision) const
     return d->locale.toString(num, 'f', qMax(precision, 0));
 }
 
-QString KLocale::formatLong(long num) const
-{
-    return d->locale.toString(qlonglong(num));
-}
-
 QString KLocale::formatNumber(const QString &numStr, bool round, int precision) const
 {
     const double numdbl = d->locale.toDouble(numStr);
@@ -245,6 +251,11 @@ QString KLocale::formatNumber(const QString &numStr, bool round, int precision) 
         return QString::number(qRound(numdbl));
     }
     return QString::number(numdbl, 'f', qMax(precision, 0));
+}
+
+QString KLocale::formatLong(long num) const
+{
+    return d->locale.toString(qlonglong(num));
 }
 
 QString KLocale::formatByteSize(double size, int precision,
@@ -505,6 +516,7 @@ QTime KLocale::readTime(const QString &intstr, bool *ok) const
 
 void KLocale::insertCatalog(const QString &catalog)
 {
+    QMutexLocker locker(d->mutex);
     const QStringList cataloglanguages = languageList();
     foreach (const QString &cataloglanguage, cataloglanguages) {
         d->catalogs.append(KCatalog(catalog, cataloglanguage));
@@ -514,6 +526,7 @@ void KLocale::insertCatalog(const QString &catalog)
 
 void KLocale::removeCatalog(const QString &catalog)
 {
+    QMutexLocker locker(d->mutex);
     const QStringList cataloglanguages = languageList();
     QMutableListIterator catalogsiter(d->catalogs);
     while (catalogsiter.hasNext()) {
@@ -527,6 +540,7 @@ void KLocale::removeCatalog(const QString &catalog)
 
 void KLocale::setActiveCatalog(const QString &catalog)
 {
+    QMutexLocker locker(d->mutex);
     for (int i = 1; i < d->catalogs.size(); i++) {
         if (d->catalogs.at(i).name() == catalog) {
             d->catalogs.move(i, 0);
@@ -538,6 +552,7 @@ void KLocale::setActiveCatalog(const QString &catalog)
 
 void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const
 {
+    QMutexLocker locker(d->mutex);
     foreach (const KCatalog &catalog, d->catalogs) {
         QString result = catalog.translateStrict(ctxt, msg);
         if (!result.isEmpty()) {
@@ -557,6 +572,7 @@ void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QSt
 void KLocale::translateRaw(const char *ctxt, const char *singular, const char *plural,
                            unsigned long n, QString *lang, QString *trans) const
 {
+    QMutexLocker locker(d->mutex);
     foreach (const KCatalog &catalog, d->catalogs) {
         QString result = catalog.translateStrict(ctxt, singular, plural, n);
         if (!result.isEmpty()) {
@@ -583,6 +599,7 @@ void KLocale::translateRaw(const char *ctxt, const char *singular, const char *p
 
 QString KLocale::translateQt(const char *context, const char *sourceText) const
 {
+    QMutexLocker locker(d->mutex);
     // return empty according to Katie's expectations
     QString result;
     if (isDefaultLocale(this)) {
@@ -641,6 +658,7 @@ QString KLocale::countryCodeToName(const QString &country) const
 
 void KLocale::copyCatalogsTo(KLocale *locale)
 {
+    QMutexLocker locker(d->mutex);
     d->catalogs = locale->d->catalogs;
     KLocalizedString::notifyCatalogsUpdated(languageList());
 }
@@ -684,6 +702,8 @@ QString KLocale::removeAcceleratorMarker(const QString &label) const
 
 void KLocale::reparseConfiguration()
 {
+    QMutexLocker locker(d->mutex);
+
     d->configgroup.sync();
 
     d->binaryUnitDialect = static_cast<KLocale::BinaryUnitDialect>(
