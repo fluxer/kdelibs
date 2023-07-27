@@ -530,7 +530,7 @@ void KLocale::removeCatalog(const QString &catalog)
 {
     QMutexLocker locker(d->mutex);
     const QStringList cataloglanguages = languageList();
-    QMutableListIterator catalogsiter(d->catalogs);
+    QMutableListIterator<KCatalog> catalogsiter(d->catalogs);
     while (catalogsiter.hasNext()) {
         const QString cataloglanguage = catalogsiter.next().language();
         if (cataloglanguages.contains(cataloglanguage)) {
