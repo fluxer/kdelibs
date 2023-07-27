@@ -415,31 +415,13 @@ public:
     /**
      * @since 4.5
      *
-     * Raw translation from all loaded catalogs.
-     *
-     * Never use this directly to get message translations. See the i18n and ki18n family of calls
-     * related to KLocalizedString.
-     *
-     * @param msg the message. Must not be null or empty. Must be UTF-8 encoded.
-     * @param lang language in which the translation was found. If no translation was found,
-     *             KLocale::defaultLanguage() is reported. If null, the language is not reported.
-     * @param trans raw translation, or original if not found. If no translation was found,
-     *              original message is reported. If null, the translation is not reported.
-     *
-     * @see KLocalizedString
-     */
-    void translateRaw(const char *msg, QString *lang, QString *trans) const;
-
-    /**
-     * @since 4.5
-     *
      * Raw translation from all loaded catalogs, with given context. Context + message are used as
      * the lookup key in the catalog.
      *
      * Never use this directly to get message translations. See @p i18n and @p ki18n calls related
      * to KLocalizedString.
      *
-     * @param ctxt the context. Must not be null. Must be UTF-8 encoded.
+     * @param ctxt the context. May be null. Must be UTF-8 encoded.
      * @param msg the message. Must not be null or empty. Must be UTF-8 encoded.
      * @param lang language in which the translation was found. If no translation was found,
      *             KLocale::defaultLanguage() is reported. If null, the language is not reported.
@@ -453,35 +435,13 @@ public:
     /**
      * @since 4.5
      *
-     * Raw translation from all loaded catalogs, with given singular/plural form. Singular form is
-     * used as the lookup key in the catalog.
-     *
-     * Never use this directly to get message translations. See @p i18n and @p ki18n calls related
-     * to KLocalizedString.
-     *
-     * @param singular the singular form. Must not be null or empty. Must be UTF-8 encoded.
-     * @param plural the plural form. Must not be null. Must be UTF-8 encoded.
-     * @param n number on which the forms are decided.
-     * @param lang language in which the translation was found. If no translation was found,
-     *             KLocale::defaultLanguage() is reported. If null, the language is not reported.
-     * @param trans raw translation, or original if not found. If no translation was found,
-     *              original message is reported (either plural or singular, as determined by
-     *              @p n). If null, the translation is not reported.
-     *
-     * @see KLocalizedString
-     */
-    void translateRaw(const char *singular, const char *plural, unsigned long n,
-                      QString *lang, QString *trans) const;
-    /**
-     * @since 4.5
-     *
      * Raw translation from all loaded catalogs, with given context and singular/plural form.
      * Context + singular form is used as the lookup key in the catalog.
      *
      * Never use this directly to get message translations. See @p i18n and @p ki18n calls related
      * to KLocalizedString.
      *
-     * @param ctxt the context. Must not be null. Must be UTF-8 encoded.
+     * @param ctxt the context. May be null. Must be UTF-8 encoded.
      * @param singular the singular form. Must not be null or empty. Must be UTF-8 encoded.
      * @param plural the plural form. Must not be null. Must be UTF-8 encoded.
      * @param n number on which the forms are decided.

@@ -167,11 +167,11 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale) const
         if (!ctxt.isEmpty() && !plural.isEmpty()) {
             locale->translateRaw(ctxt, msg, plural, number, &lang, &rawtrans);
         } else if (!plural.isEmpty()) {
-            locale->translateRaw(msg, plural, number, &lang, &rawtrans);
+            locale->translateRaw(nullptr, msg, plural, number, &lang, &rawtrans);
         } else if (!ctxt.isEmpty()) {
             locale->translateRaw(ctxt, msg, &lang, &rawtrans);
         } else {
-            locale->translateRaw(msg, &lang, &rawtrans);
+            locale->translateRaw(nullptr, msg, &lang, &rawtrans);
         }
     } else {
         lang = KLocale::defaultLanguage();

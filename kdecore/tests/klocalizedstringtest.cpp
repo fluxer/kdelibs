@@ -229,7 +229,7 @@ void KLocalizedStringTest::translateQt()
 
     // So let's use translateRaw instead for the threaded test
     QString lang;
-    KGlobal::locale()->translateRaw("Landscape", &lang, &result);
+    KGlobal::locale()->translateRaw(nullptr, "Landscape", &lang, &result);
     QCOMPARE(lang, m_hasFrench ? QString("fr") : QString("en_US")); // it finds it in kdeqt.po
     QCOMPARE(result, m_hasFrench ? QString("Paysage") : QString("Landscape"));
 }

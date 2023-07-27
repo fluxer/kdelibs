@@ -526,11 +526,6 @@ void KLocale::setActiveCatalog(const QString &catalog)
     KLocalizedString::notifyCatalogsUpdated(languageList());
 }
 
-void KLocale::translateRaw(const char *msg, QString *lang, QString *trans) const
-{
-    translateRaw(nullptr, msg, lang, trans);
-}
-
 void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const
 {
     foreach (const KCatalog &catalog, d->catalogs) {
@@ -547,12 +542,6 @@ void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QSt
         *lang = KLocale::defaultLanguage();
     }
     *trans = QString::fromUtf8(msg);
-}
-
-void KLocale::translateRaw(const char *singular, const char *plural, unsigned long n, QString *lang,
-                           QString *trans) const
-{
-    translateRaw(nullptr, singular, plural, n, lang, trans);
 }
 
 void KLocale::translateRaw(const char *ctxt, const char *singular, const char *plural,
