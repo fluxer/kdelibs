@@ -81,7 +81,6 @@ install(
     KDEPrintDialog
     KCalendarWidget
     KDateTime
-    KDateValidator
     KDBusMenuExporter
     KDBusMenuImporter
     KDesktopFile
@@ -210,7 +209,6 @@ install(
     KPluginInfo
     KPluginLoader
     KPluginSelector
-    KPopupFrame
     KPowerManager
     KPreviewWidgetBase
     KProcess
@@ -458,7 +456,6 @@ install(
     Solid/Device
     Solid/DeviceInterface
     Solid/DeviceNotifier
-    Solid/GenericInterface
     Solid/NetworkInterface
     Solid/OpticalDisc
     Solid/OpticalDrive

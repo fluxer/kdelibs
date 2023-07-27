@@ -22,7 +22,7 @@ for root, dirs, files in os.walk(os.getcwd()):
         sfull = '%s/%s' % (root, sfile)
         with open(sfull, 'rb') as f:
             content = f.read()
-        for smatch in oregex.findall(content):
+        for smatch in oregex.findall(str(content)):
             if smatch in lexceptions:
                 continue
             if not os.path.basename(smatch) in lall:
