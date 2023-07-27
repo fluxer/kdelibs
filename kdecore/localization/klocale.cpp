@@ -38,19 +38,19 @@ enum KLocaleDuration
     KDurationHour = 3
 };
 
-static bool isDefaultLocale(const KLocale *locale)
-{
-    return (locale->language() == KLocale::defaultLanguage());
-}
-
 // catalogs from which each application can draw translations
-static QStringList s_defaultCatalogs = QStringList()
+static QStringList s_defaultcatalogs = QStringList()
     << QString::fromLatin1("kio4")
     << QString::fromLatin1("kdelibs4")
     << QString::fromLatin1("kdeqt")
     << QString::fromLatin1("solid_qt");
 
 static const QLatin1String s_localenamec = QLatin1String("C");
+
+static bool isDefaultLocale(const KLocale *locale)
+{
+    return (locale->language() == KLocale::defaultLanguage());
+}
 
 static QString getDuration(const KLocaleDuration which, const int duration)
 {
@@ -76,6 +76,16 @@ static QString getMultiDuration(const KLocaleDuration which, const int duration,
                                 const KLocaleDuration which2, const int duration2)
 {
     return i18nc("@item:intext", "%1 and %2", getDuration(which, duration), getDuration(which2, duration2));
+}
+
+static QString getLanguage(const KLocale *locale)
+{
+    // NOTE: QLocale::name() always return "foo_BAR", unless the locale is "C" but KLocale uses
+    // KLocale::defaultLanguage() instead
+    const QString language = locale->language();
+    const int underscoreindex = language.indexOf(QLatin1Char('_'));
+    Q_ASSERT(underscoreindex > 1);
+    return language.mid(0, underscoreindex);
 }
 
 class KLocalePrivate
@@ -593,12 +603,14 @@ QString KLocale::languageCodeToName(const QString &language) const
     const QString entryfile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
+        entryconfig.setLocale(getLanguage(this));
         KConfigGroup entrygroup(&entryconfig, "KCM Locale");
         result = entrygroup.readEntry("Name");
     }
     if (result.isEmpty()) {
         // in case the language is not installed
         KConfig languagesconfig(QLatin1String("all_languages"), KConfig::NoGlobals, "locale");
+        languagesconfig.setLocale(getLanguage(this));
         KConfigGroup languagegroup(&languagesconfig, language);
         result = languagegroup.readEntry("Name");
     }
@@ -616,6 +628,7 @@ QString KLocale::countryCodeToName(const QString &country) const
     const QString entryfile = KStandardDirs::locate("locale", QString::fromLatin1("l10n/") + country.toLower() + QLatin1String("/entry.desktop"));
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
+        entryconfig.setLocale(getLanguage(this));
         KConfigGroup entrygroup(&entryconfig, "KCM Locale");
         result = entrygroup.readEntry("Name");
     }
@@ -717,7 +730,7 @@ void KLocale::reparseConfiguration()
     d->catalogs.clear();
     foreach (const QString &cataloglanguage, cataloglanguages) {
         d->catalogs.append(KCatalog(d->catalog, cataloglanguage));
-        foreach (const QString &defaultcatalog, s_defaultCatalogs) {
+        foreach (const QString &defaultcatalog, s_defaultcatalogs) {
             d->catalogs.append(KCatalog(defaultcatalog, cataloglanguage));
         }
     }
@@ -772,7 +785,7 @@ bool KLocale::isApplicationTranslatedInto(const QString &lang)
         return true;
     }
     // check for partial translations from one of the default catalogs
-    foreach (const QString &defaultcatalog, s_defaultCatalogs) {
+    foreach (const QString &defaultcatalog, s_defaultcatalogs) {
         if (!KCatalog::catalogLocaleDir(defaultcatalog, lang).isEmpty()) {
             return true;
         }
