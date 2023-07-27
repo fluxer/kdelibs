@@ -31,6 +31,8 @@
 #include <QCoreApplication>
 #include <qmath.h>
 
+#include <array>
+
 enum KLocaleDuration
 {
     KDurationMilisecond = 0,
@@ -98,9 +100,9 @@ public:
     ~KLocalePrivate();
 
     KLocale::BinaryUnitDialect binaryUnitDialect;
-    QString dateFormats[3];
-    QString timeFormats[3];
-    QString dateTimeFormats[3];
+    std::array<QString, 3> dateFormats;
+    std::array<QString, 3> timeFormats;
+    std::array<QString, 3> dateTimeFormats;
     QLocale::MeasurementSystem measurementSystem;
     QLocale locale;
     QString catalog;
