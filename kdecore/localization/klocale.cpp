@@ -33,6 +33,8 @@
 
 #include <array>
 
+// #define KLOCALE_DUMP
+
 enum KLocaleDuration
 {
     KDurationMilisecond = 0,
@@ -112,6 +114,18 @@ public:
     KConfigGroup configgroup;
     QMutex *mutex;
 };
+
+#ifdef KLOCALE_DUMP
+static void dumpKLocaleCatalogs(const KLocalePrivate *locale)
+{
+    qDebug() << "Catalogs for" << locale->locale.name() << locale->catalogs.size();
+    foreach (const KCatalog &catalog, locale->catalogs) {
+        qDebug() << "Catalog for" << locale->locale.name();
+        qDebug() << "    -> name =" << catalog.name();
+        qDebug() << "    -> language =" << catalog.language();
+    }
+}
+#endif
 
 KLocalePrivate::KLocalePrivate(const KLocalePrivate &other)
     : binaryUnitDialect(other.binaryUnitDialect),
@@ -528,11 +542,16 @@ void KLocale::insertCatalog(const QString &catalog)
     QMutexLocker locker(d->mutex);
     const QStringList cataloglanguages = languageList();
     foreach (const QString &cataloglanguage, cataloglanguages) {
-        d->catalogs.append(KCatalog(catalog, cataloglanguage));
-        if (!d->manualcatalogs.contains(catalog)) {
-            d->manualcatalogs.append(catalog);
+        if (KCatalog::hasCatalog(catalog, cataloglanguage)) {
+            d->catalogs.append(KCatalog(catalog, cataloglanguage));
+            if (!d->manualcatalogs.contains(catalog)) {
+                d->manualcatalogs.append(catalog);
+            }
         }
     }
+#ifdef KLOCALE_DUMP
+    dumpKLocaleCatalogs(d);
+#endif
     KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
 }
 
@@ -542,12 +561,15 @@ void KLocale::removeCatalog(const QString &catalog)
     const QStringList cataloglanguages = languageList();
     QMutableListIterator<KCatalog> catalogsiter(d->catalogs);
     while (catalogsiter.hasNext()) {
-        const QString cataloglanguage = catalogsiter.next().language();
-        if (cataloglanguages.contains(cataloglanguage)) {
+        const QString catalogname = catalogsiter.next().name();
+        if (catalogname == catalog) {
             catalogsiter.remove();
             d->manualcatalogs.removeAll(catalog);
         }
     }
+#ifdef KLOCALE_DUMP
+    dumpKLocaleCatalogs(d);
+#endif
     KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
 }
 
@@ -746,13 +768,9 @@ void KLocale::reparseConfiguration()
     // the locale name itself (e.g. "en_US")
     const QString localename = d->locale.name();
     d->languagelist.append(localename);
-    // and the language only (e.g. "en")
-    QString language;
-    QString country;
-    QString modifier;
-    QString charset;
-    KLocale::splitLocale(localename, language, country, modifier, charset);
-    d->languagelist.append(language);
+    // the language only (e.g. "en")
+    d->languagelist.append(getLanguage(this));
+    // default as fallback, unless the locale language is the default
     if (localename != KLocale::defaultLanguage()) {
         d->languagelist.append(KLocale::defaultLanguage());
     }
@@ -761,14 +779,23 @@ void KLocale::reparseConfiguration()
     const QStringList cataloglanguages = languageList();
     d->catalogs.clear();
     foreach (const QString &cataloglanguage, cataloglanguages) {
-        d->catalogs.append(KCatalog(d->catalog, cataloglanguage));
+        if (KCatalog::hasCatalog(d->catalog, cataloglanguage)) {
+            d->catalogs.append(KCatalog(d->catalog, cataloglanguage));
+        }
         foreach (const QString &defaultcatalog, s_defaultcatalogs) {
-            d->catalogs.append(KCatalog(defaultcatalog, cataloglanguage));
+            if (KCatalog::hasCatalog(defaultcatalog, cataloglanguage)) {
+                d->catalogs.append(KCatalog(defaultcatalog, cataloglanguage));
+            }
         }
         foreach (const QString &manualcatalog, d->manualcatalogs) {
+            // assume it has already been checked for by KLocale::insertCatalog()
             d->catalogs.append(KCatalog(manualcatalog, cataloglanguage));
         }
     }
+
+#ifdef KLOCALE_DUMP
+    dumpKLocaleCatalogs(d);
+#endif
 
     KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
 }
@@ -816,12 +843,12 @@ bool KLocale::isApplicationTranslatedInto(const QString &lang)
         return true;
     }
     // check if the application itself was translated
-    if (!KCatalog::catalogLocaleDir(QCoreApplication::applicationName(), lang).isEmpty()) {
+    if (KCatalog::hasCatalog(QCoreApplication::applicationName(), lang)) {
         return true;
     }
     // check for partial translations from one of the default catalogs
     foreach (const QString &defaultcatalog, s_defaultcatalogs) {
-        if (!KCatalog::catalogLocaleDir(defaultcatalog, lang).isEmpty()) {
+        if (KCatalog::hasCatalog(defaultcatalog, lang)) {
             return true;
         }
     }

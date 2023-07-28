@@ -60,14 +60,14 @@ public:
   ~KCatalog();
 
   /**
-   * Finds the locale directory for the given catalog in given language.
+   * Checks the locale directory for the given catalog in given language.
    *
    * @param name The name of the catalog
    * @param language The language of this catalog
    *
-   * @return The locale directory if found, QString() otherwise.
+   * @return true if catalog was found, false otherwise.
    */
-  static QString catalogLocaleDir(const QString &name, const QString &language);
+  static bool hasCatalog(const QString &name, const QString &language);
 
 #ifndef QT_NO_TRANSLATION
   /**
