@@ -205,7 +205,7 @@ void KLocalizedStringTest::correctButIllFormed()
     );
 }
 
-void KLocalizedStringTest::wrongSubs ()
+void KLocalizedStringTest::wrongSubs()
 {
 #ifndef NDEBUG
     // Too many arguments.
