@@ -58,7 +58,7 @@ public:
      *
      * The constructor looks for an entry Language in the group Locale in the configuration file.
      * If not specified in the configuration file or the one specified in the configuration fiel
-     * is not valid the environment variables LC_ALL, LC_MESSAGES and LANG will be checked (in that
+     * is not valid the environment variables LC_ALL, LC_CTYPE and LANG will be checked (in that
      * order). If KLocale is not able to use any of the specified languages, the default language
      * (en_US) will be used.
      *
