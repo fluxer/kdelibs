@@ -78,7 +78,6 @@ install(
     configinterface.h
     containerinterface.h
     annotationinterface.h
-    loadsavefiltercheckplugin.h
     highlightinterface.h
     modeinterface.h
     movinginterface.h
@@ -100,6 +99,5 @@ install(
     FILES
     ktexteditor.desktop
     ktexteditorplugin.desktop
-    ktexteditor_loadsavefiltercheckplugin.desktop
     DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )

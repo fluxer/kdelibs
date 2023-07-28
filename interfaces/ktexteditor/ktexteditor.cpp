@@ -53,9 +53,6 @@
 #include "annotationinterface.h"
 #include "moc_annotationinterface.cpp"
 
-#include "loadsavefiltercheckplugin.h"
-#include "moc_loadsavefiltercheckplugin.cpp"
-
 #include "modeinterface.h"
 
 #include <kparts/factory.h>
@@ -289,15 +286,6 @@ VariableInterface::VariableInterface()
 }
 
 VariableInterface::~VariableInterface()
-{
-}
-
-LoadSaveFilterCheckPlugin::LoadSaveFilterCheckPlugin(QObject *parent):
-    QObject(parent)
-{
-}
-
-LoadSaveFilterCheckPlugin::~LoadSaveFilterCheckPlugin()
 {
 }
 
