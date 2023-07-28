@@ -52,12 +52,12 @@ static QStringList s_defaultcatalogs = QStringList()
 
 static const QLatin1String s_localenamec = QLatin1String("C");
 
-static bool isDefaultLocale(const KLocale *locale)
+static bool kIsDefaultLocale(const KLocale *locale)
 {
     return (locale->language() == KLocale::defaultLanguage());
 }
 
-static QString getDuration(const KLocaleDuration which, const int duration)
+static QString kGetDuration(const KLocaleDuration which, const int duration)
 {
     switch (which) {
         case KLocaleDuration::KDurationHour: {
@@ -77,13 +77,13 @@ static QString getDuration(const KLocaleDuration which, const int duration)
     return QString();
 }
 
-static QString getMultiDuration(const KLocaleDuration which, const int duration,
+static QString kGetMultiDuration(const KLocaleDuration which, const int duration,
                                 const KLocaleDuration which2, const int duration2)
 {
-    return i18nc("@item:intext", "%1 and %2", getDuration(which, duration), getDuration(which2, duration2));
+    return i18nc("@item:intext", "%1 and %2", kGetDuration(which, duration), kGetDuration(which2, duration2));
 }
 
-static QString getLanguage(const QString &language)
+static QString kGetLanguage(const QString &language)
 {
     // NOTE: QLocale::name() always return "foo_BAR", unless the locale is "C" but KLocale uses
     // KLocale::defaultLanguage() instead
@@ -113,6 +113,20 @@ public:
     KConfigGroup configgroup;
     QMutex *mutex;
 };
+
+static bool kInsertCatalog(KLocalePrivate *locale, const QString &catalogname, const QString &cataloglanguage)
+{
+    foreach (const KCatalog &catalog, locale->catalogs) {
+        if (catalog.name() == catalogname && catalog.language() == cataloglanguage) {
+            return false;
+        }
+    }
+    if (KCatalog::hasCatalog(catalogname, cataloglanguage)) {
+        locale->catalogs.append(KCatalog(catalogname, cataloglanguage));
+        return true;
+    }
+    return false;
+}
 
 #ifdef KLOCALE_DUMP
 static void dumpKLocaleCatalogs(const KLocalePrivate *locale)
@@ -464,34 +478,34 @@ QString KLocale::formatDuration(unsigned long mSec) const
     const int miliseconds = durationtime.msec();
 
     if (hours && minutes) {
-        return getMultiDuration(
+        return kGetMultiDuration(
             KLocaleDuration::KDurationHour, hours,
             KLocaleDuration::KDurationMinute, minutes
         );
     } else if (hours) {
-        return getDuration(
+        return kGetDuration(
             KLocaleDuration::KDurationHour, hours
         );
     } else if (minutes && seconds) {
-        return getMultiDuration(
+        return kGetMultiDuration(
             KLocaleDuration::KDurationMinute, minutes,
             KLocaleDuration::KDurationSecond, seconds
         );
     } else if (minutes) {
-        return getDuration(
+        return kGetDuration(
             KLocaleDuration::KDurationMinute, minutes
         );
     } else if (seconds && miliseconds) {
-        return getMultiDuration(
+        return kGetMultiDuration(
             KLocaleDuration::KDurationSecond, seconds,
             KLocaleDuration::KDurationMilisecond, miliseconds
         );
     } else if (seconds) {
-        return getDuration(
+        return kGetDuration(
             KLocaleDuration::KDurationSecond, seconds
         );
     }
-    return getDuration(
+    return kGetDuration(
         KLocaleDuration::KDurationMilisecond, miliseconds
     );
 }
@@ -541,8 +555,7 @@ void KLocale::insertCatalog(const QString &catalog)
     QMutexLocker locker(d->mutex);
     const QStringList cataloglanguages = languageList();
     foreach (const QString &cataloglanguage, cataloglanguages) {
-        if (KCatalog::hasCatalog(catalog, cataloglanguage)) {
-            d->catalogs.append(KCatalog(catalog, cataloglanguage));
+        if (kInsertCatalog(d, catalog, cataloglanguage)) {
             if (!d->manualcatalogs.contains(catalog)) {
                 d->manualcatalogs.append(catalog);
             }
@@ -635,7 +648,7 @@ QString KLocale::translateQt(const char *context, const char *sourceText) const
 {
     // return empty according to Katie's expectations
     QString result;
-    if (isDefaultLocale(this)) {
+    if (kIsDefaultLocale(this)) {
         return result;
     }
     QMutexLocker locker(d->mutex);
@@ -652,7 +665,7 @@ QString KLocale::languageCodeToName(const QString &language) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
-    const QString localelanguage = getLanguage(this->language());
+    const QString localelanguage = kGetLanguage(this->language());
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
         entryconfig.setLocale(localelanguage);
@@ -678,7 +691,7 @@ QString KLocale::countryCodeToName(const QString &country) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", QString::fromLatin1("l10n/") + country.toLower() + QLatin1String("/entry.desktop"));
-    const QString localelanguage = getLanguage(this->language());
+    const QString localelanguage = kGetLanguage(this->language());
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
         entryconfig.setLocale(localelanguage);
@@ -703,7 +716,7 @@ void KLocale::copyCatalogsTo(KLocale *locale)
 QString KLocale::localizedFilePath(const QString &filePath) const
 {
     // Stop here if the default language is primary.
-    if (isDefaultLocale(this)) {
+    if (kIsDefaultLocale(this)) {
         return filePath;
     }
 
@@ -771,7 +784,7 @@ void KLocale::reparseConfiguration()
     const QString localename = d->locale.name();
     d->languagelist.append(localename);
     // the language only (e.g. "en")
-    d->languagelist.append(getLanguage(localename));
+    d->languagelist.append(kGetLanguage(localename));
     // default as fallback, unless the locale language is the default
     if (localename != KLocale::defaultLanguage()) {
         d->languagelist.append(KLocale::defaultLanguage());
@@ -781,17 +794,12 @@ void KLocale::reparseConfiguration()
     const QStringList cataloglanguages = languageList();
     d->catalogs.clear();
     foreach (const QString &cataloglanguage, cataloglanguages) {
-        if (KCatalog::hasCatalog(d->catalog, cataloglanguage)) {
-            d->catalogs.append(KCatalog(d->catalog, cataloglanguage));
-        }
+        kInsertCatalog(d, d->catalog, cataloglanguage);
         foreach (const QString &defaultcatalog, s_defaultcatalogs) {
-            if (KCatalog::hasCatalog(defaultcatalog, cataloglanguage)) {
-                d->catalogs.append(KCatalog(defaultcatalog, cataloglanguage));
-            }
+            kInsertCatalog(d, defaultcatalog, cataloglanguage);
         }
         foreach (const QString &manualcatalog, d->manualcatalogs) {
-            // assume it has already been checked for by KLocale::insertCatalog()
-            d->catalogs.append(KCatalog(manualcatalog, cataloglanguage));
+            kInsertCatalog(d, manualcatalog, cataloglanguage);
         }
     }
 
