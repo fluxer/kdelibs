@@ -243,16 +243,21 @@ QLocale::MeasurementSystem KLocale::measureSystem() const
 
 QString KLocale::formatNumber(double num, int precision) const
 {
-    return d->locale.toString(num, 'f', qMax(precision, 0));
+    if (precision <= 0) {
+        // NOTE: kcalc for example passes 0 for precision but the constants should no be round
+        // otherwise the whole meaning of Pi (3.14) being non-rounded number is lost so instead of
+        // forcing a number rounding the precision is automatically chosen here
+        return d->locale.toString(num, 'f', qRound(num) == num ? 0 : 2);
+    }
+    return d->locale.toString(num, 'f', precision);
 }
 
 QString KLocale::formatNumber(const QString &numStr, bool round, int precision) const
 {
-    const double numdbl = d->locale.toDouble(numStr);
     if (round) {
-        return QString::number(qRound(numdbl));
+        return formatNumber(qRound(numStr.toDouble()), 0);
     }
-    return QString::number(numdbl, 'f', qMax(precision, 0));
+    return formatNumber(numStr.toDouble(), precision);
 }
 
 QString KLocale::formatLong(long num) const

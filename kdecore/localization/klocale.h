@@ -228,8 +228,8 @@ public:
      * equivalent.
      *
      * Given 123456.78F, returns "123,456.78" (for some European country). If precision isn't
-     * specified or is < 0, then the precision is zero. This function is a wrapper that is provided
-     * for convenience.
+     * specified or is < 0, then the precision is automatically chosen based on the number. This
+     * function is a wrapper that is provided for convenience.
      *
      * @param num The number to convert
      * @param precision Number of decimal places used.
