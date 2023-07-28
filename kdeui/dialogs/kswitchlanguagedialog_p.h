@@ -21,6 +21,8 @@
 
 #include "kdialog.h"
 #include "keditlistwidget.h"
+#include "kcombobox.h"
+#include "klineedit.h"
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -43,12 +45,17 @@ public:
 private Q_SLOTS:
     void slotOk();
     void slotDefault();
+    void slotAdded(const QString &languagetext);
+    void slotRemoved(const QString &languagetext);
 
 private:
     QWidget* m_dialogwidget;
     QVBoxLayout* m_dialoglayout;
     QLabel* m_languagelabel;
     KEditListWidget* m_languageedit;
+    KComboBox* m_languagebox;
+    KLineEdit* m_languageline;
+    QMap<QString, QString> m_languagesmap;
 };
 
 #endif // KSWITCHLANGUAGEDIALOG_H
