@@ -100,7 +100,6 @@ KSwitchLanguageDialog::KSwitchLanguageDialog(QWidget *parent)
         }
         translationslist.append(translationstext);
     }
-    translationslist.sort();
 
     m_languageedit->insertStringList(translationslist);
     m_languageline->setReadOnly(true);

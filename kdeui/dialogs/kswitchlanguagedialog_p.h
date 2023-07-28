@@ -45,8 +45,6 @@ public:
 private Q_SLOTS:
     void slotOk();
     void slotDefault();
-    void slotAdded(const QString &languagetext);
-    void slotRemoved(const QString &languagetext);
 
 private:
     QWidget* m_dialogwidget;
