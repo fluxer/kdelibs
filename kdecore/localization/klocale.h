@@ -343,7 +343,7 @@ public:
      * Returns a string formatted to the current locale's conventions regarding dates and times.
      *
      * @param datetime The date and time to be formatted.
-     * @param format category of time format to use
+     * @param format category of date and time format to use
      *
      * @return The date and time as a string
      */
@@ -366,12 +366,11 @@ public:
      * The bool pointed by ok will be invalid if the date entered was not valid.
      *
      * @param str the string we want to convert.
-     * @param ok the boolean that is set to false if it's not a valid date. If @p ok is null, it
-     *        will be ignored
+     * @param format category of date format to use
      *
      * @return The string converted to a QDate
      */
-    QDate readDate(const QString &str, bool *ok = nullptr) const;
+    QDate readDate(const QString &str, QLocale::FormatType format = QLocale::ShortFormat) const;
 
     /**
      * Converts a localized time string to a QTime.
@@ -379,12 +378,11 @@ public:
      * The bool pointed to by @p ok will be set to false if the time entered was not valid.
      *
      * @param str the string we want to convert.
-     * @param ok the boolean that is set to false if it's not a valid time. If @p ok is null, it
-     *        will be ignored
+     * @param format category of time format to use
      *
      * @return The string converted to a QTime
      */
-    QTime readTime(const QString &str, bool *ok = nullptr) const;
+    QTime readTime(const QString &str, QLocale::FormatType format = QLocale::ShortFormat) const;
 
     /**
      * Adds another catalog to search for translation lookup. This function is useful for extern

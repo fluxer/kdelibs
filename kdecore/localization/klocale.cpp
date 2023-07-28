@@ -533,24 +533,14 @@ double KLocale::readNumber(const QString &str, bool *ok) const
     return d->locale.toDouble(str, ok);
 }
 
-QDate KLocale::readDate(const QString &intstr, bool *ok) const
+QDate KLocale::readDate(const QString &intstr, QLocale::FormatType format) const
 {
-    if (!ok) {
-        return d->locale.toDate(intstr);
-    }
-    const QDate result = d->locale.toDate(intstr);
-    *ok = result.isValid();
-    return result;
+    return d->locale.toDate(intstr, d->dateFormats[format]);
 }
 
-QTime KLocale::readTime(const QString &intstr, bool *ok) const
+QTime KLocale::readTime(const QString &intstr, QLocale::FormatType format) const
 {
-    if (!ok) {
-        return d->locale.toTime(intstr);
-    }
-    const QTime result = d->locale.toTime(intstr);
-    *ok = result.isValid();
-    return result;
+    return d->locale.toTime(intstr, d->timeFormats[format]);
 }
 
 void KLocale::insertCatalog(const QString &catalog)
