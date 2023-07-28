@@ -83,11 +83,10 @@ static QString getMultiDuration(const KLocaleDuration which, const int duration,
     return i18nc("@item:intext", "%1 and %2", getDuration(which, duration), getDuration(which2, duration2));
 }
 
-static QString getLanguage(const KLocale *locale)
+static QString getLanguage(const QString &language)
 {
     // NOTE: QLocale::name() always return "foo_BAR", unless the locale is "C" but KLocale uses
     // KLocale::defaultLanguage() instead
-    const QString language = locale->language();
     const int underscoreindex = language.indexOf(QLatin1Char('_'));
     Q_ASSERT(underscoreindex > 1);
     return language.mid(0, underscoreindex);
@@ -653,16 +652,17 @@ QString KLocale::languageCodeToName(const QString &language) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
+    const QString localelanguage = getLanguage(this->language());
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
-        entryconfig.setLocale(getLanguage(this));
+        entryconfig.setLocale(localelanguage);
         KConfigGroup entrygroup(&entryconfig, "KCM Locale");
         result = entrygroup.readEntry("Name");
     }
     if (result.isEmpty()) {
         // in case the language is not installed
         KConfig languagesconfig(QLatin1String("all_languages"), KConfig::NoGlobals, "locale");
-        languagesconfig.setLocale(getLanguage(this));
+        languagesconfig.setLocale(localelanguage);
         KConfigGroup languagegroup(&languagesconfig, language);
         result = languagegroup.readEntry("Name");
     }
@@ -678,9 +678,10 @@ QString KLocale::countryCodeToName(const QString &country) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", QString::fromLatin1("l10n/") + country.toLower() + QLatin1String("/entry.desktop"));
+    const QString localelanguage = getLanguage(this->language());
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
-        entryconfig.setLocale(getLanguage(this));
+        entryconfig.setLocale(localelanguage);
         KConfigGroup entrygroup(&entryconfig, "KCM Locale");
         result = entrygroup.readEntry("Name");
     }
@@ -694,6 +695,7 @@ QString KLocale::countryCodeToName(const QString &country) const
 void KLocale::copyCatalogsTo(KLocale *locale)
 {
     QMutexLocker locker(d->mutex);
+    d->manualcatalogs = locale->d->manualcatalogs;
     d->catalogs = locale->d->catalogs;
     KLocalizedString::notifyCatalogsUpdated(languageList());
 }
@@ -769,7 +771,7 @@ void KLocale::reparseConfiguration()
     const QString localename = d->locale.name();
     d->languagelist.append(localename);
     // the language only (e.g. "en")
-    d->languagelist.append(getLanguage(this));
+    d->languagelist.append(getLanguage(localename));
     // default as fallback, unless the locale language is the default
     if (localename != KLocale::defaultLanguage()) {
         d->languagelist.append(KLocale::defaultLanguage());

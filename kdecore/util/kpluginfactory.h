@@ -381,8 +381,6 @@ protected:
         registerPlugin(keyword, &T::staticMetaObject, instanceFunction);
     }
 
-    virtual void setupTranslations();
-
     KPluginFactoryPrivate *const d_ptr;
 
     /**

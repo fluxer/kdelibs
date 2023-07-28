@@ -61,11 +61,6 @@ KPluginFactory::KPluginFactory(KPluginFactoryPrivate &d, QObject *parent)
 KPluginFactory::~KPluginFactory()
 {
     Q_D(KPluginFactory);
-
-    if (d->catalogInitialized && d->componentData.isValid()) {
-        KGlobal::locale()->removeCatalog(d->componentData.catalogName());
-    }
-
     delete d_ptr;
 }
 
@@ -123,12 +118,6 @@ QObject *KPluginFactory::create(const char *iface, QWidget *parentWidget, QObjec
 
     QObject *obj = 0;
 
-    if (!d->catalogInitialized) {
-        d->catalogInitialized = true;
-        setupTranslations();
-    }
-
-
     const QList<KPluginFactoryPrivate::Plugin> candidates(d->createInstanceHash.values(keyword));
     // for !keyword.isEmpty() candidates.count() is 0 or 1
 
@@ -148,16 +137,6 @@ QObject *KPluginFactory::create(const char *iface, QWidget *parentWidget, QObjec
         emit objectCreated(obj);
     }
     return obj;
-}
-
-void KPluginFactory::setupTranslations()
-{
-    Q_D(KPluginFactory);
-
-    if (!d->componentData.isValid())
-        return;
-
-    KGlobal::locale()->insertCatalog(d->componentData.catalogName());
 }
 
 void KPluginFactory::setComponentData(const KComponentData &kcd)
