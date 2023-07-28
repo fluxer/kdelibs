@@ -33,7 +33,7 @@
 #include <QtCore/qprocess.h>
 #include <QtCore/qthread.h>
 
-#include <locale.h>
+#include <stdlib.h>
 #include <future>
 #include <chrono>
 
@@ -44,11 +44,12 @@ void KServiceTest::initTestCase()
     // A non-C locale is necessary for some tests.
     // This locale must have the following properties:
     //   - some character other than dot as decimal separator
-    // If it cannot be set, locale-dependent tests are skipped.
-    setlocale(LC_ALL, "fr_FR.utf8");
-    m_hasNonCLocale = (setlocale(LC_ALL, NULL) == QByteArray("fr_FR.utf8"));
-    if (!m_hasNonCLocale) {
-        kDebug() << "Setting locale to fr_FR.utf8 failed";
+    m_hasNonCLocale = !KStandardDirs::locate("locale", "fr/kdelibs4.tr").isEmpty();
+    if (m_hasNonCLocale) {
+        kDebug() << "Setting locale to fr_FR.UTF-8";
+        ::setenv("LC_ALL", "fr_FR.UTF-8", 1);
+    } else {
+        kWarning() << "fr_FR.UTF-8 locale no available";
     }
 
     m_hasKde4Konsole = false;

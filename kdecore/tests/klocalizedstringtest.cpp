@@ -37,6 +37,7 @@ void KLocalizedStringTest::initTestCase ()
 {
     m_hasFrench = !KStandardDirs::locate("locale", "fr/kdelibs4.tr").isEmpty();
     if (m_hasFrench) {
+        kDebug() << "Setting locale to fr_FR.UTF-8";
         ::setenv("LC_ALL", "fr_FR.UTF-8", 1);
     }
 
