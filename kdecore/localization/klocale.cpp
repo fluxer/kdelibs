@@ -51,6 +51,7 @@ static QStringList s_defaultcatalogs = QStringList()
     << QString::fromLatin1("solid_qt");
 
 static const QLatin1String s_localenamec = QLatin1String("C");
+static const QLatin1Char s_localeexponentc = QLatin1Char('e');
 
 static QString kGetDuration(const KLocaleDuration which, const int duration)
 {
@@ -286,6 +287,10 @@ QString KLocale::formatNumber(double num, int precision) const
 
 QString KLocale::formatNumber(const QString &numStr, bool round, int precision) const
 {
+    if (numStr.indexOf(s_localeexponentc) > 0) {
+        // special case for number with exponent - no rounding but convert it to the locale
+        return d->locale.toString(numStr.toDouble());
+    }
     if (round) {
         return formatNumber(qRound(numStr.toDouble()), 0);
     }
