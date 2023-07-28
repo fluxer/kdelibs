@@ -107,6 +107,7 @@ public:
     QLocale locale;
     QString catalog;
     QStringList languagelist;
+    QStringList manualcatalogs;
     QList<KCatalog> catalogs;
     KConfigGroup configgroup;
     QMutex *mutex;
@@ -121,6 +122,7 @@ KLocalePrivate::KLocalePrivate(const KLocalePrivate &other)
     locale(other.locale),
     catalog(other.catalog),
     languagelist(other.languagelist),
+    manualcatalogs(other.manualcatalogs),
     catalogs(other.catalogs),
     configgroup(other.configgroup),
     mutex(new QMutex())
@@ -527,6 +529,9 @@ void KLocale::insertCatalog(const QString &catalog)
     const QStringList cataloglanguages = languageList();
     foreach (const QString &cataloglanguage, cataloglanguages) {
         d->catalogs.append(KCatalog(catalog, cataloglanguage));
+        if (!d->manualcatalogs.contains(catalog)) {
+            d->manualcatalogs.append(catalog);
+        }
     }
     KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
 }
@@ -540,6 +545,7 @@ void KLocale::removeCatalog(const QString &catalog)
         const QString cataloglanguage = catalogsiter.next().language();
         if (cataloglanguages.contains(cataloglanguage)) {
             catalogsiter.remove();
+            d->manualcatalogs.removeAll(catalog);
         }
     }
     KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
@@ -753,12 +759,14 @@ void KLocale::reparseConfiguration()
     // qDebug() << Q_FUNC_INFO << d->languagelist;
 
     const QStringList cataloglanguages = languageList();
-    // TODO: manually inserted catalogs should be preserved
     d->catalogs.clear();
     foreach (const QString &cataloglanguage, cataloglanguages) {
         d->catalogs.append(KCatalog(d->catalog, cataloglanguage));
         foreach (const QString &defaultcatalog, s_defaultcatalogs) {
             d->catalogs.append(KCatalog(defaultcatalog, cataloglanguage));
+        }
+        foreach (const QString &manualcatalog, d->manualcatalogs) {
+            d->catalogs.append(KCatalog(manualcatalog, cataloglanguage));
         }
     }
 
