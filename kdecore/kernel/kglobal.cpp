@@ -143,18 +143,7 @@ void KGlobal::insertCatalog(const QString& catalog)
 #ifndef QT_NO_TRANSLATION
 KDETranslator* s_kdetranslator = nullptr;
 
-static int installKDETranslator()
-{
-    QCoreApplication* coreApp = QCoreApplication::instance();
-    if (coreApp && !s_kdetranslator) { // testcase: kwrite --help: no qcore app
-        s_kdetranslator = new KDETranslator();
-        QCoreApplication::installTranslator(s_kdetranslator);
-    }
-    return 0;
-}
-Q_CONSTRUCTOR_FUNCTION(installKDETranslator);
-
-static int removeKDETranslator()
+static void removeKDETranslator()
 {
     QCoreApplication* coreApp = QCoreApplication::instance();
     if (coreApp && s_kdetranslator) {
@@ -162,9 +151,17 @@ static int removeKDETranslator()
         delete s_kdetranslator;
         s_kdetranslator = nullptr;
     }
-    return 0;
 }
-Q_DESTRUCTOR_FUNCTION(removeKDETranslator);
+
+static void installKDETranslator()
+{
+    QCoreApplication* coreApp = QCoreApplication::instance();
+    if (coreApp && !s_kdetranslator) { // testcase: kwrite --help: no qcore app
+        s_kdetranslator = new KDETranslator();
+        QCoreApplication::installTranslator(s_kdetranslator);
+        qAddPostRoutine(removeKDETranslator);
+    }
+}
 #endif // QT_NO_TRANSLATION
 
 KLocale *KGlobal::locale()
@@ -190,6 +187,9 @@ KLocale *KGlobal::locale()
         d->locale = new KLocale(mainComponent().catalogName());
         d->localeIsFromFakeComponent = !d->mainComponent.isValid();
         mainComponent().aboutData()->translateInternalProgramName();
+#ifndef QT_NO_TRANSLATION
+        installKDETranslator();
+#endif
         foreach(const QString &catalog, d->catalogsToInsert) {
             d->locale->insertCatalog(catalog);
         }

@@ -241,7 +241,7 @@ void KLocalizedStringTest::translateToFrench()
         QSKIP("l10n/fr not installed", SkipAll);
     }
     QCOMPARE(i18n("Loadable modules"), QString::fromUtf8("Modules chargeables"));
-    QCOMPARE(i18n("Job"), QString::fromUtf8("Tâche"));
+    QCOMPARE(i18n("Print Immediately"), QString::fromUtf8("Imprimer immédiatement"));
 }
 
 void KLocalizedStringTest::translateQt()
