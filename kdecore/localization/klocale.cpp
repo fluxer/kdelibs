@@ -559,15 +559,17 @@ void KLocale::setActiveCatalog(const QString &catalog)
 
 void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const
 {
-    QMutexLocker locker(d->mutex);
-    foreach (const KCatalog &catalog, d->catalogs) {
-        QString result = catalog.translateStrict(ctxt, msg);
-        if (!result.isEmpty()) {
-            *trans = result;
-            if (lang) {
-                *lang = catalog.language();
+    {
+        QMutexLocker locker(d->mutex);
+        foreach (const KCatalog &catalog, d->catalogs) {
+            QString result = catalog.translateStrict(ctxt, msg);
+            if (!result.isEmpty()) {
+                *trans = result;
+                if (lang) {
+                    *lang = catalog.language();
+                }
+                return;
             }
-            return;
         }
     }
     if (lang) {
@@ -579,15 +581,17 @@ void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QSt
 void KLocale::translateRaw(const char *ctxt, const char *singular, const char *plural,
                            unsigned long n, QString *lang, QString *trans) const
 {
-    QMutexLocker locker(d->mutex);
-    foreach (const KCatalog &catalog, d->catalogs) {
-        QString result = catalog.translateStrict(ctxt, singular, plural, n);
-        if (!result.isEmpty()) {
-            *trans = result;
-            if (lang) {
-                *lang = catalog.language();
+    {
+        QMutexLocker locker(d->mutex);
+        foreach (const KCatalog &catalog, d->catalogs) {
+            QString result = catalog.translateStrict(ctxt, singular, plural, n);
+            if (!result.isEmpty()) {
+                *trans = result;
+                if (lang) {
+                    *lang = catalog.language();
+                }
+                return;
             }
-            return;
         }
     }
     if (lang) {
@@ -606,12 +610,12 @@ void KLocale::translateRaw(const char *ctxt, const char *singular, const char *p
 
 QString KLocale::translateQt(const char *context, const char *sourceText) const
 {
-    QMutexLocker locker(d->mutex);
     // return empty according to Katie's expectations
     QString result;
     if (isDefaultLocale(this)) {
         return result;
     }
+    QMutexLocker locker(d->mutex);
     foreach (const KCatalog &catalog, d->catalogs) {
         result = catalog.translateStrict(context, sourceText);
         if (!result.isEmpty()) {
