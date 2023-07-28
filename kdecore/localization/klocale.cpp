@@ -52,11 +52,6 @@ static QStringList s_defaultcatalogs = QStringList()
 
 static const QLatin1String s_localenamec = QLatin1String("C");
 
-static bool kIsDefaultLocale(const KLocale *locale)
-{
-    return (locale->language() == KLocale::defaultLanguage());
-}
-
 static QString kGetDuration(const KLocaleDuration which, const int duration)
 {
     switch (which) {
@@ -113,6 +108,11 @@ public:
     KConfigGroup configgroup;
     QMutex *mutex;
 };
+
+static bool kIsDefaultLocale(const KLocalePrivate *locale)
+{
+    return (locale->locale.name() == KLocale::defaultLanguage());
+}
 
 static bool kInsertCatalog(KLocalePrivate *locale, const QString &catalogname, const QString &cataloglanguage)
 {
@@ -237,7 +237,10 @@ KLocale & KLocale::operator=(const KLocale &rhs)
 
 QString KLocale::language() const
 {
-    return d->locale.name();
+    if (kIsDefaultLocale(d)) {
+        return d->locale.name();
+    }
+    return kGetLanguage(d->locale.name());
 }
 
 QStringList KLocale::languageList() const
@@ -648,7 +651,7 @@ QString KLocale::translateQt(const char *context, const char *sourceText) const
 {
     // return empty according to Katie's expectations
     QString result;
-    if (kIsDefaultLocale(this)) {
+    if (kIsDefaultLocale(d)) {
         return result;
     }
     QMutexLocker locker(d->mutex);
@@ -665,7 +668,7 @@ QString KLocale::languageCodeToName(const QString &language) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
-    const QString localelanguage = kGetLanguage(this->language());
+    const QString localelanguage = this->language();
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
         entryconfig.setLocale(localelanguage);
@@ -691,7 +694,7 @@ QString KLocale::countryCodeToName(const QString &country) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", QString::fromLatin1("l10n/") + country.toLower() + QLatin1String("/entry.desktop"));
-    const QString localelanguage = kGetLanguage(this->language());
+    const QString localelanguage = this->language();
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
         entryconfig.setLocale(localelanguage);
@@ -716,7 +719,7 @@ void KLocale::copyCatalogsTo(KLocale *locale)
 QString KLocale::localizedFilePath(const QString &filePath) const
 {
     // Stop here if the default language is primary.
-    if (kIsDefaultLocale(this)) {
+    if (kIsDefaultLocale(d)) {
         return filePath;
     }
 
