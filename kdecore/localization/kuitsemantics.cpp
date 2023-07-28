@@ -87,7 +87,7 @@ namespace Kuit {
         typedef enum {
             None,
             Ctx, Url, Address, Section, Label, Strong,
-            Width, Fill // internal helpers for numbers, not part of DTD
+            Width, Fill, Precision // internal helpers for numbers, not part of DTD
         } Var;
     }
 
@@ -203,7 +203,7 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
     SETUP_TAG(Nl, "nl", None, None);
     // Internal, not part of DTD.
     SETUP_TAG(NumIntg, KUIT_NUMINTG, Width << Fill, None);
-    SETUP_TAG(NumReal, KUIT_NUMREAL, Width << Fill, None);
+    SETUP_TAG(NumReal, KUIT_NUMREAL, Width << Fill << Precision, None);
 
     // Setup known attribute names.
     #undef SETUP_ATT
@@ -219,6 +219,7 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
     // Internal, not part of DTD.
     SETUP_ATT(Width, "width");
     SETUP_ATT(Fill, "fill");
+    SETUP_ATT(Precision, "precision");
 
     // Setup known format names.
     #undef SETUP_FMT
@@ -1287,10 +1288,11 @@ QString KuitSemanticsPrivate::modifyTagText (const QString &text,
 {
     // numctx < 1 means that the number is not in numeric-id context.
     if (   (tag == Kuit::Tag::NumIntg || tag == Kuit::Tag::NumReal) && numctx < 1) {
-        int fieldWidth = avals.value(Kuit::Att::Width, QString(QLatin1Char('0'))).toInt();
+        const int fieldWidth = avals.value(Kuit::Att::Width, QString(QLatin1Char('0'))).toInt();
         const QString fillStr = avals.value(Kuit::Att::Fill, QString(QLatin1Char(' ')));
         const QChar fillChar = !fillStr.isEmpty() ? fillStr[0] : QChar::fromLatin1(' ');
-        return QString::fromLatin1("%1").arg(KGlobal::locale()->formatNumber(text, false), fieldWidth, fillChar);
+        const int precision = avals.value(Kuit::Att::Precision, QString(QLatin1String("-1"))).toInt();
+        return QString::fromLatin1("%1").arg(KGlobal::locale()->formatNumber(text, false, precision), fieldWidth, fillChar);
     } else if (tag == Kuit::Tag::Filename) {
         return QDir::toNativeSeparators(text);
     }
