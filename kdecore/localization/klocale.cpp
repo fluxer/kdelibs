@@ -37,7 +37,7 @@
 
 enum KLocaleDuration
 {
-    KDurationMilisecond = 0,
+    KDurationMillisecond = 0,
     KDurationSecond = 1,
     KDurationMinute = 2,
     KDurationHour = 3
@@ -64,8 +64,8 @@ static QString kGetDuration(const KLocaleDuration which, const int duration)
         case KLocaleDuration::KDurationSecond: {
             return i18ncp("@item:intext", "1 second", "%1 seconds", duration);
         }
-        case KLocaleDuration::KDurationMilisecond: {
-            return i18ncp("@item:intext", "1 milisecond", "%1 miliseconds", duration);
+        case KLocaleDuration::KDurationMillisecond: {
+            return i18ncp("@item:intext", "1 millisecond", "%1 milliseconds", duration);
         }
     }
     Q_ASSERT(false);
@@ -478,7 +478,7 @@ QString KLocale::formatDuration(unsigned long mSec) const
     const int hours = durationtime.hour();
     const int minutes = durationtime.minute();
     const int seconds = durationtime.second();
-    const int miliseconds = durationtime.msec();
+    const int milliseconds = durationtime.msec();
 
     if (hours && minutes) {
         return kGetMultiDuration(
@@ -498,10 +498,10 @@ QString KLocale::formatDuration(unsigned long mSec) const
         return kGetDuration(
             KLocaleDuration::KDurationMinute, minutes
         );
-    } else if (seconds && miliseconds) {
+    } else if (seconds && milliseconds) {
         return kGetMultiDuration(
             KLocaleDuration::KDurationSecond, seconds,
-            KLocaleDuration::KDurationMilisecond, miliseconds
+            KLocaleDuration::KDurationMillisecond, milliseconds
         );
     } else if (seconds) {
         return kGetDuration(
@@ -509,7 +509,7 @@ QString KLocale::formatDuration(unsigned long mSec) const
         );
     }
     return kGetDuration(
-        KLocaleDuration::KDurationMilisecond, miliseconds
+        KLocaleDuration::KDurationMillisecond, milliseconds
     );
 }
 
