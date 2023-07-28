@@ -268,7 +268,6 @@ void KLocalizedStringTest::testThreads()
     std::future<void> future4 = std::async(std::launch::async, &KLocalizedStringTest::translateQt, this);
     std::future<void> future5 = std::async(std::launch::async, &KLocalizedStringTest::translateQt, this);
     std::future<void> future6 = std::async(std::launch::async, &KLocalizedStringTest::translateToFrench, this);
-    KGlobal::locale()->removeCatalog("kdelibs4");
     kDebug() << "Joining all threads";
     future1.wait();
     future2.wait();
