@@ -597,14 +597,10 @@ void KLocale::translateRaw(const char *ctxt, const char *singular, const char *p
     if (lang) {
         *lang = KLocale::defaultLanguage();
     }
-    if (!plural) {
+    if (!plural || n == 1) {
         *trans = QString::fromUtf8(singular);
     } else {
-        if (n == 1) {
-            *trans = QString::fromUtf8(singular);
-        } else {
-            *trans = QString::fromUtf8(plural);
-        }
+        *trans = QString::fromUtf8(plural);
     }
 }
 
