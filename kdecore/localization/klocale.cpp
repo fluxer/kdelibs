@@ -282,13 +282,18 @@ QString KLocale::formatNumber(double num, int precision) const
         // forcing a number rounding the precision is automatically chosen here
         return d->locale.toString(num, 'f', qRound(num) == num ? 0 : 2);
     }
+    const QString cnum = QString::number(num);
+    if (cnum.indexOf(s_localeexponentc) > 0) {
+        // special case for number with exponent - no rounding but convert it to the locale
+        return d->locale.toString(cnum.toDouble());
+    }
     return d->locale.toString(num, 'f', precision);
 }
 
 QString KLocale::formatNumber(const QString &numStr, bool round, int precision) const
 {
     if (numStr.indexOf(s_localeexponentc) > 0) {
-        // special case for number with exponent - no rounding but convert it to the locale
+        // see above
         return d->locale.toString(numStr.toDouble());
     }
     if (round) {
