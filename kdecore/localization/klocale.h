@@ -594,7 +594,7 @@ public:
                             QString &modifier, QString &charset);
 
     /**
-     * Returns the name of the internal language.
+     * Returns the name of the default language.
      *
      * @return Name of the default language
      */
