@@ -45,7 +45,7 @@ void KCalendarWidget::changeEvent(QEvent *event)
 {
     switch (event->type()) {
         // NOTE: QCalendarWidget adapts on QEvent::LocaleChange, KSwitchLanguageDialog sends
-        // QEvent::LanguageChange event
+        // QEvent::LanguageChange event, KGlobalSettings sends both
         case QEvent::LocaleChange:
         case QEvent::LanguageChange: {
             setupCalendarWidget(this, selectedDate());
