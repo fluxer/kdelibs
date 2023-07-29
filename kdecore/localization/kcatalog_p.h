@@ -100,7 +100,7 @@ public:
   /**
    * Retrieves a translation of the specified message id with given context.
    *
-   * Do not pass 0 or "" strings as message id or context.
+   * Do not pass 0 or "" strings as message id.
    *
    * @param msgctxt The context
    * @param msgid The message id
@@ -113,7 +113,7 @@ public:
    * Retrieves a proper plural form of translation for the specified English
    * singular and plural message ids, with given context.
    *
-   * Do not pass 0 or "" strings as message ids or context.
+   * Do not pass 0 or "" strings as message id.
    *
    * @param msgctxt The context
    * @param msgid The singular message id
@@ -129,7 +129,7 @@ public:
    * Retrieves a translation of the specified message id with given context,
    * returning empty if the translation was not found.
    *
-   * Do not pass 0 or "" strings as message id or context.
+   * Do not pass 0 or "" strings as message id.
    *
    * @param msgctxt The context
    * @param msgid The message id
@@ -143,7 +143,7 @@ public:
    * singular and plural message ids, with given context,
    * returning empty if the translation was not found.
    *
-   * Do not pass 0 or "" strings as message ids or context.
+   * Do not pass 0 or "" strings as message id.
    *
    * @param msgctxt The context
    * @param msgid The singular message id
