@@ -849,7 +849,9 @@ bool KUrlNavigator::goForward()
 bool KUrlNavigator::goUp()
 {
     const KUrl currentUrl = locationUrl();
-    const KUrl upUrl = currentUrl.upUrl();
+    KUrl upUrl = currentUrl;
+    upUrl.adjustPath(KUrl::AddTrailingSlash);
+    upUrl = upUrl.upUrl();
     if (upUrl != currentUrl) {
         setLocationUrl(upUrl);
         return true;
