@@ -242,18 +242,6 @@ namespace KIO {
         QString queryMetaData(const QString &key);
 
     protected:
-
-    Q_SIGNALS:
-        /**
-         * @deprecated. Don't use !
-         * Emitted when the job is canceled.
-         * Signal result() is emitted as well, and error() is,
-         * in this case, ERR_USER_CANCELED.
-         * @param job the job that emitted this signal
-         */
-        void canceled( KJob *job );
-
-    protected:
         /**
          * Add a job that has to be finished before a result
          * is emitted. This has obviously to be called before
