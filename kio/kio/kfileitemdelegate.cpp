@@ -93,7 +93,6 @@ class KFileItemDelegate::Private
         void drawTextItems(QPainter *painter, const QTextLayout &labelLayout, const QTextLayout &infoLayout,
                            const QRect &textBoundingRect) const;
         QPixmap applyHoverEffect(const QPixmap &icon) const;
-        QPixmap transition(const QPixmap &from, const QPixmap &to, qreal amount) const;
         void initStyleOption(QStyleOptionViewItemV4 *option, const QModelIndex &index) const;
         void drawFocusRect(QPainter *painter, const QStyleOptionViewItemV4 &option, const QRect &rect) const;
 
@@ -553,63 +552,6 @@ QPixmap KFileItemDelegate::Private::applyHoverEffect(const QPixmap &icon) const
 
     return icon;
 }
-
-QPixmap KFileItemDelegate::Private::transition(const QPixmap &from, const QPixmap &to, qreal amount) const
-{
-    int value = int(0xff * amount);
-
-    if (value == 0 || to.isNull())
-        return from;
-
-    if (value == 0xff || from.isNull())
-        return to;
-
-    QColor color;
-    color.setAlphaF(amount);
-
-    // If the native paint engine supports Porter/Duff compositing and CompositionMode_Plus
-    if (from.paintEngine()->hasFeature(QPaintEngine::PorterDuff) &&
-        from.paintEngine()->hasFeature(QPaintEngine::BlendModes))
-    {
-        QPixmap under = from;
-        QPixmap over  = to;
-
-        QPainter p;
-        p.begin(&over);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        p.fillRect(over.rect(), color);
-        p.end();
-
-        p.begin(&under);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-        p.fillRect(under.rect(), color);
-        p.setCompositionMode(QPainter::CompositionMode_Plus);
-        p.drawPixmap(0, 0, over);
-        p.end();
-
-        return under;
-    } else {
-        // Fall back to using QRasterPaintEngine to do the transition.
-        QImage under = from.toImage();
-        QImage over  = to.toImage();
-
-        QPainter p;
-        p.begin(&over);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        p.fillRect(over.rect(), color);
-        p.end();
-
-        p.begin(&under);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-        p.fillRect(under.rect(), color);
-        p.setCompositionMode(QPainter::CompositionMode_Plus);
-        p.drawImage(0, 0, over);
-        p.end();
-
-        return QPixmap::fromImage(under);
-    }
-}
-
 
 void KFileItemDelegate::Private::layoutTextItems(const QStyleOptionViewItemV4 &option, const QModelIndex &index,
                                                  QTextLayout *labelLayout, QTextLayout *infoLayout,
