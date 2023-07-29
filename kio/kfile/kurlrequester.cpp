@@ -54,11 +54,12 @@ public:
 protected:
     virtual QDrag *dragObject()
     {
-        if (m_urls.isEmpty())
-            return 0;
+        if (m_urls.isEmpty()) {
+            return nullptr;
+        }
 
         QDrag *drag = new QDrag(this);
-        QMimeData *mimeData = new QMimeData;
+        QMimeData *mimeData = new QMimeData();
         m_urls.populateMimeData(mimeData);
         drag->setMimeData(mimeData);
         return drag;
