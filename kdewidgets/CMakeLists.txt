@@ -27,7 +27,7 @@ if(QT_QTUITOOLS_FOUND)
 
     kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
 
-    target_link_libraries(kdewidgets kio kmediaplayer)
+    target_link_libraries(kdewidgets kio kmediaplayer ${QT_QTUITOOLS_LIBRARY})
 
     install(
         TARGETS kdewidgets
