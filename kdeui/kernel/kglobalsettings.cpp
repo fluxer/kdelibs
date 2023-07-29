@@ -546,11 +546,19 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
                 }
             } else {
                 switch (category) {
-                    case SETTINGS_LOCALE:
+                    case SETTINGS_LOCALE: {
                         KGlobal::locale()->reparseConfiguration();
+                        // KLocale is reponsible for both so event for locale and language change
+                        // is send
+                        QEvent localeevent(QEvent::LocaleChange);
+                        QApplication::sendEvent(qApp, &localeevent);
+                        QEvent languageevent(QEvent::LanguageChange);
+                        QApplication::sendEvent(qApp, &languageevent);
                         break;
-                    default:
+                    }
+                    default: {
                         break;
+                    }
                 }
                 emit q->settingsChanged(category);
             }
