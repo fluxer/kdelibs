@@ -101,6 +101,7 @@ public:
     std::array<QString, 3> timeFormats;
     std::array<QString, 3> dateTimeFormats;
     QLocale::MeasurementSystem measurementSystem;
+    bool immutable;
     QLocale locale;
     QString catalog;
     QStringList languagelist;
@@ -147,6 +148,7 @@ KLocalePrivate::KLocalePrivate(const KLocalePrivate &other)
     timeFormats(other.timeFormats),
     dateTimeFormats(other.dateTimeFormats),
     measurementSystem(other.measurementSystem),
+    immutable(other.immutable),
     locale(other.locale),
     catalog(other.catalog),
     languagelist(other.languagelist),
@@ -160,6 +162,7 @@ KLocalePrivate::KLocalePrivate(const KLocalePrivate &other)
 KLocalePrivate::KLocalePrivate(const QString &_catalog, KSharedConfig::Ptr config)
     : binaryUnitDialect(KLocale::IECBinaryDialect),
     measurementSystem(QLocale::MetricSystem),
+    immutable(false),
     catalog(_catalog),
     mutex(new QMutex())
 {
@@ -168,24 +171,12 @@ KLocalePrivate::KLocalePrivate(const QString &_catalog, KSharedConfig::Ptr confi
     } else {
         configgroup = KGlobal::config()->group("Locale");
     }
-
-    // locale from the config overrides everything (not Unix-like but that's how it should be)
-    const QString configlanguage = configgroup.readEntry("Language", QString());
-    locale = QLocale(configlanguage);
-    // if no locale was specified or QLocale does not support the specified language use the system
-    // locale
-    if (locale.name() == s_localenamec) {
-        locale = QLocale::system();
-    }
-    // finally, if the locale is C for compat fallback to KLocale::defaultLanguage()
-    if (locale.name() == s_localenamec) {
-        locale = QLocale(KLocale::defaultLanguage());
-    }
 }
 
 KLocalePrivate::KLocalePrivate(const QString &_catalog, const QString &language, KConfig *config)
     : binaryUnitDialect(KLocale::IECBinaryDialect),
     measurementSystem(QLocale::MetricSystem),
+    immutable(true),
     catalog(_catalog),
     mutex(new QMutex())
 {
@@ -758,6 +749,21 @@ void KLocale::reparseConfiguration()
     QMutexLocker locker(d->mutex);
 
     d->configgroup.sync();
+
+    if (!d->immutable) {
+        // locale from the config overrides everything (not Unix-like but that's how it should be)
+        const QString configlanguage = d->configgroup.readEntry("Language", QString());
+        d->locale = QLocale(configlanguage);
+        // if no locale was specified or QLocale does not support the specified language use the system
+        // locale
+        if (d->locale.name() == s_localenamec) {
+            d->locale = QLocale::system();
+        }
+        // finally, if the locale is C for compat fallback to KLocale::defaultLanguage()
+        if (d->locale.name() == s_localenamec) {
+            d->locale = QLocale(KLocale::defaultLanguage());
+        }
+    }
 
     d->binaryUnitDialect = static_cast<KLocale::BinaryUnitDialect>(
         d->configgroup.readEntry("BinaryUnitDialect", int(KLocale::IECBinaryDialect))
