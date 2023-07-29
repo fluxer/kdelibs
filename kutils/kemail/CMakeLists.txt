@@ -1,4 +1,5 @@
 include_directories(
+    ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kutils/kpasswdstore
     ${CMAKE_BINARY_DIR}/kutils/kpasswdstore
     ${CURL_INCLUDE_DIRS}
@@ -18,6 +19,7 @@ target_link_libraries(kemail PUBLIC
     kdecore
     kdeui
     kpasswdstore
+    kio
 )
 target_link_libraries(kemail PRIVATE ${CURL_LIBRARIES})
 

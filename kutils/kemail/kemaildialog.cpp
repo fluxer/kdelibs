@@ -21,6 +21,7 @@
 #include "klocale.h"
 #include "kstandarddirs.h"
 #include "kmessagebox.h"
+#include "kurlrequester.h"
 #include "kdebug.h"
 
 #include "ui_kemaildialog.h"
@@ -36,6 +37,7 @@ public:
     ~KEMailDialogPrivate();
 
     KEMail* kemail;
+    KUrlRequester* urlrequester;
     Ui::KEMailDialogUI ui;
 
     void sendMail(const QStringList &to, const QString &subject, const QString &message, const QStringList &attach);
@@ -55,7 +57,8 @@ private:
 };
 
 KEMailDialogPrivate::KEMailDialogPrivate()
-    : kemail(nullptr)
+    : kemail(nullptr),
+    urlrequester(nullptr)
 {
     kemail = new KEMail(this);
 }
@@ -89,10 +92,13 @@ KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
     : KDialog(parent, flags),
     d(new KEMailDialogPrivate())
 {
+    d->urlrequester = new KUrlRequester(mainWidget());
+    d->urlrequester->setMode(KFile::File | KFile::ExistingOnly | KFile::LocalOnly);
     d->ui.setupUi(mainWidget());
     d->ui.userlineedit->setText(d->kemail->user());
     d->ui.passlineedit->setText(d->kemail->password());
     d->ui.oauthlineedit->setText(d->kemail->oauth());
+    d->ui.attachlistwidget->setCustomEditor(d->urlrequester->customEditor());
     connect(d->ui.settingslabel, SIGNAL(leftClickedUrl()), this, SLOT(_slotSettings()));
 
     connect(d, SIGNAL(sent()), this, SLOT(_slotSent()));
