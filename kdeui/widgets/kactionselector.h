@@ -20,8 +20,8 @@
 #define _KACTION_SELECTOR_H_
 
 #include <kdeui_export.h>
-#include <QtGui/QWidget>
 
+#include <QWidget>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QKeyEvent>
