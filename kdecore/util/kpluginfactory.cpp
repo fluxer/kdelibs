@@ -60,7 +60,6 @@ KPluginFactory::KPluginFactory(KPluginFactoryPrivate &d, QObject *parent)
 
 KPluginFactory::~KPluginFactory()
 {
-    Q_D(KPluginFactory);
     delete d_ptr;
 }
 

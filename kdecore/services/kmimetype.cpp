@@ -764,7 +764,6 @@ int KMimeType::sharedMimeInfoVersion()
 
 QString KMimeType::mainExtension() const
 {
-    Q_D(const KMimeType);
     Q_FOREACH(const QString &pattern, patterns()) {
         // Skip if if looks like: README or *. or *.*
         // or *.JP*G or *.JP?
