@@ -54,7 +54,8 @@ KSwitchLanguageDialog::KSwitchLanguageDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotOk()));
     connect(this, SIGNAL(defaultClicked()), SLOT(slotDefault()));
 
-    foreach (const QString &language, KLocale::installedLanguages()) {
+    const QStringList languages = KLocale::installedLanguages();
+    foreach (const QString &language, languages) {
         QString languagelang;
         QString languagecntry;
         QString languagemod;
@@ -77,6 +78,12 @@ KSwitchLanguageDialog::KSwitchLanguageDialog(QWidget *parent)
     m_languagelabel = new QLabel(m_dialogwidget);
     m_languagelabel->setText(i18n("Please choose the language which should be used for this application:"));
     m_dialoglayout->addWidget(m_languagelabel);
+    if (languages.size() == 0) {
+        m_languagelabel->setText(i18n("No translations installed"));
+        m_languagelabel->setAlignment(Qt::AlignCenter);
+        setMainWidget(m_dialogwidget);
+        return;
+    }
     m_languageedit = new KEditListWidget(m_dialogwidget);
     m_languagebox = new KComboBox(m_languageedit);
     // TODO: not having a line editor is not an option, KComboBox creates one and things get ugly.
