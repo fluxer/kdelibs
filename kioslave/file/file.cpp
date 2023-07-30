@@ -54,7 +54,6 @@
 
 #include <QByteArray>
 #include <QDateTime>
-#include <QVarLengthArray>
 #include <QCoreApplication>
 #include <QRegExp>
 #include <QFile>
