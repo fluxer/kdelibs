@@ -46,8 +46,7 @@ class KLocalePrivate;
   *   QString date = KGlobal::locale()->formatDate(QDate(1995,5,17));
   * \endcode
   *
-  * @author Stephan Kulow <coolo@kde.org>, Preston Brown <pbrown@kde.org>,
-  * Hans Petter Bieker <bieker@kde.org>, Lukas Tinkl <lukas.tinkl@suse.cz>
+  * @author Ivailo Monev <xakepa10@gmail.com>
   * @short class for supporting locale settings and national language
   */
 class KDECORE_EXPORT KLocale
