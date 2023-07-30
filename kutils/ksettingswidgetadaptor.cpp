@@ -28,7 +28,7 @@ KSettingsWidgetAdaptor::KSettingsWidgetAdaptor(QObject *parent)
 
 QString KSettingsWidgetAdaptor::applicationName()
 {
-	return KGlobal::caption();
+    return KGlobal::caption();
 }
 
 #include "moc_ksettingswidgetadaptor.cpp"

@@ -46,23 +46,23 @@ namespace KCModuleLoader
      * Determines the way errors are reported
      */
     enum ErrorReporting {
-      /**
-       * no error reporting is done
-       * */
-      None = 0,
-      /**
-       * the error report is shown instead of the
-       * KCModule that should have been loaded
-       */
-      Inline = 1,
-      /**
-       * shows a dialog with the error report
-       */
-      Dialog = 2,
-      /**
-       * does both Inline and Dialog
-       */
-      Both = 3
+        /**
+         * no error reporting is done
+         */
+        None = 0,
+        /**
+         * the error report is shown instead of the
+         * KCModule that should have been loaded
+         */
+        Inline = 1,
+        /**
+         * shows a dialog with the error report
+         */
+        Dialog = 2,
+        /**
+         * does both Inline and Dialog
+         */
+        Both = 3
     };
 
     /**
@@ -72,8 +72,8 @@ namespace KCModuleLoader
      *
      * @return a pointer to the loaded @ref KCModule
      */
-    KCMUTILS_EXPORT KCModule *loadModule(const KCModuleInfo &module, ErrorReporting
-        report, QWidget * parent = 0, const QStringList& args = QStringList() );
+    KCMUTILS_EXPORT KCModule* loadModule(const KCModuleInfo &module, ErrorReporting report,
+                                         QWidget *parent = nullptr, const QStringList &args = QStringList());
 
     /**
      * Loads a @ref KCModule. If loading fails a zero pointer is returned.
@@ -83,8 +83,8 @@ namespace KCModuleLoader
      *
      * @return a pointer to the loaded @ref KCModule
      */
-    KCMUTILS_EXPORT KCModule *loadModule( const QString &module, ErrorReporting report,
-        QWidget *parent = 0, const QStringList& args = QStringList() );
+    KCMUTILS_EXPORT KCModule* loadModule(const QString &module, ErrorReporting report,
+                                         QWidget *parent = nullptr, const QStringList &args = QStringList());
 
     /**
      * Returns a KCModule containing the messages @p report and @p text.
@@ -95,9 +95,8 @@ namespace KCModuleLoader
      *
      * @internal
      */
-    KCMUTILS_EXPORT KCModule* reportError( ErrorReporting report, const QString & text,
-        const QString &details, QWidget * parent );
+    KCMUTILS_EXPORT KCModule* reportError(ErrorReporting report, const QString &text,
+                                          const QString &details, QWidget *parent);
 }
 
-// vim: ts=2 sw=2 et
 #endif // KCMODULELOADER_H

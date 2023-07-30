@@ -44,123 +44,136 @@
  TODO:
 
  - Two Layout problems in runAsRoot:
- 	* lblBusy doesn't show
- 	* d->kcm/d->rootInfo doesn't get it right when the user
-		presses cancel in the kdesudo dialog
+    * lblBusy doesn't show
+    * d->kcm/d->rootInfo doesn't get it right when the user presses cancel in the kdesudo dialog
 
  - Resizing horizontally is contrained; minimum size is set somewhere.
- 	It appears to be somehow derived from the module's size.
+   It appears to be somehow derived from the module's size.
 
  - Prettify: set icon in KCMultiDialog.
 
- */
+*/
 /***************************************************************/
 KCModule* KCModuleProxy::realModule() const
 {
     Q_D(const KCModuleProxy);
-	/*
-	 * Note, don't call any function that calls realModule() since
-	 * that leads to an infinite loop.
-	 */
+    /*
+     * Note, don't call any function that calls realModule() since
+     * that leads to an infinite loop.
+     */
 
-	/* Already loaded */
-	if( !d->kcm )
-	{
-		QApplication::setOverrideCursor( Qt::WaitCursor );
-        const_cast<KCModuleProxyPrivate *>(d)->loadModule();
-		QApplication::restoreOverrideCursor();
-	}
-	return d->kcm;
+    /* Already loaded */
+    if (!d->kcm) {
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        const_cast<KCModuleProxyPrivate*>(d)->loadModule();
+        QApplication::restoreOverrideCursor();
+    }
+    return d->kcm;
 }
 
 void KCModuleProxyPrivate::loadModule()
 {
-	if( !topLayout )
-	{
-		topLayout = new QVBoxLayout( parent );
-		topLayout->setMargin( 0 );
+    if (!topLayout) {
+        topLayout = new QVBoxLayout(parent);
+        topLayout->setMargin(0);
 
-		QString name = modInfo.library();
-		name.replace("-", "_"); //hyphen is not allowed in dbus, only [A-Z][a-z][0-9]_
-		dbusPath = QLatin1String("/internal/KSettingsWidget/") + name;
-		dbusService = QLatin1String("org.kde.internal.KSettingsWidget_") + name;
-	}
+        QString name = modInfo.library();
+        name.replace("-", "_"); //hyphen is not allowed in dbus, only [A-Z][a-z][0-9]_
+        dbusPath = QLatin1String("/internal/KSettingsWidget/") + name;
+        dbusService = QLatin1String("org.kde.internal.KSettingsWidget_") + name;
+    }
 
-	if( QDBusConnection::sessionBus().registerService( dbusService ) || bogusOccupier )
-	{ /* We got the name we requested, because no one was before us,
-	   * or, it was an random application which had picked that name */
-		kDebug(711) << "Module not already loaded, loading module " << modInfo.moduleName() << " from library " << modInfo.library();
+    if (QDBusConnection::sessionBus().registerService(dbusService) || bogusOccupier) {
+        /* We got the name we requested, because no one was before us,
+         * or, it was an random application which had picked that name
+         */
+        kDebug(711) << "Module not already loaded, loading module " << modInfo.moduleName()
+                    << " from library " << modInfo.library();
 
-		kcm = KCModuleLoader::loadModule( modInfo, KCModuleLoader::Inline, parent, args );
+        kcm = KCModuleLoader::loadModule(modInfo, KCModuleLoader::Inline, parent, args);
 
         QObject::connect(kcm, SIGNAL(changed(bool)), parent, SLOT(_k_moduleChanged(bool)));
         QObject::connect(kcm, SIGNAL(destroyed()), parent, SLOT(_k_moduleDestroyed()));
-		QObject::connect( kcm, SIGNAL(quickHelpChanged()), parent, SIGNAL(quickHelpChanged()) );
-		parent->setWhatsThis( kcm->quickHelp() );
+        QObject::connect(kcm, SIGNAL(quickHelpChanged()), parent, SIGNAL(quickHelpChanged()));
+        parent->setWhatsThis(kcm->quickHelp());
 
-		if ( kcm->layout() ) {
-			kcm->layout()->setMargin( 0 );
-		}
-		topLayout->addWidget( kcm );
-		if( !modInfo.library().isEmpty() )
-			QDBusConnection::sessionBus().registerObject(dbusPath, new KSettingsWidgetAdaptor(parent), QDBusConnection::ExportAllSlots);
+        if (kcm->layout()) {
+            kcm->layout()->setMargin(0);
+        }
+        topLayout->addWidget( kcm );
+        if (!modInfo.library().isEmpty()) {
+            QDBusConnection::sessionBus().registerObject(
+                dbusPath, new KSettingsWidgetAdaptor(parent), QDBusConnection::ExportAllSlots
+            );
+        }
 
-		if ( !rootInfo && /* If it's not already done */
-				kcm->useRootOnlyMessage() && /* kcm wants root message */
-				!KUser().isSuperUser() ) /* Not necessary if we're root */
-		{
-			/*rootInfo = new QLabel( parent );
-			topLayout->insertWidget( 0, rootInfo );
-			
-			QPalette palette = rootInfo->palette();
-			KStatefulBrush stbrush(KColorScheme::Window, KColorScheme::NeutralBackground);
-			qDebug() << stbrush.brush(rootInfo);
-			palette.setBrush(QPalette::Window, stbrush.brush(rootInfo));
-			rootInfo->setPalette(palette);
-			rootInfo->setAutoFillBackground(true);
+        if (!rootInfo && /* If it's not already done */
+            kcm->useRootOnlyMessage() && /* kcm wants root message */
+            !KUser().isSuperUser() ) /* Not necessary if we're root */
+        {
+#if 0
+            rootInfo = new QLabel(parent);
+            topLayout->insertWidget(0, rootInfo);
 
-			const QString message = kcm->rootOnlyMessage();
-			if( message.isEmpty() )
-				rootInfo->setText( i18n(
-   					  "<b>Changes in this section require root access.</b><br />"
-					  "On applying your changes you will have to supply your root "
-					  "password." ) );
-			else
-				rootInfo->setText(message);
+            QPalette palette = rootInfo->palette();
+            KStatefulBrush stbrush(KColorScheme::Window, KColorScheme::NeutralBackground);
+            qDebug() << stbrush.brush(rootInfo);
+            palette.setBrush(QPalette::Window, stbrush.brush(rootInfo));
+            rootInfo->setPalette(palette);
+            rootInfo->setAutoFillBackground(true);
 
-			rootInfo->setWhatsThis( i18n(
-				  "This section requires special permissions, probably "
-				  "for system-wide changes; therefore, it is "
-				  "required that you provide the root password to be "
-				  "able to change the module's properties. If "
-				  "you cannot provide the password, the changes of the "
-				  "module cannot be saved " ) );*/
-		}
-	}
-	else
-	{
-		kDebug(711) << "Module already loaded, loading KCMError";
+            const QString message = kcm->rootOnlyMessage();
+            if (message.isEmpty() )
+                rootInfo->setText(
+                    i18n(
+                        "<b>Changes in this section require root access.</b><br />"
+                        "On applying your changes you will have to supply your root "
+                        "password." )
+                    );
+            } else {
+                rootInfo->setText(message);
+            }
 
-		/* Figure out the name of where the module is already loaded */
-		QDBusInterface proxy( dbusService, dbusPath, "org.kde.internal.KSettingsWidget" );
-		QDBusReply<QString> reply = proxy.call("applicationName");
+            rootInfo->setWhatsThis(
+                i18n(
+                    "This section requires special permissions, probably "
+                    "for system-wide changes; therefore, it is "
+                    "required that you provide the root password to be "
+                    "able to change the module's properties. If "
+                    "you cannot provide the password, the changes of the "
+                    "module cannot be saved "
+                )
+            );
+#endif
+        }
+    } else {
+        kDebug(711) << "Module already loaded, loading KCMError";
 
-		if( reply.isValid() )
-		{
-			QObject::connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-                    parent, SLOT(_k_ownerChanged(QString,QString,QString)));
-			kcm = KCModuleLoader::reportError( KCModuleLoader::Inline,
-					i18nc( "Argument is application name", "This configuration section is "
-						"already opened in %1" ,  reply.value() ), " ", parent );
-			topLayout->addWidget( kcm );
-		}
-		else
-		{
-			kDebug(711) << "Calling KCModuleProxy's DBus interface for fetching the name failed.";
-			bogusOccupier = true;
-			loadModule();
-		}
-	}
+        /* Figure out the name of where the module is already loaded */
+        QDBusInterface proxy(dbusService, dbusPath, "org.kde.internal.KSettingsWidget");
+        QDBusReply<QString> reply = proxy.call("applicationName");
+
+        if (reply.isValid()) {
+            QObject::connect(
+                QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+                parent, SLOT(_k_ownerChanged(QString,QString,QString))
+            );
+            kcm = KCModuleLoader::reportError(
+                KCModuleLoader::Inline,
+                i18nc(
+                    "Argument is application name", "This configuration section is "
+                    "already opened in %1", reply.value()
+                ),
+                " ",
+                parent
+            );
+            topLayout->addWidget(kcm);
+        } else {
+            kDebug(711) << "Calling KCModuleProxy's DBus interface for fetching the name failed.";
+            bogusOccupier = true;
+            loadModule();
+        }
+    }
 }
 
 void KCModuleProxyPrivate::_k_ownerChanged(const QString &service, const QString &oldOwner, const QString &)
@@ -169,7 +182,7 @@ void KCModuleProxyPrivate::_k_ownerChanged(const QString &service, const QString
         // Violence: Get rid of KCMError & CO, so that
         // realModule() attempts to reload the module
         delete kcm;
-        kcm = 0;
+        kcm = nullptr;
         Q_Q(KCModuleProxy);
         q->realModule();
 
@@ -178,33 +191,32 @@ void KCModuleProxyPrivate::_k_ownerChanged(const QString &service, const QString
     }
 }
 
-void KCModuleProxy::showEvent( QShowEvent * ev )
+void KCModuleProxy::showEvent(QShowEvent *ev)
 {
     Q_D(KCModuleProxy);
 
-	( void )realModule();
+    (void)realModule();
 
-	/* We have no kcm, if we're in root mode */
-	if( d->kcm ) {
-		d->kcm->showEvent(ev);
+    /* We have no kcm, if we're in root mode */
+    if( d->kcm ) {
+        d->kcm->showEvent(ev);
     }
 
-	QWidget::showEvent( ev );
+    QWidget::showEvent(ev);
 
 }
 
 KCModuleProxy::~KCModuleProxy()
 {
-	deleteClient();
-
-	delete d_ptr;
+    deleteClient();
+    delete d_ptr;
 }
 
 void KCModuleProxy::deleteClient()
 {
     Q_D(KCModuleProxy);
     delete d->kcm;
-    d->kcm = 0;
+    d->kcm = nullptr;
 
     if (qApp) {
         qApp->syncX();
@@ -213,7 +225,7 @@ void KCModuleProxy::deleteClient()
 
 void KCModuleProxyPrivate::_k_moduleChanged(bool c)
 {
-    if(changed == c) {
+    if (changed == c) {
         return;
     }
 
@@ -225,112 +237,114 @@ void KCModuleProxyPrivate::_k_moduleChanged(bool c)
 
 void KCModuleProxyPrivate::_k_moduleDestroyed()
 {
-    kcm = 0;
+    kcm = nullptr;
 }
 
-KCModuleProxy::KCModuleProxy( const KService::Ptr& service, QWidget * parent,
-		const QStringList& args )
-    : QWidget(parent), d_ptr(new KCModuleProxyPrivate(this, KCModuleInfo(service), args))
+KCModuleProxy::KCModuleProxy(const KService::Ptr &service, QWidget *parent,
+                             const QStringList &args)
+    : QWidget(parent),
+    d_ptr(new KCModuleProxyPrivate(this, KCModuleInfo(service), args))
 {
     d_ptr->q_ptr = this;
 }
 
-KCModuleProxy::KCModuleProxy( const KCModuleInfo& info, QWidget * parent,
-		const QStringList& args )
-    : QWidget(parent), d_ptr(new KCModuleProxyPrivate(this, info, args))
+KCModuleProxy::KCModuleProxy(const KCModuleInfo &info, QWidget *parent,
+                             const QStringList &args)
+    : QWidget(parent),
+    d_ptr(new KCModuleProxyPrivate(this, info, args))
 {
     d_ptr->q_ptr = this;
 }
 
-KCModuleProxy::KCModuleProxy( const QString& serviceName, QWidget * parent,
-		const QStringList& args )
-    : QWidget(parent), d_ptr(new KCModuleProxyPrivate(this, KCModuleInfo(serviceName), args))
+KCModuleProxy::KCModuleProxy(const QString &serviceName, QWidget *parent,
+                             const QStringList &args)
+    : QWidget(parent),
+    d_ptr(new KCModuleProxyPrivate(this, KCModuleInfo(serviceName), args))
 {
     d_ptr->q_ptr = this;
 }
-
 
 void KCModuleProxy::load()
 {
     Q_D(KCModuleProxy);
-	if( realModule() )
-	{
-		d->kcm->load();
+    if (realModule()) {
+        d->kcm->load();
         d->_k_moduleChanged(false);
-	}
+    }
 }
 
 void KCModuleProxy::save()
 {
     Q_D(KCModuleProxy);
-	if( d->changed && realModule() )
-	{
-		d->kcm->save();
+    if (d->changed && realModule()) {
+        d->kcm->save();
         d->_k_moduleChanged(false);
-	}
+    }
 }
 
 void KCModuleProxy::defaults()
 {
     Q_D(KCModuleProxy);
-	if( realModule() )
-		d->kcm->defaults();
+    if (realModule()) {
+        d->kcm->defaults();
+    }
 }
 
 QString KCModuleProxy::quickHelp() const
 {
-	return realModule() ? realModule()->quickHelp() : QString();
+    return realModule() ? realModule()->quickHelp() : QString();
 }
 
-const KAboutData * KCModuleProxy::aboutData() const
+const KAboutData* KCModuleProxy::aboutData() const
 {
-	return realModule() ? realModule()->aboutData() : 0;
+    return realModule() ? realModule()->aboutData() : nullptr;
 }
 
 KCModule::Buttons KCModuleProxy::buttons() const
 {
-	if( realModule() )
-		return realModule()->buttons();
-	return KCModule::Buttons( KCModule::Help | KCModule::Default | KCModule::Apply );
+    if (realModule()) {
+        return realModule()->buttons();
+    }
+    return KCModule::Buttons(KCModule::Help | KCModule::Default | KCModule::Apply);
 }
 
 QString KCModuleProxy::rootOnlyMessage() const
 {
-	return realModule() ? realModule()->rootOnlyMessage() : QString();
+    return realModule() ? realModule()->rootOnlyMessage() : QString();
 }
 
 bool KCModuleProxy::useRootOnlyMessage() const
 {
-	return realModule() ? realModule()->useRootOnlyMessage() : true;
+    return realModule() ? realModule()->useRootOnlyMessage() : true;
 }
 
 KComponentData KCModuleProxy::componentData() const
 {
-	return realModule() ? realModule()->componentData() : KComponentData();
+    return realModule() ? realModule()->componentData() : KComponentData();
 }
 
 bool KCModuleProxy::changed() const
 {
     Q_D(const KCModuleProxy);
-	return d->changed;
+    return d->changed;
 }
 
 KCModuleInfo KCModuleProxy::moduleInfo() const
 {
     Q_D(const KCModuleProxy);
-	return d->modInfo;
+    return d->modInfo;
 }
 
 QString KCModuleProxy::dbusService() const
 {
     Q_D(const KCModuleProxy);
-	return d->dbusService;
+    return d->dbusService;
 }
 
 QString KCModuleProxy::dbusPath() const
 {
     Q_D(const KCModuleProxy);
-	return d->dbusPath;
+    return d->dbusPath;
 }
 
 //X void KCModuleProxy::emitQuickHelpChanged()
@@ -340,5 +354,3 @@ QString KCModuleProxy::dbusPath() const
 
 /***************************************************************/
 #include "moc_kcmoduleproxy.cpp"
-
-// vim: ts=4

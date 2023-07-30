@@ -42,155 +42,146 @@
 /***********************************************************************/
 class KCModuleContainer::KCModuleContainerPrivate
 {
-	public:
-		KCModuleContainerPrivate( const QStringList& mods )
-			: modules( mods )
-			, tabWidget( 0 )
-			, topLayout( 0 )
-			{}
+public:
+    KCModuleContainerPrivate(const QStringList &mods)
+        : modules(mods),
+        tabWidget(nullptr),
+        topLayout(nullptr)
+    {
+    }
 
-		QStringList modules;
-		KTabWidget *tabWidget;
-		KCModule::Buttons buttons;
-		QVBoxLayout *topLayout;
-
-
+    QStringList modules;
+    KTabWidget *tabWidget;
+    KCModule::Buttons buttons;
+    QVBoxLayout *topLayout;
 };
 /***********************************************************************/
-
 
 
 // The KCModuleContainer is only a wrapper around real KCModules. Therefore it doesn't need a
 // special KComponentData and can just use the global instance. The contained KCModules create their own
 // KComponentData objects when needed.
 /***********************************************************************/
-KCModuleContainer::KCModuleContainer( QWidget* parent, const QString& mods )
+KCModuleContainer::KCModuleContainer(QWidget *parent, const QString &mods)
     : KCModule( KGlobal::mainComponent(), parent ),
-      d(new KCModuleContainerPrivate( QString(mods).remove( ' ' ).split( ',', QString::SkipEmptyParts ) ))
+    d(new KCModuleContainerPrivate(QString(mods).remove(' ').split(',', QString::SkipEmptyParts)))
 {
-	init();
+    init();
 }
 
-KCModuleContainer::KCModuleContainer( QWidget* parent, const QStringList& mods )
-    : KCModule( KGlobal::mainComponent(), parent ),
-      d( new KCModuleContainerPrivate( mods ) )
+KCModuleContainer::KCModuleContainer(QWidget *parent, const QStringList &mods)
+    : KCModule( KGlobal::mainComponent(), parent),
+    d(new KCModuleContainerPrivate(mods))
 {
-	init();
+    init();
 }
 
 void KCModuleContainer::init()
 {
-	d->topLayout = new QVBoxLayout( this );
-	d->topLayout->setMargin( 0 );
-	d->topLayout->setObjectName( "topLayout" );
-	d->tabWidget = new KTabWidget(this);
-	d->tabWidget->setObjectName( "tabWidget");
-	connect( d->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabSwitched(int)));
-	d->topLayout->addWidget( d->tabWidget );
+    d->topLayout = new QVBoxLayout(this);
+    d->topLayout->setMargin(0);
+    d->topLayout->setObjectName("topLayout");
+    d->tabWidget = new KTabWidget(this);
+    d->tabWidget->setObjectName("tabWidget");
+    connect(d->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabSwitched(int)));
+    d->topLayout->addWidget(d->tabWidget);
 
-	if ( !d->modules.isEmpty() )
-	{
-		/* Add our modules */
-		foreach (const QString it, d->modules )
-			addModule( it );
-	}
+    if (!d->modules.isEmpty()) {
+        /* Add our modules */
+        foreach (const QString it, d->modules) {
+            addModule(it);
+        }
+    }
 }
 
-void KCModuleContainer::addModule( const QString& module )
+void KCModuleContainer::addModule(const QString &module)
 {
-	/* In case it doesn't exist we just silently drop it.
-	 * This allows people to easily extend containers.
-	 * For example, KCM monitor gamma can be in kdegraphics.
-	 */
-	KService::Ptr service = KService::serviceByDesktopName( module );
-	if ( !service )
-	{
-		kDebug(713) << "KCModuleContainer: module '" << 
-			module << "' was not found and thus not loaded";
-		return;
-	}
+    /* In case it doesn't exist we just silently drop it.
+     * This allows people to easily extend containers.
+     * For example, KCM monitor gamma can be in kdegraphics.
+     */
+    KService::Ptr service = KService::serviceByDesktopName(module);
+    if (!service) {
+        kDebug(713) << "KCModuleContainer: module '"
+                    << module << "' was not found and thus not loaded";
+        return;
+    }
 
-	if ( service->noDisplay() )
-		return;
+    if (service->noDisplay()) {
+        return;
+    }
 
-	KCModuleProxy* proxy = new KCModuleProxy( service, d->tabWidget );
-	allModules.append( proxy );
+    KCModuleProxy* proxy = new KCModuleProxy(service, d->tabWidget);
+    allModules.append(proxy);
 
-	proxy->setObjectName( module.toLatin1() );
+    proxy->setObjectName(module.toLatin1());
 
-	d->tabWidget->addTab( proxy, KIcon( proxy->moduleInfo().icon() ),
-			/* Qt eats ampersands for dinner. But not this time. */
-			proxy->moduleInfo().moduleName().replace( '&', "&&" ));
+    d->tabWidget->addTab(
+        proxy, KIcon(proxy->moduleInfo().icon()),
+        /* Katie eats ampersands for dinner. But not this time. */
+        proxy->moduleInfo().moduleName().replace('&', "&&")
+    );
 
-	d->tabWidget->setTabToolTip( d->tabWidget->indexOf( proxy ), proxy->moduleInfo().comment() );
+    d->tabWidget->setTabToolTip(d->tabWidget->indexOf(proxy), proxy->moduleInfo().comment());
 
-	connect( proxy, SIGNAL(changed(KCModuleProxy*)), SLOT(moduleChanged(KCModuleProxy*)));
+    connect(proxy, SIGNAL(changed(KCModuleProxy*)), SLOT(moduleChanged(KCModuleProxy*)));
 
-	/* Collect our buttons - we go for the common deliminator */
-	setButtons( buttons() | proxy->realModule()->buttons() );
+    /* Collect our buttons - we go for the common deliminator */
+    setButtons(buttons() | proxy->realModule()->buttons());
 }
 
 void KCModuleContainer::tabSwitched(int index)
 {
-	KCModuleProxy* mod = static_cast<KCModuleProxy *>(d->tabWidget->widget(index));
-	setQuickHelp( mod->quickHelp() );
-	setAboutData( mod->aboutData() );
+    KCModuleProxy* mod = static_cast<KCModuleProxy*>(d->tabWidget->widget(index));
+    setQuickHelp(mod->quickHelp());
+    setAboutData(mod->aboutData());
 }
 
 void KCModuleContainer::save()
 {
-	ModuleList list = changedModules;
-	ModuleList::iterator it;
-	for ( it = list.begin() ; it !=list.end() ; ++it )
-	{
-		(*it)->save();
-	}
+    ModuleList list = changedModules;
+    ModuleList::iterator it;
+    for ( it = list.begin() ; it !=list.end() ; ++it ) {
+        (*it)->save();
+    }
 
-	emit changed( false );
+    emit changed( false );
 
 }
 
 void KCModuleContainer::load()
 {
-	ModuleList list = allModules;
-	ModuleList::iterator it;
-	for ( it = list.begin() ; it !=list.end() ; ++it )
-	{
-		(*it)->load();
-	}
+    ModuleList list = allModules;
+    ModuleList::iterator it;
+    for ( it = list.begin() ; it !=list.end() ; ++it ) {
+        (*it)->load();
+    }
 
-	emit changed( false );
+    emit changed( false );
 }
 
 void KCModuleContainer::defaults()
 {
-	ModuleList list = allModules;
-	ModuleList::iterator it;
-	for ( it = list.begin() ; it !=list.end() ; ++it )
-	{
-		(*it)->defaults();
-	}
+    ModuleList list = allModules;
+    ModuleList::iterator it;
+    for (it = list.begin() ; it !=list.end() ; ++it) {
+        (*it)->defaults();
+    }
 
-	emit changed( true );
+    emit changed( true );
 }
 
-
-void KCModuleContainer::moduleChanged(KCModuleProxy * proxy)
+void KCModuleContainer::moduleChanged(KCModuleProxy *proxy)
 {
-	changedModules.append( proxy );
-	if( changedModules.isEmpty() )
-		return;
+    changedModules.append(proxy);
+    if (changedModules.isEmpty()) {
+        return;
+    }
 
-	emit changed(true);
+    emit changed(true);
 }
 
 KCModuleContainer::~KCModuleContainer()
 {
-	delete d;
+    delete d;
 }
-
-/***********************************************************************/
-
-
-
-

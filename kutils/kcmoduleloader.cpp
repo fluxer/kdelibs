@@ -41,44 +41,60 @@ using namespace KCModuleLoader;
 class KCMError : public KCModule
 {
 public:
-        KCMError( const QString& msg, const QString& details, QWidget* parent )
-            : KCModule( KGlobal::mainComponent(), parent )
-        {
-            QVBoxLayout* topLayout = new QVBoxLayout( this );
-            QLabel *lab = new QLabel( msg, this );
-            lab->setWordWrap(true);
-            topLayout->addWidget( lab );
-            lab = new QLabel(details, this );
-            lab->setWordWrap(true);
-            topLayout->addWidget( lab );
-        }
+    KCMError(const QString &msg, const QString &details, QWidget *parent)
+        : KCModule(KGlobal::mainComponent(), parent)
+    {
+        QVBoxLayout* topLayout = new QVBoxLayout(this);
+        QLabel *lab = new QLabel(msg, this);
+        lab->setWordWrap(true);
+        topLayout->addWidget(lab);
+        lab = new QLabel(details, this);
+        lab->setWordWrap(true);
+        topLayout->addWidget(lab);
+    }
 };
 /***************************************************************/
 
-KCModule *KCModuleLoader::loadModule(const QString &module, ErrorReporting report, QWidget *parent, const QStringList &args)
+KCModule *KCModuleLoader::loadModule(const QString &module, ErrorReporting report,
+                                     QWidget *parent, const QStringList &args)
 {
-  return loadModule( KCModuleInfo( module ), report, parent, args );
+    return loadModule(KCModuleInfo(module), report, parent, args);
 }
 
-KCModule* KCModuleLoader::loadModule(const KCModuleInfo& mod, ErrorReporting report, QWidget* parent, const QStringList& args )
+KCModule* KCModuleLoader::loadModule(const KCModuleInfo &mod, ErrorReporting report,
+                                     QWidget *parent, const QStringList &args)
 {
-  /*
-   * Simple libraries as modules are the easiest case:
-   *  We just have to load the library and get the module
-   *  from the factory.
-   */
+    /*
+     * Simple libraries as modules are the easiest case:
+     *  We just have to load the library and get the module
+     *  from the factory.
+     */
 
-  if ( !mod.service() )
-    return reportError( report,
-        i18n("The module %1 could not be found.",
-          mod.moduleName() ), i18n("<qt><p>The diagnosis is:<br />The desktop file %1 could not be found.</p></qt>", mod.fileName()), parent );
-  if( mod.service()->noDisplay() )
-    return reportError( report, i18n( "The module %1 is disabled.", mod.moduleName() ),
-        i18n( "<qt><p>Either the hardware/software the module configures is not available or the module has been disabled by the administrator.</p></qt>" ),
-        parent );
+    if (!mod.service()) {
+        return reportError(
+            report,
+            i18n(
+                "The module %1 could not be found.",
+                mod.moduleName()
+            ),
+            i18n(
+                "<qt><p>The diagnosis is:<br />The desktop file %1 could not be found.</p></qt>", mod.fileName()
+            ),
+            parent
+        );
+    }
+    if (mod.service()->noDisplay()) {
+        return reportError(
+            report,
+            i18n("The module %1 is disabled.", mod.moduleName()),
+            i18n(
+                "<qt><p>Either the hardware/software the module configures is not available or the module has been disabled by the administrator.</p></qt>"
+            ),
+            parent
+        );
+    }
 
-  if (!mod.library().isEmpty())
-  {
+    if (!mod.library().isEmpty()) {
         QString error;
         QVariantList args2;
         foreach (const QString &arg, args) {
@@ -89,31 +105,36 @@ KCModule* KCModuleLoader::loadModule(const KCModuleInfo& mod, ErrorReporting rep
             return module;
         }
         return reportError(report, error, QString(), parent);
-  }
+    }
 
-  /*
-   * Ok, we could not load the library.
-   * Try to run it as an executable.
-   * This must not be done when calling from kcmshell, or you'll
-   * have infinite recursion
-   * (startService calls kcmshell which calls modloader which calls startService...)
-   *
-   */
-  return reportError( report,
-      i18n("The module %1 is not a valid configuration module.", mod.moduleName() ),
-      i18n("<qt>The diagnosis is:<br />The desktop file %1 does not specify a library.</qt>", mod.fileName()), parent );
+    /*
+     * Ok, we could not load the library.
+     * Try to run it as an executable.
+     * This must not be done when calling from kcmshell, or you'll
+     * have infinite recursion
+     * (startService calls kcmshell which calls modloader which calls startService...)
+     *
+     */
+    return reportError(
+        report,
+        i18n("The module %1 is not a valid configuration module.", mod.moduleName()),
+        i18n("<qt>The diagnosis is:<br />The desktop file %1 does not specify a library.</qt>", mod.fileName()),
+        parent
+    );
 }
 
-KCModule* KCModuleLoader::reportError( ErrorReporting report, const QString & text,
-        const QString &details, QWidget * parent )
+KCModule* KCModuleLoader::reportError(ErrorReporting report, const QString &text,
+                                      const QString &details, QWidget *parent)
 {
     QString realDetails = details;
     if (realDetails.isNull()) {
-        realDetails = i18n("<qt><p>Possible reasons:<ul><li>An error occurred during your last "
-                "KDE upgrade leaving an orphaned control module</li><li>You have old third party "
-                "modules lying around.</li></ul></p><p>Check these points carefully and try to remove "
-                "the module mentioned in the error message. If this fails, consider contacting "
-                "your distributor or packager.</p></qt>");
+        realDetails = i18n(
+            "<qt><p>Possible reasons:<ul><li>An error occurred during your last "
+            "KDE upgrade leaving an orphaned control module</li><li>You have old third party "
+            "modules lying around.</li></ul></p><p>Check these points carefully and try to remove "
+            "the module mentioned in the error message. If this fails, consider contacting "
+            "your distributor or packager.</p></qt>"
+        );
     }
     if (report & KCModuleLoader::Dialog) {
         KMessageBox::detailedError(parent, text, realDetails);
@@ -121,7 +142,5 @@ KCModule* KCModuleLoader::reportError( ErrorReporting report, const QString & te
     if (report & KCModuleLoader::Inline) {
         return new KCMError(text, realDetails, parent);
     }
-    return 0;
+    return nullptr;
 }
-
-// vim: ts=4
