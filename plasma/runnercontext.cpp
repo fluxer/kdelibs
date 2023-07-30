@@ -57,14 +57,13 @@ bool correctLastComponentCase(const QString &path, QString &correctCasePath, con
 {
     //kDebug() << "Correcting " << path;
 
+    const QFileInfo pathInfo(path);
     // If the file already exists then no need to search for it.
-    if (QFileInfo(path).exists()) {
+    if (pathInfo.exists()) {
         correctCasePath = path;
         //kDebug() << "Correct path is" << correctCasePath;
         return true;
     }
-
-    const QFileInfo pathInfo(path);
 
     const QDir fileDir = pathInfo.dir();
     //kDebug() << "Directory is" << fileDir;
