@@ -18,17 +18,17 @@
  */
 
 #include "windoweffects.h"
-#include <QVarLengthArray>
+#include "theme.h"
 
 #include <kwindowsystem.h>
 
-#include "theme.h"
+#include <vector>
 
 #ifdef Q_WS_X11
-    #include <X11/Xlib.h>
-    #include <X11/Xatom.h>
-    #include <X11/Xutil.h>
-    #include <QtGui/qx11info_x11.h>
+#  include <X11/Xlib.h>
+#  include <X11/Xatom.h>
+#  include <X11/Xutil.h>
+#  include <QtGui/qx11info_x11.h>
 #endif
 
 namespace Plasma
@@ -91,7 +91,7 @@ void slideWindow(WId id, Plasma::Location location, int offset)
 #ifdef Q_WS_X11
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_SLIDE", False);
-    QVarLengthArray<long> data(2);
+    std::vector<long> data(2);
 
     data[0] = offset;
 
@@ -159,7 +159,7 @@ void showWindowThumbnails(WId parent, const QList<WId> &windows, const QList<QRe
     int numWindows = windows.size();
 
     // 64 is enough for 10 windows and is a nice base 2 number
-    QVarLengthArray<long> data(1 + (6 * numWindows));
+    std::vector<long> data(1 + (6 * numWindows));
     data[0] = numWindows;
 
     QList<QRect>::const_iterator rectsIt = rects.constBegin();
@@ -188,11 +188,11 @@ void presentWindows(WId controller, const QList<WId> &ids)
 {
 #ifdef Q_WS_X11
     const int numWindows = ids.count();
-    QVarLengthArray<long> data(numWindows);
+    std::vector<long> data(numWindows);
     for (int i = 0; i < numWindows; ++i) {
         data[i] = ids.at(i);
     }
-    if (!data.isEmpty()) {
+    if (data.size() > 0) {
         Display *dpy = QX11Info::display();
         Atom atom = XInternAtom(dpy, "_KDE_PRESENT_WINDOWS_GROUP", False);
         XChangeProperty(dpy, controller, atom, atom, 32, PropModeReplace,
@@ -204,7 +204,7 @@ void presentWindows(WId controller, const QList<WId> &ids)
 void presentWindows(WId controller, int desktop)
 {
 #ifdef Q_WS_X11
-    QVarLengthArray<long> data(1);
+    std::vector<long> data(1);
     data[0] = desktop;
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_PRESENT_WINDOWS_DESKTOP", False);
@@ -225,12 +225,12 @@ void highlightWindows(WId controller, const QList<WId> &ids)
         return;
     }
 
-    QVarLengthArray<long> data(numWindows);
+    std::vector<long> data(numWindows);
     for (int i = 0; i < numWindows; ++i) {
         data[i] = ids.at(i);
 
     }
-    if (!data.isEmpty()) {
+    if (data.size() > 0) {
         XChangeProperty(dpy, controller, atom, atom, 32, PropModeReplace,
                         reinterpret_cast<unsigned char *>(data.data()), data.size());
     }
