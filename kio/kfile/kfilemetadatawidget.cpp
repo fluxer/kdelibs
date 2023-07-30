@@ -46,20 +46,6 @@ public:
     Private(KFileMetaDataWidget* parent);
     ~Private();
 
-    /**
-     * Initializes the configuration file "kmetainformationrc"
-     * with proper default settings for the first start in
-     * an uninitialized environment.
-     */
-    void initMetaInfoSettings();
-
-    /**
-     * Parses the configuration file "kmetainformationrc" and
-     * updates the visibility of all rows that got their data
-     * from KFileItem.
-     */
-    void updateFileItemRowsVisibility();
-
     void deleteRows();
 
     void slotLoadingFinished();
@@ -73,27 +59,11 @@ private:
     KFileMetaDataWidget* const q;
 };
 
-KFileMetaDataWidget::Private::Private(KFileMetaDataWidget* parent) :
-    m_rows(),
-    m_provider(0),
-    m_gridLayout(0),
+KFileMetaDataWidget::Private::Private(KFileMetaDataWidget* parent)
+    : m_rows(),
+    m_provider(nullptr),
+    m_gridLayout(nullptr),
     q(parent)
-{
-    initMetaInfoSettings();
-
-    // TODO: If KFileMetaDataProvider might get a public class in future KDE releases,
-    // the following code should be moved into KFileMetaDataWidget::setModel():
-    m_provider = new KFileMetaDataProvider(q);
-    connect(m_provider, SIGNAL(loadingFinished()), q, SLOT(slotLoadingFinished()));
-    connect(m_provider, SIGNAL(urlActivated(KUrl)), q, SIGNAL(urlActivated(KUrl)));
-}
-
-KFileMetaDataWidget::Private::~Private()
-{
-    deleteRows();
-}
-
-void KFileMetaDataWidget::Private::initMetaInfoSettings()
 {
     // increase version, if the blacklist of disabled properties should be updated
     static const int currentVersion = 7;
@@ -145,6 +115,17 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
         // mark the group as initialized
         config.group("Misc").writeEntry("version", currentVersion);
     }
+
+    // TODO: If KFileMetaDataProvider might get a public class in future KDE releases,
+    // the following code should be moved into KFileMetaDataWidget::setModel():
+    m_provider = new KFileMetaDataProvider(q);
+    connect(m_provider, SIGNAL(loadingFinished()), q, SLOT(slotLoadingFinished()));
+    connect(m_provider, SIGNAL(urlActivated(KUrl)), q, SIGNAL(urlActivated(KUrl)));
+}
+
+KFileMetaDataWidget::Private::~Private()
+{
+    deleteRows();
 }
 
 void KFileMetaDataWidget::Private::deleteRows()
@@ -160,7 +141,7 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
 {
     deleteRows();
 
-    if (m_gridLayout == 0) {
+    if (!m_gridLayout) {
         m_gridLayout = new QGridLayout(q);
         m_gridLayout->setMargin(0);
         m_gridLayout->setSpacing(q->fontMetrics().height() / 4);
@@ -251,7 +232,7 @@ KFileItemList KFileMetaDataWidget::items() const
 
 QSize KFileMetaDataWidget::sizeHint() const
 {
-    if (d->m_gridLayout == 0) {
+    if (!d->m_gridLayout) {
         return QWidget::sizeHint();
     }
 
