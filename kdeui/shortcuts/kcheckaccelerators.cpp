@@ -19,8 +19,6 @@
     Boston, MA 02110-1301, USA.
  */
 
-#define INCLUDE_MENUITEM_DEF
-
 #include "kcheckaccelerators.h"
 
 #include <config.h>
