@@ -64,8 +64,6 @@ public:
 
     void slotLoadingFinished();
     void slotLinkActivated(const QString& link);
-    void slotDataChangeStarted();
-    void slotDataChangeFinished();
 
     QList<Row> m_rows;
     KFileMetaDataProvider* m_provider;
@@ -228,16 +226,6 @@ void KFileMetaDataWidget::Private::slotLinkActivated(const QString& link)
     if (url.isValid()) {
         emit q->urlActivated(url);
     }
-}
-
-void KFileMetaDataWidget::Private::slotDataChangeStarted()
-{
-    q->setEnabled(false);
-}
-
-void KFileMetaDataWidget::Private::slotDataChangeFinished()
-{
-    q->setEnabled(true);
 }
 
 KFileMetaDataWidget::KFileMetaDataWidget(QWidget* parent) :
