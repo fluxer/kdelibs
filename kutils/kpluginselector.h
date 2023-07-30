@@ -75,50 +75,6 @@ public:
     ~KPluginSelector();
 
     /**
-      * Add a list of KParts plugins
-      *
-      * The information about the plugins will be loaded from the
-      * share/&lt;instancename&gt;/kpartplugins directory
-      *
-      * @param componentName The name of the KComponentData of the plugin's parent.
-      * @param categoryName  The translated name of the category. This is the
-      *                      name that is shown in the title. If the category
-      *                      did exist before because of another call to
-      *                      addPlugins, then they will be shown in that
-      *                      category. If @p categoryName is a new one, then
-      *                      a new category will be shown on the plugin window,
-      *                      and the list of plugins added to it
-      * @param categoryKey   When you have different categories of KParts
-      *                      plugins you distinguish between the plugins using
-      *                      the Category key in the .desktop file. Use this
-      *                      parameter to select only those KParts plugins
-      *                      with the Category key == @p categoryKey. If
-      *                      @p categoryKey is not set the Category key is
-      *                      ignored and all plugins are shown. Not match case
-      * @param config        The KConfig object that holds the state of the
-      *                      plugins being enabled or not. By default it should
-      *                      be componentData.config(). It is recommended to
-      *                      always pass a KConfig object if you use
-      *                      KSettings::PluginPage since you never know from where the
-      *                      page will be called (think global config app).
-      *                      For example KViewCanvas passes KConfig(
-      *                      "kviewcanvas" )
-      */
-    void addPlugins(const QString &componentName,
-                    const QString &categoryName = QString(),
-                    const QString &categoryKey = QString(),
-                    KSharedConfig::Ptr config = KSharedConfig::Ptr());
-
-    /**
-      * Add a list of KParts plugins. Convenience method for the one above.
-      * If not set explicitly, @p config is set to componentData.config()
-      */
-    void addPlugins(const KComponentData &instance,
-                    const QString &categoryName = QString(),
-                    const QString &categoryKey = QString(),
-                    const KSharedConfig::Ptr &config = KSharedConfig::Ptr());
-
-    /**
       * Add a list of non-KParts plugins
       *
       * @param pluginInfoList   A list of KPluginInfo objects containing the

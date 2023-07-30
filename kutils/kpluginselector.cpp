@@ -290,38 +290,6 @@ KPluginSelector::~KPluginSelector()
     delete d;
 }
 
-void KPluginSelector::addPlugins(const QString &componentName,
-                                 const QString &categoryName,
-                                 const QString &categoryKey,
-                                 KSharedConfig::Ptr config)
-{
-    QStringList desktopFileNames = KGlobal::dirs()->findAllResources("data",
-        componentName + "/kpartplugins/*.desktop", KStandardDirs::Recursive);
-
-    QList<KPluginInfo> pluginInfoList = KPluginInfo::fromFiles(desktopFileNames);
-
-    if (pluginInfoList.isEmpty())
-        return;
-
-    Q_ASSERT(config);
-    if (!config)
-        config = KSharedConfig::openConfig(componentName);
-
-    KConfigGroup cfgGroup(config, "KParts Plugins");
-    kDebug( 702 ) << "cfgGroup = " << &cfgGroup;
-
-    d->pluginModel->addPlugins(pluginInfoList, categoryName, categoryKey, cfgGroup);
-    d->proxyModel->sort(0);
-}
-
-void KPluginSelector::addPlugins(const KComponentData &instance,
-                                 const QString &categoryName,
-                                 const QString &categoryKey,
-                                 const KSharedConfig::Ptr &config)
-{
-    addPlugins(instance.componentName(), categoryName, categoryKey, config);
-}
-
 void KPluginSelector::addPlugins(const QList<KPluginInfo> &pluginInfoList,
                                  PluginLoadMethod pluginLoadMethod,
                                  const QString &categoryName,
