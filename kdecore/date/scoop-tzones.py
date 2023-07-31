@@ -106,7 +106,7 @@ for tzone, tzcomments in system_timezones.items():
 if num_new_tzones or num_new_tzcomments:
     tzlines = []
     tzones = current_timezones.keys()
-    tzones.sort()
+    tzones = sorted(tzones)
     for tzone in tzones:
         tzlines.append("i18n(\"%s\");\n" % tzone);
         for tzcomment in current_timezones[tzone]:
