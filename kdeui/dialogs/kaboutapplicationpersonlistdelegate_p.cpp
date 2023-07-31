@@ -16,16 +16,14 @@
 */
 
 #include "kaboutapplicationpersonlistdelegate_p.h"
-
 #include "kaboutapplicationpersonmodel_p.h"
 #include "kaboutapplicationpersonlistview_p.h"
-#include "kdeui/widgets/ktoolbar.h"
-#include "kdeui/actions/kaction.h"
-#include "kdeui/icons/kicon.h"
-
-#include <kdecore/io/kdebug.h>
-#include <kdecore/kernel/kstandarddirs.h>
-#include <kdecore/kernel/ktoolinvocation.h>
+#include "ktoolbar.h"
+#include "kaction.h"
+#include "kicon.h"
+#include "kdebug.h"
+#include "kstandarddirs.h"
+#include "ktoolinvocation.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QPainter>

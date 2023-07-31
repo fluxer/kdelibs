@@ -34,7 +34,6 @@
 #include <kstandarddirs.h>
 #include <kurl.h>
 #include <kcomponentdata.h>
-#include <ktoolinvocation.h>
 #include <kaboutdata.h>
 #include <kshell.h>
 #include <kdebug.h>

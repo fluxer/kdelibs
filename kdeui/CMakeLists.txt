@@ -153,6 +153,8 @@ set(kdeui_LIB_SRCS
     kernel/kstartupinfo.cpp
     kernel/kglobalsettings.cpp
     kernel/ksystemeventfilter.cpp
+    kernel/ktoolinvocation.cpp
+    kernel/ktoolinvocation_x11.cpp
     notifications/knotification.cpp
     notifications/knotificationmanager.cpp
     notifications/knotificationrestrictions.cpp
@@ -304,6 +306,8 @@ set_source_files_properties(
     ${CMAKE_SOURCE_DIR}/kdeui/kernel/kapplication.cpp
     ${CMAKE_SOURCE_DIR}/kdeui/kernel/kglobalsettings.cpp
     ${CMAKE_SOURCE_DIR}/kdeui/kernel/kuniqueapplication.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/kernel/ktoolinvocation.cpp
+    ${CMAKE_SOURCE_DIR}/kdeui/kernel/ktoolinvocation_x11.cpp
     ${CMAKE_SOURCE_DIR}/kdeui/notifications/knotificationrestrictions.cpp
     ${CMAKE_SOURCE_DIR}/kdeui/util/kcrash.cpp
     ${CMAKE_SOURCE_DIR}/kdeui/util/kcursor.cpp
@@ -464,6 +468,7 @@ install(
     kernel/kstartupinfo.h
     kernel/kglobalsettings.h
     kernel/ksystemeventfilter.h
+    kernel/ktoolinvocation.h
     notifications/kstatusnotifieritem.h
     notifications/ksystemtrayicon.h
     notifications/knotification.h

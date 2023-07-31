@@ -31,7 +31,8 @@
 #include <QtGui/QSessionManager>
 #include <QtGui/QStyleFactory>
 #include <QtGui/QWidget>
-#include <QtGui/qevent.h>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QX11Info>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
 
@@ -49,7 +50,6 @@
 #include "ksessionmanager.h"
 #include "kstandarddirs.h"
 #include "kstandardshortcut.h"
-#include "ktoolinvocation.h"
 #include "kurl.h"
 #include "kmessage.h"
 #include "kmessageboxmessagehandler.h"
@@ -67,14 +67,12 @@
 #include <sys/stat.h>
 
 #ifdef Q_WS_X11
-#include <netwm.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/SM/SMlib.h>
-#include <fixx11h.h>
-
-#include <QtGui/qx11info_x11.h>
+#  include <netwm.h>
+#  include <X11/Xlib.h>
+#  include <X11/Xutil.h>
+#  include <X11/Xatom.h>
+#  include <X11/SM/SMlib.h>
+#  include <fixx11h.h>
 #endif
 
 KApplication* KApplication::KApp = 0L;
@@ -168,7 +166,6 @@ public:
 
   void _k_x11FilterDestroyed();
   void _k_checkAppStartedSlot();
-  void _k_KToolInvocation_hook(QStringList&, QByteArray&);
   void _k_disableAutorestartSlot();
 
   QString sessionConfigName() const;
@@ -470,15 +467,6 @@ void KApplicationPrivate::init()
     KMessage::setMessageHandler( new KMessageBoxMessageHandler(0) );
 
     KCheckAccelerators::initiateIfNeeded(q);
-
-    // HACK: KLauncher creates KApplication instance and KToolInvocation creates KLauncher instance
-    // (i.e recursion)
-    if (QCoreApplication::applicationName() != QLatin1String("klauncher")) {
-        q->connect(
-            KToolInvocation::self(), SIGNAL(kapplication_hook(QStringList&,QByteArray&)),
-            q, SLOT(_k_KToolInvocation_hook(QStringList&,QByteArray&))
-        );
-    }
   }
 
   // too late to restart if the application is about to quit (e.g. if QApplication::quit() was
@@ -918,27 +906,6 @@ void KApplicationPrivate::read_app_startup_id()
     startup_id = *startup_id_tmp;
     delete startup_id_tmp;
     startup_id_tmp = nullptr;
-#endif
-}
-
-// Hook called by KToolInvocation
-void KApplicationPrivate::_k_KToolInvocation_hook(QStringList& envs,QByteArray& startup_id)
-{
-#ifdef Q_WS_X11
-    if (QX11Info::display()) {
-        QByteArray dpystring(XDisplayString(QX11Info::display()));
-        envs << QLatin1String("DISPLAY=") + dpystring;
-    } else {
-        const QByteArray dpystring( qgetenv( "DISPLAY" ));
-        if(!dpystring.isEmpty())
-            envs << QLatin1String("DISPLAY=") + dpystring;
-    }
-
-    if(startup_id.isEmpty())
-        startup_id = KStartupInfo::createNewStartupId();
-#else
-    Q_UNUSED(envs);
-    Q_UNUSED(startup_id);
 #endif
 }
 

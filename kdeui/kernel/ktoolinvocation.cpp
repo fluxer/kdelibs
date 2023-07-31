@@ -28,12 +28,19 @@
 #include "kservice.h"
 #include "klocale.h"
 #include "kglobalsettings.h"
+#include "kstartupinfo.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QProcess>
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
+#include <QtGui/QX11Info>
+
+#ifdef Q_WS_X11
+#  include <X11/Xlib.h>
+#  include <fixx11h.h>
+#endif
 
 #define KTOOLINVOCATION_TIMEOUT 250
 #define KTOOLINVOCATION_SLEEPTIME 50
@@ -109,7 +116,19 @@ int KToolInvocation::startServiceInternal(const char *_function,
     // make sure there is id, so that user timestamp exists
     QStringList envs;
     QByteArray asn = startup_id;
-    emit kapplication_hook(envs, asn);
+    if (QX11Info::display()) {
+        const QString dpystring = QString::fromLatin1(XDisplayString(QX11Info::display()));
+        envs << QLatin1String("DISPLAY=") + dpystring;
+    } else {
+        const QString dpystring = QString::fromLocal8Bit(qgetenv("DISPLAY"));
+        if (!dpystring.isEmpty()) {
+            envs << QLatin1String("DISPLAY=") + dpystring;
+        }
+    }
+
+    if (asn.isEmpty()) {
+        asn = KStartupInfo::createNewStartupId();
+    }
 
     QDBusPendingReply<int> reply;
     if (qstrcmp(_function, "kdeinit_exec_with_workdir") == 0) {

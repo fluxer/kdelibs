@@ -22,7 +22,6 @@
 #include "ksycoca_p.h"
 #include "ksycocatype.h"
 #include "ksycocafactory.h"
-#include "ktoolinvocation.h"
 #include "kglobal.h"
 #include "kde_file.h"
 #include "kconfiggroup.h"

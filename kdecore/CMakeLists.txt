@@ -73,7 +73,6 @@ set(kdecore_LIB_SRCS
     kernel/kglobal.cpp
     kernel/kcomponentdata.cpp
     kernel/kstandarddirs.cpp
-    kernel/ktoolinvocation.cpp
     services/kmimetypefactory.cpp
     services/kmimemagicrule.cpp
     services/kmimetypetrader.cpp
@@ -121,7 +120,6 @@ set(kdecore_LIB_SRCS
     util/kunitconversion.cpp
     util/qtest_kde.cpp
 
-    kernel/ktoolinvocation_x11.cpp
     kernel/kstandarddirs_unix.cpp
     io/klockfile_unix.cpp
     util/kshell_unix.cpp
@@ -222,7 +220,6 @@ install(
     kernel/kglobal.h
     kernel/kcomponentdata.h
     kernel/kstandarddirs.h
-    kernel/ktoolinvocation.h
     services/kmimetype.h
     services/kmimetypetrader.h
     services/kservice.h
