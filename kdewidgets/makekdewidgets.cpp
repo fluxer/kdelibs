@@ -191,8 +191,6 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
     QString widgetIconPath = QString::fromLatin1(DATA_INSTALL_DIR "/kdewidgets/pics/%1.png").arg( widgetIconName );
 
     defMap.insert( "Group", input.readEntry( "Group", group ).replace( '\"', "\\\"" ) );
-    defMap.insert( "IconSet", input.readEntry( "IconSet", QString(name.toLower() + ".png") ).replace( ':', '_' ) );
-    defMap.insert( "Pixmap", name.toLower().replace( ':', '_' ) + "_xpm" );
     defMap.insert( "IncludeFile", input.readEntry( "IncludeFile", QString(name.toLower() + ".h") ).remove( ':' ) );
     defMap.insert( "ToolTip", input.readEntry( "ToolTip", QString(name + " Widget") ).replace( '\"', "\\\"" ) );
     defMap.insert( "WhatsThis", input.readEntry( "WhatsThis", QString(name + " Widget") ).replace( '\"', "\\\"" ) );
@@ -206,8 +204,7 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
     // If domXml is empty then we shoud call base class function
     if ( domXml.isEmpty() ) {
         domXml = QLatin1String("QCustomWidget::domXml()");
-    }
-    else {
+    } else {
         // Wrap domXml value into QLatin1String
         domXml = QString::fromLatin1("QLatin1String(\"%1\")").arg(domXml.replace( '\"', "\\\"" ));
     }
