@@ -13,7 +13,6 @@ install(
     ksqueezedtextlabel.png
     kurllabel.png
     kruler.png
-    kcmodule.png
     kdoublenuminput.png
     klistbox.png
     kactivelabel.png
