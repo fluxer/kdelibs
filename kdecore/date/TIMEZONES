@@ -68,6 +68,8 @@ i18n("Africa/Windhoek");
 i18n("America/Adak");
 // i18n: comment to the previous timezone
 i18n("Aleutian Islands");
+// i18n: comment to the previous timezone
+i18n("Alaska - western Aleutians");
 i18n("America/Anchorage");
 // i18n: comment to the previous timezone
 i18n("Alaska Time");
@@ -143,6 +145,8 @@ i18n("America/Bahia_Banderas");
 i18n("Mexican Central Time - Bahia de Banderas");
 // i18n: comment to the previous timezone
 i18n("Central Time - Bahia de Banderas");
+// i18n: comment to the previous timezone
+i18n("Bahia de Banderas");
 i18n("America/Barbados");
 i18n("America/Belem");
 // i18n: comment to the previous timezone
@@ -183,6 +187,8 @@ i18n("America/Cancun");
 i18n("Central Time - Quintana Roo");
 // i18n: comment to the previous timezone
 i18n("Eastern Standard Time - Quintana Roo");
+// i18n: comment to the previous timezone
+i18n("Quintana Roo");
 i18n("America/Caracas");
 i18n("America/Catamarca");
 // i18n: comment to the previous timezone
@@ -201,6 +207,11 @@ i18n("Mountain Time - Chihuahua");
 i18n("Mexican Mountain Time - Chihuahua away from US border");
 // i18n: comment to the previous timezone
 i18n("Mountain Time - Chihuahua (most areas)");
+// i18n: comment to the previous timezone
+i18n("Chihuahua (most areas)");
+i18n("America/Ciudad_Juarez");
+// i18n: comment to the previous timezone
+i18n("Chihuahua (US border - west)");
 i18n("America/Coral_Harbour");
 // i18n: comment to the previous timezone
 i18n("Eastern Standard Time - Atikokan, Ontario and Southampton I, Nunavut");
@@ -248,6 +259,8 @@ i18n("America/Edmonton");
 i18n("Mountain Time - Alberta, east British Columbia & west Saskatchewan");
 // i18n: comment to the previous timezone
 i18n("Mountain - AB; BC (E); SK (W)");
+// i18n: comment to the previous timezone
+i18n("Mountain - AB; BC (E); NT (E); SK (W)");
 i18n("America/Eirunepe");
 // i18n: comment to the previous timezone
 i18n("W Amazonas");
@@ -303,6 +316,8 @@ i18n("America/Havana");
 i18n("America/Hermosillo");
 // i18n: comment to the previous timezone
 i18n("Mountain Standard Time - Sonora");
+// i18n: comment to the previous timezone
+i18n("Sonora");
 i18n("America/Indiana/Indianapolis");
 // i18n: comment to the previous timezone
 i18n("Eastern Time - Indiana - most locations");
@@ -360,6 +375,8 @@ i18n("America/Iqaluit");
 i18n("Eastern Time - east Nunavut - most locations");
 // i18n: comment to the previous timezone
 i18n("Eastern - NU (most east areas)");
+// i18n: comment to the previous timezone
+i18n("Eastern - NU (most areas)");
 i18n("America/Jamaica");
 i18n("America/Jujuy");
 // i18n: comment to the previous timezone
@@ -410,11 +427,15 @@ i18n("America/Matamoros");
 i18n("US Central Time - Coahuila, Durango, Nuevo Leon, Tamaulipas near US border");
 // i18n: comment to the previous timezone
 i18n("Central Time US - Coahuila, Nuevo Leon, Tamaulipas (US border)");
+// i18n: comment to the previous timezone
+i18n("Coahuila, Nuevo Leon, Tamaulipas (US border)");
 i18n("America/Mazatlan");
 // i18n: comment to the previous timezone
 i18n("Mountain Time - S Baja, Nayarit, Sinaloa");
 // i18n: comment to the previous timezone
 i18n("Mountain Time - Baja California Sur, Nayarit, Sinaloa");
+// i18n: comment to the previous timezone
+i18n("Baja California Sur, Nayarit (most areas), Sinaloa");
 i18n("America/Mendoza");
 // i18n: comment to the previous timezone
 i18n("Mendoza (MZ)");
@@ -426,6 +447,8 @@ i18n("Central - MI (Wisconsin border)");
 i18n("America/Merida");
 // i18n: comment to the previous timezone
 i18n("Central Time - Campeche, Yucatan");
+// i18n: comment to the previous timezone
+i18n("Campeche, Yucatan");
 i18n("America/Metlakatla");
 // i18n: comment to the previous timezone
 i18n("Metlakatla Time - Annette Island");
@@ -436,6 +459,8 @@ i18n("America/Mexico_City");
 i18n("Central Time - most locations");
 // i18n: comment to the previous timezone
 i18n("Central Time");
+// i18n: comment to the previous timezone
+i18n("Central Mexico");
 i18n("America/Miquelon");
 i18n("America/Moncton");
 // i18n: comment to the previous timezone
@@ -449,6 +474,8 @@ i18n("Central Time - Coahuila, Durango, Nuevo Leon, Tamaulipas");
 i18n("Mexican Central Time - Coahuila, Durango, Nuevo Leon, Tamaulipas away from US border");
 // i18n: comment to the previous timezone
 i18n("Central Time - Durango; Coahuila, Nuevo Leon, Tamaulipas (most areas)");
+// i18n: comment to the previous timezone
+i18n("Durango; Coahuila, Nuevo Leon, Tamaulipas (most areas)");
 i18n("America/Montevideo");
 i18n("America/Montreal");
 // i18n: comment to the previous timezone
@@ -491,11 +518,15 @@ i18n("Central - ND (Morton rural)");
 i18n("America/Nuuk");
 // i18n: comment to the previous timezone
 i18n("Greenland (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Greenland");
 i18n("America/Ojinaga");
 // i18n: comment to the previous timezone
 i18n("US Mountain Time - Chihuahua near US border");
 // i18n: comment to the previous timezone
 i18n("Mountain Time US - Chihuahua (US border)");
+// i18n: comment to the previous timezone
+i18n("Chihuahua (US border - east)");
 i18n("America/Ontario");
 // i18n: comment to the previous timezone
 i18n("Eastern Time - Quebec - most locations");
@@ -511,6 +542,8 @@ i18n("America/Phoenix");
 i18n("Mountain Standard Time - Arizona");
 // i18n: comment to the previous timezone
 i18n("MST - Arizona (except Navajo)");
+// i18n: comment to the previous timezone
+i18n("MST - AZ (except Navajo)");
 i18n("America/Port-au-Prince");
 i18n("America/Port_of_Spain");
 i18n("America/Porto_Acre");
@@ -567,6 +600,8 @@ i18n("America/Santiago");
 i18n("most locations");
 // i18n: comment to the previous timezone
 i18n("Chile (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Chile");
 i18n("America/Santo_Domingo");
 i18n("America/Sao_Paulo");
 // i18n: comment to the previous timezone
@@ -622,6 +657,8 @@ i18n("Pacific Time");
 i18n("US Pacific Time - Baja California near US border");
 // i18n: comment to the previous timezone
 i18n("Pacific Time US - Baja California");
+// i18n: comment to the previous timezone
+i18n("Baja California");
 i18n("America/Toronto");
 // i18n: comment to the previous timezone
 i18n("Eastern Time - Ontario - most locations");
@@ -719,6 +756,8 @@ i18n("Asia/Almaty");
 i18n("most locations");
 // i18n: comment to the previous timezone
 i18n("Kazakhstan (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Kazakhstan");
 i18n("Asia/Amman");
 i18n("Asia/Anadyr");
 // i18n: comment to the previous timezone
@@ -871,6 +910,8 @@ i18n("Asia/Muscat");
 i18n("Asia/Nicosia");
 // i18n: comment to the previous timezone
 i18n("Cyprus (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Cyprus");
 i18n("Asia/Novokuznetsk");
 // i18n: comment to the previous timezone
 i18n("Moscow+03 - Novokuznetsk");
@@ -930,6 +971,8 @@ i18n("Asia/Singapore");
 i18n("Asia/Srednekolymsk");
 // i18n: comment to the previous timezone
 i18n("MSK+08 - Sakha (E); North Kuril Is");
+// i18n: comment to the previous timezone
+i18n("MSK+08 - Sakha (E); N Kuril Is");
 i18n("Asia/Taipei");
 i18n("Asia/Tashkent");
 // i18n: comment to the previous timezone
@@ -953,6 +996,8 @@ i18n("Asia/Ulaanbaatar");
 i18n("most locations");
 // i18n: comment to the previous timezone
 i18n("Mongolia (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Mongolia");
 i18n("Asia/Ulan_Bator");
 // i18n: comment to the previous timezone
 i18n("most locations");
@@ -1144,6 +1189,8 @@ i18n("Europe/Belgrade");
 i18n("Europe/Berlin");
 // i18n: comment to the previous timezone
 i18n("Germany (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Germany");
 i18n("Europe/Bratislava");
 i18n("Europe/Brussels");
 i18n("Europe/Bucharest");
@@ -1173,6 +1220,9 @@ i18n("Ukraine (most areas)");
 i18n("Europe/Kirov");
 // i18n: comment to the previous timezone
 i18n("MSK+00 - Kirov");
+i18n("Europe/Kyiv");
+// i18n: comment to the previous timezone
+i18n("most of Ukraine");
 i18n("Europe/Lisbon");
 // i18n: comment to the previous timezone
 i18n("mainland");
@@ -1299,6 +1349,8 @@ i18n("Pacific/Auckland");
 i18n("most locations");
 // i18n: comment to the previous timezone
 i18n("New Zealand (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of New Zealand");
 i18n("Pacific/Bougainville");
 // i18n: comment to the previous timezone
 i18n("Bougainville");
@@ -1336,6 +1388,9 @@ i18n("Hawaii");
 i18n("Pacific/Johnston");
 // i18n: comment to the previous timezone
 i18n("Johnston Atoll");
+i18n("Pacific/Kanton");
+// i18n: comment to the previous timezone
+i18n("Phoenix Islands");
 i18n("Pacific/Kiritimati");
 // i18n: comment to the previous timezone
 i18n("Line Islands");
@@ -1350,6 +1405,8 @@ i18n("Pacific/Majuro");
 i18n("most locations");
 // i18n: comment to the previous timezone
 i18n("Marshall Islands (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Marshall Islands");
 i18n("Pacific/Marquesas");
 // i18n: comment to the previous timezone
 i18n("Marquesas Islands");
@@ -1374,6 +1431,8 @@ i18n("Ponape (Pohnpei)");
 i18n("Pacific/Port_Moresby");
 // i18n: comment to the previous timezone
 i18n("Papua New Guinea (most areas)");
+// i18n: comment to the previous timezone
+i18n("most of Papua New Guinea");
 i18n("Pacific/Rarotonga");
 i18n("Pacific/Saipan");
 i18n("Pacific/Samoa");
