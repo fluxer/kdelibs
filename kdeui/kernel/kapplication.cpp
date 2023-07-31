@@ -78,9 +78,7 @@
 KApplication* KApplication::KApp = 0L;
 
 #ifdef Q_WS_X11
-static Atom atom_DesktopWindow = None;
 static Atom atom_NetSupported = None;
-static Atom kde_xdnd_drop = None;
 static QByteArray* startup_id_tmp = nullptr;
 #endif
 
@@ -385,30 +383,9 @@ void KApplicationPrivate::init()
   (void) QApplication::clipboard();
 
   parseCommandLine();
-
 #ifdef Q_WS_X11
-  // create all required atoms in _one_ roundtrip to the X server
-  const int max = 20;
-  Atom* atoms[max];
-  char* names[max];
-  Atom atoms_return[max];
-  int n = 0;
-
-  atoms[n] = &atom_DesktopWindow;
-  names[n++] = (char *) "KDE_DESKTOP_WINDOW";
-
-  atoms[n] = &atom_NetSupported;
-  names[n++] = (char *) "_NET_SUPPORTED";
-
-  atoms[n] = &kde_xdnd_drop;
-  names[n++] = (char *) "XdndDrop";
-
-  XInternAtoms( QX11Info::display(), names, n, false, atoms_return );
-
-  for (int i = 0; i < n; i++ )
-    *atoms[i] = atoms_return[i];
+  atom_NetSupported = XInternAtom( QX11Info::display(), "_NET_SUPPORTED", False );
 #endif
-
 
   // sanity checking, to make sure we've connected
   QDBusConnection sessionBus = QDBusConnection::sessionBus();
