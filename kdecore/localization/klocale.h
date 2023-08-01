@@ -26,7 +26,6 @@
 #include <QLocale>
 #include <QDateTime>
 
-class KDateTime;
 class KLocalePrivate;
 
 /**
