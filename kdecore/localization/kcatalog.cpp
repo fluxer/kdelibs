@@ -18,7 +18,7 @@
 
 #include "kcatalog_p.h"
 #include "kstandarddirs.h"
-#include <kdebug.h>
+#include "kdebug.h"
 
 #include <QFile>
 

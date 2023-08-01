@@ -22,7 +22,6 @@
 #include "kconfig.h"
 #include "kconfiggroup.h"
 #include "kstandarddirs.h"
-#include "kdatetime.h"
 #include "kdebug.h"
 #include "common_helpers_p.h"
 
