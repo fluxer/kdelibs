@@ -20,7 +20,6 @@
 #include "kpluginfactory.h"
 #include "kglobal.h"
 #include "klocale.h"
-#include "kdatetime.h"
 #include "kdebug.h"
 
 #include <QDateTime>
@@ -43,8 +42,11 @@ static QString getString(const poppler::ustring &popplerstring)
 
 static QString getTime(const popplertimetype &popplertime)
 {
-    const KDateTime kdatetime(QDateTime::fromTime_t(popplertime));
-    return KGlobal::locale()->formatDateTime(kdatetime, QLocale::NarrowFormat);
+    if (popplertime <= 0) {
+        return QString();
+    }
+    const QDateTime qdatetime(QDateTime::fromTime_t(popplertime));
+    return KGlobal::locale()->formatDateTime(qdatetime, QLocale::NarrowFormat);
 }
 
 KFileMetaDataPopplerPlugin::KFileMetaDataPopplerPlugin(QObject* parent, const QVariantList &args)
