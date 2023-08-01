@@ -20,9 +20,11 @@
 #include "kpluginfactory.h"
 #include "kglobal.h"
 #include "klocale.h"
+#include "kdecompressor.h"
 #include "kdebug.h"
 
 #include <QDateTime>
+#include <QFile>
 
 #include <poppler/cpp/poppler-document.h>
 #include <poppler/cpp/poppler-version.h>
@@ -62,8 +64,29 @@ KFileMetaDataPopplerPlugin::~KFileMetaDataPopplerPlugin()
 QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
-    poppler::document *popplerdocument = poppler::document::load_from_file(std::string(urlpath.constData(), urlpath.size()));
+    const QString urlpath = url.toLocalFile();
+    poppler::document* popplerdocument = nullptr;
+    // NOTE: data has be kept for as long as the document is open
+    QByteArray popplerbytes;
+    const KDecompressor::KDecompressorType pathtype = KDecompressor::typeForFile(urlpath);
+    if (pathtype != KDecompressor::TypeUnknown) {
+        QFile pathfile(urlpath);
+        if (!pathfile.open(QFile::ReadOnly)) {
+            kWarning() << "Could not open" << urlpath;
+            return result;
+        }
+        KDecompressor kdecompressor;
+        kdecompressor.setType(pathtype);
+        if (!kdecompressor.process(pathfile.readAll())) {
+            kWarning() << "Could not decompress" << urlpath;
+            return result;
+        }
+        popplerbytes = kdecompressor.result();
+        popplerdocument = poppler::document::load_from_raw_data(popplerbytes.constData(), popplerbytes.size());
+    } else {
+        const QByteArray urlpathbytes = QFile::encodeName(urlpath);
+        popplerdocument = poppler::document::load_from_file(std::string(urlpathbytes.constData(), urlpathbytes.size()));
+    }
     if (!popplerdocument) {
         kWarning() << "Could not open" << urlpath;
         return result;

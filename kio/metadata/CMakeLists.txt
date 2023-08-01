@@ -91,6 +91,7 @@ if (POPPLER_FOUND)
     target_link_libraries(kfilemetadata_poppler
         ${POPPLER_LIBRARIES}
         kio
+        karchive
     )
 
     install(

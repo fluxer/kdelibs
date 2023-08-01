@@ -16,6 +16,8 @@ include_directories(
     ${CMAKE_BINARY_DIR}/kutils/kpasswdstore
     ${CMAKE_SOURCE_DIR}/kutils/kexiv2
     ${CMAKE_BINARY_DIR}/kutils/kexiv2
+    ${CMAKE_SOURCE_DIR}/kutils/karchive
+    ${CMAKE_BINARY_DIR}/kutils/karchive
 )
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=7000)
