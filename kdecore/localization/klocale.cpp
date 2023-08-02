@@ -658,7 +658,7 @@ QString KLocale::languageCodeToName(const QString &language) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
-    const QString localelanguage = this->language();
+    const QString localelanguage = languageList().first();
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
         entryconfig.setLocale(localelanguage);
@@ -684,7 +684,7 @@ QString KLocale::countryCodeToName(const QString &country) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", QString::fromLatin1("l10n/") + country.toLower() + QLatin1String("/entry.desktop"));
-    const QString localelanguage = this->language();
+    const QString localelanguage = languageList().first();
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
         entryconfig.setLocale(localelanguage);
