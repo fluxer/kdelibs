@@ -384,8 +384,6 @@ private:
 
 /* ------------------------------------------------------------------------ */
 
-class KDoubleLine;
-
 /**
  * @short An input control for real numbers, consisting of a spinbox and a slider.
  *
@@ -443,7 +441,7 @@ public:
      * @param parent parent QWidget
      */
     KDoubleNumInput(double lower, double upper, double value, QWidget *parent=0,double singleStep=0.01,
-		    int precision=2);
+                    int precision=2);
 
     /**
      * destructor
@@ -617,7 +615,6 @@ protected:
     virtual void doLayout();
     void resizeEvent ( QResizeEvent * );
 
-    friend class KDoubleLine;
 private:
     void init(double value, double lower, double upper,
     double singleStep, int precision);
