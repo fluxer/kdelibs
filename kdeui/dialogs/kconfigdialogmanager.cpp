@@ -134,6 +134,7 @@ void KConfigDialogManager::initMaps()
 
     s_changedMap->insert( "KColorButton", SIGNAL(changed(QColor)));
     s_changedMap->insert( "KCalendarWidget", SIGNAL(activated(QDate)));
+    s_changedMap->insert( "KTimeEdit", SIGNAL(timeChanged(QTime)));
     s_changedMap->insert( "KEditListBox", SIGNAL(changed()));
     s_changedMap->insert( "KEditListWidget", SIGNAL(changed()));
     s_changedMap->insert( "KListWidget", SIGNAL(itemSelectionChanged()));

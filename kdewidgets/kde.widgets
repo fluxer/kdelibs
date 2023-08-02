@@ -59,6 +59,11 @@ ToolTip=A date selection widget (KDE)
 WhatsThis=Provides a widget for calendar date input
 Group=Date/Time (KDE)
 
+[KTimeEdit]
+ToolTip=A time edit widget (KDE)
+WhatsThis=Provides a widget for time editing
+Group=Date/Time (KDE)
+
 [KDialog]
 IncludeFile=kdialog.h
 ToolTip=Class for simple Dialogs (KDE)

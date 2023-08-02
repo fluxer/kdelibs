@@ -236,6 +236,7 @@ set(kdeui_LIB_SRCS
     widgets/ktabbar.cpp
     widgets/ktabwidget.cpp
     widgets/ktextedit.cpp
+    widgets/ktimeedit.cpp
     widgets/ktimezonewidget.cpp
     widgets/ktitlewidget.cpp
     widgets/ktoolbar.cpp
@@ -537,6 +538,7 @@ install(
     widgets/kseparator.h
     widgets/ksqueezedtextlabel.h
     widgets/ktextedit.h
+    widgets/ktimeedit.h
     widgets/ktimezonewidget.h
     widgets/ktitlewidget.h
     widgets/ktabbar.h

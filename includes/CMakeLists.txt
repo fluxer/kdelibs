@@ -274,6 +274,7 @@ install(
     KTempDir
     KTemporaryFile
     KTextEdit
+    KTimeEdit
     KTimeZone
     KTimeZoneWidget
     KTipDatabase
