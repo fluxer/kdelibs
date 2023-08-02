@@ -49,7 +49,7 @@ KSwitchLanguageDialog::KSwitchLanguageDialog(QWidget *parent)
 {
     setCaption(i18n("Switch Application Language"));
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
-    setDefaultButton(Ok);
+    setDefaultButton(KDialog::Ok);
 
     connect(this, SIGNAL(okClicked()), SLOT(slotOk()));
     connect(this, SIGNAL(defaultClicked()), SLOT(slotDefault()));

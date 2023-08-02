@@ -24,8 +24,6 @@
 #include <QCalendarWidget>
 #include <QEvent>
 
-class KCalendarWidgetPrivate;
-
 /*!
     Class to pick a date.
 
