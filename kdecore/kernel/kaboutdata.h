@@ -546,18 +546,6 @@ class KDECORE_EXPORT KAboutData
     QString organizationDomain() const;
 
     /**
-     * @internal
-     * Provided for use by KCrash
-     */
-    const char* internalProgramName() const;
-
-    /**
-     * @internal
-     * Provided for use by KCrash
-     */
-    void translateInternalProgramName() const;
-
-    /**
      * Returns the program's icon name.
      *
      * The default value is appName().
@@ -588,12 +576,6 @@ class KDECORE_EXPORT KAboutData
     QString version() const;
 
     /**
-     * @internal
-     * Provided for use by KCrash
-     */
-    const char* internalVersion() const;
-
-    /**
      * Returns a short, translated description.
      * @return the short description (translated). Can be
      *         QString() if not set.
@@ -618,12 +600,6 @@ class KDECORE_EXPORT KAboutData
      * @return the email address where to report bugs.
      */
     QString bugAddress() const;
-
-    /**
-     * @internal
-     * Provided for use by KCrash
-     */
-    const char* internalBugAddress() const;
 
     /**
      * Returns a list of authors.

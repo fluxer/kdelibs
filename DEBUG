@@ -89,10 +89,9 @@ Attaching gdb to already running applications
 
 Sometimes it is not practical to start an application from within gdb.
 E.g. in those cases where you didn't know the application was about to
-crash :-) When you get the friendly DrKonqi dialog informing you about 
-a crash you are just in time to start your debugger.
+crash :-).
 
-First lets attach gdb to an application that hasn't crashed (yet).
+gdb can be attached to an application that hasn't crashed (yet).
 
 You start with finding the process of the application with e.g. "ps -aux":
 
@@ -150,14 +149,4 @@ Getting core dumps
 ==================
 
 If you want to have a core dump after your application crashes you need to 
-do two things:
-
-1) Disable the KDE crash handler. This can be done either by using the 
---nocrashhandler command line option or by setting the KDE_DEBUG environment
-variable to some value e.g. KDE_DEBUG=true.
-
-2) Enable core dump generation by changing the so called 'ulimits' with the
-following command: 
-	ulimit -c unlimited
-
-
+setup the kernel option for it (kernel.core_pattern) via `sysctl`.

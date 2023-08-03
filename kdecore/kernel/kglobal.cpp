@@ -186,7 +186,6 @@ KLocale *KGlobal::locale()
         d->locale = 0;
         d->locale = new KLocale(mainComponent().catalogName());
         d->localeIsFromFakeComponent = !d->mainComponent.isValid();
-        mainComponent().aboutData()->translateInternalProgramName();
 #ifndef QT_NO_TRANSLATION
         installKDETranslator();
 #endif

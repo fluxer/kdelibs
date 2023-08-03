@@ -81,7 +81,6 @@ void KAboutDataTest::testConstructorWithDefaults()
     QCOMPARE( aboutData.customAuthorPlainText(), QString() );
     QCOMPARE( aboutData.customAuthorRichText(), QString() );
     QVERIFY( !aboutData.customAuthorTextEnabled() );
-    //TODO: test internalVersion, internalProgramName, internalBugAddress
 }
 
 void KAboutDataTest::testConstructor()
@@ -123,7 +122,6 @@ void KAboutDataTest::testConstructor()
     QCOMPARE( aboutData.customAuthorPlainText(), QString() );
     QCOMPARE( aboutData.customAuthorRichText(), QString() );
     QVERIFY( !aboutData.customAuthorTextEnabled() );
-    //TODO: test internalVersion, internalProgramName, internalBugAddress
 }
 
 void KAboutDataTest::testSetAddLicense()

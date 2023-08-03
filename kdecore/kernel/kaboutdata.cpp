@@ -383,9 +383,6 @@ public:
 
     QString organizationDomain;
 
-    // Everything dr.konqi needs, we store as utf-8, so we
-    // can just give it a pointer, w/o any allocations.
-    QByteArray _translatedProgramName; // ### I don't see it ever being translated, and I did not change that
     QByteArray _version;
     QByteArray _bugEmailAddress;
 };
@@ -412,8 +409,6 @@ KAboutData::KAboutData( const QByteArray &_appName,
 
     d->_catalogName = _catalogName;
     d->_programName = _programName;
-    if (!d->_programName.isEmpty()) // KComponentData("klauncher") gives empty program name
-        d->_translatedProgramName = _programName.toString(0).toUtf8();
     d->_version = _version;
     d->_shortDescription = _shortDescription;
     d->_licenseList.append(KAboutLicense(licenseType,this));
@@ -540,7 +535,6 @@ KAboutData &KAboutData::setAppName( const QByteArray &_appName )
 KAboutData &KAboutData::setProgramName( const KLocalizedString &_programName )
 {
   d->_programName = _programName;
-  translateInternalProgramName();
   return *this;
 }
 
@@ -622,25 +616,6 @@ QString KAboutData::programName() const
    return QString();
 }
 
-/// @internal
-/// Return the program name. It is always pre-allocated.
-/// Needed for KCrash in particular.
-const char* KAboutData::internalProgramName() const
-{
-   return d->_translatedProgramName.constData();
-}
-
-/// @internal
-/// KCrash should call as few things as possible and should avoid e.g. malloc()
-/// because it may deadlock. Since i18n() needs it, when KLocale is available
-/// the i18n() call will be done here in advance.
-void KAboutData::translateInternalProgramName() const
-{
-  d->_translatedProgramName.clear();
-  if( KGlobal::locale())
-      d->_translatedProgramName = programName().toUtf8();
-}
-
 QString KAboutData::programIconName() const
 {
     return d->programIconName.isEmpty() ? appName() : d->programIconName;
@@ -666,14 +641,6 @@ KAboutData &KAboutData::setProgramLogo(const QVariant& image)
 QString KAboutData::version() const
 {
    return QString::fromUtf8(d->_version);
-}
-
-/// @internal
-/// Return the untranslated and uninterpreted (to UTF8) string
-/// for the version information. Used in particular for KCrash.
-const char* KAboutData::internalVersion() const
-{
-   return d->_version.constData();
 }
 
 QString KAboutData::shortDescription() const
@@ -704,17 +671,6 @@ QString KAboutData::bugAddress() const
 QString KAboutData::organizationDomain() const
 {
     return d->organizationDomain;
-}
-
-
-/// @internal
-/// Return the untranslated and uninterpreted (to UTF8) string
-/// for the bug mail address. Used in particular for KCrash.
-const char* KAboutData::internalBugAddress() const
-{
-   if (d->_bugEmailAddress.isEmpty())
-      return 0;
-   return d->_bugEmailAddress.constData();
 }
 
 QList<KAboutPerson> KAboutData::authors() const

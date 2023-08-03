@@ -26,15 +26,24 @@
 #include "kdebug.h"
 
 #include <QCoreApplication>
-#include <QProcess>
+#include <QDataStream>
 #include <QX11Info>
 
 #include <signal.h>
 #include <X11/Xlib.h>
 #include "fixx11h.h"
 
+// NOTE: keep in sync with:
+// kde-workspace/kcrash/kded/kded_kcrash.cpp
+
+// see kdebug.areas
+static const int s_kcrasharea = 1410;
+
 static KCrash::HandlerType s_crashHandler = nullptr;
-static KCrash::CrashFlags s_flags = 0;
+static KCrash::CrashFlags s_crashflags = 0;
+static QString s_crashtmp;
+static QString s_crashfile;
+static QVariantMap s_crashdata;
 
 static const int s_signals[] = {
 #ifdef SIGSEGV
@@ -57,8 +66,8 @@ static const int s_signals[] = {
 
 void KCrash::setFlags(KCrash::CrashFlags flags)
 {
-    s_flags = flags;
-    if (s_flags & KCrash::AutoRestart || s_flags & KCrash::DrKonqi || s_flags & KCrash::Backtrace) {
+    s_crashflags = flags;
+    if (s_crashflags & KCrash::AutoRestart || s_crashflags & KCrash::DrKonqi || s_crashflags & KCrash::Backtrace) {
         // Default crash handler is required for the flags to work but one may be set already
         if (!s_crashHandler) {
             KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
@@ -66,12 +75,50 @@ void KCrash::setFlags(KCrash::CrashFlags flags)
                 setCrashHandler(defaultCrashHandler);
             }
         }
+
+        if (s_crashtmp.isEmpty()) {
+            const QString tmppath = KGlobal::dirs()->saveLocation("tmp", "kcrash/");
+            s_crashtmp = QString::fromLatin1("%1/%2_%3.tmp").arg(
+                tmppath,
+                QCoreApplication::applicationName(),
+                QString::number(QCoreApplication::applicationPid())
+            );
+            s_crashfile = s_crashtmp;
+            s_crashfile.chop(4);
+            s_crashfile.append(QLatin1String(".kcrash"));
+        }
+
+        if (s_crashdata.isEmpty()) {
+            // start up on the correct display
+            const char* dpy = nullptr;
+            if (QX11Info::display()) {
+                dpy = XDisplayString(QX11Info::display());
+            } else {
+                dpy = ::getenv("DISPLAY");
+            }
+            if (dpy) {
+                s_crashdata["display"] = QString::fromLatin1(dpy);
+            }
+            s_crashdata["appname"] = QCoreApplication::applicationName();
+            s_crashdata["apppath"] = QCoreApplication::applicationFilePath();
+            s_crashdata["pid"] = QCoreApplication::applicationPid();
+            const KComponentData kcomponentdata = KGlobal::mainComponent();
+            const KAboutData *kaboutdata = kcomponentdata.isValid() ? kcomponentdata.aboutData() : nullptr;
+            if (kaboutdata) {
+                s_crashdata["appversion"] = kaboutdata->version();
+                s_crashdata["programname"] = kaboutdata->programName();
+                s_crashdata["bugaddress"] = kaboutdata->bugAddress();
+                s_crashdata["homepage"] = kaboutdata->homepage();
+            }
+        }
+        // flags may be updated
+        s_crashdata["flags"] = int(s_crashflags);
     }
 }
 
 KCrash::CrashFlags KCrash::flags()
 {
-    return s_flags;
+    return s_crashflags;
 }
 
 void KCrash::setCrashHandler(HandlerType handler)
@@ -102,77 +149,30 @@ void KCrash::defaultCrashHandler(int sig)
 {
     KDE_signal(sig, SIG_DFL);
 
-    if (s_flags & KCrash::AutoRestart) {
-        QStringList procargs;
-
-        // start up on the correct display
-        const char* dpy = nullptr;
-        if (QX11Info::display()) {
-            dpy = XDisplayString(QX11Info::display());
-        } else {
-            dpy = ::getenv("DISPLAY");
-        }
-
-        if (dpy) {
-            procargs.append(QString::fromLatin1("--display"));
-            procargs.append(QString::fromLatin1(dpy));
-        }
-
-        QProcess::startDetached(QCoreApplication::applicationFilePath(), procargs);
-    } else if (s_flags & KCrash::DrKonqi) {
-        const QString drkonqiexe = KStandardDirs::findExe(QString::fromLatin1("drkonqi"));
-        if (drkonqiexe.isEmpty()) {
-            // NOTE: not using kFatal() because that can call abort() (abort on fatal is a option)
-            kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
-            ::exit(sig);
-        }
-
-        QByteArray systemargs = drkonqiexe.toLocal8Bit();
-
-        systemargs.append(" --signal \"");
-        systemargs.append(QByteArray::number(sig));
-        systemargs.append("\" --appname \"");
-        systemargs.append(QCoreApplication::applicationName().toLocal8Bit());
-        systemargs.append("\" --apppath \"");
-        systemargs.append(QCoreApplication::applicationFilePath().toLocal8Bit());
-        systemargs.append("\" --pid \"");
-        systemargs.append(QByteArray::number(QCoreApplication::applicationPid()));
-        systemargs.append("\"");
-
-        if (s_flags & KCrash::NoRestart) {
-            systemargs.append(" --restarted");
-        }
-
-        const KComponentData kcomponentdata = KGlobal::mainComponent();
-        const KAboutData *kaboutdata = kcomponentdata.isValid() ? kcomponentdata.aboutData() : nullptr;
-        if (kaboutdata) {
-            if (kaboutdata->internalVersion()) {
-                systemargs.append(" --appversion \"");
-                systemargs.append(kaboutdata->internalVersion());
-                systemargs.append("\"");
-            }
-
-            if (kaboutdata->internalProgramName()) {
-                systemargs.append(" --programname \"");
-                systemargs.append(kaboutdata->internalProgramName());
-                systemargs.append("\"");
-            }
-
-            if (kaboutdata->internalBugAddress()) {
-                systemargs.append(" --bugaddress \"");
-                systemargs.append(kaboutdata->internalBugAddress());
-                systemargs.append("\"");
-            }
-        }
-
-        ::system(systemargs.constData());
-    } else if (s_flags & KCrash::Backtrace) {
+    const QString crashtrace = kBacktrace();
+    if (s_crashflags & KCrash::Backtrace) {
         // NOTE: if HAVE_BACKTRACE is not defined kBacktrace() will return empty string
 #ifdef HAVE_BACKTRACE
-        kError() << QCoreApplication::applicationName() << "crashed:\n" << kBacktrace();
+        kError() << QCoreApplication::applicationName() << "crashed:\n" << crashtrace;
 #else
         kError() << QCoreApplication::applicationName() << "crashed";
 #endif
+    }
+
+    if (s_crashflags & KCrash::AutoRestart || s_crashflags & KCrash::DrKonqi) {
+        {
+            QFile crashfile(s_crashtmp);
+            if (!crashfile.open(QFile::WriteOnly)) {
+                kError(s_kcrasharea) << "Could not open" << s_crashtmp;
+                ::exit(sig);
+                return;
+            }
+            QDataStream crashstream(&crashfile);
+            crashstream << s_crashdata;
+            crashstream << sig;
+            crashstream << crashtrace;
+        }
+        QFile::rename(s_crashtmp, s_crashfile);
     }
 
     ::exit(sig);
