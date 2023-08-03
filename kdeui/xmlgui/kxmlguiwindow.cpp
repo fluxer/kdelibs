@@ -42,7 +42,6 @@
 #include <QtGui/qevent.h>
 #include <QtGui/QMenuBar>
 #include <QtGui/QLayout>
-#include <QtGui/QSessionManager>
 #include <QtGui/QStyle>
 #include <QtGui/QWidget>
 #include <QtDBus/QDBusConnection>
