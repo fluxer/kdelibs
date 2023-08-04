@@ -81,9 +81,9 @@ namespace KCrash
      * Options to determine how the default crash handler should behave.
      */
     enum CrashFlag {
-        AutoRestart = 1,  ///< autorestart this application. Only sensible for KUniqueApplications. @since 4.1.
+        AutoRestart = 1,  ///< autorestart the application. @since 4.1.
         Notify = 2,       ///< notify about the crash via system notification. @since 4.23.
-        Log = 4           ///< log details about the program if it crashes. @since 4.23.
+        Log = 4           ///< log details about the crash to the system log. @since 4.23.
     };
     Q_DECLARE_FLAGS(CrashFlags, CrashFlag)
 
