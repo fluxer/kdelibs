@@ -193,15 +193,22 @@ bool ICOHandler::read(QImage *image)
             // fallbacks
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
             const int imageheight = (icoheight ? icoheight : (bmpheight / 2));
+            const int imagencolors = (icocolors ? icocolors : bmpncolors);
 
             int imageboundary = 0;
             QImage::Format imageformat = QImage::Format_ARGB32;
+            QList<QRgb> imagecolors;
             switch (bmpbpp) {
                 case 32: {
                     imageboundary = (imagewidth * imageheight * 4);
                     break;
                 }
                 case 24: {
+                    imageformat = QImage::Format_RGB32;
+                    imageboundary = (imagewidth * imageheight * 3);
+                    break;
+                }
+                case 8: {
                     imageformat = QImage::Format_RGB32;
                     imageboundary = (imagewidth * imageheight * 3);
                     break;
@@ -214,10 +221,27 @@ bool ICOHandler::read(QImage *image)
 
             if (Q_UNLIKELY(bmpimagesize == 0)) {
                 kDebug() << "BMP image size is dummy" << bmpimagesize << imageboundary;
-                bmpimagesize = imageboundary;
+                bmpimagesize = (bmpbpp == 8 ? (imageboundary / 3): imageboundary);
             } else if (Q_UNLIKELY(bmpimagesize >= INT_MAX)) {
                 kWarning() << "BMP image size is too big" << bmpimagesize;
                 return false;
+            }
+
+            if (bmpbpp == 8) {
+                QByteArray imagecolorbytes(imagencolors * 4, '\0');
+                if (Q_UNLIKELY(datastream.readRawData(imagecolorbytes.data(), imagecolorbytes.size()) != imagecolorbytes.size())) {
+                    kWarning() << "Could not read BMP colors data";
+                    return false;
+                }
+                for (int ci = 0; ci < imagecolorbytes.size(); ci += 4) {
+                    imagecolors.append(
+                        qRgb(imagecolorbytes.at(ci + 2), imagecolorbytes.at(ci + 1), imagecolorbytes.at(ci))
+                    );
+                }
+                if (Q_UNLIKELY(imagecolors.size() != 256)) {
+                    kWarning() << "Invalid BMP image color table" << imagecolors.size();
+                    return false;
+                }
             }
 
             imagebytes.resize(bmpimagesize);
@@ -230,10 +254,6 @@ bool ICOHandler::read(QImage *image)
             if (Q_UNLIKELY(bmpimage.isNull())) {
                 kWarning() << "Could not create BMP image" << imagewidth << imageheight << imageformat;
                 return false;
-            }
-
-            if (Q_UNLIKELY(bmpimagesize != imageboundary)) {
-                kDebug() << "BMP and QImage bytes count mismatch" << bmpimagesize << imageboundary;
             }
 
             switch (bmpbpp) {
@@ -254,6 +274,14 @@ bool ICOHandler::read(QImage *image)
                     QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
                     for (uint bi = 0; bi < bmpimagesize && bi < imageboundary; bi += 3) {
                         *bmpimagebits = qRgb(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi));
+                        bmpimagebits++;
+                    }
+                    break;
+                }
+                case 8: {
+                    QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
+                    for (uint bi = 0; bi < (bmpimagesize * 3) && bi < imageboundary; bi += 3) {
+                        *bmpimagebits = imagecolors[imagebytes.at(bi / 3)];
                         bmpimagebits++;
                     }
                     break;
