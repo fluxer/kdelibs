@@ -39,7 +39,7 @@
 // see kdebug.areas
 static const int s_kcrasharea = 1410;
 
-static KCrash::HandlerType s_crashHandler = nullptr;
+static KCrash::HandlerType s_crashhandler = nullptr;
 static KCrash::CrashFlags s_crashflags = 0;
 static QString s_crashtmp;
 static QString s_crashfile;
@@ -69,7 +69,7 @@ void KCrash::setFlags(KCrash::CrashFlags flags)
     s_crashflags = flags;
     if (s_crashflags & KCrash::AutoRestart || s_crashflags & KCrash::Notify || s_crashflags & KCrash::Log) {
         // Default crash handler is required for the flags to work but one may be set already
-        if (!s_crashHandler) {
+        if (!s_crashhandler) {
             KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
             if (!args || args->isSet("crashhandler")) {
                 setCrashHandler(defaultCrashHandler);
@@ -127,13 +127,13 @@ void KCrash::setCrashHandler(HandlerType handler)
         handler = SIG_DFL;
     }
 
-    s_crashHandler = handler;
+    s_crashhandler = handler;
 
     sigset_t handlermask;
     ::sigemptyset(&handlermask);
     int counter = 0;
     while (s_signals[counter]) {
-        KDE_signal(s_signals[counter], s_crashHandler);
+        KDE_signal(s_signals[counter], s_crashhandler);
         ::sigaddset(&handlermask, s_signals[counter]);
         counter++;
     }
@@ -142,7 +142,7 @@ void KCrash::setCrashHandler(HandlerType handler)
 
 KCrash::HandlerType KCrash::crashHandler()
 {
-    return s_crashHandler;
+    return s_crashhandler;
 }
 
 void KCrash::defaultCrashHandler(int sig)
