@@ -580,33 +580,33 @@ QIODevice* KDebugConfig::areaDevice(const QtMsgType type, const char* const func
     Q_UNREACHABLE();
 }
 
-QString kBacktrace(int levels)
+QByteArray kBacktrace(int levels)
 {
 #ifdef HAVE_BACKTRACE
-    void* trace[256];
-    int n = backtrace(trace, 256);
-    if (!n)
-        return QString();
-    char** strings = backtrace_symbols(trace, n);
+    void* tracebuffer[256];
+    int tracecount = backtrace(tracebuffer, 256);
+    if (!tracecount) {
+        return QByteArray();
+    }
+    char** tracestrings = backtrace_symbols(tracebuffer, tracecount);
 
     if (levels != -1) {
-        n = qMin(n, levels);
+        tracecount = qMin(tracecount, levels);
     }
 
-    QString s = QString::fromLatin1("[\n");
-    for (int i = 0; i < n; ++i) {
-        s += QString::number(i) + QLatin1String(": ") +
-             QString::fromLatin1(strings[i]) + QLatin1Char('\n');
+    QByteArray result("[\n");
+    for (int i = 0; i < tracecount; i++) {
+        result += QByteArray::number(i) + ": " + QByteArray(tracestrings[i]) + '\n';
     }
-    s += QLatin1String("]\n");
+    result += "]\n";
 
-    if (strings) {
-        ::free(strings);
+    if (tracestrings) {
+        ::free(tracestrings);
     }
 
-    return s;
+    return result;
 #else
-    return QString();
+    return QByteArray();
 #endif // HAVE_BACKTRACE
 }
 

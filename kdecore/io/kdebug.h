@@ -70,7 +70,7 @@
     @param levels the number of levels of the backtrace
     @return a backtrace
 */
-KDECORE_EXPORT QString kBacktrace(int levels = -1);
+KDECORE_EXPORT QByteArray kBacktrace(int levels = -1);
 
 /*!
     @brief Clears the KDebug cache and therefore forces it to reread the config

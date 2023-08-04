@@ -149,7 +149,7 @@ void KCrash::defaultCrashHandler(int sig)
 {
     KDE_signal(sig, SIG_DFL);
 
-    const QString crashtrace = kBacktrace();
+    const QByteArray crashtrace = kBacktrace();
     if (s_crashflags & KCrash::Backtrace) {
         // NOTE: if HAVE_BACKTRACE is not defined kBacktrace() will return empty string
 #ifdef HAVE_BACKTRACE
