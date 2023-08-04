@@ -32,6 +32,13 @@
 # AbortFatal=true
 #
 
+# kcrash warning, error and fatal to syslog
+[1410]
+InfoOutput=4
+WarnOutput=3
+ErrorOutput=3
+FatalOutput=3
+
 # KHTTP warning, error and fatal to syslog
 [7050]
 InfoOutput=4

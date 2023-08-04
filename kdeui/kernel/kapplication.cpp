@@ -672,8 +672,8 @@ void KApplicationPrivate::parseCommandLine( )
 
     if (qgetenv("KDE_DEBUG").isEmpty() && args->isSet("crashhandler"))
     {
-        // enable drkonqi
-        KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi);
+        // setup default crash handler
+        KCrash::setFlags(KCrash::Notify | KCrash::Log);
     }
 
 #ifdef Q_WS_X11

@@ -43,7 +43,7 @@ static KCrash::HandlerType s_crashHandler = nullptr;
 static KCrash::CrashFlags s_crashflags = 0;
 static QString s_crashtmp;
 static QString s_crashfile;
-static QVariantMap s_crashdata;
+static QMap<QByteArray,QString> s_crashdata;
 
 static const int s_signals[] = {
 #ifdef SIGSEGV
@@ -67,7 +67,7 @@ static const int s_signals[] = {
 void KCrash::setFlags(KCrash::CrashFlags flags)
 {
     s_crashflags = flags;
-    if (s_crashflags & KCrash::AutoRestart || s_crashflags & KCrash::DrKonqi || s_crashflags & KCrash::Backtrace) {
+    if (s_crashflags & KCrash::AutoRestart || s_crashflags & KCrash::Notify || s_crashflags & KCrash::Log) {
         // Default crash handler is required for the flags to work but one may be set already
         if (!s_crashHandler) {
             KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
@@ -101,7 +101,7 @@ void KCrash::setFlags(KCrash::CrashFlags flags)
             }
             s_crashdata["appname"] = QCoreApplication::applicationName();
             s_crashdata["apppath"] = QCoreApplication::applicationFilePath();
-            s_crashdata["pid"] = QCoreApplication::applicationPid();
+            s_crashdata["pid"] = QString::number(QCoreApplication::applicationPid());
             const KComponentData kcomponentdata = KGlobal::mainComponent();
             const KAboutData *kaboutdata = kcomponentdata.isValid() ? kcomponentdata.aboutData() : nullptr;
             if (kaboutdata) {
@@ -112,7 +112,7 @@ void KCrash::setFlags(KCrash::CrashFlags flags)
             }
         }
         // flags may be updated
-        s_crashdata["flags"] = int(s_crashflags);
+        s_crashdata["flags"] = QString::number(int(s_crashflags));
     }
 }
 
@@ -150,30 +150,19 @@ void KCrash::defaultCrashHandler(int sig)
     KDE_signal(sig, SIG_DFL);
 
     const QByteArray crashtrace = kBacktrace();
-    if (s_crashflags & KCrash::Backtrace) {
-        // NOTE: if HAVE_BACKTRACE is not defined kBacktrace() will return empty string
-#ifdef HAVE_BACKTRACE
-        kError() << QCoreApplication::applicationName() << "crashed:\n" << crashtrace;
-#else
-        kError() << QCoreApplication::applicationName() << "crashed";
-#endif
-    }
-
-    if (s_crashflags & KCrash::AutoRestart || s_crashflags & KCrash::DrKonqi) {
-        {
-            QFile crashfile(s_crashtmp);
-            if (!crashfile.open(QFile::WriteOnly)) {
-                kError(s_kcrasharea) << "Could not open" << s_crashtmp;
-                ::exit(sig);
-                return;
-            }
-            QDataStream crashstream(&crashfile);
-            crashstream << s_crashdata;
-            crashstream << sig;
-            crashstream << crashtrace;
+    {
+        QFile crashfile(s_crashtmp);
+        if (!crashfile.open(QFile::WriteOnly)) {
+            kError(s_kcrasharea) << "Could not open" << s_crashtmp;
+            ::exit(sig);
+            return;
         }
-        QFile::rename(s_crashtmp, s_crashfile);
+        QDataStream crashstream(&crashfile);
+        crashstream << s_crashdata;
+        crashstream << sig;
+        crashstream << crashtrace;
     }
+    QFile::rename(s_crashtmp, s_crashfile);
 
     ::exit(sig);
 }
