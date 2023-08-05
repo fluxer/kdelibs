@@ -15,70 +15,7 @@ add_subdirectory(kdnssd)
 add_subdirectory(karchive)
 add_subdirectory(kemail)
 add_subdirectory(knetworkmanager)
-
-######## kidletime ####################
-
-set(kidletime_LIB_SRCS
-    kidletime/kidletime.cpp
-    kidletime/abstractsystempoller.cpp
-    kidletime/widgetbasedpoller.cpp
-)
-
-if (HAVE_XSCREENSAVER)
-    set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS}
-        kidletime/xscreensaverbasedpoller.cpp
-    )
-endif()
-
-if(HAVE_XSYNC)
-    set(kidletime_LIB_SRCS
-        ${kidletime_LIB_SRCS}
-        kidletime/xsyncbasedpoller.cpp
-    )
-endif()
-
-set_source_files_properties(
-    ${CMAKE_SOURCE_DIR}/kutils/kidletime/xscreensaverbasedpoller.cpp
-    ${CMAKE_SOURCE_DIR}/kutils/kidletime/xsyncbasedpoller.cpp
-    PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE
-)
-
-add_library(kidletime SHARED ${kidletime_LIB_SRCS})
-
-target_link_libraries(kidletime PUBLIC
-    ${QT_QTGUI_LIBRARY}
-    kdecore
-    kdeui
-)
-
-if(HAVE_XSCREENSAVER)
-    target_link_libraries(kidletime PRIVATE ${X11_Xscreensaver_LIB})
-endif()
-
-if(HAVE_XSYNC)
-    target_link_libraries(kidletime PRIVATE ${X11_Xext_LIB})
-endif()
-target_link_libraries(kidletime PRIVATE ${X11_X11_LIB})
-
-set_target_properties(kidletime PROPERTIES
-    VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION}
-)
-
-generate_export_header(kidletime)
-
-install(
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/kidletime_export.h
-    kidletime/kidletime.h
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-)
-
-install(
-    TARGETS kidletime
-    EXPORT kdelibsTargets
-    DESTINATION ${KDE4_LIB_INSTALL_DIR}
-)
+add_subdirectory(kidletime)
 
 ########### kcmutils ###############
 

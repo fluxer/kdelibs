@@ -47,11 +47,11 @@ XSyncBasedPoller *XSyncBasedPoller::instance()
 }
 
 XSyncBasedPoller::XSyncBasedPoller(QWidget *parent)
-        : AbstractSystemPoller(parent)
-        , m_display(QX11Info::display())
-        , m_idleCounter(X::None)
-        , m_resetAlarm(X::None)
-        , m_available(true)
+    : AbstractSystemPoller(parent)
+    , m_display(QX11Info::display())
+    , m_idleCounter(X::None)
+    , m_resetAlarm(X::None)
+    , m_available(true)
 {
     Q_ASSERT(!s_globalXSyncBasedPoller->q);
     s_globalXSyncBasedPoller->q = this;

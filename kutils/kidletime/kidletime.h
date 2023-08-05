@@ -22,6 +22,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 #include <kidletime_export.h>
+
 class KIdleTimePrivate;
 
 /**
