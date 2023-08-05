@@ -67,6 +67,7 @@
 7101        kio_file
 7102        kio_ftp
 7103        kio_http
+7104        kidletime
 51003       kexiv2
 51004       kpasswdstore
 51005       kpowermanager

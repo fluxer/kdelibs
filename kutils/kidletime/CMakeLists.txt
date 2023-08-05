@@ -1,6 +1,6 @@
 project(kidletime)
 
-######## kidletime ####################
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=7104)
 
 set(kidletime_LIB_SRCS
     kidletime.cpp
