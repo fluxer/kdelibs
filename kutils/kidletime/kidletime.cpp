@@ -20,13 +20,11 @@
 
 #include "config.h"
 
-#ifdef Q_WS_X11
 #ifdef HAVE_XSCREENSAVER
-#include "xscreensaverbasedpoller.h"
+#  include "xscreensaverbasedpoller.h"
 #endif
 #ifdef HAVE_XSYNC
-#include "xsyncbasedpoller.h"
-#endif
+#  include "xsyncbasedpoller.h"
 #endif
 
 #include <QtCore/qsharedpointer.h>
@@ -173,7 +171,6 @@ void KIdleTimePrivate::loadSystem()
     }
 
     // Priority order
-#ifdef Q_WS_X11
 #ifdef HAVE_XSYNC
     if (XSyncBasedPoller::instance()->isAvailable()) {
         poller = XSyncBasedPoller::instance();
@@ -183,7 +180,6 @@ void KIdleTimePrivate::loadSystem()
     if (poller.isNull()) {
         poller = new XScreensaverBasedPoller();
     }
-#endif
 #endif
 
     if (!poller.isNull()) {
@@ -198,11 +194,11 @@ void KIdleTimePrivate::unloadCurrentSystem()
 {
     if (!poller.isNull()) {
         poller.data()->unloadPoller();
-#ifdef Q_WS_X11
+#ifdef HAVE_XSYNC
         if (qobject_cast<XSyncBasedPoller*>(poller.data()) == 0) {
 #endif
             poller.data()->deleteLater();
-#ifdef Q_WS_X11
+#ifdef HAVE_XSYNC
         }
 #endif
     }
