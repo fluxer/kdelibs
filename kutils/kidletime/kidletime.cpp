@@ -187,7 +187,10 @@ void KIdleTimePrivate::loadSystem()
 #endif
 
     if (!poller.isNull()) {
+        kDebug() << "Using poller" << poller.data();
         poller.data()->setUpPoller();
+    } else {
+        kWarning() << "No poller";
     }
 }
 
