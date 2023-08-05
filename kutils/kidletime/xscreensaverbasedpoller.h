@@ -21,8 +21,6 @@
 
 #include "widgetbasedpoller.h"
 
-#include "screensaver_interface.h"
-
 class XScreensaverBasedPoller: public WidgetBasedPoller
 {
     Q_OBJECT
@@ -34,15 +32,8 @@ public:
 public slots:
     void simulateUserActivity();
 
-private:
-    bool additionalSetUp();
-
 private slots:
-    void screensaverActivated(bool activated);
     int getIdleTime();
-
-private:
-    OrgFreedesktopScreenSaverInterface * m_screenSaverIface;
 };
 
 #endif /* XSCREENSAVERBASEDPOLLER_H_ */

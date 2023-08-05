@@ -55,9 +55,6 @@ private slots:
     void releaseInputLock();
 
 private:
-    virtual bool additionalSetUp() = 0;
-
-private:
     QTimer * m_pollTimer;
     QWidget * m_grabber;
     QList<int> m_timeouts;

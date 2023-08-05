@@ -23,7 +23,7 @@
 #include <QEvent>
 
 WidgetBasedPoller::WidgetBasedPoller(QWidget *parent)
-        : AbstractSystemPoller(parent)
+    : AbstractSystemPoller(parent)
 {
 }
 
@@ -50,7 +50,7 @@ bool WidgetBasedPoller::setUpPoller()
     m_grabber->installEventFilter(this);
     m_grabber->setObjectName("KIdleGrabberWidget");
 
-    return additionalSetUp();
+    return true;
 }
 
 void WidgetBasedPoller::unloadPoller()
@@ -89,7 +89,6 @@ bool WidgetBasedPoller::eventFilter(QObject *object, QEvent *event)
 void WidgetBasedPoller::waitForActivity()
 {
     // This code was taken from Lithium/KDE4Powersave
-
     m_grabber->show();
     m_grabber->grabMouse();
     m_grabber->grabKeyboard();

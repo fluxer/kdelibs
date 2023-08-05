@@ -75,8 +75,8 @@ public:
 };
 
 KIdleTime::KIdleTime()
-        : QObject(0)
-        , d_ptr(new KIdleTimePrivate())
+    : QObject(0)
+    , d_ptr(new KIdleTimePrivate())
 {
     Q_ASSERT(!s_globalKIdleTime->q);
     s_globalKIdleTime->q = this;
@@ -173,22 +173,16 @@ void KIdleTimePrivate::loadSystem()
     }
 
     // Priority order
-
 #ifdef Q_WS_X11
 #ifdef HAVE_XSYNC
-#ifdef HAVE_XSCREENSAVER
     if (XSyncBasedPoller::instance()->isAvailable()) {
         poller = XSyncBasedPoller::instance();
-    } else {
+    }
+#endif
+#ifdef HAVE_XSCREENSAVER
+    if (poller.isNull()) {
         poller = new XScreensaverBasedPoller();
     }
-#else
-    poller = XSyncBasedPoller::instance();
-#endif
-#else
-#ifdef HAVE_XSCREENSAVER
-    poller = new XScreensaverBasedPoller();
-#endif
 #endif
 #endif
 
@@ -214,7 +208,6 @@ void KIdleTimePrivate::unloadCurrentSystem()
 void KIdleTimePrivate::_k_resumingFromIdle()
 {
     Q_Q(KIdleTime);
-
     if (catchResume) {
         emit q->resumingFromIdle();
         q->stopCatchingResumeEvent();
@@ -236,21 +229,23 @@ void KIdleTimePrivate::_k_timeoutReached(int msec)
 void KIdleTime::simulateUserActivity()
 {
     Q_D(KIdleTime);
-
-    d->poller.data()->simulateUserActivity();
+    if (!d->poller.isNull()) {
+        d->poller.data()->simulateUserActivity();
+    }
 }
 
 int KIdleTime::idleTime() const
 {
     Q_D(const KIdleTime);
-
-    return d->poller.data()->forcePollRequest();
+    if (!d->poller.isNull()) {
+        return d->poller.data()->forcePollRequest();
+    }
+    return 0;
 }
 
 QHash<int, int> KIdleTime::idleTimeouts() const
 {
     Q_D(const KIdleTime);
-
     return d->associations;
 }
 

@@ -28,10 +28,6 @@ if (HAVE_XSCREENSAVER)
     set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS}
         kidletime/xscreensaverbasedpoller.cpp
     )
-    qt4_add_dbus_interface(kidletime_LIB_SRCS
-        kidletime/org.freedesktop.ScreenSaver.xml
-        screensaver_interface
-    )
 endif()
 
 if(HAVE_XSYNC)

@@ -18,41 +18,19 @@
 
 #include "xscreensaverbasedpoller.h"
 
-#include "config.h"
-
 #include <QtGui/qx11info_x11.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/scrnsaver.h>
 
 XScreensaverBasedPoller::XScreensaverBasedPoller(QWidget *parent)
-        : WidgetBasedPoller(parent), m_screenSaverIface( 0 )
+    : WidgetBasedPoller(parent)
 {
 
 }
 
 XScreensaverBasedPoller::~XScreensaverBasedPoller()
 {
-}
-
-bool XScreensaverBasedPoller::additionalSetUp()
-{
-    m_screenSaverIface = new OrgFreedesktopScreenSaverInterface("org.freedesktop.ScreenSaver", "/ScreenSaver",
-            QDBusConnection::sessionBus(), this);
-
-    connect(m_screenSaverIface, SIGNAL(ActiveChanged(bool)), SLOT(screensaverActivated(bool)));
-
-    return true;
-}
-
-void XScreensaverBasedPoller::screensaverActivated(bool activated)
-{
-    // We care only if it has been disactivated
-
-    if (!activated) {
-        m_screenSaverIface->SimulateUserActivity();
-        emit resumingFromIdle();
-    }
 }
 
 int XScreensaverBasedPoller::getIdleTime()
