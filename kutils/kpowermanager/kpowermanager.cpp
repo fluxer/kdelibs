@@ -35,6 +35,9 @@ static QString governorForProfile(const QString &profile, const QStringList &gov
         // exact match
         return lowerprofile;
     }
+    // governors that do the same essentially - preserve power one way or the other. because
+    // governors are option some may not be aviable thus when the profile is "PowerSave" any
+    // governor that will save (some) power is used if the powersave governor is not aviable
     if (lowerprofile == QLatin1String("powersave")) {
         if (governors.contains(QString::fromLatin1("conservative"))) {
             return QString::fromLatin1("conservative");
