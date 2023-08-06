@@ -111,34 +111,34 @@ public:
   CfgConfig( const QString &codegenFilename )
   {
     // Configure the compiler with some settings
-    QSettings codegenConfig(codegenFilename, QSettings::IniFormat);
+    QSettings codegenConfig(codegenFilename);
 
-    nameSpace = codegenConfig.value("NameSpace").toString();
-    className = codegenConfig.value("ClassName").toString();
+    nameSpace = codegenConfig.string("NameSpace");
+    className = codegenConfig.string("ClassName");
     if ( className.isEmpty() ) {
       cerr << "Class name missing" << endl;
       exit(1);
     }
-    inherits = codegenConfig.value("Inherits").toString();
+    inherits = codegenConfig.string("Inherits");
     if ( inherits.isEmpty() ) inherits = "KConfigSkeleton";
-    visibility = codegenConfig.value("Visibility").toString();
+    visibility = codegenConfig.string("Visibility");
     if ( !visibility.isEmpty() ) visibility += ' ';
-    forceStringFilename = codegenConfig.value("ForceStringFilename", false).toBool();
-    singleton = codegenConfig.value("Singleton", false).toBool();
+    forceStringFilename = codegenConfig.boolean("ForceStringFilename", false);
+    singleton = codegenConfig.boolean("Singleton", false);
     staticAccessors = singleton;
-    customAddons = codegenConfig.value("CustomAdditions", false).toBool();
-    memberVariables = codegenConfig.value("MemberVariables").toString();
+    customAddons = codegenConfig.boolean("CustomAdditions", false);
+    memberVariables = codegenConfig.string("MemberVariables");
     dpointer = (memberVariables == "dpointer");
-    headerIncludes = codegenConfig.value("IncludeFiles", QStringList()).toStringList();
-    sourceIncludes = codegenConfig.value("SourceIncludeFiles", QStringList()).toStringList();
-    mutators = codegenConfig.value("Mutators", QStringList()).toStringList();
+    headerIncludes = codegenConfig.stringList("IncludeFiles", QStringList());
+    sourceIncludes = codegenConfig.stringList("SourceIncludeFiles", QStringList());
+    mutators = codegenConfig.stringList("Mutators", QStringList());
     allMutators = ((mutators.count() == 1) && (mutators.at(0).toLower() == "true"));
-    itemAccessors = codegenConfig.value("ItemAccessors", false).toBool();
-    setUserTexts = codegenConfig.value("SetUserTexts", false).toBool();
-    defaultGetters = codegenConfig.value("DefaultValueGetters", QStringList()).toStringList();
+    itemAccessors = codegenConfig.boolean("ItemAccessors", false);
+    setUserTexts = codegenConfig.boolean("SetUserTexts", false);
+    defaultGetters = codegenConfig.stringList("DefaultValueGetters", QStringList());
     allDefaultGetters = (defaultGetters.count() == 1) && (defaultGetters.at(0).toLower() == "true");
-    globalEnums = codegenConfig.value("GlobalEnums", false).toBool();
-    useEnumTypes = codegenConfig.value("UseEnumTypes", false).toBool();
+    globalEnums = codegenConfig.boolean("GlobalEnums", false);
+    useEnumTypes = codegenConfig.boolean("UseEnumTypes", false);
   }
 
 public:

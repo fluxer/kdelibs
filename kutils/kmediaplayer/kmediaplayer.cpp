@@ -37,18 +37,18 @@
 */
 #define COMMON_STATE_LOAD \
     d->m_settings->sync(); \
-    const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString(); \
-    const int globalvolume = d->m_settings->value("global/volume", 90).toInt(); \
-    const bool globalmute = d->m_settings->value("global/mute", false).toBool(); \
-    setAudioOutput(d->m_settings->value(d->m_playerid + "/audiooutput", globalaudio).toString()); \
-    setVolume(d->m_settings->value(d->m_playerid + "/volume", globalvolume).toInt()); \
-    setMute(d->m_settings->value(d->m_playerid + "/mute", globalmute).toBool());
+    const QString globalaudio = d->m_settings->string("global/audiooutput", "auto"); \
+    const int globalvolume = d->m_settings->integer("global/volume", 90); \
+    const bool globalmute = d->m_settings->boolean("global/mute", false); \
+    setAudioOutput(d->m_settings->string(d->m_playerid + "/audiooutput", globalaudio)); \
+    setVolume(int(d->m_settings->integer(d->m_playerid + "/volume", globalvolume))); \
+    setMute(d->m_settings->boolean(d->m_playerid + "/mute", globalmute));
 
 #define COMMON_STATE_SAVE \
     if (d->m_handle && d->m_settings && d->m_settings->isWritable()) { \
-        d->m_settings->setValue(d->m_playerid + "/audiooutput", audiooutput()); \
-        d->m_settings->setValue(d->m_playerid + "/volume", int(volume())); \
-        d->m_settings->setValue(d->m_playerid + "/mute", mute()); \
+        d->m_settings->setString(d->m_playerid + "/audiooutput", audiooutput()); \
+        d->m_settings->setInteger(d->m_playerid + "/volume", int(volume())); \
+        d->m_settings->setBoolean(d->m_playerid + "/mute", mute()); \
         d->m_settings->sync(); \
     } else { \
         kWarning() << "Could not save state"; \

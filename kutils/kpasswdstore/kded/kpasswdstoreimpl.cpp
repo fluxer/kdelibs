@@ -79,8 +79,8 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 #endif
 
     KSettings ksettings("kpasswdstorerc", KSettings::SimpleConfig);
-    m_retries = ksettings.value("KPasswdStore/Retries", kpasswdstore_passretries).toUInt();
-    m_timeout = (ksettings.value("KPasswdStore/Timeout", kpasswdstore_passtimeout).toUInt() * 60000);
+    m_retries = ksettings.integer("KPasswdStore/Retries", kpasswdstore_passretries);
+    m_timeout = (ksettings.integer("KPasswdStore/Timeout", kpasswdstore_passtimeout) * 60000);
 }
 
 KPasswdStoreImpl::~KPasswdStoreImpl()
@@ -146,7 +146,7 @@ QString KPasswdStoreImpl::getPasswd(const QByteArray &key, const qlonglong windo
     QString storekey = m_storeid;
     storekey.append(QLatin1Char('/'));
     storekey.append(QString::fromLatin1(key.constData(), key.size()));
-    const QString passwd = ksettings.value(storekey).toString();
+    const QString passwd = ksettings.string(storekey);
     if (passwd.isEmpty()) {
         return QString();
     }
@@ -173,7 +173,7 @@ bool KPasswdStoreImpl::storePasswd(const QByteArray &key, const QString &passwd,
     QString storekey = m_storeid;
     storekey.append(QLatin1Char('/'));
     storekey.append(QString::fromLatin1(key.constData(), key.size()));
-    ksettings.setValue(storekey, encryptPasswd(passwd, &ok));
+    ksettings.setString(storekey, encryptPasswd(passwd, &ok));
     return ok;
 }
 
@@ -195,7 +195,7 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
         KSettings ksettings(m_passwdstore, KSettings::SimpleConfig);
         QString storekey = QString::fromLatin1("KPasswdStore/");
         storekey.append(m_storeid);
-        const QString storepasswdhash = ksettings.value(storekey).toString();
+        const QString storepasswdhash = ksettings.string(storekey);
         if (storepasswdhash.isEmpty()) {
             KNewPasswordDialog knewpasswddialog(widgetForWindowID(windowid));
             knewpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", m_storeid));
@@ -243,7 +243,7 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
         }
 
         if (storepasswdhash.isEmpty()) {
-            ksettings.setValue(storekey, passhash);
+            ksettings.setString(storekey, passhash);
             return true;
         }
         if (passhash != storepasswdhash) {

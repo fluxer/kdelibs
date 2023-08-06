@@ -27,8 +27,6 @@
 #include <QMetaProperty>
 #include <QWidget>
 
-static const QSettings::Format defaultformat = QSettings::IniFormat;
-
 static QString getSettingsPath(const QString &filename)
 {
     const QFileInfo info(filename);
@@ -39,7 +37,7 @@ static QString getSettingsPath(const QString &filename)
 }
 
 KSettings::KSettings(const QString& file, const OpenFlags mode)
-    : QSettings(getSettingsPath(file), defaultformat)
+    : QSettings(getSettingsPath(file))
 {
     if ((mode & IncludeGlobals) != mode) {
         addSource(KStandardDirs::locateLocal("config", QLatin1String("kdeglobals")));
@@ -48,10 +46,10 @@ KSettings::KSettings(const QString& file, const OpenFlags mode)
 
 void KSettings::addSource(const QString &source)
 {
-    QSettings settings(source, defaultformat);
+    QSettings settings(source);
     foreach (const QString &key, settings.keys()) {
         if (!QSettings::contains(key)) {
-            QSettings::setValue(key, settings.value(key));
+            QSettings::setString(key, settings.string(key));
         }
     }
 }
@@ -82,11 +80,13 @@ bool KSettings::save(const QObject *object)
             continue;
         }
         const QVariant propertyvalue = property.read(widget);
-        if (propertyvalue.isValid()) {
-            kDebug() << "saving property" << propertyname << "with value" << propertyvalue << "of" << objectname;
-            QSettings::setValue(objectname + QLatin1Char('/') + propertyname, propertyvalue);
-        } else {
+        if (!propertyvalue.canConvert<QString>()) {
+            kWarning() << "property value not QString-convertable" << propertyname << propertyvalue;
+        } else if (!propertyvalue.isValid()) {
             kWarning() << "invalid property value" << propertyname << propertyvalue;
+        } else {
+            kDebug() << "saving property" << propertyname << "with value" << propertyvalue << "of" << objectname;
+            QSettings::setString(objectname + QLatin1Char('/') + propertyname, propertyvalue.toString());
         }
     }
 
@@ -119,7 +119,7 @@ bool KSettings::restore(QObject *object)
             kDebug() << "skipping non-writable property" << propertyname << "of" << objectname;
             continue;
         }
-        const QVariant propertyvalue = QSettings::value(objectname + QLatin1Char('/') + propertyname, property.read(widget));
+        const QVariant propertyvalue = QSettings::string(objectname + QLatin1Char('/') + propertyname, property.read(widget).toString());
         if (propertyvalue.isValid()) {
             kDebug() << "restoring property" << propertyname << "with value" << propertyvalue << "of" << objectname;
             bool success = false;

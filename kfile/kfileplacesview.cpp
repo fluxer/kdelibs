@@ -578,7 +578,7 @@ void KFilePlacesView::contextMenuEvent(QContextMenuEvent *event)
             if (placesModel->url(index) == KUrl("trash:/")) {
                 emptyTrash = menu.addAction(KIcon("trash-empty"), i18nc("@action:inmenu", "Empty Trash"));
                 KSettings trashConfig("trashrc", KSettings::SimpleConfig);
-                emptyTrash->setEnabled(!trashConfig.value("Status/Empty", true).toBool());
+                emptyTrash->setEnabled(!trashConfig.boolean("Status/Empty", true));
                 menu.addSeparator();
             }
             add = menu.addAction(KIcon("document-new"), i18n("Add Entry..."));

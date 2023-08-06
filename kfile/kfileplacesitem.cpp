@@ -46,7 +46,7 @@ KFilePlacesItem::KFilePlacesItem(const KBookmark &bookmark,
     } else if (udi.isEmpty() && m_bookmark.url() == KUrl("trash:/")) {
         KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", "trashrc"));
         KSettings trashConfig("trashrc", KSettings::SimpleConfig);
-        m_trashIsEmpty = trashConfig.value("Status/Empty", true).toBool();
+        m_trashIsEmpty = trashConfig.boolean("Status/Empty", true);
         connect(KDirWatch::self(), SIGNAL(dirty(QString)),
                          this, SLOT(trashConfigChanged(QString)));
     } else if (!udi.isEmpty() && m_device.isValid()) {
@@ -298,7 +298,7 @@ void KFilePlacesItem::trashConfigChanged(const QString &config)
 {
     Q_UNUSED(config);
     KSettings trashConfig("trashrc", KSettings::SimpleConfig);
-    m_trashIsEmpty = trashConfig.value("Status/Empty", true).toBool();
+    m_trashIsEmpty = trashConfig.boolean("Status/Empty", true);
     emit itemChanged(id());
 }
 
