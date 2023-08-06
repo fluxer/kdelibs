@@ -118,9 +118,6 @@ private:
     KMimeTypeRepository();
     ~KMimeTypeRepository();
 
-    typedef QHash<QString, QString> AliasesMap;
-    const AliasesMap& aliases() const;
-
     /**
      * @internal (re-)parses the glob, aliases, parents and magic file(s)
      */
@@ -145,6 +142,7 @@ private:
                                   QString &foundExt,
                                   bool highWeight) const;
 
+    typedef QHash<QString, QString> AliasesMap;
     AliasesMap m_aliases; // alias -> canonicalName
 
     typedef QHash<QString, QStringList> ParentsMap;

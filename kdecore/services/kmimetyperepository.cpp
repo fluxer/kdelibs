@@ -219,7 +219,7 @@ bool KMimeTypeRepository::checkMimeTypes()
 
 QString KMimeTypeRepository::resolveAlias(const QString& mime) const
 {
-    return aliases().value(mime);
+    return m_aliases.value(mime);
 }
 
 QString KMimeTypeRepository::canonicalName(const QString& mime) const
@@ -615,11 +615,6 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice *file, const
         }
     }
     return rules;
-}
-
-const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases() const
-{
-    return m_aliases;
 }
 
 static void errorMissingMimeTypes(const QStringList &types)
