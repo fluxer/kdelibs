@@ -363,8 +363,8 @@ void KXMLGUIFactoryPrivate::saveDefaultActionProperties(const QList<QAction *>& 
         else
         {
             // A QAction used with KXMLGUI? Set our property and ignore it.
-	    if ( !action->isSeparator() )
-              kError() << "Attempt to use QAction" << action->objectName() << "with KXMLGUIFactory!";
+            if ( !action->isSeparator() )
+                kError() << "Attempt to use QAction" << action->objectName() << "with KXMLGUIFactory!";
             action->setProperty("_k_DefaultShortcut", KShortcut());
         }
 
