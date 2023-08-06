@@ -545,49 +545,67 @@ QTime KLocale::readTime(const QString &intstr, QLocale::FormatType format) const
 
 void KLocale::insertCatalog(const QString &catalog)
 {
-    QMutexLocker locker(d->mutex);
+    bool updated = false;
     const QStringList cataloglanguages = languageList();
-    foreach (const QString &cataloglanguage, cataloglanguages) {
-        if (kInsertCatalog(d, catalog, cataloglanguage)) {
-            if (!d->manualcatalogs.contains(catalog)) {
-                d->manualcatalogs.append(catalog);
+    {
+        QMutexLocker locker(d->mutex);
+        foreach (const QString &cataloglanguage, cataloglanguages) {
+            if (kInsertCatalog(d, catalog, cataloglanguage)) {
+                if (!d->manualcatalogs.contains(catalog)) {
+                    d->manualcatalogs.append(catalog);
+                }
+                updated = true;
             }
         }
-    }
 #ifdef KLOCALE_DUMP
-    dumpKLocaleCatalogs(d);
+        dumpKLocaleCatalogs(d);
 #endif
-    KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
+    }
+    if (updated) {
+        KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
+    }
 }
 
 void KLocale::removeCatalog(const QString &catalog)
 {
-    QMutexLocker locker(d->mutex);
+    bool updated = false;
     const QStringList cataloglanguages = languageList();
-    QMutableListIterator<KCatalog> catalogsiter(d->catalogs);
-    while (catalogsiter.hasNext()) {
-        const QString catalogname = catalogsiter.next().name();
-        if (catalogname == catalog) {
-            catalogsiter.remove();
-            d->manualcatalogs.removeAll(catalog);
+    {
+        QMutexLocker locker(d->mutex);
+        QMutableListIterator<KCatalog> catalogsiter(d->catalogs);
+        while (catalogsiter.hasNext()) {
+            const QString catalogname = catalogsiter.next().name();
+            if (catalogname == catalog) {
+                catalogsiter.remove();
+                d->manualcatalogs.removeAll(catalog);
+                updated = true;
+            }
         }
-    }
 #ifdef KLOCALE_DUMP
-    dumpKLocaleCatalogs(d);
+        dumpKLocaleCatalogs(d);
 #endif
-    KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
+    }
+    if (updated) {
+        KLocalizedString::notifyCatalogsUpdated(cataloglanguages);
+    }
 }
 
 void KLocale::setActiveCatalog(const QString &catalog)
 {
-    QMutexLocker locker(d->mutex);
-    for (int i = 1; i < d->catalogs.size(); i++) {
-        if (d->catalogs.at(i).name() == catalog) {
-            d->catalogs.move(i, 0);
-            i = 1;
+    bool updated = false;
+    {
+        QMutexLocker locker(d->mutex);
+        for (int i = 1; i < d->catalogs.size(); i++) {
+            if (d->catalogs.at(i).name() == catalog) {
+                d->catalogs.move(i, 0);
+                i = 1;
+                updated = true;
+            }
         }
     }
-    KLocalizedString::notifyCatalogsUpdated(languageList());
+    if (updated) {
+        KLocalizedString::notifyCatalogsUpdated(languageList());
+    }
 }
 
 void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const
@@ -715,9 +733,11 @@ QString KLocale::countryCodeToName(const QString &country) const
 
 void KLocale::copyCatalogsTo(KLocale *locale)
 {
-    QMutexLocker locker(d->mutex);
-    d->manualcatalogs = locale->d->manualcatalogs;
-    d->catalogs = locale->d->catalogs;
+    {
+        QMutexLocker locker(d->mutex);
+        d->manualcatalogs = locale->d->manualcatalogs;
+        d->catalogs = locale->d->catalogs;
+    }
     KLocalizedString::notifyCatalogsUpdated(languageList());
 }
 
@@ -825,7 +845,6 @@ void KLocale::reparseConfiguration()
             kInsertCatalog(d, manualcatalog, cataloglanguage);
         }
     }
-
 #ifdef KLOCALE_DUMP
     dumpKLocaleCatalogs(d);
 #endif
