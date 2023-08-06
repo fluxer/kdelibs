@@ -181,13 +181,11 @@ void KIdleTimePrivate::loadSystem()
         poller = new XScreensaverBasedPoller();
     }
 #endif
+    // either XSync or Xscreensaver must be available, see the top-level build file
+    Q_ASSERT(!poller.isNull());
 
-    if (!poller.isNull()) {
-        kDebug() << "Using poller" << poller.data();
-        poller.data()->setUpPoller();
-    } else {
-        kWarning() << "No poller";
-    }
+    kDebug() << "Using poller" << poller.data();
+    poller.data()->setUpPoller();
 }
 
 void KIdleTimePrivate::unloadCurrentSystem()
