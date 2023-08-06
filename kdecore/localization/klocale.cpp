@@ -658,19 +658,29 @@ QString KLocale::languageCodeToName(const QString &language) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
-    const QString localelanguage = languageList().first();
+    const QStringList entrylanguages = languageList();
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
-        entryconfig.setLocale(localelanguage);
-        KConfigGroup entrygroup(&entryconfig, "KCM Locale");
-        result = entrygroup.readEntry("Name");
+        foreach (const QString &lang, entrylanguages) {
+            entryconfig.setLocale(lang);
+            KConfigGroup entrygroup(&entryconfig, "KCM Locale");
+            result = entrygroup.readEntry("Name");
+            if (!result.isEmpty()) {
+                break;
+            }
+        }
     }
     if (result.isEmpty()) {
         // in case the language is not installed
         KConfig languagesconfig(QLatin1String("all_languages"), KConfig::NoGlobals, "locale");
-        languagesconfig.setLocale(localelanguage);
-        KConfigGroup languagegroup(&languagesconfig, language);
-        result = languagegroup.readEntry("Name");
+        foreach (const QString &lang, entrylanguages) {
+            languagesconfig.setLocale(lang);
+            KConfigGroup languagegroup(&languagesconfig, language);
+            result = languagegroup.readEntry("Name");
+            if (!result.isEmpty()) {
+                break;
+            }
+        }
     }
     if (result.isEmpty()) {
         // not translated at all
@@ -684,12 +694,17 @@ QString KLocale::countryCodeToName(const QString &country) const
 {
     QString result;
     const QString entryfile = KStandardDirs::locate("locale", QString::fromLatin1("l10n/") + country.toLower() + QLatin1String("/entry.desktop"));
-    const QString localelanguage = languageList().first();
+    const QStringList entrylanguages = languageList();
     if (!entryfile.isEmpty()) {
         KConfig entryconfig(entryfile);
-        entryconfig.setLocale(localelanguage);
-        KConfigGroup entrygroup(&entryconfig, "KCM Locale");
-        result = entrygroup.readEntry("Name");
+        foreach (const QString &lang, entrylanguages) {
+            entryconfig.setLocale(lang);
+            KConfigGroup entrygroup(&entryconfig, "KCM Locale");
+            result = entrygroup.readEntry("Name");
+            if (!result.isEmpty()) {
+                break;
+            }
+        }
     }
     if (result.isEmpty()) {
         // not translated at all (e.g. 001 - world)
@@ -788,11 +803,11 @@ void KLocale::reparseConfiguration()
     if (!configtranslations.isEmpty()) {
         d->languagelist.append(configtranslations);
     }
-    // the locale name itself (e.g. "en_US")
     const QString localename = d->locale.name();
-    d->languagelist.append(localename);
     // the language only (e.g. "en")
     d->languagelist.append(kGetLanguage(localename));
+    // the locale name itself (e.g. "en_US")
+    d->languagelist.append(localename);
     // default as fallback, unless the locale language is the default
     if (localename != KLocale::defaultLanguage()) {
         d->languagelist.append(KLocale::defaultLanguage());
