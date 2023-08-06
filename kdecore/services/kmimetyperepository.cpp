@@ -291,7 +291,7 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList &matchingMimeType
                                                    QString &foundExt,
                                                    bool highWeight) const
 {
-    const KMimeGlobsFileParser::GlobList& patternList = highWeight ? m_globs.m_highWeightGlobs : m_globs.m_lowWeightGlobs;
+    const KMimeGlobsFileParser::GlobList patternList = highWeight ? m_globs.m_highWeightGlobs : m_globs.m_lowWeightGlobs;
 
     int matchingPatternLength = 0;
     qint32 lastMatchedWeight = 0;
