@@ -254,15 +254,13 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
             QString rfn = relPart+fn;
             fn = prefix + fn;
 
-            bool isDir;
-
+            bool isDir = false;
 #ifdef HAVE_DIRENT_D_TYPE
             isDir = ep->d_type == DT_DIR;
 
             if (ep->d_type == DT_UNKNOWN || ep->d_type == DT_LNK)
 #endif
             {
-                QString pathfn = path + fn;
                 KDE_struct_stat buff;
                 if ( KDE::stat( fn, &buff ) != 0 ) {
                     kDebug() << "Error stat'ing " << fn << " : " << ::strerror(errno);
