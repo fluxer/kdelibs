@@ -580,18 +580,18 @@ QString KUriFilterPlugin::iconNameFor(const KUrl& url, KUriFilterData::UriTypes 
 QHostInfo KUriFilterPlugin::resolveName(const QString &hostname, unsigned long timeout) const
 {
     kDebug(7022) << "Resolving" << hostname << "with timeout" << timeout;
-    KHostInfoThread khostinfothread(qApp, hostname);
+    KHostInfoThread* khostinfothread = new KHostInfoThread(qApp, hostname);
     QElapsedTimer hostinfotimer;
     hostinfotimer.start();
-    khostinfothread.start();
-    while (!khostinfothread.isFinished()) {
+    khostinfothread->start();
+    while (!khostinfothread->isFinished()) {
         if (hostinfotimer.elapsed() >= timeout) {
-            khostinfothread.quit();
+            khostinfothread->terminate();
             return QHostInfo();
         }
         QCoreApplication::processEvents();
     }
-    return khostinfothread.resolved();
+    return khostinfothread->resolved();
 }
 
 
