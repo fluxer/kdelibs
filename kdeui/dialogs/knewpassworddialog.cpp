@@ -85,6 +85,8 @@ void KNewPasswordDialog::KNewPasswordDialogPrivate::init()
     connect( ui.linePassword, SIGNAL(textChanged(QString)), q, SLOT(_k_textChanged()) );
     connect( ui.lineVerifyPassword, SIGNAL(textChanged(QString)), q, SLOT(_k_textChanged()) );
 
+    ui.linePassword->setFocus();
+
     _k_textChanged();
 }
 
