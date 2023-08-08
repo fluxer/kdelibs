@@ -33,6 +33,7 @@
 #include <array>
 
 // #define KLOCALE_DUMP
+#define KLOCALE_DUMP_UNTRANSLATED
 
 enum KLocaleDuration
 {
@@ -129,7 +130,7 @@ static bool kInsertCatalog(KLocalePrivate *locale, const QString &catalogname, c
     return false;
 }
 
-#ifdef KLOCALE_DUMP
+#if defined(KLOCALE_DUMP) || defined(KLOCALE_DUMP_UNTRANSLATED)
 static void dumpKLocaleCatalogs(const KLocalePrivate *locale)
 {
     qDebug() << "Catalogs for" << locale->locale.name() << locale->catalogs.size();
@@ -623,6 +624,10 @@ void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QSt
             }
         }
     }
+#ifdef KLOCALE_DUMP_UNTRANSLATED
+    qDebug() << "No translation for" << ctxt << msg;
+    dumpKLocaleCatalogs(d);
+#endif
     if (lang) {
         *lang = KLocale::defaultLanguage();
     }
@@ -645,6 +650,10 @@ void KLocale::translateRaw(const char *ctxt, const char *singular, const char *p
             }
         }
     }
+#ifdef KLOCALE_DUMP_UNTRANSLATED
+    qDebug() << "No translation for" << ctxt << singular << plural;
+    dumpKLocaleCatalogs(d);
+#endif
     if (lang) {
         *lang = KLocale::defaultLanguage();
     }
