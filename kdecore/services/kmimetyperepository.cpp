@@ -38,14 +38,16 @@ extern int servicesDebugArea();
 static int mimeDataBaseVersion()
 {
     // shared-mime-info installs a "version" file since 0.91
-    const QStringList versionFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("version"));
-    if (!versionFiles.isEmpty()) {
-        QFile file(versionFiles.first()); // Look at the global file, not at a possibly old local one
+    const QString versionFile = KGlobal::dirs()->findResource("xdgdata-mime", QLatin1String("version"));
+    if (!versionFile.isEmpty()) {
+        QFile file(versionFile);
         if (file.open(QIODevice::ReadOnly)) {
-            const QByteArray line = file.readLine().simplified();
-            QRegExp versionRe(QString::fromLatin1("(\\d+)\\.(\\d+)(\\.(\\d+))?"));
-            if (versionRe.indexIn(QString::fromLocal8Bit(line)) > -1) {
-                return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
+            const QByteArray versionData = file.readAll().trimmed();
+            const QList<QByteArray> versionParts = versionData.split('.');
+            if (versionParts.size() == 3) {
+                return KDE_MAKE_VERSION(versionParts.at(0).toInt(), versionParts.at(1).toInt(), versionParts.at(2).toInt());
+            } else if (versionParts.size() == 2) {
+                return KDE_MAKE_VERSION(versionParts.at(0).toInt(), versionParts.at(1).toInt(), 0);
             }
         }
     }
