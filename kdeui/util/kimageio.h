@@ -43,22 +43,21 @@ namespace KImageIO
   /**
    * Returns a list of patterns of all KImageIO supported formats.
    *
-   * These patterns can be passed to KFileDialog::getOpenFileName()
-   * or KFileDialog::getSaveFileName(), for example.
+   * These patterns can be passed to KFileDialog::getOpenFileName() or
+   * KFileDialog::getSaveFileName(), for example.
    *
    * @param mode Tells whether to retrieve modes that can be read or written.
-   * @return a space-separated list of file globs that describe the
-   * supported formats
+   * @return a space-separated list of file globs that describe the supported formats
    */
   KDEUI_EXPORT QString pattern(Mode mode = Reading);
 
   /**
    * Returns the type of a MIME type.
    * @param mimeType the MIME type to search
-   * @return type id(s) of the MIME type or QStringList() if the MIME type
-   *         is not supported
+   * @param mode Tells whether to retrieve type that can be read or written.
+   * @return type id of the MIME type or QString() if the MIME type is not supported
    */
-  KDEUI_EXPORT QStringList typeForMime(const QString &mimeType);
+  KDEUI_EXPORT QString typeForMime(const QString &mimeType, Mode mode = Writing);
   /**
    * Returns a list of all KImageIO supported formats.
    *

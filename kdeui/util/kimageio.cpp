@@ -41,15 +41,22 @@ QString KImageIO::pattern(Mode mode)
     return patterns.join(QLatin1String("\n"));
 }
 
-QStringList KImageIO::typeForMime(const QString &mimeType)
+QString KImageIO::typeForMime(const QString &mimeType, Mode mode)
 {
-    QStringList result;
+    QString result;
     if (mimeType.isEmpty()) {
         return result;
     }
-    const QByteArray format = QImageReader::formatForMimeType(mimeType.toLatin1());
-    if (!format.isEmpty()) {
-        result << QString::fromLatin1(format.constData(), format.size());
+    if (mode == KImageIO::Reading) {
+        const QByteArray format = QImageReader::formatForMimeType(mimeType.toLatin1());
+        if (!format.isEmpty()) {
+            result = QString::fromLatin1(format.constData(), format.size());
+        }
+    } else {
+        const QByteArray format = QImageWriter::formatForMimeType(mimeType.toLatin1());
+        if (!format.isEmpty()) {
+            result = QString::fromLatin1(format.constData(), format.size());
+        }
     }
     return result;
 }
