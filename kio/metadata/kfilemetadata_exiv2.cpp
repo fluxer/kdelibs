@@ -19,8 +19,15 @@
 #include "kfilemetadata_exiv2.h"
 #include "kpluginfactory.h"
 #include "kexiv2.h"
+#include "kglobal.h"
+#include "klocale.h"
+#include "kdebug.h"
 
-#include <QDebug>
+static QString getExiv2Time(const QString &exiv2time)
+{
+    const QDateTime qdatetime = QDateTime::fromString(exiv2time, Qt::ISODate);
+    return KGlobal::locale()->formatDateTime(qdatetime, QLocale::NarrowFormat);
+}
 
 KFileMetaDataExiv2Plugin::KFileMetaDataExiv2Plugin(QObject* parent, const QVariantList &args)
     : KFileMetaDataPlugin(parent)
@@ -115,7 +122,7 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url)
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated"),
-                    kexiv2property.value
+                    getExiv2Time(kexiv2property.value)
                 )
             );
         } else if (kexiv2property.name == "Exif.Image.Make") {
