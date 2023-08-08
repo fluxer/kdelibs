@@ -33,7 +33,7 @@
 #include <array>
 
 // #define KLOCALE_DUMP
-#define KLOCALE_DUMP_UNTRANSLATED
+// #define KLOCALE_DUMP_UNTRANSLATED
 
 enum KLocaleDuration
 {
