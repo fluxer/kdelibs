@@ -94,8 +94,8 @@ void KFilePlacesItem::setBookmark(const KBookmark &bookmark)
         // are created with 'KFile System Bookmarks' as their context, so this
         // ensures the right string is picked from the catalog.
         // (coles, 13th May 2009)
-
-        m_text = i18nc("KFile System Bookmarks", bookmark.text().toUtf8().data());
+        const QByteArray text = bookmark.text().toUtf8();
+        m_text = i18nc("KFile System Bookmarks", text.constData());
     } else {
         m_text = bookmark.text();
     }
