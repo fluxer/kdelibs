@@ -29,9 +29,9 @@
 #include <ksycoca.h>
 
 #include <QFile>
-#include <QtCore/qendian.h>
+#include <QtEndian>
 
-#include "config-prefix.h"
+#include <string.h>
 
 extern int servicesDebugArea();
 
@@ -438,7 +438,7 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice *file, const
 {
     QList<KMimeMagicRule> rules;
     QByteArray header = file->read(12);
-    if (header != QByteArray::fromRawData("MIME-Magic\0\n", 12)) {
+    if (header.size() != 12 || ::memcmp(header.constData(), "MIME-Magic\0\n", 12) != 0) {
         kWarning(servicesDebugArea()) << "Invalid magic file " << fileName << " starts with " << header;
         return rules;
     }
