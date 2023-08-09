@@ -291,12 +291,6 @@ KProtocolManager::ProxyType KProtocolManager::proxyType()
   return static_cast<ProxyType>(cg.readEntry( "ProxyType" , 0));
 }
 
-KProtocolManager::ProxyAuthMode KProtocolManager::proxyAuthMode()
-{
-  KConfigGroup cg(config(), "Proxy Settings" );
-  return static_cast<ProxyAuthMode>(cg.readEntry( "AuthMode" , 0));
-}
-
 QString KProtocolManager::noProxyFor()
 {
   QString noProxy = config()->group("Proxy Settings").readEntry( "NoProxyFor" );

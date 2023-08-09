@@ -120,11 +120,6 @@ private:
   void ftpCloseConnection();
 
   /**
-   * Executes any auto login macro's as specified in a .netrc file.
-   */
-  void ftpAutoLoginMacro ();
-
-  /**
    * Called by ftpOpenConnection. It logs us in.
    * m_initialPath is set to the current working directory
    * if logging on was successful.

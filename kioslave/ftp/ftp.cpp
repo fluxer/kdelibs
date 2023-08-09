@@ -440,16 +440,6 @@ bool Ftp::ftpLogin(bool* userChanged)
   QString user (m_user);
   QString pass (m_pass);
 
-  if ( config()->readEntry("EnableAutoLogin", false) )
-  {
-    QString au = config()->readEntry("autoLoginUser");
-    if ( !au.isEmpty() )
-    {
-        user = au;
-        pass = config()->readEntry("autoLoginPass");
-    }
-  }
-
   AuthInfo info;
   info.url.setScheme( "ftp" );
   info.url.setHost( m_host );
@@ -615,9 +605,6 @@ bool Ftp::ftpLogin(bool* userChanged)
   else
     kWarning(7102) << "SYST failed";
 
-  if ( config()->readEntry ("EnableAutoLoginMacro", false) )
-    ftpAutoLoginMacro ();
-
   // Get the current working directory
   kDebug(7102) << "Searching for pwd";
   if( !ftpSendCmd("PWD") || (m_iRespType != 2) )
@@ -639,37 +626,6 @@ bool Ftp::ftpLogin(bool* userChanged)
   }
   return true;
 }
-
-void Ftp::ftpAutoLoginMacro ()
-{
-  QString macro = metaData( "autoLoginMacro" );
-
-  if ( macro.isEmpty() )
-    return;
-
-  const QStringList list = macro.split('\n',QString::SkipEmptyParts);
-
-  for(QStringList::const_iterator it = list.begin() ; it != list.end() ; ++it )
-  {
-    if ( (*it).startsWith(QLatin1String("init")) )
-    {
-      const QStringList list2 = macro.split( '\\',QString::SkipEmptyParts);
-      it = list2.begin();
-      ++it;  // ignore the macro name
-
-      for( ; it != list2.end() ; ++it )
-      {
-        // TODO: Add support for arbitrary commands
-        // besides simply changing directory!!
-        if ( (*it).startsWith( QLatin1String("cwd") ) )
-          (void)ftpFolder( (*it).mid(4), false );
-      }
-
-      break;
-    }
-  }
-}
-
 
 /**
  * ftpSendCmd - send a command (@p cmd) and read response

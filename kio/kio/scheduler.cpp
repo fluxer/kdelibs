@@ -697,7 +697,6 @@ void SchedulerPrivate::slotReparseSlaveConfiguration(const QString &proto, const
     KProtocolManager::reparseConfiguration();
     SlaveConfig::self()->reset();
     sessionData.reset();
-    NetRC::self()->reload();
 
     QHash<QString, ProtoQueue *>::ConstIterator it = proto.isEmpty() ? m_protocols.constBegin() :
                                                                        m_protocols.constFind(proto);
@@ -798,27 +797,6 @@ MetaData SchedulerPrivate::metaDataFor(const QString &protocol, const QStringLis
     } else {
         configData[QLatin1String("UseProxy")] = proxyList.first();
         configData[QLatin1String("ProxyUrls")] = proxyList.join(QLatin1String(","));
-    }
-
-    if ( configData.contains("EnableAutoLogin") &&
-         configData.value("EnableAutoLogin").compare("true", Qt::CaseInsensitive) == 0 )
-    {
-        NetRC::AutoLogin l;
-        l.login = url.userName();
-        bool usern = (protocol == "ftp");
-        if ( NetRC::self()->lookup( url, l, usern) )
-        {
-            configData["autoLoginUser"] = l.login;
-            configData["autoLoginPass"] = l.password;
-            if ( usern )
-            {
-                QString macdef;
-                QMap<QString, QStringList>::ConstIterator it = l.macdef.constBegin();
-                for ( ; it != l.macdef.constEnd(); ++it )
-                    macdef += it.key() + '\\' + it.value().join( "\\" ) + '\n';
-                configData["autoLoginMacro"] = macdef;
-            }
-        }
     }
 
     return configData;
