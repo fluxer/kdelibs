@@ -62,7 +62,7 @@ public:
    /**
     * Copy constructor.
     */
-   AuthInfo( const AuthInfo& info );
+   AuthInfo(const AuthInfo &info);
 
    /**
     * Destructor
@@ -73,7 +73,7 @@ public:
    /**
     * Custom assignment operator.
     */
-   AuthInfo& operator=( const AuthInfo& info );
+   AuthInfo& operator=(const AuthInfo &info);
 
    /**
     * The URL for which authentication is to be stored.
@@ -182,7 +182,7 @@ public:
     * Extra Fields are disabled by default.
     * @since 4.1
     */
-   void setExtraField(const QString &fieldName, const QVariant & value);
+   void setExtraField(const QString &fieldName, const QVariant &value);
 
    /**
     * Get Extra Field Value
@@ -196,8 +196,8 @@ private:
     AuthInfoPrivate * const d;
 };
 
-KIO_EXPORT QDataStream& operator<< (QDataStream& s, const AuthInfo& a);
-KIO_EXPORT QDataStream& operator>> (QDataStream& s, AuthInfo& a);
+KIO_EXPORT QDataStream& operator<< (QDataStream &s, const AuthInfo &a);
+KIO_EXPORT QDataStream& operator>> (QDataStream &s, AuthInfo &a);
 
 /**
  * A Singleton class that provides access to passwords
@@ -211,79 +211,77 @@ KIO_EXPORT QDataStream& operator>> (QDataStream& s, AuthInfo& a);
 class KIO_EXPORT NetRC
 {
 public:
+    /**
+     * Specifies the mode to be used when searching for a
+     * matching automatic login info for a given site :
+     *
+     * @li exactOnly        search entries with exact host name matches.
+     * @li defaultOnly      search entries that are specified as "default".
+     * @li presetOnly       search entries that are specified as "preset".
+     *
+     * @see lookup
+     */
+    enum LookUpModeFlag
+    {
+        exactOnly = 0x0002,
+        defaultOnly = 0x0004,
+        presetOnly = 0x0008
+    };
+    Q_DECLARE_FLAGS(LookUpMode, LookUpModeFlag)
 
-  /**
-   * Specifies the mode to be used when searching for a
-   * matching automatic login info for a given site :
-   *
-   * @li exactOnly        search entries with exact host name matches.
-   * @li defaultOnly      search entries that are specified as "default".
-   * @li presetOnly       search entries that are specified as "preset".
-   *
-   * @see lookup
-   */
-  enum LookUpModeFlag
-  {
-      exactOnly = 0x0002,
-      defaultOnly = 0x0004,
-      presetOnly = 0x0008
-  };
-  Q_DECLARE_FLAGS(LookUpMode, LookUpModeFlag)
+    /**
+     * Contains auto login information.
+     * @see lookup()
+     */
+    struct AutoLogin
+    {
+        QString type;
+        QString machine;
+        QString login;
+        QString password;
+        QMap<QString, QStringList> macdef;
+    };
 
-  /**
-   * Contains auto login information.
-   * @see lookup()
-   */
-  struct AutoLogin
-  {
-    QString type;
-    QString machine;
-    QString login;
-    QString password;
-    QMap<QString, QStringList> macdef;
-  };
+    /**
+     * A reference to the instance of the class.
+     * @return the class
+     */
+     static NetRC* self();
 
-  /**
-   * A reference to the instance of the class.
-   * @return the class
-   */
-  static NetRC* self();
-
-  /**
-   * Looks up the @p login information for the given @p url.
-   *
-   * @param url the url whose login information will be checked
-   * @param login the login information will be writte here
-   * @param userealnetrc if true, use $HOME/.netrc file
-   * @param type the type of the login. If null, the @p url's protocol
-   *        will be taken
-   * @param mode the LookUpMode flags (ORed) for the query
-   */
-  bool lookup( const KUrl& url, AutoLogin& login,
-               bool userealnetrc = false,
-               const QString &type = QString(),
-               LookUpMode mode = LookUpMode(exactOnly) | defaultOnly );
-  /**
-   * Reloads the auto login information.
-   */
-  void reload();
+    /**
+     * Looks up the @p login information for the given @p url.
+     *
+     * @param url the url whose login information will be checked
+     * @param login the login information will be writte here
+     * @param userealnetrc if true, use $HOME/.netrc file
+     * @param type the type of the login. If null, the @p url's protocol
+     *        will be taken
+     * @param mode the LookUpMode flags (ORed) for the query
+     */
+    bool lookup(const KUrl &url, AutoLogin &login,
+                bool userealnetrc = false,
+                const QString &type = QString(),
+                LookUpMode mode = LookUpMode(exactOnly) | defaultOnly );
+    /**
+     * Reloads the auto login information.
+     */
+    void reload();
 
 protected:
-  QString extract( const char*, const char*, int& );
-  int openf( const QString& );
-  bool parse( int );
+    QString extract(const char*, const char*, int &);
+    int openf(const QString &);
+    bool parse(int);
 
 private:
-  NetRC();
-  ~NetRC();
+    NetRC();
+    ~NetRC();
 
-private:
-  static NetRC* instance;
+    static NetRC* instance;
 
-  class NetRCPrivate;
-  NetRCPrivate* const d;
+    class NetRCPrivate;
+    NetRCPrivate* const d;
 };
 }
 Q_DECLARE_OPERATORS_FOR_FLAGS(KIO::NetRC::LookUpMode)
 
-#endif
+#endif // KIO_AUTHINFO_H
