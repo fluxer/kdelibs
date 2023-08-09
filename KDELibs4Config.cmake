@@ -40,9 +40,9 @@
 #
 #  This module allows to depend on a particular minimum version of kdelibs.
 #  To acomplish that one should use the appropriate cmake syntax for
-#  find_package. For example to depend on kdelibs >= 4.23.0 one should use
+#  find_package. For example to depend on kdelibs >= 4.24.0 one should use
 #
-#  find_package(KDELibs4 4.23.0 REQUIRED)
+#  find_package(KDELibs4 4.24.0 REQUIRED)
 #
 # Copyright (c) 2023 Ivailo Monev <xakepa10@gmail.com>
 #

@@ -50,7 +50,7 @@ set(CMAKE_UNITY_BUILD_BATCH_SIZE 200)
 # define the generic version of the libraries here, this makes it easy to
 # advance it when the next KDE release comes. Use this version number for
 # libraries
-set(GENERIC_LIB_VERSION "4.23")
+set(GENERIC_LIB_VERSION "4.24")
 set(GENERIC_LIB_SOVERSION "4")
 
 if(ENABLE_TESTING)
