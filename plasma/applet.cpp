@@ -1727,12 +1727,11 @@ bool Applet::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
                         d->handle.data()->setHoverPos(he->pos());
                     } else {
                         //kDebug() << "generated applet handle";
-                        AppletHandle *handle = new AppletHandle(containment(), this, he->pos());
-                        connect(handle, SIGNAL(disappearDone(AppletHandle*)),
+                        d->handle = new AppletHandle(containment(), this, he->pos());
+                        connect(d->handle.data(), SIGNAL(disappearDone(AppletHandle*)),
                                 this, SLOT(handleDisappeared(AppletHandle*)));
                         connect(this, SIGNAL(geometryChanged()),
-                                handle, SLOT(appletResized()));
-                        d->handle = handle;
+                                d->handle.data(), SLOT(appletResized()));
                     }
                 }
                 break;
@@ -2835,14 +2834,13 @@ void AppletPrivate::resetConfigurationObject()
 
 void AppletPrivate::handleDisappeared(AppletHandle *h)
 {
-    if (h == handle.data()) {
-        h->detachApplet();
-        QGraphicsScene *scene = q->scene();
-        if (scene && h->scene() == scene) {
-            scene->removeItem(h);
-        }
-        h->deleteLater();
+    h->detachApplet();
+    QGraphicsScene *scene = q->scene();
+    if (scene && h->scene() == scene) {
+        scene->removeItem(h);
     }
+    h->deleteLater();
+    handle = QWeakPointer<AppletHandle>();
 }
 
 void ContainmentPrivate::checkRemoveAction()
