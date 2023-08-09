@@ -542,8 +542,6 @@ void KIconLoader::addAppDir(const QString& appname)
     d->initIconThemes();
 
     d->mpDirs->addResourceType("appicon", "data", appname + "/pics/");
-    // ################## KDE5: consider removing the toolbar directory
-    d->mpDirs->addResourceType("appicon", "data", appname + "/toolbar/");
     d->addAppThemes(appname);
 }
 
