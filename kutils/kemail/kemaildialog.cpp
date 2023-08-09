@@ -192,7 +192,7 @@ void KEMailDialog::showEvent(QShowEvent *event)
     const bool ispassempty = d->ui.passlineedit->text().isEmpty();
     const bool isoauthempty = d->ui.oauthlineedit->text().isEmpty();
     KEMailSettings* kemailsettings = nullptr;
-    if (isuserempty || ispassempty) {
+    if (isuserempty || ispassempty || isoauthempty) {
         kemailsettings = new KEMailSettings();
     }
     if (isuserempty) {
