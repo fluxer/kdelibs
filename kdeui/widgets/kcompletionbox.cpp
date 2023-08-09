@@ -23,17 +23,16 @@
 
 #include "kcompletionbox.h"
 #include "klineedit.h"
+#include "kconfig.h"
+#include "kdebug.h"
 
 #include <QtCore/QEvent>
 #include <QtGui/QApplication>
 #include <QtGui/QComboBox>
 #include <QtGui/QStyle>
 #include <QtGui/QScrollBar>
-#include <QtGui/qevent.h>
-
-#include <kdebug.h>
-#include <kconfig.h>
-#include <kglobalsettings.h>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QKeyEvent>
 
 class KCompletionBox::KCompletionBoxPrivate
 {
@@ -283,7 +282,7 @@ void KCompletionBox::sizeAndPosition()
     if ( d->m_parent ) {
       if ( !isVisible() ) {
         QPoint orig = globalPositionHint();
-        QRect screenSize = KGlobalSettings::desktopGeometry(orig);
+        QRect screenSize = QApplication::desktop()->screenGeometry(orig);
 
         x = orig.x() + geom.x();
         y = orig.y() + geom.y();

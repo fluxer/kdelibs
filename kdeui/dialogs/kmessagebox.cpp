@@ -18,6 +18,17 @@
 */
 
 #include "kmessagebox.h"
+#include "kapplication.h"
+#include "kconfig.h"
+#include "kdialog.h"
+#include "kdialogqueue_p.h"
+#include "klocale.h"
+#include "knotification.h"
+#include "kiconloader.h"
+#include "kconfiggroup.h"
+#include "ktextedit.h"
+#include "ksqueezedtextlabel.h"
+#include "kwindowsystem.h"
 
 #include <QtCore/QPointer>
 #include <QtGui/QCheckBox>
@@ -28,19 +39,7 @@
 #include <QtGui/QScrollArea>
 #include <QtGui/QScrollBar>
 #include <QtGui/QTextDocumentFragment>
-
-#include <kapplication.h>
-#include <kconfig.h>
-#include <kdialog.h>
-#include <kdialogqueue_p.h>
-#include <kglobalsettings.h>
-#include <klocale.h>
-#include <knotification.h>
-#include <kiconloader.h>
-#include <kconfiggroup.h>
-#include <ktextedit.h>
-#include <ksqueezedtextlabel.h>
-#include <kwindowsystem.h>
+#include <QtGui/QDesktopWidget>
 
 // Some i18n filters, that standard button texts are piped through
 // (the new KGuiItem object with filtered text is created from the old one).
@@ -199,7 +198,7 @@ int KMessageBox::createKMessageBox(KDialog *dialog, const QIcon &icon,
     }
     messageLabel->setTextInteractionFlags(flags);
 
-    QRect desktop = KGlobalSettings::desktopGeometry(dialog);
+    QRect desktop = QApplication::desktop()->screenGeometry(dialog);
     bool usingSqueezedTextLabel = false;
     if (messageLabel->sizeHint().width() > desktop.width() * 0.5) {
         // enable automatic wrapping of messages which are longer than 50% of screen width

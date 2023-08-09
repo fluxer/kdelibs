@@ -17,16 +17,17 @@
 */
 
 #include "ksqueezedtextlabel.h"
-#include <kdebug.h>
-#include <klocale.h>
-#include <QtGui/qevent.h>
-#include <kaction.h>
+#include "kaction.h"
+#include "klocale.h"
+#include "kdebug.h"
+
+#include <QResizeEvent>
 #include <QMenu>
 #include <QClipboard>
 #include <QApplication>
 #include <QMimeData>
 #include <QTextDocument>
-#include <kglobalsettings.h>
+#include <QDesktopWidget>
 
 class KSqueezedTextLabelPrivate
 {
@@ -77,7 +78,7 @@ QSize KSqueezedTextLabel::minimumSizeHint() const
 
 QSize KSqueezedTextLabel::sizeHint() const
 {
-  int maxWidth = KGlobalSettings::desktopGeometry(this).width() * 3 / 4;
+  int maxWidth = QApplication::desktop()->screenGeometry(this).width() * 3 / 4;
   QFontMetrics fm(fontMetrics());
   int textWidth = fm.width(d->fullText);
   if (textWidth > maxWidth) {

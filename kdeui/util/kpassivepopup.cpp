@@ -17,8 +17,13 @@
  *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  */
 
+#include "config.h"
 #include "kpassivepopup.h"
-#include "moc_kpassivepopup.cpp"
+#include "kvbox.h"
+#include "kdialog.h"
+#include "kconfig.h"
+#include "kdebug.h"
+#include "netwm.h"
 
 // Qt
 #include <QApplication>
@@ -32,16 +37,8 @@
 #include <QTimer>
 #include <QToolTip>
 #include <QSystemTrayIcon>
+#include <QDesktopWidget>
 #include <QX11Info>
-
-#include <kvbox.h>
-#include <kdebug.h>
-#include <kdialog.h>
-#include <kglobalsettings.h>
-#include <kconfig.h>
-#include <netwm.h>
-
-#include <config.h>
 
 static const int DEFAULT_POPUP_TYPE = KPassivePopup::Boxed;
 static const int DEFAULT_POPUP_TIME = 6*1000;
@@ -353,7 +350,7 @@ QPoint KPassivePopup::calculateNearbyPoint(const QRect &target)
     int w = minimumSizeHint().width();
     int h = minimumSizeHint().height();
 
-    QRect r = KGlobalSettings::desktopGeometry(QPoint(x + w / 2,y + h / 2));
+    QRect r = QApplication::desktop()->screenGeometry(QPoint(x + w / 2,y + h / 2));
 
     if (d->popupStyle == KPassivePopup::Balloon) {
         // find a point to anchor to
@@ -417,7 +414,7 @@ void KPassivePopup::updateMask()
 {
     // get screen-geometry for screen our anchor is on
     // (geometry can differ from screen to screen!
-    QRect deskRect = KGlobalSettings::desktopGeometry(d->anchor);
+    QRect deskRect = QApplication::desktop()->screenGeometry(d->anchor);
 
     int xh = 70, xl = 40;
     if (width() < 80) {
@@ -602,3 +599,5 @@ KPassivePopup *KPassivePopup::message(int popupStyle, const QString &caption, co
 {
     return message(popupStyle, caption, text, QPixmap(), parent);
 }
+
+#include "moc_kpassivepopup.cpp"
