@@ -72,7 +72,6 @@ public:
      *
      * @return A list of services that satisfy the query, sorted by preference
      * (preferred service first)
-     * @see http://techbase.kde.org/Development/Tutorials/Services/Traders#The_KTrader_Query_Language
      */
     KService::List query( const QString& mimeType,
                           const QString& genericServiceType = QString::fromLatin1("Application"),

@@ -35,7 +35,6 @@ class KLocalizedStringPrivate;
 /**
  * I18N_NOOP marks a string to be translated without translating it.
  * Do not use this unless you know you need it.
- * http://developer.kde.org/documentation/other/developer-faq.html#q2.11.2
  *
  * Example usage where say_something() returns either "hello" or "goodbye":
  * \code
@@ -275,20 +274,11 @@ class KLocalizedStringPrivate;
  *
  * \section other_ref Further References
  *
- * <a href="http://techbase.kde.org/">KDE Techbase</a> contains a
- * <a href="http://techbase.kde.org/Development/Tutorials/Localization">
- * series of tutorials</a> on preparing the code for localization (and on
- * internationalization process in general), where the intended patterns of
- * usage of i18n API are covered in great detail.
- *
  * All i18n'd messages, whether sent to widgets expecting plain text or
- * allowing Qt rich text (HTML), support the new KDE semantic markup for
+ * allowing Katie rich text (HTML), support the new KDE semantic markup for
  * user interface text, KUIT in short. Semantic markup both increases the
  * consistency of visual presentation for the end user, and provides extra
  * information to translators, so that translations can be of higher quality.
- * KUIT is documented in an
- * <a href="http://techbase.kde.org/Development/Tutorials/Localization/i18n_Semantics">
- * Techbase article</a> as well.
  *
  * @see KLocale
  * @author Chusslove Illich \<caslav.ilic@gmx.net\>

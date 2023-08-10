@@ -512,8 +512,6 @@ void KuitSemanticsPrivate::setFormattingPatterns ()
                 I18N_NOOP2("@title/plain",
     // i18n: The following messages, with msgctxt "@tag/modifier",
     // are KUIT patterns for formatting the text found inside semantic tags.
-    // For review of the KUIT semantic markup, see the article on Techbase:
-    // http://techbase.kde.org/Development/Tutorials/Localization/i18n_Semantics
     // The "/modifier" tells if the pattern is used for plain text, or rich text
     // which can use HTML tags.
     // You may be in general satisfied with the patterns as they are in the

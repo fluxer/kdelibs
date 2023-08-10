@@ -86,8 +86,6 @@ class KLinkItemSelectionModelPrivate;
     view2->setSelectionModel( view2SelectionModel );
   @endcode
 
-  See also <a href="http://websvn.kde.org/trunk/KDE/kdelibs/kdeui/tests/proxymodeltestapp/proxyitemselectionwidget.cpp?view=markup">kdelibs/kdeui/tests/proxymodeltestapp/proxyitemselectionwidget.cpp</a>.
-
   @since 4.5
   @author Stephen Kelly <steveire@gmail.com>
 

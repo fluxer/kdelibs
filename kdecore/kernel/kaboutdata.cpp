@@ -745,12 +745,13 @@ QList<KAboutPerson> KAboutData::translators() const
 
 QString KAboutData::aboutTranslationTeam()
 {
-    return i18nc("replace this with information about your translation team",
-            "<p>KDE is translated into many languages thanks to the work "
-            "of the translation teams all over the world.</p>"
-            "<p>For more information on KDE internationalization "
-            "visit <a href=\"http://l10n.kde.org\">http://l10n.kde.org</a></p>"
-            );
+    return i18nc(
+        "replace this with information about your translation team",
+        "<p>KDE is translated into many languages thanks to the work "
+        "of the translation teams all over the world.</p>"
+        "<p>For more information on KDE internationalization "
+        "visit <a href=\"%1\">%1</a></p>", QLatin1String(KDE_HOME_URL)
+    );
 }
 
 QString KAboutData::otherText() const

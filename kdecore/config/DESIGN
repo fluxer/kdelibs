@@ -1,6 +1,3 @@
-If you add a major new feature, suggest using it in
-http://techbase.kde.org/Development/Tutorials/KConfig
-
 kconfigdata.h contains definitions of the data formats used by kconfig.
 
 Configuration entries are stored as "KEntry". They are indexed with "KEntryKey".
@@ -102,5 +99,3 @@ KConfigDialogManager: Class that links widgets in a dialog up with their
 MyConfigWidget: Dialog generated from a .ui description file. Widget names
                 in the dialog that start with "kcfg_" refer to configuration
                 options.
-
-See http://techbase.kde.org/Development/Tutorials/Using_KConfig_XT

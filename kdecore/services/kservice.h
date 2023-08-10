@@ -44,9 +44,6 @@ class KServicePrivate;
  * The types of service a plugin provides is taken from the accompanying desktop file
  * where the 'ServiceTypes=' field is used.
  *
- * For a tutorial on how to build a plugin-loading mechanism and how to write plugins
- * in general, see http://techbase.kde.org/Development/Tutorials#Services:_Applications_and_Plugins
- *
  * @see KServiceType
  * @see KServiceGroup
  * @author Torben Weis

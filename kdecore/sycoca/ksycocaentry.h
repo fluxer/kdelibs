@@ -36,7 +36,6 @@ class KSycocaEntryPrivate;
  * the common functionality for servicetypes and services.
  *
  * @internal
- * @see http://techbase.kde.org/Development/Architecture/KDE3/System_Configuration_Cache
  */
 class KDECORE_EXPORT KSycocaEntry : public QSharedData
 {

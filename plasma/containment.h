@@ -64,8 +64,6 @@ class AbstractToolBox;
  * Containments are differentiated from Applets by being marked with the ServiceType
  * of Plasma/Containment. Plugins registered with both the Applet and the Containment
  * ServiceTypes can be loaded for us in either situation.
- *
- * See techbase.kde.org for a tutorial on writing Containments using this class.
  */
 class PLASMA_EXPORT Containment : public Applet
 {

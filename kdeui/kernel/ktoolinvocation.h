@@ -60,10 +60,6 @@ class KUrl;
  * If you call the members with signal/slot connections across threads, you can't use the return values
  * If a function is called from the wrong thread and it has a return value -1 is returned
  * Investigate if this is really needed or if D-Bus is threadsafe anyway
- *
- * For more details see <a
- * href="http://techbase.kde.org/Development/Architecture/KDE4/Starting_Other_Programs#KToolInvocation::startServiceByDesktopPath">techbase</a>.
- *
  */
 class KDECORE_EXPORT KToolInvocation : public QObject
 {

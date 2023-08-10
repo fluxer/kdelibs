@@ -109,9 +109,7 @@ public:
     static int dndEventDelay();
 
     /**
-     * Returns whether KDE runs in single (default) or double click
-     * mode.
-     * see http://developer.kde.org/documentation/standards/kde/style/mouse/index.html
+     * Returns whether KDE runs in single (default) or double click mode.
      * @return true if single click mode, or false if double click mode.
      **/
     static bool singleClick();
@@ -163,8 +161,6 @@ public:
 
     /**
      * This enum describes the completion mode used for by the KCompletion class.
-     * See <a href="http://developer.kde.org/documentation/standards/kde/style/keys/completion.html">
-     * the styleguide</a>.
      **/
     enum Completion {
         /**

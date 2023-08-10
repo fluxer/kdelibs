@@ -69,8 +69,6 @@ class Package;
  * look and feel in just one line of code for applets), loading and starting
  * of scripting support for each applet, providing access to the associated
  * plasmoid package (if any) and access to configuration data.
- *
- * See techbase.kde.org for tutorials on writing Applets using this class.
  */
 class PLASMA_EXPORT Applet : public QGraphicsWidget
 {

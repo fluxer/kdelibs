@@ -48,12 +48,8 @@ class KXmlGuiWindowPrivate;
  * toolbar buttons and actions to it by hand, this class can be used to load an
  * rc file to manage the main window's actions.
  *
- * See http://techbase.kde.org/Development/Tutorials/Using_KActions#XMLGUI
- * for essential information on the XML file format and usage of this class.
- *
  * @see KMainWindow
  * @author Reginald Stadlbauer (reggie@kde.org) Stephan Kulow (coolo@kde.org), Matthias Ettrich (ettrich@kde.org), Chris Schlaeger (cs@kde.org), Sven Radej (radej@kde.org). Maintained by Sven Radej (radej@kde.org)
-
  */
 
 class KDEUI_EXPORT KXmlGuiWindow : public KMainWindow, public KXMLGUIBuilder, virtual public KXMLGUIClient
