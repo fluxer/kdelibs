@@ -616,6 +616,14 @@ Notes:
     <glob pattern="*.kgt"/>
   </mime-type>
 
+  <mime-type type="application/x-kwinrules">
+    <sub-class-of type="text/plain"/>
+    <comment>KWin window rules</comment>
+    <comment xml:lang="bg">Правила за прозорци на KWin</comment>
+    <comment xml:lang="en_GB">KWin window rules</comment>
+    <glob pattern="*.kwinrules"/>
+  </mime-type>
+
   <mime-type type="image/katie">
     <comment>Katie image</comment>
     <comment xml:lang="af">Katie-beeld</comment>
