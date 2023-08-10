@@ -230,11 +230,7 @@ class KDECORE_EXPORT KPluginInfo
         /**
          * @return The full license object, according to the license keyword.
          *         It can be used to present friendlier and more detailed
-         *         license info to the user, when the license is one of the
-         *         widespread within KDE. For other licenses, the license
-         *         object will state not very useful, "custom license" info
-         *         (this can be identified by KAboutLicense::key() returning
-         *          KAboutData::License_Custom).
+         *         license info to the user.
          *
          * @see KAboutLicense::byKeyword()
          * @since 4.1

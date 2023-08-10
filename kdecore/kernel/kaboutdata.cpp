@@ -130,13 +130,9 @@ class KAboutLicense::Private : public QSharedData
 {
 public:
     Private( enum KAboutData::LicenseKey licenseType, const KAboutData *aboutData );
-    Private( const QString &pathToFile, const KAboutData *aboutData );
-    Private( const KLocalizedString &licenseText, const KAboutData *aboutData );
     Private( const Private& other);
 public:
     enum KAboutData::LicenseKey  _licenseKey;
-    KLocalizedString             _licenseText;
-    QString                      _pathToLicenseTextFile;
     // needed for access to the possibly changing copyrightStatement()
     const KAboutData *           _aboutData;
 };
@@ -148,43 +144,16 @@ KAboutLicense::Private::Private( enum KAboutData::LicenseKey licenseType, const 
 {
 }
 
-KAboutLicense::Private::Private( const QString &pathToFile, const KAboutData *aboutData )
-  : QSharedData(),
-    _licenseKey( KAboutData::License_File ),
-    _pathToLicenseTextFile( pathToFile ),
-    _aboutData( aboutData )
-{
-}
-
-KAboutLicense::Private::Private( const KLocalizedString &licenseText, const KAboutData *aboutData )
-  : QSharedData(),
-    _licenseKey( KAboutData::License_Custom ),
-    _licenseText( licenseText ),
-    _aboutData( aboutData )
-{
-}
-
 KAboutLicense::Private::Private(const KAboutLicense::Private& other)
   : QSharedData(other),
     _licenseKey( other._licenseKey ),
-    _licenseText( other._licenseText ),
-    _pathToLicenseTextFile( other._pathToLicenseTextFile ),
     _aboutData( other._aboutData )
-{}
+{
+}
 
 
 KAboutLicense::KAboutLicense( enum KAboutData::LicenseKey licenseType, const KAboutData *aboutData )
   : d(new Private(licenseType,aboutData))
-{
-}
-
-KAboutLicense::KAboutLicense( const QString &pathToFile, const KAboutData *aboutData )
-  : d(new Private(pathToFile,aboutData))
-{
-}
-
-KAboutLicense::KAboutLicense( const KLocalizedString &licenseText, const KAboutData *aboutData )
-  : d(new Private(licenseText,aboutData))
 {
 }
 
@@ -194,7 +163,8 @@ KAboutLicense::KAboutLicense(const KAboutLicense& other)
 }
 
 KAboutLicense::~KAboutLicense()
-{}
+{
+}
 
 QString KAboutLicense::text() const
 {
@@ -210,9 +180,6 @@ QString KAboutLicense::text() const
     QString pathToFile;
     switch ( d->_licenseKey )
     {
-    case KAboutData::License_File:
-        pathToFile = d->_pathToLicenseTextFile;
-        break;
     case KAboutData::License_GPL_V2:
         knownLicense = true;
         pathToFile = KStandardDirs::locate("data", QString::fromLatin1("LICENSES/GPL_V2"));
@@ -237,16 +204,11 @@ QString KAboutLicense::text() const
         knownLicense = true;
         pathToFile = KStandardDirs::locate("data", QString::fromLatin1("LICENSES/LGPL_V3"));
         break;
-    case KAboutData::License_Custom:
-        if (!d->_licenseText.isEmpty()) {
-            result = d->_licenseText.toString();
-            break;
-        }
-        // fall through
     default:
         result += i18n("No licensing terms for this program have been specified.\n"
                        "Please check the documentation or the source for any\n"
                        "licensing terms.\n");
+        break;
     }
 
     if (knownLicense) {
@@ -298,12 +260,9 @@ QString KAboutLicense::name(KAboutData::NameFormat formatName) const
         licenseShort = i18nc("@item license (short name)","LGPL v3");
         licenseFull = i18nc("@item license","GNU Lesser General Public License Version 3");
         break;
-    case KAboutData::License_Custom:
-    case KAboutData::License_File:
-        licenseShort = licenseFull = i18nc("@item license","Custom");
-        break;
     default:
         licenseShort = licenseFull = i18nc("@item license","Not specified");
+        break;
     }
 
     const QString result =
@@ -353,7 +312,7 @@ KAboutLicense KAboutLicense::byKeyword(const QString &rawKeyword)
     keyword.remove(QLatin1Char('.'));
 
     KAboutData::LicenseKey license = ldict.value(keyword.toLatin1(),
-                                                 KAboutData::License_Custom);
+                                                 KAboutData::License_Unknown);
     return KAboutLicense(license, 0);
 }
 

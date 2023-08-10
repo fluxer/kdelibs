@@ -166,8 +166,6 @@ class KDECORE_EXPORT KAboutData
    */
     enum LicenseKey // KDE5: move to KAboutLicense, cut License_ prefix
     {
-      License_Custom = -2,
-      License_File = -1,
       License_Unknown = 0,
       License_GPL  = 1,
       License_GPL_V2 = 1,
@@ -630,9 +628,8 @@ public:
      * Keywords are matched by stripping all whitespace and lowercasing.
      * The known keywords correspond to the KAboutData::LicenseKey enumeration,
      * e.g. any of "LGPLV3", "LGPLv3", "LGPL v3" would match License_LGPL_V3.
-     * If there is no match for the keyword, a valid license object is still
-     * returned, with its name and text informing about a custom license,
-     * and its key equal to KAboutData::License_Custom.
+     * If there is no match for the keyword, an invalid license object is
+     * returned (KAboutData::License_Unknown).
      *
      * @param keyword The license keyword.
      * @return The license object.
@@ -647,14 +644,6 @@ private:
      * @internal Used by KAboutData to construct a predefined license.
      */
     explicit KAboutLicense( enum KAboutData::LicenseKey licenseType, const KAboutData *aboutData );
-    /**
-     * @internal Used by KAboutData to construct license by given text
-     */
-    explicit KAboutLicense( const QString &pathToFile, const KAboutData *aboutData );
-    /**
-     * @internal Used by KAboutData to construct license by given text
-     */
-    explicit KAboutLicense( const KLocalizedString &licenseText, const KAboutData *aboutData );
 
     class Private;
     QSharedDataPointer<Private> d;
