@@ -395,7 +395,7 @@ KAboutData::KAboutData(const KAboutData& other)
     }
 }
 
-KAboutData &KAboutData::operator=(const KAboutData& other)
+KAboutData& KAboutData::operator=(const KAboutData& other)
 {
     if (this != &other) {
         *d = *other.d;
@@ -409,7 +409,7 @@ KAboutData &KAboutData::operator=(const KAboutData& other)
     return *this;
 }
 
-KAboutData &KAboutData::addAuthor(const KLocalizedString &name,
+KAboutData& KAboutData::addAuthor(const KLocalizedString &name,
                                   const KLocalizedString &task,
                                   const QByteArray &emailAddress,
                                   const QByteArray &webAddress)
@@ -418,7 +418,7 @@ KAboutData &KAboutData::addAuthor(const KLocalizedString &name,
     return *this;
 }
 
-KAboutData &KAboutData::addCredit(const KLocalizedString &name,
+KAboutData& KAboutData::addCredit(const KLocalizedString &name,
                                   const KLocalizedString &task,
                                   const QByteArray &emailAddress,
                                   const QByteArray &webAddress)
@@ -427,15 +427,15 @@ KAboutData &KAboutData::addCredit(const KLocalizedString &name,
     return *this;
 }
 
-KAboutData &KAboutData::setTranslator( const KLocalizedString &name,
-                                       const KLocalizedString &emailAddress)
+KAboutData& KAboutData::setTranslator(const KLocalizedString &name,
+                                      const KLocalizedString &emailAddress)
 {
     d->translatorName = name;
     d->translatorEmail = emailAddress;
     return *this;
 }
 
-KAboutData &KAboutData::setAppName(const QByteArray &_appName)
+KAboutData& KAboutData::setAppName(const QByteArray &_appName)
 {
     d->_appName = _appName;
     return *this;
@@ -447,31 +447,31 @@ KAboutData &KAboutData::setProgramName(const KLocalizedString &_programName)
     return *this;
 }
 
-KAboutData &KAboutData::setVersion(const QByteArray &_version)
+KAboutData& KAboutData::setVersion(const QByteArray &_version)
 {
     d->_version = _version;
     return *this;
 }
 
-KAboutData &KAboutData::setShortDescription(const KLocalizedString &_shortDescription)
+KAboutData& KAboutData::setShortDescription(const KLocalizedString &_shortDescription)
 {
     d->_shortDescription = _shortDescription;
     return *this;
 }
 
-KAboutData &KAboutData::setCatalogName(const QByteArray &_catalogName)
+KAboutData& KAboutData::setCatalogName(const QByteArray &_catalogName)
 {
     d->_catalogName = _catalogName;
     return *this;
 }
 
-KAboutData &KAboutData::setLicense(LicenseKey licenseKey)
+KAboutData& KAboutData::setLicense(LicenseKey licenseKey)
 {
     d->_licenseList[0] = KAboutLicense(licenseKey, this);
     return *this;
 }
 
-KAboutData &KAboutData::addLicense(LicenseKey licenseKey)
+KAboutData& KAboutData::addLicense(LicenseKey licenseKey)
 {
     // if the default license is unknown, overwrite instead of append
     KAboutLicense &firstLicense = d->_licenseList[0];
@@ -483,25 +483,25 @@ KAboutData &KAboutData::addLicense(LicenseKey licenseKey)
     return *this;
 }
 
-KAboutData &KAboutData::setCopyrightStatement(const KLocalizedString &_copyrightStatement)
+KAboutData& KAboutData::setCopyrightStatement(const KLocalizedString &_copyrightStatement)
 {
     d->_copyrightStatement = _copyrightStatement;
     return *this;
 }
 
-KAboutData &KAboutData::setHomepage(const QByteArray &_homepage)
+KAboutData& KAboutData::setHomepage(const QByteArray &_homepage)
 {
     d->_homepageAddress = QString::fromLatin1(_homepage);
     return *this;
 }
 
-KAboutData &KAboutData::setBugAddress(const QByteArray &_bugAddress)
+KAboutData& KAboutData::setBugAddress(const QByteArray &_bugAddress)
 {
     d->_bugEmailAddress = _bugAddress;
     return *this;
 }
 
-KAboutData &KAboutData::setOrganizationDomain(const QByteArray &domain)
+KAboutData& KAboutData::setOrganizationDomain(const QByteArray &domain)
 {
     d->organizationDomain = QString::fromLatin1(domain);
     return *this;
@@ -525,7 +525,7 @@ QString KAboutData::programIconName() const
     return d->programIconName.isEmpty() ? appName() : d->programIconName;
 }
 
-KAboutData &KAboutData::setProgramIconName(const QString &iconName)
+KAboutData& KAboutData::setProgramIconName(const QString &iconName)
 {
     d->programIconName = iconName;
     return *this;
