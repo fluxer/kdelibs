@@ -97,7 +97,7 @@ int main( int argc, char **argv ) {
     options.add("g <group>", ki18n( "Default widget group name to display in designer" ), "Custom" );
 
 
-    KAboutData about( "makekdewidgets", 0, ki18n( "makekdewidgets" ), version, description, KAboutData::License_GPL, ki18n("(C) 2004-2005 Ian Reinhart Geiser"), KLocalizedString(), 0, "geiseri@kde.org" );
+    KAboutData about( "makekdewidgets", 0, ki18n( "makekdewidgets" ), version, description, KAboutData::License_GPL, ki18n("(C) 2004-2005 Ian Reinhart Geiser"));
     about.addAuthor( ki18n("Ian Reinhart Geiser"), KLocalizedString(), "geiseri@kde.org" );
     about.addAuthor( ki18n("Daniel Molkentin"), KLocalizedString(), "molkentin@kde.org" );
     about.addAuthor( ki18n("Ivalo Monev"), KLocalizedString(), "xakepa10@gmail.com" );

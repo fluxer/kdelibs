@@ -871,17 +871,8 @@ KCmdLineArgsStatic::parseAllArgs()
        }
        if (s->about)
        {
-         if (!s->about->customAuthorTextEnabled ())
-         {
-           if (s->about->bugAddress().isEmpty() || s->about->bugAddress() == QLatin1String(KDE_BUG_REPORT_EMAIL))
-             s->printQ( i18n( "Please use %1.\n", QLatin1String(KDE_BUG_REPORT_URL) ) );
-           else
-             s->printQ( i18n( "Please report bugs to %1.\n", s->about->bugAddress()) );
-         }
-         else
-         {
-           s->printQ(s->about->customAuthorPlainText()+QLatin1Char('\n'));
-         }
+         if (s->about->bugAddress().isEmpty() || s->about->bugAddress() == QLatin1String(KDE_BUG_REPORT_EMAIL))
+           s->printQ( i18n( "Please use %1.\n", QLatin1String(KDE_BUG_REPORT_URL) ) );
        }
        exit(0);
          } else {

@@ -361,15 +361,11 @@ KAboutLicense KAboutLicense::byKeyword(const QString &rawKeyword)
 class KAboutData::Private
 {
 public:
-    Private()
-        : customAuthorTextEnabled(false)
-        {}
     QByteArray _appName;
     KLocalizedString _programName;
     KLocalizedString _shortDescription;
     QByteArray _catalogName;
     KLocalizedString _copyrightStatement;
-    KLocalizedString _otherText;
     QString _homepageAddress;
     QList<KAboutPerson> _authorList;
     QList<KAboutPerson> _creditList;
@@ -377,12 +373,7 @@ public:
     KLocalizedString translatorName;
     KLocalizedString translatorEmail;
     QString programIconName;
-    QVariant programLogo;
-    KLocalizedString customAuthorPlainText, customAuthorRichText;
-    bool customAuthorTextEnabled;
-
     QString organizationDomain;
-
     QByteArray _version;
     QByteArray _bugEmailAddress;
 };
@@ -394,10 +385,7 @@ KAboutData::KAboutData( const QByteArray &_appName,
                         const QByteArray &_version,
                         const KLocalizedString &_shortDescription,
                         enum LicenseKey licenseType,
-                        const KLocalizedString &_copyrightStatement,
-                        const KLocalizedString &text,
-                        const QByteArray &homePageAddress,
-                        const QByteArray &bugsEmailAddress
+                        const KLocalizedString &_copyrightStatement
                       )
   : d(new Private)
 {
@@ -413,25 +401,9 @@ KAboutData::KAboutData( const QByteArray &_appName,
     d->_shortDescription = _shortDescription;
     d->_licenseList.append(KAboutLicense(licenseType,this));
     d->_copyrightStatement = _copyrightStatement;
-    d->_otherText = text;
-    d->_homepageAddress = QString::fromLatin1(homePageAddress);
-    d->_bugEmailAddress = bugsEmailAddress;
-
-    if (d->_homepageAddress.contains(QLatin1String("http://"))) {
-        const int dot = d->_homepageAddress.indexOf(QLatin1Char('.'));
-        if (dot >= 0) {
-            d->organizationDomain = d->_homepageAddress.mid(dot + 1);
-            const int slash = d->organizationDomain.indexOf(QLatin1Char('/'));
-            if (slash >= 0)
-                d->organizationDomain.truncate(slash);
-        }
-        else {
-            d->organizationDomain = QString::fromLatin1("kde.org");
-        }
-    }
-    else {
-        d->organizationDomain = QString::fromLatin1("kde.org");
-    }
+    d->_homepageAddress = QString::fromLatin1(KDE_HOME_URL);
+    d->_bugEmailAddress = QByteArray(KDE_BUG_REPORT_EMAIL);
+    d->organizationDomain = QString::fromLatin1("kde.org");
 }
 
 KAboutData::~KAboutData()
@@ -490,42 +462,6 @@ KAboutData &KAboutData::setTranslator( const KLocalizedString& name,
   return *this;
 }
 
-KAboutData &KAboutData::setLicenseText( const KLocalizedString &licenseText )
-{
-    d->_licenseList[0] = KAboutLicense(licenseText,this);
-    return *this;
-}
-
-KAboutData &KAboutData::addLicenseText( const KLocalizedString &licenseText )
-{
-    // if the default license is unknown, overwrite instead of append
-    KAboutLicense &firstLicense = d->_licenseList[0];
-    if (d->_licenseList.count() == 1 && firstLicense.d->_licenseKey == License_Unknown) {
-        firstLicense = KAboutLicense(licenseText,this);
-    } else {
-        d->_licenseList.append(KAboutLicense(licenseText,this));
-    }
-    return *this;
-}
-
-KAboutData &KAboutData::setLicenseTextFile( const QString &pathToFile )
-{
-    d->_licenseList[0] = KAboutLicense(pathToFile,this);
-    return *this;
-}
-
-KAboutData &KAboutData::addLicenseTextFile( const QString &pathToFile )
-{
-    // if the default license is unknown, overwrite instead of append
-    KAboutLicense &firstLicense = d->_licenseList[0];
-    if (d->_licenseList.count() == 1 && firstLicense.d->_licenseKey == License_Unknown) {
-        firstLicense = KAboutLicense(pathToFile,this);
-    } else {
-        d->_licenseList.append(KAboutLicense(pathToFile,this));
-    }
-    return *this;
-}
-
 KAboutData &KAboutData::setAppName( const QByteArray &_appName )
 {
   d->_appName = _appName;
@@ -580,12 +516,6 @@ KAboutData &KAboutData::setCopyrightStatement( const KLocalizedString &_copyrigh
   return *this;
 }
 
-KAboutData &KAboutData::setOtherText( const KLocalizedString &_otherText )
-{
-  d->_otherText = _otherText;
-  return *this;
-}
-
 KAboutData &KAboutData::setHomepage( const QByteArray &_homepage )
 {
   d->_homepageAddress = QString::fromLatin1(_homepage);
@@ -624,17 +554,6 @@ QString KAboutData::programIconName() const
 KAboutData &KAboutData::setProgramIconName( const QString &iconName )
 {
     d->programIconName = iconName;
-    return *this;
-}
-
-QVariant KAboutData::programLogo() const
-{
-    return d->programLogo;
-}
-
-KAboutData &KAboutData::setProgramLogo(const QVariant& image)
-{
-    d->programLogo = image ;
     return *this;
 }
 
@@ -754,13 +673,6 @@ QString KAboutData::aboutTranslationTeam()
     );
 }
 
-QString KAboutData::otherText() const
-{
-   if (!d->_otherText.isEmpty())
-      return d->_otherText.toString();
-   return QString();
-}
-
 QString KAboutData::license() const
 {
     return d->_licenseList.at(0).text();
@@ -782,44 +694,3 @@ QString KAboutData::copyrightStatement() const
     return d->_copyrightStatement.toString();
   return QString();
 }
-
-QString KAboutData::customAuthorPlainText() const
-{
-  if (!d->customAuthorPlainText.isEmpty())
-    return d->customAuthorPlainText.toString();
-  return QString();
-}
-
-QString KAboutData::customAuthorRichText() const
-{
-  if (!d->customAuthorRichText.isEmpty())
-    return d->customAuthorRichText.toString();
-  return QString();
-}
-
-bool KAboutData::customAuthorTextEnabled() const
-{
-  return d->customAuthorTextEnabled;
-}
-
-KAboutData &KAboutData::setCustomAuthorText( const KLocalizedString &plainText,
-                                             const KLocalizedString &richText )
-{
-  d->customAuthorPlainText = plainText;
-  d->customAuthorRichText = richText;
-
-  d->customAuthorTextEnabled = true;
-
-  return *this;
-}
-
-KAboutData &KAboutData::unsetCustomAuthorText()
-{
-  d->customAuthorPlainText = KLocalizedString();
-  d->customAuthorRichText = KLocalizedString();
-
-  d->customAuthorTextEnabled = false;
-
-  return *this;
-}
-

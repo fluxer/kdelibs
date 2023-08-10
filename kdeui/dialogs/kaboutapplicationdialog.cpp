@@ -107,10 +107,6 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
         windowIcon = qApp->windowIcon();
     }
     titleWidget->setPixmap(windowIcon.pixmap(64, 64), KTitleWidget::ImageLeft);
-    if (aboutData->programLogo().canConvert<QPixmap>())
-        titleWidget->setPixmap(aboutData->programLogo().value<QPixmap>(), KTitleWidget::ImageLeft);
-    else if (aboutData->programLogo().canConvert<QImage>())
-        titleWidget->setPixmap(QPixmap::fromImage(aboutData->programLogo().value<QImage>()), KTitleWidget::ImageLeft);
 
     if ( opt & HideKdeVersion )
         titleWidget->setText(i18n("<html><font size=\"5\">%1</font><br /><b>Version %2</b><br />&nbsp;</html>",
@@ -126,9 +122,6 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
 
     //Set up the first page...
     QString aboutPageText = aboutData->shortDescription() + '\n';
-
-    if (!aboutData->otherText().isEmpty())
-        aboutPageText += '\n' + aboutData->otherText() + '\n';
 
     if (!aboutData->copyrightStatement().isEmpty())
         aboutPageText += '\n' + aboutData->copyrightStatement() + '\n';
@@ -180,32 +173,26 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
         QVBoxLayout *authorLayout = new QVBoxLayout( authorWidget );
         authorLayout->setMargin( 0 );
 
-        if (!aboutData->customAuthorTextEnabled() || !aboutData->customAuthorRichText().isEmpty()) {
-            QLabel *bugsLabel = new QLabel( authorWidget );
-            bugsLabel->setContentsMargins( 4, 2, 0, 4 );
-            bugsLabel->setOpenExternalLinks( true );
-            if (!aboutData->customAuthorTextEnabled()) {
-                if (aboutData->bugAddress().isEmpty() || aboutData->bugAddress() == QLatin1String(KDE_BUG_REPORT_EMAIL))
-                    bugsLabel->setText( i18n("Please use <a href=\"%1\">%2</a> to report bugs.\n",
-                                             QString::fromLatin1(KDE_BUG_REPORT_URL), QString::fromLatin1(KDE_BUG_REPORT_URL)) );
-                else {
-                    if( ( aboutData->authors().count() == 1 ) &&
-                        ( aboutData->authors().first().emailAddress() == aboutData->bugAddress() ) ) {
-                        bugsLabel->setText( i18n("Please report bugs to <a href=\"mailto:%1\">%2</a>.\n",
-                                              aboutData->authors().first().emailAddress(),
-                                              aboutData->authors().first().emailAddress() ) );
-                    }
-                    else {
-                        bugsLabel->setText( i18n("Please report bugs to <a href=\"mailto:%1\">%2</a>.\n",
-                                              aboutData->bugAddress(), aboutData->bugAddress()));
-                    }
-                }
+        QLabel *bugsLabel = new QLabel( authorWidget );
+        bugsLabel->setContentsMargins( 4, 2, 0, 4 );
+        bugsLabel->setOpenExternalLinks( true );
+        if (aboutData->bugAddress().isEmpty() || aboutData->bugAddress() == QLatin1String(KDE_BUG_REPORT_EMAIL)) {
+            bugsLabel->setText( i18n("Please use <a href=\"%1\">%2</a> to report bugs.\n",
+                                     QString::fromLatin1(KDE_BUG_REPORT_URL), QString::fromLatin1(KDE_BUG_REPORT_URL)) );
+        } else {
+            if( ( aboutData->authors().count() == 1 ) &&
+                ( aboutData->authors().first().emailAddress() == aboutData->bugAddress() ) ) {
+                bugsLabel->setText( i18n("Please report bugs to <a href=\"mailto:%1\">%2</a>.\n",
+                                          aboutData->authors().first().emailAddress(),
+                                          aboutData->authors().first().emailAddress() ) );
             }
-            else
-                bugsLabel->setText( aboutData->customAuthorRichText() );
-            bugsLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
-            authorLayout->addWidget( bugsLabel );
+            else {
+                bugsLabel->setText( i18n("Please report bugs to <a href=\"mailto:%1\">%2</a>.\n",
+                                         aboutData->bugAddress(), aboutData->bugAddress()));
+            }
         }
+        bugsLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
+        authorLayout->addWidget( bugsLabel );
 
         KDEPrivate::KAboutApplicationPersonModel *authorModel =
                 new KDEPrivate::KAboutApplicationPersonModel( aboutData->authors(),

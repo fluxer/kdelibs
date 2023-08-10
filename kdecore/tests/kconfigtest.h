@@ -78,9 +78,6 @@ private Q_SLOTS:
 
     void testThreads();
 
-    // unrelated
-    void testKAboutDataOrganizationDomain();
-
     // should be last
     void testSyncOnExit();
 private:

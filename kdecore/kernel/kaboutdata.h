@@ -28,8 +28,6 @@
 #include <klocale.h>
 #include <kglobalsettings.h>
 
-#include <QVariant>
-
 class KAboutData;
 
 /**
@@ -210,27 +208,11 @@ class KDECORE_EXPORT KAboutData
      *        This string should be marked for translation.
      *        Example: ki18n("A simple text editor.")
      *
-     * @param licenseType The license identifier. Use setLicenseText or
-              setLicenseTextFile if you use a license not predefined here.
+     * @param licenseType The license identifier.
      *
      * @param copyrightStatement A copyright statement, that can look like this:
      *        ki18n("Copyright (C) 1999-2000 Name"). The string specified here is
      *        taken verbatim; the author information from addAuthor is not used.
-     *
-     * @param otherText Some free form text, that can contain any kind of
-     *        information. The text can contain newlines. This string
-     *        should be marked for translation.
-     *
-     * @param homePageAddress The program homepage string.
-     *        Start the address with "http://". "http://some.domain" is
-     *        is correct, "some.domain" is not.
-     * IMPORTANT: if you set a home page address, this will change the "organization domain"
-     * of the application, which is used for automatic D-Bus registration.
-     * @see setOrganizationDomain
-     *
-     * @param bugsEmailAddress The bug report email address string.
-     *        This defaults to the kde.org bug system.
-     *
      */
     KAboutData( const QByteArray &appName,
                 const QByteArray &catalogName,
@@ -238,10 +220,7 @@ class KDECORE_EXPORT KAboutData
                 const QByteArray &version,
                 const KLocalizedString &shortDescription = KLocalizedString(),
                 enum LicenseKey licenseType = License_Unknown,
-                const KLocalizedString &copyrightStatement = KLocalizedString(),
-                const KLocalizedString &otherText = KLocalizedString(),
-                const QByteArray &homePageAddress = QByteArray(),
-                const QByteArray &bugsEmailAddress = KDE_BUG_REPORT_EMAIL
+                const KLocalizedString &copyrightStatement = KLocalizedString()
               );
 
     /**
@@ -338,56 +317,6 @@ class KDECORE_EXPORT KAboutData
                                const KLocalizedString& emailAddress );
 
     /**
-     * Defines a license text, which is marked for translation.
-     *
-     * Example:
-     * \code
-     * setLicenseText( ki18n("This is my license") );
-     * \endcode
-     *
-     * @param license The license text.
-     */
-    KAboutData &setLicenseText( const KLocalizedString &license );
-
-    /**
-     * Adds a license text, which is marked for translation.
-     *
-     * If there is only one unknown license set, e.g. by using the default
-     * parameter in the constructor, that one is replaced.
-     *
-     * Example:
-     * \code
-     * addLicenseText( ki18n("This is my license") );
-     * \endcode
-     *
-     * @param license The license text.
-     * @see setLicenseText, addLicense, addLicenseTextFile
-     * @since 4.1
-     */
-    KAboutData &addLicenseText( const KLocalizedString &license );
-
-    /**
-     * Defines a license text by pointing to a file where it resides.
-     * The file format has to be plain text in an encoding compatible to the locale.
-     *
-     * @param file Path to the file in the local filesystem containing the license text.
-     */
-    KAboutData &setLicenseTextFile( const QString &file );
-
-    /**
-     * Adds a license text by pointing to a file where it resides.
-     * The file format has to be plain text in an encoding compatible to the locale.
-     *
-     * If there is only one unknown license set, e.g. by using the default
-     * parameter in the constructor, that one is replaced.
-     *
-     * @param file Path to the file in the local filesystem containing the license text.
-     * @see addLicenseText, addLicense, setLicenseTextFile
-     * @since 4.1
-     */
-    KAboutData &addLicenseTextFile( const QString &file );
-
-    /**
      * Defines the program name used internally.
      *
      * @param appName The application name. Example: "kate".
@@ -416,20 +345,6 @@ class KDECORE_EXPORT KAboutData
     KAboutData &setProgramIconName( const QString &iconName );
 
     /**
-     * Defines the program logo.
-     *
-     * Use this if you need to have an application logo
-     * in AboutData other than the application icon.
-     *
-     * Because KAboutData is in kdecore it cannot use QImage directly,
-     * so this is a QVariant that should contain a QImage.
-     *
-     * @param image logo image.
-     * @see programLogo()
-    */
-    KAboutData &setProgramLogo(const QVariant& image);
-
-    /**
      * Defines the program version string.
      *
      * @param version The program version.
@@ -456,7 +371,7 @@ class KDECORE_EXPORT KAboutData
      * Defines the license identifier.
      *
      * @param licenseKey The license identifier.
-     * @see addLicenseText, setLicenseText, setLicenseTextFile
+     * @see addLicense
      */
     KAboutData &setLicense( LicenseKey licenseKey );
 
@@ -467,7 +382,6 @@ class KDECORE_EXPORT KAboutData
      * parameter in the constructor, that one is replaced.
      *
      * @param licenseKey The license identifier.
-     * @see setLicenseText, addLicenseText, addLicenseTextFile
      * @since 4.1
      */
     KAboutData &addLicense( LicenseKey licenseKey );
@@ -480,15 +394,6 @@ class KDECORE_EXPORT KAboutData
      *        taken verbatim; the author information from addAuthor is not used.
      */
     KAboutData &setCopyrightStatement( const KLocalizedString &copyrightStatement );
-
-    /**
-     * Defines the additional text to show in the about dialog.
-     *
-     * @param otherText Some free form text, that can contain any kind of
-     *        information. The text can contain newlines. This string
-     *        should be marked for translation.
-     */
-    KAboutData &setOtherText( const KLocalizedString &otherText );
 
     /**
      * Defines the program homepage.
@@ -559,17 +464,6 @@ class KDECORE_EXPORT KAboutData
     QString programIconName() const;
 
     /**
-     * Returns the program logo image.
-     *
-     * Because KAboutData is in kdecore it cannot use QImage directly,
-     * so this is a QVariant containing a QImage.
-     *
-     * @return the program logo data, or a null image if there is
-     *         no custom application logo defined.
-     */
-    QVariant programLogo() const;
-
-    /**
      * Returns the program's version.
      * @return the version string.
      */
@@ -626,12 +520,6 @@ class KDECORE_EXPORT KAboutData
     static QString aboutTranslationTeam();
 
     /**
-     * Returns a translated, free form text.
-     * @return the free form text (translated). Can be QString() if not set.
-     */
-    QString otherText() const;
-
-    /**
      * Returns the license. If the licenseType argument of the constructor has been
      * used, any text defined by setLicenseText is ignored,
      * and the standard text for the chosen license will be returned.
@@ -664,54 +552,6 @@ class KDECORE_EXPORT KAboutData
      * @return the copyright statement. Can be QString() if not set.
      */
     QString copyrightStatement() const;
-
-    /**
-     * Returns the plain text displayed around the list of authors instead
-     * of the default message telling users to send bug reports to bugAddress().
-     *
-     * @return the plain text displayed around the list of authors instead
-     *         of the default message.  Can be QString().
-     */
-    QString customAuthorPlainText() const;
-
-    /**
-     * Returns the rich text displayed around the list of authors instead
-     * of the default message telling users to send bug reports to bugAddress().
-     *
-     * @return the rich text displayed around the list of authors instead
-     *         of the default message.  Can be QString().
-     */
-    QString customAuthorRichText() const;
-
-    /**
-     * Returns whether custom text should be displayed around the list of
-     * authors.
-     *
-     * @return whether custom text should be displayed around the list of
-     *         authors.
-     */
-    bool customAuthorTextEnabled() const;
-
-    /**
-     * Sets the custom text displayed around the list of authors instead
-     * of the default message telling users to send bug reports to bugAddress().
-     *
-     * @param plainText The plain text.
-     * @param richText The rich text.
-     *
-     * Setting both to parameters to KLocalizedString() will cause no message to be
-     * displayed at all.  Call unsetCustomAuthorText() to revert to the default
-     * message.
-     */
-    KAboutData &setCustomAuthorText(const KLocalizedString &plainText,
-                                    const KLocalizedString &richText);
-
-    /**
-     * Clears any custom text displayed around the list of authors and falls
-     * back to the default message telling users to send bug reports to
-     * bugAddress().
-     */
-    KAboutData &unsetCustomAuthorText();
 
   private:
 
@@ -756,8 +596,8 @@ public:
 
     /**
      * Returns the full license text. If the licenseType argument of the
-     * constructor has been used, any text defined by setLicenseText is ignored,
-     * and the standard text for the chosen license will be returned.
+     * constructor has been used and the standard text for the chosen
+     * license will be returned.
      *
      * @return The license text.
      */

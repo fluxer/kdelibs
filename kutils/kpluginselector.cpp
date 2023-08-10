@@ -747,12 +747,13 @@ void KPluginSelector::Private::PluginDelegate::slotAboutClicked()
     const QString version = model->data(index, VersionRole).toString();
     const QString license = model->data(index, LicenseRole).toString();
 
-    KAboutData aboutData(name.toUtf8(), name.toUtf8(), ki18n(name.toUtf8()), version.toUtf8(), ki18n(comment.toUtf8()), KAboutLicense::byKeyword(license).key(), ki18n(QByteArray()), ki18n(QByteArray()), website.toLatin1());
+    KAboutData aboutData(name.toUtf8(), name.toUtf8(), ki18n(name.toUtf8()), version.toUtf8(), ki18n(comment.toUtf8()), KAboutLicense::byKeyword(license).key());
+    aboutData.setHomepage(website.toLatin1());
     aboutData.setProgramIconName(index.model()->data(index, Qt::DecorationRole).toString());
     const QStringList authors = author.split(',');
     const QStringList emails = email.split(',');
     if (authors.count() == emails.count()) {
-	int i = 0;
+        int i = 0;
         foreach (const QString &author, authors) {
             if (!author.isEmpty()) {
                 aboutData.addAuthor(ki18n(author.toUtf8()), ki18n(QByteArray()), emails[i].toUtf8(), 0);
