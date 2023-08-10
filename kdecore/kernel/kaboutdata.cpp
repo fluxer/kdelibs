@@ -606,11 +606,11 @@ QList<KAboutPerson> KAboutData::translators() const
        emailList = translatorEmail.split(QString(QLatin1Char(',')), QString::KeepEmptyParts);
     }
 
-    foreach ( const QString nit, nameList )
+    foreach ( const QString &nit, nameList )
     {
         // overkill?
         QString email;
-        foreach (const QString eit, emailList )
+        foreach (const QString &eit, emailList )
         {
             email = eit;
         }
