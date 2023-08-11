@@ -95,7 +95,7 @@ KCatalog::~KCatalog()
 bool KCatalog::hasCatalog(const QString &name, const QString &language)
 {
     const QString relpath = QString::fromLatin1("%1/%2.tr").arg(language).arg(name);
-    return !KGlobal::dirs()->findResourceDir("locale", relpath).isEmpty();
+    return !KGlobal::dirs()->locate("locale", relpath).isEmpty();
 }
 
 bool KCatalog::loadCatalog(const QString &name, const QString &language, QTranslator *translator)
