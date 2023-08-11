@@ -4,7 +4,6 @@
 install(
     FILES
     klineedit.png
-    kpasswordedit.png
     kfontrequester.png
     kurlrequester.png
     kcombobox.png
