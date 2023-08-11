@@ -35,8 +35,6 @@ class KPluginLoaderPrivate
 public:
     KPluginLoaderPrivate(const QString &libname)
         : name(libname)
-    {}
-    ~KPluginLoaderPrivate()
     {
     }
 
@@ -44,11 +42,12 @@ public:
     QString errorString;
 };
 
-static inline QString makeLibName( const QString &libname )
+static inline QString makeLibName(const QString &libname)
 {
     int pos = libname.lastIndexOf(QLatin1Char('/'));
-    if (pos < 0)
+    if (pos < 0) {
         pos = 0;
+    }
     if (libname.indexOf(QLatin1Char('.'), pos) < 0) {
         const QString lib = libname + QLatin1String(".so");
         if (QLibrary::isLibrary(lib)) {
@@ -58,7 +57,6 @@ static inline QString makeLibName( const QString &libname )
     return libname;
 }
 
-
 static QString findLibraryInternal(const QString &name, const KComponentData &cData)
 {
     // Convert name to a valid platform libname
@@ -66,8 +64,9 @@ static QString findLibraryInternal(const QString &name, const KComponentData &cD
     QFileInfo fileinfo(name);
     bool hasPrefix = fileinfo.fileName().startsWith(QLatin1String("lib"));
 
-    if (hasPrefix)
+    if (hasPrefix) {
         kDebug() << "plugins should not have a 'lib' prefix:" << libname;
+    }
 
     // If it is a absolute path just return it
     if (!QDir::isRelativePath(libname))
@@ -75,12 +74,14 @@ static QString findLibraryInternal(const QString &name, const KComponentData &cD
 
     // Check for kde modules/plugins?
     QString libfile = cData.dirs()->findResource("module", libname);
-    if (!libfile.isEmpty())
+    if (!libfile.isEmpty()) {
         return libfile;
+    }
 
     // Now look where they don't belong but sometimes are
-    if (!hasPrefix)
+    if (!hasPrefix) {
         libname = fileinfo.path() + QLatin1String("/lib") + fileinfo.fileName();
+    }
 
     libfile = cData.dirs()->findResource("lib", libname);
     if (!libfile.isEmpty()) {
@@ -93,23 +94,26 @@ static QString findLibraryInternal(const QString &name, const KComponentData &cD
 }
 
 KPluginLoader::KPluginLoader(const QString &plugin, const KComponentData &componentdata, QObject *parent)
-    : QPluginLoader(findLibraryInternal(plugin, componentdata), parent), d_ptr(new KPluginLoaderPrivate(plugin))
+    : QPluginLoader(findLibraryInternal(plugin, componentdata), parent),
+    d_ptr(new KPluginLoaderPrivate(plugin))
 {
     Q_D(KPluginLoader);
 
     // No lib, no fun.
     if (fileName().isEmpty()) {
         d->errorString = i18n(
-                "Could not find plugin '%1' for application '%2'",
-                plugin,
-                componentdata.aboutData()->appName());
+            "Could not find plugin '%1' for application '%2'",
+            plugin,
+            componentdata.aboutData()->appName()
+        );
         return;
     }
 }
 
 
 KPluginLoader::KPluginLoader(const KService &service, const KComponentData &componentdata, QObject *parent)
-: QPluginLoader(findLibraryInternal(service.library(), componentdata), parent), d_ptr(new KPluginLoaderPrivate(service.library()))
+    : QPluginLoader(findLibraryInternal(service.library(), componentdata), parent),
+    d_ptr(new KPluginLoaderPrivate(service.library()))
 {
     Q_D(KPluginLoader);
 
@@ -122,7 +126,10 @@ KPluginLoader::KPluginLoader(const KService &service, const KComponentData &comp
 
     // service.library() is used to find the lib. So first check if it is empty.
     if (service.library().isEmpty()) {
-        d->errorString = i18n("The service '%1' provides no library or the Library key is missing", service.entryPath());
+        d->errorString = i18n(
+            "The service '%1' provides no library or the Library key is missing",
+            service.entryPath()
+        );
         return;
     }
 
@@ -130,9 +137,10 @@ KPluginLoader::KPluginLoader(const KService &service, const KComponentData &comp
     // find the lib.
     if (fileName().isEmpty()) {
         d->errorString = i18n(
-                "Could not find plugin '%1' for application '%2'",
-                service.name(),
-                componentdata.aboutData()->appName());
+            "Could not find plugin '%1' for application '%2'",
+            service.name(),
+            componentdata.aboutData()->appName()
+        );
         return;
     }
 }
@@ -142,25 +150,24 @@ KPluginLoader::~KPluginLoader()
     delete d_ptr;
 }
 
-KPluginFactory *KPluginLoader::factory()
+KPluginFactory* KPluginLoader::factory()
 {
     Q_D(KPluginLoader);
 
-    if (!load())
-        return 0;
-
+    if (!load()) {
+        return nullptr;
+    }
 
     QObject *obj = instance();
+    if (!obj) {
+        return nullptr;
+    }
 
-    if (!obj)
-        return 0;
-
-    KPluginFactory *factory = qobject_cast<KPluginFactory *>(obj);
-
+    KPluginFactory *factory = qobject_cast<KPluginFactory*>(obj);
     if (!factory) {
         kDebug() << "Expected a KPluginFactory, got a" << obj->metaObject()->className();
         delete obj;
-        d->errorString = i18n("The library %1 does not offer a KDE 4 compatible factory." , d->name);
+        d->errorString = i18n("The library %1 does not offer a KDE 4 compatible factory.", d->name);
     }
 
     return factory;
@@ -169,10 +176,9 @@ KPluginFactory *KPluginLoader::factory()
 QString KPluginLoader::errorString() const
 {
     Q_D(const KPluginLoader);
-
-    if (!d->errorString.isEmpty())
+    if (!d->errorString.isEmpty()) {
         return d->errorString;
-
+    }
     return QPluginLoader::errorString();
 }
 

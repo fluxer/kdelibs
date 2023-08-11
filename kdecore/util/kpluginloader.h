@@ -87,7 +87,7 @@ public:
      * \param componentdata The KStandardDirs object from componentdata is used to search the library.
      * \param parent A parent object.
      */
-    explicit KPluginLoader(const QString &plugin, const KComponentData &componentdata = KGlobal::mainComponent(), QObject *parent = 0);
+    explicit KPluginLoader(const QString &plugin, const KComponentData &componentdata = KGlobal::mainComponent(), QObject *parent = nullptr);
 
     /**
      * Used this constructor to load a plugin from a service. The service must contain a library.
@@ -98,7 +98,7 @@ public:
      * \param componentdata The KStandardDirs object from componentdata is used to search the library.
      * \param parent A parent object.
      */
-    explicit KPluginLoader(const KService &service, const KComponentData &componentdata = KGlobal::mainComponent(), QObject *parent = 0);
+    explicit KPluginLoader(const KService &service, const KComponentData &componentdata = KGlobal::mainComponent(), QObject *parent = nullptr);
 
     /**
      * Destroys the plugin loader.
@@ -111,7 +111,7 @@ public:
      *
      * \returns The factory of the plugin or 0 on error.
      */
-    KPluginFactory *factory();
+    KPluginFactory* factory();
 
     /**
      * The name of this plugin as given to the constructor.
