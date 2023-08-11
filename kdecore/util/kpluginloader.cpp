@@ -59,19 +59,18 @@ static inline QString makeLibName(const QString &libname)
 
 static QString findLibraryInternal(const QString &name, const KComponentData &cData)
 {
-    // Convert name to a valid platform libname
-    QString libname = makeLibName(name);
-    QFileInfo fileinfo(name);
-    bool hasPrefix = fileinfo.fileName().startsWith(QLatin1String("lib"));
-
+    const bool hasPrefix = name.startsWith(QLatin1String("lib"));
     if (hasPrefix) {
-        kDebug() << "plugins should not have a 'lib' prefix:" << libname;
+        kWarning() << "plugins should not have a 'lib' prefix:" << name;
     }
 
     // If it is a absolute path just return it
-    if (!QDir::isRelativePath(libname)) {
-        return libname;
+    if (!QDir::isRelativePath(name)) {
+        return name;
     }
+
+    // Convert name to a valid platform libname
+    QString libname = makeLibName(name);
 
     // Check for kde modules/plugins?
     QString libfile = cData.dirs()->findResource("module", libname);
@@ -81,7 +80,7 @@ static QString findLibraryInternal(const QString &name, const KComponentData &cD
 
     // Now look where they don't belong but sometimes are
     if (!hasPrefix) {
-        libname = fileinfo.path() + QLatin1String("/lib") + fileinfo.fileName();
+        libname = QLatin1String("lib") + libname;
     }
 
     libfile = cData.dirs()->findResource("lib", libname);
