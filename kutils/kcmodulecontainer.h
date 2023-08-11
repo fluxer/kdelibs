@@ -62,7 +62,7 @@ class KCMUTILS_EXPORT KCModuleContainer : public KCModule
 		 * This is a convenience function, instead of building a QStringList you
 		 * can specify the modules in a comma separated QString. For example;
 		 * \code
-		 * KCModuleContainer* cont = KCModuleContainer( this, "kcm_misc", QString("kcm_energy, kcm_keyboard ,kcm_useraccount, kcm_mouse") );
+		 * KCModuleContainer* const = KCModuleContainer( this, "kcm_misc", QString("kcm_energy, kcm_keyboard ,kcm_useraccount, kcm_mouse") );
 		 * \endcode
 		 * The other constructor takes its modules in a QStringlist which also can be constructed from a
 		 * string and thus you will have to be explicit on the data type.
