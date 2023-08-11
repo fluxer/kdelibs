@@ -116,8 +116,6 @@ KUniqueApplication::KUniqueApplication(bool configUnique)
     : KApplication(Private::initHack(configUnique)),
     d(new Private(this))
 {
-    d->firstInstance = true;
-
     // the sanity checking happened in initHack
     new KUniqueApplicationAdaptor(this);
 
@@ -132,8 +130,6 @@ KUniqueApplication::KUniqueApplication(Display *display, Qt::HANDLE visual,
     : KApplication(display, visual, colormap, Private::initHack(configUnique)),
     d(new Private(this))
 {
-    d->firstInstance = true;
-
     // the sanity checking happened in initHack
     new KUniqueApplicationAdaptor(this);
 

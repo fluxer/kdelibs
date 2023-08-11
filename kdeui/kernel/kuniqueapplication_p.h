@@ -26,7 +26,8 @@ class KUniqueApplication::Private
 {
 public:
     Private(KUniqueApplication *q)
-        : q(q)
+        : q(q),
+        firstInstance(true)
     {
     }
 
