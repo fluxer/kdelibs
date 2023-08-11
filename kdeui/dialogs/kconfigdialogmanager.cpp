@@ -139,7 +139,6 @@ void KConfigDialogManager::initMaps()
     s_changedMap->insert( "KEditListWidget", SIGNAL(changed()));
     s_changedMap->insert( "KListWidget", SIGNAL(itemSelectionChanged()));
     s_changedMap->insert( "KLineEdit", SIGNAL(textChanged(QString)));
-    s_changedMap->insert( "KPasswordEdit", SIGNAL(textChanged(QString)));
     s_changedMap->insert( "KRestrictedLine", SIGNAL(textChanged(QString)));
     s_changedMap->insert( "KTextEdit", SIGNAL(textChanged()));
     s_changedMap->insert( "KUrlRequester",  SIGNAL(textChanged(QString)));
