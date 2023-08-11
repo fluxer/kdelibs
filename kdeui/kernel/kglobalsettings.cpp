@@ -155,12 +155,6 @@ bool KGlobalSettings::singleClick()
     return g.readEntry("SingleClick", KDE_DEFAULT_SINGLECLICK);
 }
 
-bool KGlobalSettings::smoothScroll()
-{
-    KConfigGroup g( KGlobal::config(), "KDE");
-    return g.readEntry("SmoothScroll", KDE_DEFAULT_SMOOTHSCROLL);
-}
-
 KGlobalSettings::TearOffHandle KGlobalSettings::insertTearOffHandle()
 {
     bool effectsenabled = (KGlobalSettings::graphicEffectsLevel() > KGlobalSettings::NoEffects);
@@ -189,12 +183,6 @@ KGlobalSettings::Completion KGlobalSettings::completionMode()
         completion = (int) CompletionPopup; // Default
     }
     return (Completion) completion;
-}
-
-bool KGlobalSettings::showContextMenusOnPress()
-{
-    KConfigGroup g(KGlobal::config(), "ContextMenus");
-    return g.readEntry("ShowOnPress", true);
 }
 
 // NOTE: keep this in sync with kde-workspace/kcontrol/colors/colorscm.cpp
@@ -435,12 +423,6 @@ bool KGlobalSettings::opaqueResize()
 {
     KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("OpaqueResize", KDE_DEFAULT_OPAQUE_RESIZE);
-}
-
-int KGlobalSettings::buttonLayout()
-{
-    KConfigGroup g(KGlobal::config(), "KDE");
-    return g.readEntry("ButtonLayout", KDE_DEFAULT_BUTTON_LAYOUT);
 }
 
 #ifdef Q_WS_X11

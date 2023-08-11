@@ -30,7 +30,6 @@
 
 
 #define KDE_DEFAULT_SINGLECLICK true
-#define KDE_DEFAULT_SMOOTHSCROLL true
 #define KDE_DEFAULT_INSERTTEAROFFHANDLES 0
 #define KDE_DEFAULT_AUTOSELECTDELAY -1
 #define KDE_DEFAULT_CHANGECURSOR true
@@ -38,7 +37,6 @@
 #define KDE_DEFAULT_WHEEL_ZOOM false
 #define KDE_DEFAULT_ICON_ON_PUSHBUTTON true
 #define KDE_DEFAULT_OPAQUE_RESIZE true
-#define KDE_DEFAULT_BUTTON_LAYOUT 0
 #define KDE_DEFAULT_SHADE_SORT_COLUMN true
 #define KDE_DEFAULT_NATURAL_SORTING true
 #define KDE_DEFAULT_FONT "DejaVu Sans"
@@ -115,13 +113,6 @@ public:
     static bool singleClick();
 
     /**
-     * Returns if item views should force smooth scrolling.
-     * @return true if smooth scrolling is enabled for item view, false otherwise.
-     * @since 4.2
-     */
-    static bool smoothScroll();
-
-    /**
      * This enum describes the return type for insertTearOffHandle() whether to insert
      * a handle or not. Applications who independently want to use handles in their popup menus
      * should test for Application level before calling the appropriate function in KMenu.
@@ -150,14 +141,6 @@ public:
      * @return the auto-select delay or -1 if auto-select is disabled.
      */
     static int autoSelectDelay();
-
-    /**
-     * Returns the KDE setting for context menus.
-     *
-     * @return whether context menus should be shown on button press
-     * or button release (click).
-     */
-    static bool showContextMenusOnPress ();
 
     /**
      * This enum describes the completion mode used for by the KCompletion class.
@@ -429,13 +412,6 @@ public:
      * @return Returns true if user wants to use opaque resizing.
      */
     static bool opaqueResize();
-
-    /**
-     * The layout scheme to use for dialog buttons
-     *
-     * @return Returns the number of the scheme to use.
-     */
-    static int buttonLayout();
 
     /**
      * Used to obtain the QPalette that will be used to set the application palette.

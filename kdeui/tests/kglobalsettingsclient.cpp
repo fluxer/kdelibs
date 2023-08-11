@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     if (args->isSet("p")) {
         kDebug() << "emitChange(PaletteChanged)";
         KGlobalSettings::self()->emitChange(KGlobalSettings::PaletteChanged);
-	return 0;
+        return 0;
     } else if (args->isSet("f")) {
         kDebug() << "emitChange(FontChanged)";
         KGlobalSettings::self()->emitChange(KGlobalSettings::FontChanged);
