@@ -100,16 +100,15 @@ void KConfigDialogManager::initMaps()
 
   if( s_changedMap->isEmpty() )
   {
-    // QT
+    // Katie
     s_changedMap->insert("QCheckBox", SIGNAL(stateChanged(int)));
     s_changedMap->insert("QPushButton", SIGNAL(clicked(bool)));
     s_changedMap->insert("QRadioButton", SIGNAL(toggled(bool)));
     // We can only store one thing, so you can't have
     // a ButtonGroup that is checkable.
-//    s_changedMap->insert("QButtonGroup", SIGNAL(buttonClicked(int)));
+    // s_changedMap->insert("QButtonGroup", SIGNAL(buttonClicked(int)));
     s_changedMap->insert("QGroupBox", SIGNAL(toggled(bool)));
     s_changedMap->insert("QComboBox", SIGNAL(activated(int)));
-    //qsqlproperty map doesn't store the text, but the value!
     //s_changedMap->insert("QComboBox", SIGNAL(textChanged(QString)));
     s_changedMap->insert("QDateEdit", SIGNAL(dateChanged(QDate)));
     s_changedMap->insert("QDateTimeEdit", SIGNAL(timeChanged(QTime)));
@@ -131,7 +130,6 @@ void KConfigDialogManager::initMaps()
     s_changedMap->insert( "KFontChooser",  SIGNAL(fontSelected(QFont)));
     s_changedMap->insert( "KHistoryCombo", SIGNAL(activated(int)));
     s_changedMap->insert( "KColorCombo", SIGNAL(activated(QColor)));
-
     s_changedMap->insert( "KColorButton", SIGNAL(changed(QColor)));
     s_changedMap->insert( "KCalendarWidget", SIGNAL(activated(QDate)));
     s_changedMap->insert( "KTimeEdit", SIGNAL(timeChanged(QTime)));

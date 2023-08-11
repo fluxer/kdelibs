@@ -106,10 +106,6 @@ set(kdeui_LIB_SRCS
     dialogs/kswitchlanguagedialog_p.cpp
     dialogs/ktip.cpp
     dialogs/kdeprintdialog.cpp
-    dialogs/kcupsoptionswidget_p.cpp
-    dialogs/kcupsoptionsjobwidget_p.cpp
-    dialogs/kcupsoptionspageswidget_p.cpp
-    dialogs/kcupsoptionssettingswidget_p.cpp
     findreplace/kfind.cpp
     findreplace/kreplace.cpp
     findreplace/kfinddialog.cpp
@@ -368,10 +364,6 @@ install(
 install(
     FILES
     dialogs/aboutkde.png
-    dialogs/kdeprint_nup1.png
-    dialogs/kdeprint_nup2.png
-    dialogs/kdeprint_nup4.png
-    dialogs/kdeprint_nupother.png
     dialogs/ktip-bulb.png
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui/pics
 )
