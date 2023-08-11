@@ -44,6 +44,7 @@
 #include <kstandardguiitem.h>
 #include <ktoolinvocation.h>
 #include <kurllabel.h>
+#include <kwindowsystem.h>
 
 #ifdef Q_WS_X11
 #include <qx11info_x11.h>
@@ -1108,6 +1109,9 @@ void KDialogQueue::Private::slotShowQueuedDialog()
     } while(!dialog);
 
     busy = true;
+    dialog->show();
+    KWindowSystem::raiseWindow(dialog->winId());
+    KWindowSystem::forceActiveWindow(dialog->winId());
     dialog->exec();
     busy = false;
     delete dialog;

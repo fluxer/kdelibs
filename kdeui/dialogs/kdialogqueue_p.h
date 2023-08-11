@@ -40,21 +40,20 @@
  */
 class KDialogQueue : public QObject
 {
-  Q_OBJECT
-
-  public:
+    Q_OBJECT
+public:
     static void queueDialog(QDialog *);
 
     ~KDialogQueue();
 
-  protected:
+protected:
     KDialogQueue();
     static KDialogQueue *self();
 
-  private:
+private:
     Q_PRIVATE_SLOT(d, void slotShowQueuedDialog())
 
-  private:
+private:
     class Private;
     friend class Private;  
     Private* const d;

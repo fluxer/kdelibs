@@ -22,13 +22,13 @@
 #ifndef KMESSAGEBOX_H
 #define KMESSAGEBOX_H
 
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
+#include <QWidget>
+#include <QStringList>
 
 #include <kguiitem.h>
 #include <kstandardguiitem.h>
 
-#include <QWidget>
-#include <QStringList>
 class KConfig;
 class KDialog;
 

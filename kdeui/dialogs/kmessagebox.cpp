@@ -31,6 +31,7 @@
 #include "kwindowsystem.h"
 
 #include <QtCore/QPointer>
+#include <QtCore/QDebug>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
@@ -333,10 +334,16 @@ int KMessageBox::createKMessageBox(KDialog *dialog, const QIcon &icon,
         return KMessageBox::Cancel; // We have to return something.
     }
 
-    // We use a QPointer because the dialog may get deleted
+    // use a QPointer because the dialog may get deleted
     // during exec() if the parent of the dialog gets deleted.
     // In that case the QPointer will reset to 0.
     QPointer<KDialog> guardedDialog = dialog;
+
+    // raise the dialog in case the parent is minimized (hidden), e.g. status
+    // status notifier item (kget)
+    guardedDialog->show();
+    KWindowSystem::raiseWindow(guardedDialog->winId());
+    KWindowSystem::forceActiveWindow(guardedDialog->winId());
 
     const int result = guardedDialog->exec();
     if (checkbox && checkboxReturn) {
