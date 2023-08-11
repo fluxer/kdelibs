@@ -148,7 +148,7 @@ public:
     /**
      * Describes the license of the software.
      */
-    enum LicenseKey // KDE5: move to KAboutLicense
+    enum LicenseKey
     {
         License_Unknown = 0,
         License_GPL  = 1,
@@ -164,7 +164,7 @@ public:
     /**
      * Format of the license name.
      */
-    enum NameFormat // KDE5: move to KAboutLicense
+    enum NameFormat
     {
         ShortName,
         FullName
