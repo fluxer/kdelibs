@@ -42,8 +42,6 @@
 #include <kglobal.h>
 #include <kdbusmenuexporter.h>
 
-#include <netinet/in.h>
-
 #include "statusnotifieritemadaptor.h"
 
 static const QString s_statusNotifierWatcherServiceName("org.kde.StatusNotifierWatcher");
@@ -904,15 +902,6 @@ KDbusImageStruct KStatusNotifierItemPrivate::imageToStruct(const QImage &image)
         QImage image32 = image.convertToFormat(QImage::Format_ARGB32);
         icon.data = QByteArray((const char*)image32.constBits(), image32.byteCount());
     }
-
-    //swap to network byte order if we are little endian
-#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    quint32 *uintBuf = (quint32 *) icon.data.data();
-    for (uint i = 0; i < icon.data.size()/sizeof(quint32); ++i) {
-        *uintBuf = htonl(*uintBuf);
-        ++uintBuf;
-    }
-#endif
 
     return icon;
 }
