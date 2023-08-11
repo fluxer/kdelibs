@@ -69,8 +69,9 @@ static QString findLibraryInternal(const QString &name, const KComponentData &cD
     }
 
     // If it is a absolute path just return it
-    if (!QDir::isRelativePath(libname))
+    if (!QDir::isRelativePath(libname)) {
         return libname;
+    }
 
     // Check for kde modules/plugins?
     QString libfile = cData.dirs()->findResource("module", libname);
@@ -168,8 +169,8 @@ KPluginFactory* KPluginLoader::factory()
         kDebug() << "Expected a KPluginFactory, got a" << obj->metaObject()->className();
         delete obj;
         d->errorString = i18n("The library %1 does not offer a KDE 4 compatible factory.", d->name);
+        return nullptr;
     }
-
     return factory;
 }
 
