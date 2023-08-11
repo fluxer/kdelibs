@@ -662,25 +662,17 @@ private:
       n++;}}
 
 /**
- * @def KDE_RESTORE_MAIN_WINDOWS_NUM_TEMPLATE_ARGS
- * @ingroup KDEUIMacros
- * Returns the maximal number of arguments that are actually
- * supported by kRestoreMainWindows().
- **/
-#define KDE_RESTORE_MAIN_WINDOWS_NUM_TEMPLATE_ARGS 3
-
-/**
  * Restores the last session. (To be used in your main function).
  *
  * These functions work also if you have more than one kind of toplevel
  * widget (each derived from KMainWindow, of course).
  *
- * Imagine you have three kinds of toplevel widgets: the classes childMW1,
- * childMW2 and childMW3. Than you can just do:
+ * Imagine you have toplevel widgets, than the windows can be restored
+ * like this:
  *
  * \code
  * if (qApp->isSessionRestored())
- *   kRestoreMainWindows< childMW1, childMW2, childMW3 >();
+ *   kRestoreMainWindows< childMW1>();
  * else {
  *   // create default application as usual
  * }
@@ -691,13 +683,7 @@ private:
  * call KMainWindow::restore() with the correct arguments. Note that
  * also QWidget::show() is called implicitly.
  *
- * Currently, these functions are provided for up to three
- * template arguments. If you need more, tell us. To help you in
- * deciding whether or not you can use kRestoreMainWindows, a
- * define #KDE_RESTORE_MAIN_WINDOWS_NUM_TEMPLATE_ARGS is provided.
- *
- * These global convenience functions (that come with a varying
- * number of template arguments) are a replacement for the #RESTORE
+ * The global convenience function is a replacement for the #RESTORE
  * macro provided in earlier versions of KDE. The old #RESTORE macro
  * is still provided for backwards compatibility.
  *
@@ -711,37 +697,6 @@ inline void kRestoreMainWindows() {
     const QString className = KMainWindow::classNameOfToplevel( n );
     if ( className == QLatin1String( T::staticMetaObject.className() ) )
       (new T)->restore( n );
-  }
-}
-
-template <typename T0, typename T1>
-inline void kRestoreMainWindows() {
-  const char * classNames[2];
-  classNames[0] = T0::staticMetaObject.className();
-  classNames[1] = T1::staticMetaObject.className();
-  for ( int n = 1 ; KMainWindow::canBeRestored( n ) ; ++n ) {
-    const QString className = KMainWindow::classNameOfToplevel( n );
-    if ( className == QLatin1String( classNames[0] ) )
-      (new T0)->restore( n );
-    else if ( className == QLatin1String( classNames[1] ) )
-      (new T1)->restore( n );
-  }
-}
-
-template <typename T0, typename T1, typename T2>
-inline void kRestoreMainWindows() {
-  const char * classNames[3];
-  classNames[0] = T0::staticMetaObject.className();
-  classNames[1] = T1::staticMetaObject.className();
-  classNames[2] = T2::staticMetaObject.className();
-  for ( int n = 1 ; KMainWindow::canBeRestored( n ) ; ++n ) {
-    const QString className = KMainWindow::classNameOfToplevel( n );
-    if ( className == QLatin1String( classNames[0] ) )
-      (new T0)->restore( n );
-    else if ( className == QLatin1String( classNames[1] ) )
-      (new T1)->restore( n );
-    else if ( className == QLatin1String( classNames[2] ) )
-      (new T2)->restore( n );
   }
 }
 

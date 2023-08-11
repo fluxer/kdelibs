@@ -59,7 +59,6 @@ public:
     KLocalizedString _task;
     QString _emailAddress;
     QString _webAddress;
-
     QString _nameNoop;
 };
 
@@ -124,7 +123,6 @@ KAboutPerson &KAboutPerson::operator=(const KAboutPerson &other)
     *d = *other.d;
     return *this;
 }
-
 
 
 class KAboutLicense::Private : public QSharedData

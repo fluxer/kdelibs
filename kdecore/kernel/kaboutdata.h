@@ -88,7 +88,6 @@ public:
      */
     KAboutPerson& operator=(const KAboutPerson &other);
 
-
     /**
      * The person's name
      * @return the person's name (can be QString(), if it has been constructed with an empty name)
