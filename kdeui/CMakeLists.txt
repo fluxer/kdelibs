@@ -80,7 +80,6 @@ set(kdeui_LIB_SRCS
     config/kconfigskeleton.cpp
     config/kconfiggroupgui.cpp
     dialogs/kaboutkdedialog_p.cpp
-    dialogs/kassistantdialog.cpp
     dialogs/kconfigdialog.cpp
     dialogs/kconfigdialogmanager.cpp
     dialogs/kdialog.cpp
@@ -406,7 +405,6 @@ install(
     colors/khuesaturationselect.h
     config/kconfigskeleton.h
     dialogs/kaboutapplicationdialog.h
-    dialogs/kassistantdialog.h
     dialogs/kconfigdialog.h
     dialogs/kconfigdialogmanager.h
     dialogs/kdeprintdialog.h

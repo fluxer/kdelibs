@@ -13,7 +13,6 @@ install(
     KApplication
     KArchive
     KArchiveEntry
-    KAssistantDialog
     KAuthorization
     KAutoMount
     KAutoUnmount
