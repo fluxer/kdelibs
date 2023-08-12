@@ -40,18 +40,18 @@
 class KDEUI_EXPORT KRatingWidget : public QFrame
 {
     Q_OBJECT
-    Q_PROPERTY( int rating READ rating WRITE setRating )
-    Q_PROPERTY( int maxRating READ maxRating WRITE setMaxRating )
-    Q_PROPERTY( Qt::Alignment alignment READ alignment WRITE setAlignment )
-    Q_PROPERTY( bool halfStepsEnabled READ halfStepsEnabled WRITE setHalfStepsEnabled )
-    Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
-    Q_PROPERTY( QIcon icon READ icon WRITE setIcon )
+    Q_PROPERTY(int rating READ rating WRITE setRating)
+    Q_PROPERTY(int maxRating READ maxRating WRITE setMaxRating)
+    Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment)
+    Q_PROPERTY(bool halfStepsEnabled READ halfStepsEnabled WRITE setHalfStepsEnabled)
+    Q_PROPERTY(int spacing READ spacing WRITE setSpacing)
+    Q_PROPERTY(QIcon icon READ icon WRITE setIcon)
 
  public:
     /**
      * Creates a new rating widget.
      */
-    KRatingWidget( QWidget* parent = 0 );
+    KRatingWidget(QWidget *parent = nullptr);
 
     /**
      * Destructor
@@ -103,10 +103,9 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
     bool halfStepsEnabled() const;
 
     /**
-     * The icon used to draw a star. In case a custom pixmap has been set
-     * this value is ignored.
+     * The icon used to get pixmap from and draw a star.
      *
-     * \sa setIcon, setCustomPixmap
+     * \sa setIcon
      */
     QIcon icon() const;
 
@@ -114,22 +113,22 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
     /**
      * This signal is emitted when the rating is changed.
      */
-    void ratingChanged( unsigned int rating );
-    void ratingChanged( int rating );
+    void ratingChanged(unsigned int rating);
+    void ratingChanged(int rating);
 
- public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Set the current rating. Calling this method will trigger the
      * ratingChanged signal if @p rating is different from the previous rating.
      */
-    void setRating( int rating );
+    void setRating(int rating);
 
     /**
      * Set the maximum allowed rating value. The default is 10 which means
      * that a rating from 1 to 10 is selectable. If \a max is uneven steps
      * are automatically only allowed full.
      */
-    void setMaxRating( int max );
+    void setMaxRating(int max);
 
     /**
      * If half steps are enabled (the default) then
@@ -140,41 +139,36 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
     /**
      * Set the spacing between the pixmaps. The default is 0.
      */
-    void setSpacing( int );
+    void setSpacing(int);
 
     /**
      * The alignment of the stars in the drawing rect.
      * All alignment flags are supported.
      */
-    void setAlignment( Qt::Alignment align );
+    void setAlignment(Qt::Alignment align);
 
     /**
      * LTR or RTL
      */
-    void setLayoutDirection( Qt::LayoutDirection direction );
+    void setLayoutDirection(Qt::LayoutDirection direction);
 
     /**
      * Set a custom icon. Defaults to "rating".
      */
-    void setIcon( const QIcon& icon );
-
-    /**
-     * Set a custom pixmap.
-     */
-    void setCustomPixmap( const QPixmap& pixmap );
+    void setIcon(const QIcon &icon);
 
     /**
      * Set the recommended size of the pixmaps. This is
      * only used for the sizeHint. The actual size is always
      * dependent on the size of the widget itself.
      */
-    void setPixmapSize( int size );
+    void setPixmapSize(int size);
 
  protected:
-    void mousePressEvent( QMouseEvent* e );
-    void mouseMoveEvent( QMouseEvent* e );
-    void leaveEvent( QEvent* e );
-    void paintEvent( QPaintEvent* e );
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void leaveEvent(QEvent *e);
+    void paintEvent(QPaintEvent *e);
 
  private:
     class Private;

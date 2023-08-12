@@ -99,7 +99,7 @@ public:
      * The icon used to draw a star. In case a custom pixmap has been set
      * this value is ignored.
      *
-     * \sa setIcon, setCustomPixmap
+     * \sa setIcon
      */
     QIcon icon() const;
 
@@ -112,14 +112,6 @@ public:
     bool isEnabled() const;
 
     /**
-     * The custom pixmap set to draw a star. If no custom
-     * pixmap has been set, an invalid pixmap is returned.
-     *
-     * \sa setCustomPixmap
-     */
-    QPixmap customPixmap() const;
-
-    /**
      * The spacing between rating pixmaps.
      *
      * \sa setSpacing
@@ -129,46 +121,41 @@ public:
     /**
      * The maximum rating. Defaults to 10.
      */
-    void setMaxRating( int max );
+    void setMaxRating(int max);
 
     /**
      * If half steps are enabled (the default) then
      * one rating step corresponds to half a star.
      */
-    void setHalfStepsEnabled( bool enabled );
+    void setHalfStepsEnabled(bool enabled);
 
     /**
      * The alignment of the stars in the drawing rect.
      * All alignment flags are supported.
      */
-    void setAlignment( Qt::Alignment align );
+    void setAlignment(Qt::Alignment align);
 
     /**
      * LTR or RTL
      */
-    void setLayoutDirection( Qt::LayoutDirection direction );
+    void setLayoutDirection(Qt::LayoutDirection direction);
 
     /**
      * Set a custom icon. Defaults to "rating".
      */
-    void setIcon( const QIcon& icon );
+    void setIcon(const QIcon &icon);
 
     /**
      * Enable or disable the rating. Default is enabled.
      */
-    void setEnabled( bool enabled );
-
-    /**
-     * Set a custom pixmap.
-     */
-    void setCustomPixmap( const QPixmap& pixmap );
+    void setEnabled(bool enabled);
 
     /**
      * Set the spacing between rating pixmaps. Be aware that
      * for justified horizontal alignment this values may be
      * ignored.
      */
-    void setSpacing( int spacing );
+    void setSpacing(int spacing);
 
     /**
      * Draw the rating.
@@ -182,7 +169,7 @@ public:
      *                    if the user would actually click as well as the difference to the
      *                    current rating.
      */
-    void paint( QPainter* painter, const QRect& rect, int rating, int hoverRating = -1 ) const;
+    void paint(QPainter *painter, const QRect &rect, int rating, int hoverRating = -1) const;
 
     /**
      * Calculate the rating value from mouse position pos.
@@ -190,7 +177,7 @@ public:
      * \return The rating corresponding to pos or -1 if pos is
      * outside of the configured rect.
      */
-    int ratingFromPosition( const QRect& rect, const QPoint& pos ) const;
+    int ratingFromPosition(const QRect &rect, const QPoint &pos) const;
 
     /**
      * Convenience method that paints a rating into the given rect.
@@ -200,7 +187,7 @@ public:
      * \param align can be aligned vertically and horizontally. Using Qt::AlignJustify will insert spacing
      * between the stars.
      */
-    static void paintRating( QPainter* p, const QRect& rect, Qt::Alignment align, int rating, int hoverRating = -1 );
+    static void paintRating(QPainter *p, const QRect &rect, Qt::Alignment align, int rating, int hoverRating = -1);
 
     /**
      * Get the rating that would be selected if the user clicked position pos
@@ -209,7 +196,7 @@ public:
      *
      * \return The new rating or -1 if pos is outside of the rating area.
      */
-    static int getRatingFromPosition( const QRect& rect, Qt::Alignment align, Qt::LayoutDirection direction, const QPoint& pos );
+    static int getRatingFromPosition(const QRect &rect, Qt::Alignment align, Qt::LayoutDirection direction, const QPoint &pos);
 
 private:
     class Private;

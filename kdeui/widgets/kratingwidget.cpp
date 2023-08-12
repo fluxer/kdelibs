@@ -23,7 +23,7 @@
 
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
-#include <QtGui/qevent.h>
+#include <QtGui/QPaintEvent>
 #include <QtGui/QImage>
 #include <QtGui/QIcon>
 
@@ -32,8 +32,9 @@ class KRatingWidget::Private
 public:
     Private()
         : rating(0),
-          hoverRating(-1),
-          pixSize( 16 ) {
+        hoverRating(-1),
+        pixSize(16)
+    {
     }
 
     int rating;
@@ -44,12 +45,11 @@ public:
 };
 
 
-
-KRatingWidget::KRatingWidget( QWidget* parent )
-    : QFrame( parent ),
-      d( new Private() )
+KRatingWidget::KRatingWidget(QWidget *parent)
+    : QFrame(parent),
+      d(new Private())
 {
-    setMouseTracking( true );
+    setMouseTracking(true);
 }
 
 
@@ -58,212 +58,169 @@ KRatingWidget::~KRatingWidget()
     delete d;
 }
 
-
-
-
-void KRatingWidget::setCustomPixmap( const QPixmap& pix )
+void KRatingWidget::setIcon(const QIcon &icon)
 {
-    d->ratingPainter.setCustomPixmap( pix );
+    d->ratingPainter.setIcon(icon);
     update();
 }
 
-
-void KRatingWidget::setIcon( const QIcon& icon )
-{
-    d->ratingPainter.setIcon( icon );
-    update();
-}
-
-
-void KRatingWidget::setPixmapSize( int size )
+void KRatingWidget::setPixmapSize(int size)
 {
     d->pixSize = size;
     updateGeometry();
 }
-
 
 int KRatingWidget::spacing() const
 {
     return d->ratingPainter.spacing();
 }
 
-
 QIcon KRatingWidget::icon() const
 {
     return d->ratingPainter.icon();
 }
 
-
-void KRatingWidget::setSpacing( int s )
+void KRatingWidget::setSpacing(int s)
 {
-    d->ratingPainter.setSpacing( s );
+    d->ratingPainter.setSpacing(s);
     update();
 }
-
 
 Qt::Alignment KRatingWidget::alignment() const
 {
     return d->ratingPainter.alignment();
 }
 
-
-void KRatingWidget::setAlignment( Qt::Alignment align )
+void KRatingWidget::setAlignment(Qt::Alignment align)
 {
-    d->ratingPainter.setAlignment( align );
+    d->ratingPainter.setAlignment(align);
     update();
 }
-
 
 Qt::LayoutDirection KRatingWidget::layoutDirection() const
 {
     return d->ratingPainter.layoutDirection();
 }
 
-
-void KRatingWidget::setLayoutDirection( Qt::LayoutDirection direction )
+void KRatingWidget::setLayoutDirection(Qt::LayoutDirection direction)
 {
-    d->ratingPainter.setLayoutDirection( direction );
+    d->ratingPainter.setLayoutDirection(direction);
     update();
 }
-
 
 unsigned int KRatingWidget::rating() const
 {
     return d->rating;
 }
 
-
 int KRatingWidget::maxRating() const
 {
     return d->ratingPainter.maxRating();
 }
-
 
 bool KRatingWidget::halfStepsEnabled() const
 {
     return d->ratingPainter.halfStepsEnabled();
 }
 
-
-
-
-void KRatingWidget::setRating( int rating )
+void KRatingWidget::setRating(int rating)
 {
-    if ( rating != d->rating ) {
+    if (rating != d->rating) {
         d->rating = rating;
         d->hoverRating = rating;
-        emit ratingChanged( rating );
-        emit ratingChanged( (unsigned int)rating );
+        emit ratingChanged(rating);
+        emit ratingChanged((unsigned int)rating);
         update();
     }
 }
 
-
-
-
-void KRatingWidget::setMaxRating( int max )
+void KRatingWidget::setMaxRating(int max)
 {
-    d->ratingPainter.setMaxRating( max );
+    d->ratingPainter.setMaxRating(max);
     update();
 }
 
-
-void KRatingWidget::setHalfStepsEnabled( bool enabled )
+void KRatingWidget::setHalfStepsEnabled(bool enabled)
 {
-    d->ratingPainter.setHalfStepsEnabled( enabled );
+    d->ratingPainter.setHalfStepsEnabled(enabled);
     update();
 }
 
-
-
-
-void KRatingWidget::mousePressEvent( QMouseEvent* e )
+void KRatingWidget::mousePressEvent(QMouseEvent *e)
 {
-    if ( e->button() == Qt::LeftButton ) {
+    if (e->button() == Qt::LeftButton) {
         const int prevRating = d->rating;
-        d->hoverRating = d->ratingPainter.ratingFromPosition( contentsRect(), e->pos() );
-        if ( !( d->hoverRating % 2 ) ) {
-            if ( d->hoverRating == prevRating + 1 ) {
+        d->hoverRating = d->ratingPainter.ratingFromPosition(contentsRect(), e->pos());
+        if (!(d->hoverRating % 2)) {
+            if (d->hoverRating == prevRating + 1) {
                 setRating( d->hoverRating - 2 );
+            } else if (d->hoverRating == prevRating) {
+                setRating( d->hoverRating - 1);
+            } else {
+                setRating(d->hoverRating);
             }
-            else if ( d->hoverRating == prevRating ) {
-                setRating( d->hoverRating - 1 );
-            }
-            else {
-                setRating( d->hoverRating );
-            }
-        }
-        else {
-            if ( d->hoverRating == prevRating - 1 ) {
-                setRating( d->hoverRating );
-            }
-            else if ( d->hoverRating == prevRating ) {
-                setRating( d->hoverRating - 1 );
-            }
-            else {
-                setRating( d->hoverRating + 1 );
+        } else {
+            if (d->hoverRating == prevRating - 1) {
+                setRating(d->hoverRating);
+            } else if (d->hoverRating == prevRating) {
+                setRating(d->hoverRating - 1);
+            } else {
+                setRating(d->hoverRating + 1);
             }
         }
     }
 }
 
-
-void KRatingWidget::mouseMoveEvent( QMouseEvent* e )
+void KRatingWidget::mouseMoveEvent(QMouseEvent *e)
 {
     // when moving the mouse we show the user what the result of clicking will be
     const int prevHoverRating = d->hoverRating;
-    d->hoverRating = d->ratingPainter.ratingFromPosition( contentsRect(), e->pos() );
-    if ( !( d->hoverRating % 2 ) ) {
-        if ( d->hoverRating == prevHoverRating + 1 ) {
+    d->hoverRating = d->ratingPainter.ratingFromPosition(contentsRect(), e->pos());
+    if (!(d->hoverRating % 2)) {
+        if (d->hoverRating == prevHoverRating + 1) {
             d->hoverRating -= 2;
-        }
-        else if ( d->hoverRating == prevHoverRating ) {
+        } else if (d->hoverRating == prevHoverRating) {
             d->hoverRating -= 1;
         }
-    }
-    else {
-        if ( d->hoverRating == prevHoverRating ) {
+    } else {
+        if (d->hoverRating == prevHoverRating) {
             d->hoverRating -= 1;
-        }
-        else {
+        } else {
             d->hoverRating += 1;
         }
     }
-    if ( d->hoverRating != prevHoverRating ) {
+    if (d->hoverRating != prevHoverRating) {
         update();
     }
 }
 
-
-void KRatingWidget::leaveEvent( QEvent* )
+void KRatingWidget::leaveEvent(QEvent *e)
 {
+    Q_UNUSED(e);
     d->hoverRating = -1;
     update();
 }
 
-
-void KRatingWidget::paintEvent( QPaintEvent* e )
+void KRatingWidget::paintEvent(QPaintEvent *e)
 {
-    QFrame::paintEvent( e );
-    QPainter p( this );
-    d->ratingPainter.setEnabled( isEnabled() );
-    d->ratingPainter.paint( &p, contentsRect(), d->rating, d->hoverRating );
+    QFrame::paintEvent(e);
+    QPainter p(this);
+    d->ratingPainter.setEnabled(isEnabled());
+    d->ratingPainter.paint(&p, contentsRect(), d->rating, d->hoverRating);
 }
-
 
 QSize KRatingWidget::sizeHint() const
 {
     int numPix = d->ratingPainter.maxRating();
-    if( d->ratingPainter.halfStepsEnabled() )
+    if (d->ratingPainter.halfStepsEnabled()) {
         numPix /= 2;
-
-    QSize pixSize( d->pixSize, d->pixSize );
-    if ( !d->ratingPainter.customPixmap().isNull() ) {
-        pixSize = d->ratingPainter.customPixmap().size();
     }
 
-    return QSize( pixSize.width()*numPix + spacing()*(numPix-1) + frameWidth()*2,
-                  pixSize.height() + frameWidth()*2 );
+    const QSize pixSize(d->pixSize, d->pixSize);
+    return QSize(
+        pixSize.width() * numPix + spacing() * (numPix - 1) + frameWidth() * 2,
+        pixSize.height() + frameWidth() * 2
+    );
 }
 
 #include "moc_kratingwidget.cpp"

@@ -37,14 +37,15 @@ class KRatingPainter::Private
 public:
     Private()
         : maxRating(10),
-          isEnabled( true ),
-          bHalfSteps(true),
-          alignment(Qt::AlignCenter),
-          direction(Qt::LeftToRight),
-          spacing(0) {
+        isEnabled(true),
+        bHalfSteps(true),
+        alignment(Qt::AlignCenter),
+        direction(Qt::LeftToRight),
+        spacing(0)
+    {
     }
 
-    QPixmap getPixmap( int size );
+    QPixmap getPixmap(int size);
 
     int maxRating;
     QIcon icon;
@@ -52,23 +53,16 @@ public:
     bool bHalfSteps;
     Qt::Alignment alignment;
     Qt::LayoutDirection direction;
-    QPixmap customPixmap;
     int spacing;
 };
 
-
-QPixmap KRatingPainter::Private::getPixmap( int size )
+QPixmap KRatingPainter::Private::getPixmap(int size)
 {
-    if ( !customPixmap.isNull() ) {
-        return customPixmap.scaled( QSize( size, size ) );
+    QIcon _icon(icon);
+    if (_icon.isNull()) {
+        _icon = KIcon("rating");
     }
-    else {
-        QIcon _icon( icon );
-        if ( _icon.isNull() ) {
-            _icon = KIcon( "rating" );
-        }
-        return _icon.pixmap( size );
-    }
+    return _icon.pixmap(size);
 }
 
 
@@ -77,115 +71,88 @@ KRatingPainter::KRatingPainter()
 {
 }
 
-
 KRatingPainter::~KRatingPainter()
 {
     delete d;
 }
-
 
 int KRatingPainter::maxRating() const
 {
     return d->maxRating;
 }
 
-
 bool KRatingPainter::halfStepsEnabled() const
 {
     return d->bHalfSteps;
 }
-
 
 Qt::Alignment KRatingPainter::alignment() const
 {
     return d->alignment;
 }
 
-
 Qt::LayoutDirection KRatingPainter::layoutDirection() const
 {
     return d->direction;
 }
-
 
 QIcon KRatingPainter::icon() const
 {
     return d->icon;
 }
 
-
 bool KRatingPainter::isEnabled() const
 {
     return d->isEnabled;
 }
-
-
-QPixmap KRatingPainter::customPixmap() const
-{
-    return d->customPixmap;
-}
-
 
 int KRatingPainter::spacing() const
 {
     return d->spacing;
 }
 
-
-void KRatingPainter::setMaxRating( int max )
+void KRatingPainter::setMaxRating(int max)
 {
     d->maxRating = max;
 }
 
-
-void KRatingPainter::setHalfStepsEnabled( bool enabled )
+void KRatingPainter::setHalfStepsEnabled(bool enabled)
 {
     d->bHalfSteps = enabled;
 }
 
-
-void KRatingPainter::setAlignment( Qt::Alignment align )
+void KRatingPainter::setAlignment(Qt::Alignment align)
 {
     d->alignment = align;
 }
 
-
-void KRatingPainter::setLayoutDirection( Qt::LayoutDirection direction )
+void KRatingPainter::setLayoutDirection(Qt::LayoutDirection direction)
 {
     d->direction = direction;
 }
 
 
-void KRatingPainter::setIcon( const QIcon& icon )
+void KRatingPainter::setIcon(const QIcon &icon)
 {
     d->icon = icon;
 }
 
-
-void KRatingPainter::setEnabled( bool enabled )
+void KRatingPainter::setEnabled(bool enabled)
 {
     d->isEnabled = enabled;
 }
 
-
-void KRatingPainter::setCustomPixmap( const QPixmap& pixmap )
+void KRatingPainter::setSpacing(int s)
 {
-    d->customPixmap = pixmap;
+    d->spacing = qMax(0, s);
 }
 
-
-void KRatingPainter::setSpacing( int s )
+void KRatingPainter::paint(QPainter* painter, const QRect &rect, int rating, int hoverRating) const
 {
-    d->spacing = qMax( 0, s );
-}
+    rating = qMin(rating, d->maxRating);
+    hoverRating = qMin(hoverRating, d->maxRating);
 
-
-void KRatingPainter::paint( QPainter* painter, const QRect& rect, int rating, int hoverRating ) const
-{
-    rating = qMin( rating, d->maxRating );
-    hoverRating = qMin( hoverRating, d->maxRating );
-
-    int numUsedStars = d->bHalfSteps ? d->maxRating/2 : d->maxRating;
+    int numUsedStars = (d->bHalfSteps ? d->maxRating / 2 : d->maxRating);
 
     if ( hoverRating > 0 && hoverRating < rating ) {
         int tmp = hoverRating;
@@ -196,10 +163,10 @@ void KRatingPainter::paint( QPainter* painter, const QRect& rect, int rating, in
     int usedSpacing = d->spacing;
 
     // get the rating pixmaps
-    int maxHSizeOnePix = ( rect.width() - (numUsedStars-1)*usedSpacing ) / numUsedStars;
-    QPixmap ratingPix = d->getPixmap( qMin( rect.height(), maxHSizeOnePix ) );
+    int maxHSizeOnePix = ((rect.width() - (numUsedStars - 1) * usedSpacing ) / numUsedStars);
+    QPixmap ratingPix = d->getPixmap(qMin(rect.height(), maxHSizeOnePix));
 
-    QPixmap disabledRatingPix = KIconEffect::apply( ratingPix, KIconEffect::ToGray, 1.0, QColor(), QColor(), false );
+    QPixmap disabledRatingPix = KIconEffect::apply(ratingPix, KIconEffect::ToGray, 1.0, QColor(), QColor(), false);
     QPixmap hoverPix;
 
     // if we are disabled we become gray and more transparent
@@ -208,58 +175,60 @@ void KRatingPainter::paint( QPainter* painter, const QRect& rect, int rating, in
         KIconEffect::semiTransparent( disabledRatingPix );
     }
 
-    bool half = d->bHalfSteps && rating%2;
-    int numRatingStars = d->bHalfSteps ? rating/2 : rating;
+    bool half = (d->bHalfSteps && (rating % 2));
+    int numRatingStars = (d->bHalfSteps ? rating / 2 : rating);
 
     int numHoverStars = 0;
     bool halfHover = false;
-    if ( hoverRating > 0 && rating != hoverRating && d->isEnabled ) {
-        numHoverStars = d->bHalfSteps ? hoverRating/2 : hoverRating;
-        halfHover = d->bHalfSteps && hoverRating%2;
-        hoverPix = KIconEffect::apply( ratingPix, KIconEffect::ToGray, 0.5, QColor(), QColor(), false );
+    if (hoverRating > 0 && rating != hoverRating && d->isEnabled) {
+        numHoverStars = d->bHalfSteps ? hoverRating / 2 : hoverRating;
+        halfHover = d->bHalfSteps && (hoverRating % 2);
+        hoverPix = KIconEffect::apply(ratingPix, KIconEffect::ToGray, 0.5, QColor(), QColor(), false);
     }
 
-    if ( d->alignment & Qt::AlignJustify ) {
+    if (d->alignment & Qt::AlignJustify) {
         int w = rect.width();
         w -= numUsedStars * ratingPix.width();
-        usedSpacing = w / ( numUsedStars-1 );
+        usedSpacing = w / (numUsedStars - 1);
     }
 
     int ratingAreaWidth = ratingPix.width()*numUsedStars + usedSpacing*(numUsedStars-1);
 
     int i = 0;
     int x = rect.x();
-    if ( d->alignment & Qt::AlignRight ) {
-        x += ( rect.width() - ratingAreaWidth );
-    }
-    else if ( d->alignment & Qt::AlignHCenter ) {
-        x += ( rect.width() - ratingAreaWidth )/2;
+    if (d->alignment & Qt::AlignRight) {
+        x += ( rect.width() - ratingAreaWidth);
+    } else if (d->alignment & Qt::AlignHCenter) {
+        x += ((rect.width() - ratingAreaWidth) / 2);
     }
 
     int xInc = ratingPix.width() + usedSpacing;
-    if ( d->direction == Qt::RightToLeft ) {
-        x = rect.width() - ratingPix.width() - x;
+    if (d->direction == Qt::RightToLeft) {
+        x = (rect.width() - ratingPix.width() - x);
         xInc = -xInc;
     }
 
     int y = rect.y();
-    if( d->alignment & Qt::AlignVCenter ) {
-        y += ( rect.height() / 2 - ratingPix.height() / 2 );
+    if (d->alignment & Qt::AlignVCenter) {
+        y += (rect.height() / 2 - ratingPix.height() / 2);
+    } else if (d->alignment & Qt::AlignBottom ) {
+        y += (rect.height() - ratingPix.height() );
     }
-    else if ( d->alignment & Qt::AlignBottom ) {
-        y += ( rect.height() - ratingPix.height() );
-    }
-    for(; i < numRatingStars; ++i ) {
-        painter->drawPixmap( x, y, ratingPix );
+    for(; i < numRatingStars; ++i) {
+        painter->drawPixmap(x, y, ratingPix);
         x += xInc;
     }
-    if( half ) {
-        painter->drawPixmap( x, y, ratingPix.width()/2, ratingPix.height(),
-                             d->direction == Qt::RightToLeft ? ( numHoverStars > 0 ? hoverPix : disabledRatingPix ) : ratingPix,
-                             0, 0, ratingPix.width()/2, ratingPix.height() );
-        painter->drawPixmap( x + ratingPix.width()/2, y, ratingPix.width()/2, ratingPix.height(),
-                             d->direction == Qt::RightToLeft ? ratingPix : ( numHoverStars > 0 ? hoverPix : disabledRatingPix ),
-                             ratingPix.width()/2, 0, ratingPix.width()/2, ratingPix.height() );
+    if (half) {
+        painter->drawPixmap(
+            x, y, ratingPix.width()/2, ratingPix.height(),
+            d->direction == Qt::RightToLeft ? (numHoverStars > 0 ? hoverPix : disabledRatingPix) : ratingPix,
+            0, 0, ratingPix.width()/2, ratingPix.height()
+        );
+        painter->drawPixmap(
+            x + ratingPix.width() / 2, y, ratingPix.width() / 2, ratingPix.height(),
+            d->direction == Qt::RightToLeft ? ratingPix : (numHoverStars > 0 ? hoverPix : disabledRatingPix),
+            ratingPix.width() / 2, 0, ratingPix.width() / 2, ratingPix.height()
+        );
         x += xInc;
         ++i;
     }
@@ -268,90 +237,86 @@ void KRatingPainter::paint( QPainter* painter, const QRect& rect, int rating, in
         x += xInc;
     }
     if( halfHover ) {
-        painter->drawPixmap( x, y, ratingPix.width()/2, ratingPix.height(),
-                             d->direction == Qt::RightToLeft ? disabledRatingPix : hoverPix,
-                             0, 0, ratingPix.width()/2, ratingPix.height() );
-        painter->drawPixmap( x + ratingPix.width()/2, y, ratingPix.width()/2, ratingPix.height(),
-                             d->direction == Qt::RightToLeft ? hoverPix : disabledRatingPix,
-                             ratingPix.width()/2, 0, ratingPix.width()/2, ratingPix.height() );
+        painter->drawPixmap(
+            x, y, ratingPix.width()/2, ratingPix.height(),
+            d->direction == Qt::RightToLeft ? disabledRatingPix : hoverPix,
+            0, 0, ratingPix.width()/2, ratingPix.height()
+        );
+        painter->drawPixmap(
+            x + ratingPix.width() / 2, y, ratingPix.width() / 2, ratingPix.height(),
+            d->direction == Qt::RightToLeft ? hoverPix : disabledRatingPix,
+            ratingPix.width() / 2, 0, ratingPix.width() / 2, ratingPix.height()
+        );
         x += xInc;
         ++i;
     }
-    for(; i < numUsedStars; ++i ) {
-        painter->drawPixmap( x, y, disabledRatingPix );
+    for(; i < numUsedStars; ++i) {
+        painter->drawPixmap(x, y, disabledRatingPix);
         x += xInc;
     }
 }
 
-
-int KRatingPainter::ratingFromPosition( const QRect& rect, const QPoint& pos ) const
+int KRatingPainter::ratingFromPosition(const QRect &rect, const QPoint &pos) const
 {
     int usedSpacing = d->spacing;
-    int numUsedStars = d->bHalfSteps ? d->maxRating/2 : d->maxRating;
-    int maxHSizeOnePix = ( rect.width() - (numUsedStars-1)*usedSpacing ) / numUsedStars;
-    QPixmap ratingPix = d->getPixmap( qMin( rect.height(), maxHSizeOnePix ) );
+    int numUsedStars = (d->bHalfSteps ? d->maxRating / 2 : d->maxRating);
+    int maxHSizeOnePix = ((rect.width() - (numUsedStars - 1) * usedSpacing) / numUsedStars);
+    QPixmap ratingPix = d->getPixmap(qMin(rect.height(), maxHSizeOnePix));
 
     int ratingAreaWidth = ratingPix.width()*numUsedStars + usedSpacing*(numUsedStars-1);
 
-    QRect usedRect( rect );
-    if ( d->alignment & Qt::AlignRight ) {
-        usedRect.setLeft( rect.right() - ratingAreaWidth );
-    }
-    else if ( d->alignment & Qt::AlignHCenter ) {
-        int x = ( rect.width() - ratingAreaWidth )/2;
-        usedRect.setLeft( rect.left() + x );
-        usedRect.setRight( rect.right() - x );
-    }
-    else { // d->alignment & Qt::AlignLeft
-        usedRect.setRight( rect.left() + ratingAreaWidth - 1 );
+    QRect usedRect(rect);
+    if (d->alignment & Qt::AlignRight ) {
+        usedRect.setLeft(rect.right() - ratingAreaWidth);
+    } else if (d->alignment & Qt::AlignHCenter) {
+        int x = (rect.width() - ratingAreaWidth) / 2;
+        usedRect.setLeft(rect.left() + x);
+        usedRect.setRight(rect.right() - x);
+    } else {
+        // d->alignment & Qt::AlignLeft
+        usedRect.setRight(rect.left() + ratingAreaWidth - 1);
     }
 
-    if ( d->alignment & Qt::AlignBottom ) {
-        usedRect.setTop( rect.bottom() - ratingPix.height() + 1 );
-    }
-    else if ( d->alignment & Qt::AlignVCenter ) {
+    if (d->alignment & Qt::AlignBottom) {
+        usedRect.setTop(rect.bottom() - ratingPix.height() + 1);
+    } else if (d->alignment & Qt::AlignVCenter) {
         int x = ( rect.height() - ratingPix.height() )/2;
         usedRect.setTop( rect.top() + x );
         usedRect.setBottom( rect.bottom() - x );
-    }
-    else { // d->alignment & Qt::AlignTop
-        usedRect.setBottom( rect.top() + ratingPix.height() - 1 );
+    } else {
+        // d->alignment & Qt::AlignTop
+        usedRect.setBottom(rect.top() + ratingPix.height() - 1);
     }
 
-    if ( usedRect.contains( pos ) ) {
+    if (usedRect.contains(pos)) {
         int x = 0;
-        if ( d->direction == Qt::RightToLeft ) {
+        if (d->direction == Qt::RightToLeft) {
             x = usedRect.right() - pos.x();
-        }
-        else {
+        } else {
             x = pos.x() - usedRect.left();
         }
 
         double one = ( double )usedRect.width() / ( double )d->maxRating;
 
-//        kDebug() << "rating:" << ( int )( ( double )x/one + 0.5 );
+        // kDebug() << "rating:" << ( int )( ( double )x/one + 0.5 );
 
         return ( int )( ( double )x/one + 0.5 );
     }
-    else {
-        return -1;
-    }
+    return -1;
 }
 
-
-void KRatingPainter::paintRating( QPainter* painter, const QRect& rect, Qt::Alignment align, int rating, int hoverRating )
+void KRatingPainter::paintRating(QPainter *painter, const QRect &rect, Qt::Alignment align, int rating, int hoverRating)
 {
     KRatingPainter rp;
-    rp.setAlignment( align );
-    rp.setLayoutDirection( painter->layoutDirection() );
-    rp.paint( painter, rect, rating, hoverRating );
+    rp.setAlignment(align);
+    rp.setLayoutDirection(painter->layoutDirection());
+    rp.paint(painter, rect, rating, hoverRating);
 }
 
-
-int KRatingPainter::getRatingFromPosition( const QRect& rect, Qt::Alignment align, Qt::LayoutDirection direction, const QPoint& pos )
+int KRatingPainter::getRatingFromPosition(const QRect &rect, Qt::Alignment align, Qt::LayoutDirection direction, const QPoint &pos)
 {
     KRatingPainter rp;
-    rp.setAlignment( align );
-    rp.setLayoutDirection( direction );
-    return rp.ratingFromPosition( rect, pos );
+    rp.setAlignment(align);
+    rp.setLayoutDirection(direction);
+    return rp.ratingFromPosition(rect, pos);
 }
