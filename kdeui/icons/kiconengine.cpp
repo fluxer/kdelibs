@@ -122,6 +122,15 @@ QString KIconEngine::key() const
     return QString::fromLatin1("KIconEngine");
 }
 
+QString KIconEngine::iconName() const
+{
+    if (mIconName.contains(QLatin1Char('/'))) {
+        // e.g. favicon, KIcon exclusive that QIcon::fromTheme() will not be able to load
+        return QString();
+    }
+    return mIconName;
+}
+
 QIconEngineV2 *KIconEngine::clone() const
 {
     return new KIconEngine(mIconName, mIconLoader.data(), mOverlays);

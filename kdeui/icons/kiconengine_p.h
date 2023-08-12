@@ -59,6 +59,7 @@ class KIconEngine : public QIconEngineV2
     QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) final;
 
     QString key() const final;
+    QString iconName() const final;
     QIconEngineV2 *clone() const final;
     bool read(QDataStream &in) final;
     bool write(QDataStream &out) const final;
