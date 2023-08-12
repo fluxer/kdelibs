@@ -94,9 +94,9 @@ QPixmap KIconEngine::pixmap(const QSize &size, QIcon::Mode mode, QIcon::State st
 {
     Q_UNUSED(state)
 
+    QPixmap pm(size);
+    pm.fill(Qt::transparent);
     if (!mIconLoader) {
-        QPixmap pm(size);
-        pm.fill(Qt::transparent);
         return pm;
     }
 
@@ -108,13 +108,11 @@ QPixmap KIconEngine::pixmap(const QSize &size, QIcon::Mode mode, QIcon::State st
         return pix;
     }
 
-    QPixmap pix2(size);
-    pix2.fill(QColor(0,0,0,0));
-
-    QPainter painter(&pix2);
+    QPainter painter(&pm);
     painter.drawPixmap(QPoint(), pix);
+    painter.end();
 
-    return pix2;
+    return pm;
 }
 
 QString KIconEngine::key() const
