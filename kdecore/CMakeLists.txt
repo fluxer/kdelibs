@@ -49,7 +49,6 @@ set(kdecore_LIB_SRCS
     config/ksharedconfig.cpp
     config/kcoreconfigskeleton.cpp
     config/ksettings.cpp
-    date/kdatetime.cpp
     date/ktimezone.cpp
     date/ksystemtimezone.cpp
     io/kdebug.cpp
@@ -196,7 +195,6 @@ install(
     config/ksharedconfig.h
     config/kcoreconfigskeleton.h
     config/ksettings.h
-    date/kdatetime.h
     date/ksystemtimezone.h
     date/ktimezone.h
     io/kdebug.h

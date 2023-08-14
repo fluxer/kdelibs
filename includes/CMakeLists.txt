@@ -79,7 +79,6 @@ install(
     KDEDModule
     KDEPrintDialog
     KCalendarWidget
-    KDateTime
     KDBusMenuExporter
     KDBusMenuImporter
     KDesktopFile

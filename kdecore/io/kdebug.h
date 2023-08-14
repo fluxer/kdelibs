@@ -92,9 +92,7 @@ KDECORE_EXPORT QDebug KDebug(const QtMsgType type, const char* const funcinfo, c
 
 // operators for KDE types
 class KUrl;
-class KDateTime;
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
-KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 
 #define kDebug(...)     KDebug(QtDebugMsg, Q_FUNC_INFO, ##__VA_ARGS__)
 #define kWarning(...)   KDebug(QtWarningMsg, Q_FUNC_INFO, ##__VA_ARGS__)

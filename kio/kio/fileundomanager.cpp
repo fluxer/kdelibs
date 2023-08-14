@@ -23,7 +23,6 @@
 #include "clipboardupdater_p.h"
 #include "fileundomanager_adaptor.h"
 
-#include <kdatetime.h>
 #include <kdebug.h>
 #include <kdirnotify.h>
 #include <kglobal.h>
@@ -441,8 +440,8 @@ void FileUndoManagerPrivate::slotResult(KJob *job)
         time_t mtime = statJob->statResult().numberValue(KIO::UDSEntry::UDS_MODIFICATION_TIME, -1);
         if (mtime != op.m_mtime) {
             kDebug() << op.m_dst << " was modified after being copied!";
-            KDateTime srcTime; srcTime.setTime_t(op.m_mtime); srcTime = srcTime.toLocalTime();
-            KDateTime destTime; destTime.setTime_t(mtime); destTime = destTime.toLocalTime();
+            QDateTime srcTime; srcTime.setTime_t(op.m_mtime); srcTime = srcTime.toLocalTime();
+            QDateTime destTime; destTime.setTime_t(mtime); destTime = destTime.toLocalTime();
             if (!m_uiInterface->copiedFileWasModified(op.m_src, op.m_dst, srcTime, destTime)) {
                 stopUndo(false);
             }
@@ -768,7 +767,7 @@ void FileUndoManager::UiInterface::jobError(KIO::Job* job)
     job->ui()->showErrorMessage();
 }
 
-bool FileUndoManager::UiInterface::copiedFileWasModified(const KUrl& src, const KUrl& dest, const KDateTime& srcTime, const KDateTime& destTime)
+bool FileUndoManager::UiInterface::copiedFileWasModified(const KUrl& src, const KUrl& dest, const QDateTime& srcTime, const QDateTime& destTime)
 {
     Q_UNUSED(srcTime); // not sure it should appear in the msgbox
     // Possible improvement: only show the time if date is today

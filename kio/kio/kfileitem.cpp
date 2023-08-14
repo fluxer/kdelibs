@@ -141,7 +141,7 @@ public:
     void init();
 
     QString localPath() const;
-    KDateTime time(KFileItem::FileTimes which) const;
+    QDateTime time(KFileItem::FileTimes which) const;
     void setTime(KFileItem::FileTimes which, long long time_t_val) const;
     QString user() const;
     QString group() const;
@@ -216,7 +216,7 @@ public:
     // For special case like link to dirs over FTP
     QString m_guessedMimeType;
 
-    mutable KDateTime m_time[3];
+    mutable QDateTime m_time[3];
 };
 
 void KFileItemPrivate::init()
@@ -269,7 +269,7 @@ void KFileItemPrivate::setTime(KFileItem::FileTimes mappedWhich, long long time_
     m_time[mappedWhich] = m_time[mappedWhich].toLocalTime(); // #160979
 }
 
-KDateTime KFileItemPrivate::time(KFileItem::FileTimes mappedWhich) const
+QDateTime KFileItemPrivate::time(KFileItem::FileTimes mappedWhich) const
 {
     if (!m_time[mappedWhich].isNull()) {
         return m_time[mappedWhich];
@@ -302,11 +302,11 @@ KDateTime KFileItemPrivate::time(KFileItem::FileTimes mappedWhich) const
         if (KDE::stat(m_url.toLocalFile(KUrl::RemoveTrailingSlash), &buf) == 0) {
             setTime(KFileItem::ModificationTime, buf.st_mtime);
             setTime(KFileItem::AccessTime, buf.st_atime);
-            m_time[KFileItem::CreationTime] = KDateTime();
+            m_time[KFileItem::CreationTime] = QDateTime();
             return m_time[mappedWhich];
         }
     }
-    return KDateTime();
+    return QDateTime();
 }
 
 ///////
@@ -501,10 +501,10 @@ KACL KFileItem::defaultACL() const
     return KACL();
 }
 
-KDateTime KFileItem::time(FileTimes which) const
+QDateTime KFileItem::time(FileTimes which) const
 {
     if (!d) {
-        return KDateTime();
+        return QDateTime();
     }
     return d->time(which);
 }

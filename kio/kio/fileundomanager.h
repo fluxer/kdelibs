@@ -20,12 +20,11 @@
 #ifndef KIO_FILEUNDOMANAGER_H
 #define KIO_FILEUNDOMANAGER_H
 
-#include <QtCore/QObject>
-#include <kurl.h>
-
 #include <kio/kio_export.h>
 
-class KDateTime;
+#include <QObject>
+#include <QDateTime>
+#include <kurl.h>
 
 namespace KIO
 {
@@ -101,7 +100,7 @@ public:
          * Note that this is called after confirmDeletion.
          * Return true if we should proceed with deleting dest.
          */
-        virtual bool copiedFileWasModified(const KUrl& src, const KUrl& dest, const KDateTime& srcTime, const KDateTime& destTime);
+        virtual bool copiedFileWasModified(const KUrl& src, const KUrl& dest, const QDateTime& srcTime, const QDateTime& destTime);
 
     private:
         class UiInterfacePrivate;

@@ -22,12 +22,12 @@
 
 #include <sys/stat.h>
 
+#include <QDateTime>
 #include <kio/global.h>
 #include <kio/udsentry.h>
 #include <kurl.h>
 #include <kacl.h>
 #include <kmimetype.h>
-#include <kdatetime.h>
 
 class KFileItemPrivate;
 
@@ -293,7 +293,7 @@ public:
      * @return the time asked for, (time_t)0 if not available
      * @see timeString()
      */
-    KDateTime time(FileTimes which) const;
+    QDateTime time(FileTimes which) const;
 
     /**
      * Requests the modification, access or creation time as a string, depending

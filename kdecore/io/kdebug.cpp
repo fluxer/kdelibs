@@ -24,12 +24,12 @@
 #include "kmessage.h"
 #include "kstandarddirs.h"
 #include "kcomponentdata.h"
-#include "kdatetime.h"
 #include "kurl.h"
 
 #include <QCoreApplication>
 #include <QFile>
 #include <QMutex>
+#include <QDateTime>
 
 #include <unistd.h>
 #include <stdio.h>
@@ -632,12 +632,6 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
 
     QMutexLocker locker(globalKDebugMutex);
     return QDebug(globalKDebugConfig->areaDevice(type, funcinfo, area));
-}
-
-QDebug operator<<(QDebug s, const KDateTime &time)
-{
-    s.nospace() << "KDateTime(" << time.toString() << ")";
-    return s.space();
 }
 
 QDebug operator<<(QDebug s, const KUrl &url)

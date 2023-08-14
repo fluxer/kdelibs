@@ -20,16 +20,17 @@
 #include <qtest_kde.h>
 
 #include "fileundomanagertest.h"
-#include <kio/fileundomanager.h>
 
+#include <QClipboard>
+#include <QApplication>
+#include <QMimeData>
+#include <kio/fileundomanager.h>
 #include <kio/copyjob.h>
 #include <kio/job.h>
 #include <kio/deletejob.h>
 #include <kio/netaccess.h>
 #include <kio/paste.h>
 #include <kprotocolinfo.h>
-#include <kdatetime.h>
-
 #include <kde_file.h>
 #include <kdebug.h>
 #include <kconfig.h>
@@ -39,10 +40,6 @@
 #include <utime.h>
 #include <time.h>
 #include <sys/time.h>
-
-#include <QClipboard>
-#include <QApplication>
-#include <QMimeData>
 
 #include "moc_fileundomanagertest.cpp"
 
@@ -129,7 +126,7 @@ public:
     virtual void jobError( KIO::Job* job ) {
         kFatal() << job->errorString() ;
     }
-    virtual bool copiedFileWasModified( const KUrl& src, const KUrl& dest, const KDateTime& srcTime, const KDateTime& destTime ) {
+    virtual bool copiedFileWasModified( const KUrl& src, const KUrl& dest, const QDateTime& srcTime, const QDateTime& destTime ) {
         Q_UNUSED( src );
         m_dest = dest;
         Q_UNUSED( srcTime );
