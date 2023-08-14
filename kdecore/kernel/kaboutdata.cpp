@@ -319,12 +319,20 @@ KAboutLicense KAboutLicense::byKeyword(const QString &rawKeyword)
     }
 
     // Normalize keyword.
-    QString keyword = rawKeyword;
+    QByteArray keyword = rawKeyword.toLatin1();
     keyword = keyword.toLower();
-    keyword.remove(QLatin1Char(' '));
-    keyword.remove(QLatin1Char('.'));
+    int indexofchar = keyword.indexOf(' ');
+    while (indexofchar >= 0) {
+        keyword.remove(indexofchar, 1);
+        indexofchar = keyword.indexOf(' ');
+    }
+    indexofchar = keyword.indexOf('.');
+    while (indexofchar >= 0) {
+        keyword.remove(indexofchar, 1);
+        indexofchar = keyword.indexOf('.');
+    }
 
-    KAboutData::LicenseKey license = ldict.value(keyword.toLatin1(), KAboutData::License_Unknown);
+    KAboutData::LicenseKey license = ldict.value(keyword, KAboutData::License_Unknown);
     return KAboutLicense(license, nullptr);
 }
 
