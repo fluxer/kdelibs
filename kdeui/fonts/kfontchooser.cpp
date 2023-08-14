@@ -572,8 +572,6 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
     }
 
     // Filter style strings and add to the listbox.
-    QString pureFamily;
-    splitFontString(family, &pureFamily);
     QStringList filteredStyles;
     qtStyles.clear();
     styleIDs.clear();
@@ -594,7 +592,7 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
         // noun-adjective congruence wrt. gender of the family name).
         // The message provides the dynamic context 'family', which is
         // the family name to which the style string corresponds.
-        QString fstyle = ki18nc("@item Font style", "%1").subs(style).inContext("family", pureFamily).toString();
+        QString fstyle = ki18nc("@item Font style", "%1").subs(style).toString();
         if (!filteredStyles.contains(fstyle)) {
             filteredStyles.append(fstyle);
             qtStyles.insert(fstyle, style);

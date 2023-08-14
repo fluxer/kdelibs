@@ -62,7 +62,6 @@ class KLocalizedStringPrivate
     pluraln number;
     int numberOrd;
     QByteArray ctxt;
-    QHash<QString, QString> dynctxt;
     QByteArray msg;
     QByteArray plural;
 
@@ -467,14 +466,6 @@ KLocalizedString KLocalizedString::subs(const QString &a, int fieldWidth,
     // Perhaps bad idea alltogether (too much surprise)?
     kls.d->args.append(QString::fromLatin1("%1").arg(a, fieldWidth, fillChar));
     kls.d->vals.append(a);
-    return kls;
-}
-
-KLocalizedString KLocalizedString::inContext(const QString &key,
-                                             const QString &text) const
-{
-    KLocalizedString kls(*this);
-    kls.d->dynctxt[key] = text;
     return kls;
 }
 
