@@ -991,10 +991,6 @@ bool Applet::configurationRequired() const
 
 void Applet::setConfigurationRequired(bool needsConfig, const QString &reason)
 {
-    if (d->needsConfig == needsConfig) {
-        return;
-    }
-
     d->needsConfig = needsConfig;
 
     if (!needsConfig) {
