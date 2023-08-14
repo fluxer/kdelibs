@@ -297,10 +297,11 @@ void DialogShadowsPrivate::setupData(Plasma::FrameSvg::EnabledBorders enabledBor
 void DialogShadowsPrivate::freeX11Pixmaps()
 {
 #ifdef Q_WS_X11
+    if (!QX11Info::display()) {
+        return;
+    }
+
     foreach (KPixmap &pixmap, m_shadowPixmaps) {
-        if (!QX11Info::display()) {
-            return;
-        }
         if (!pixmap.isNull()) {
             pixmap.release();
         }
