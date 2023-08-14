@@ -676,7 +676,7 @@ void KGlobalSettings::Private::applyCursorTheme()
     KConfig config("kcminputrc");
     KConfigGroup g = config.group("Mouse");
 
-    QByteArray theme = g.readEntry("cursorTheme", QByteArray("Oxygen_White"));
+    QByteArray theme = g.readEntry("cursorTheme", QByteArray(KDE_DEFAULT_CURSOR_THEME));
     int size = g.readEntry("cursorSize", -1);
 
     // Default cursor size is 16 points

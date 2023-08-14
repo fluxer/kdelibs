@@ -41,6 +41,7 @@
 #define KDE_DEFAULT_NATURAL_SORTING true
 #define KDE_DEFAULT_FONT "DejaVu Sans"
 #define KDE_DEFAULT_FIXED_FONT "DejaVu Sans Mono"
+#define KDE_DEFAULT_CURSOR_THEME "Oxygen_White"
 
 #define KDE_HOME_URL "https://osdn.net/projects/kde/"
 #define KDE_BUG_REPORT_URL "https://osdn.net/projects/kde/ticket/"
