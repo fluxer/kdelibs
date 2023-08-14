@@ -317,7 +317,7 @@ macro(KDE4_OPTIONAL_FIND_PACKAGE _PACKAGE)
 endmacro(KDE4_OPTIONAL_FIND_PACKAGE)
 
 # KDE4_TRANSLATE(<LANGUAGE> FILE1.po ... FILEN.po)
-#    This macro is will create and install translation files
+#    This macro will create and install translation files
 macro(KDE4_TRANSLATE _LANGUAGE)
     foreach(_pofile ${ARGN})
         get_filename_component(_abspofile "${_pofile}" ABSOLUTE)

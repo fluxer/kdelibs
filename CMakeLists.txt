@@ -365,12 +365,6 @@ configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h
 configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h)
 configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h)
 
-################# Disallow in-source build #################
-
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-    message(SEND_ERROR "kdelibs requires an out of source build")
-endif()
-
 #########################################################################
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
@@ -485,12 +479,12 @@ add_subdirectory( solid )
 ################# write kdelibs package config files which will be installed #################
 
 configure_file(
-    KDELibs4Config.cmake
+    KDELibs4Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4Config.cmake
     @ONLY
 )
 configure_file(
-    KDELibs4ConfigVersion.cmake
+    KDELibs4ConfigVersion.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/KDELibs4ConfigVersion.cmake
     @ONLY
 )
