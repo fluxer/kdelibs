@@ -29,7 +29,7 @@
 #include <QEvent>
 #include <QWidget>
 #include <QTimer>
-#include <QDateTime>
+#include <QElapsedTimer>
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
 #include <QTextBrowser>
@@ -652,24 +652,24 @@ public:
     void handleMousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         lastPos = QPoint();
-        lastPosTime = QTime::currentTime();
+        lastPosTime.restart();
         pressPos = event->scenePos();
         pressScrollPos = -q->scrollPosition();
-        pressTime = QTime::currentTime();
+        pressTime.restart();
         velocity = QPointF();
         stopAnimations();
     }
 
     void handleMouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
-        if (lastPosTime.isNull())
+        if (!lastPosTime.isValid())
             return;
         bool rejectY = false;
         bool rejectX = false;
 
         if (canYFlick()) {
             int dy = int(event->scenePos().y() - pressPos.y());
-            if (qAbs(dy) > KGlobalSettings::dndEventDelay() || elapsed(pressTime) > 200) {
+            if (qAbs(dy) > KGlobalSettings::dndEventDelay() || pressTime.elapsed() > 200) {
                 qreal newY = dy + pressScrollPos.y();
                 const qreal minY = minYExtent();
                 const qreal maxY = maxYExtent();
@@ -695,7 +695,7 @@ public:
 
         if (canXFlick()) {
             int dx = int(event->scenePos().x() - pressPos.x());
-            if (qAbs(dx) > KGlobalSettings::dndEventDelay() || elapsed(pressTime) > 200) {
+            if (qAbs(dx) > KGlobalSettings::dndEventDelay() || pressTime.elapsed() > 200) {
                 qreal newX = dx + pressScrollPos.x();
                 const qreal minX = minXExtent();
                 const qreal maxX = maxXExtent();
@@ -721,7 +721,7 @@ public:
         }
 
         if (!lastPos.isNull()) {
-            qreal msecs = qreal(restart(lastPosTime));
+            qreal msecs = qreal(lastPosTime.restart());
             qreal elapsed =  msecs / 1000.;
 #if IGNORE_SUSPICIOUS_MOVES
             if (msecs > 3) {
@@ -755,10 +755,10 @@ public:
     void handleMouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     {
         stealEvent = false;
-        if (lastPosTime.isNull())
+        if (!lastPosTime.isValid())
             return;
 
-        if (elapsed(lastPosTime) > 100) {
+        if (lastPosTime.elapsed() > 100) {
             // if we drag then pause before release we should not cause a flick.
             velocity = QPointF();
         }
@@ -785,7 +785,7 @@ public:
             fixupX();
         }
 
-        lastPosTime = QTime();
+        lastPosTime.invalidate();
     }
 
     void handleWheelEvent(QGraphicsSceneWheelEvent *event)
@@ -896,24 +896,6 @@ public:
     bool canYFlick() const
     {
         return q->contentsSize().height() > q->viewportGeometry().height();
-    }
-
-    int elapsed(const QTime &t) const
-    {
-        int n = t.msecsTo(QTime::currentTime());
-        if (n < 0) // passed midnight
-            n += 86400 * 1000;
-        return n;
-    }
-
-    int restart(QTime &t) const
-    {
-        QTime time = QTime::currentTime();
-        int n = t.msecsTo(time);
-        if (n < 0) // passed midnight
-            n += 86400*1000;
-        t = time;
-        return n;
     }
 
     void createFlickAnimations()
@@ -1067,8 +1049,8 @@ public:
     QPointF pressScrollPos;
     QPointF velocity;
     QPointF lastPos;
-    QTime pressTime;
-    QTime lastPosTime;
+    QElapsedTimer pressTime;
+    QElapsedTimer lastPosTime;
     QPropertyAnimation *flickAnimationX;
     QPropertyAnimation *flickAnimationY;
     struct {
