@@ -106,7 +106,6 @@ public:
     void _k_textChanged(const QString &txt)
     {
         // COMPAT (as documented): emit userTextChanged whenever textChanged is emitted
-        // KDE5: remove userTextChanged signal, textEdited does the same...
         if (!completionRunning && (txt != userText)) {
             userText = txt;
         }
@@ -1656,7 +1655,7 @@ void KLineEdit::setUserSelection(bool userSelection)
 
     if (!d->userSelection && userSelection)
     {
-	d->_k_updateUserText(text());
+        d->_k_updateUserText(text());
     }
 
     QPalette p = palette();
