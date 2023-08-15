@@ -543,15 +543,13 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
         data.setBin(bin);
         if (!userVisibleName.isEmpty()) {
             data.setName(userVisibleName);
-        }
-        else if (service && !service->name().isEmpty()) {
+        } else if (service && !service->name().isEmpty()) {
             data.setName(service->name());
         }
         data.setDescription(i18n("Launching %1" ,  data.name()));
         if (!iconName.isEmpty()) {
             data.setIcon(iconName);
-        }
-        else if (service && !service->icon().isEmpty()) {
+        } else if (service && !service->icon().isEmpty()) {
             data.setIcon(service->icon());
         }
         if (!wmclass.isEmpty()) {
@@ -1092,19 +1090,32 @@ void KRun::init()
             mimeTypeDetermined(mime->name());
             return;
         }
-    }
-    else if (KProtocolInfo::isHelperProtocol(d->m_strURL)) {
-        kDebug(7010) << "Helper protocol";
+    } else if (KProtocolInfo::isHelperProtocol(d->m_strURL)) {
         const QString exec = KProtocolInfo::exec(d->m_strURL.protocol());
+        kDebug(7010) << "Helper protocol" << exec;
         if (exec.isEmpty()) {
             mimeTypeDetermined(KProtocolManager::defaultMimetype(d->m_strURL));
             return;
-        } else {
-            if (run(exec, KUrl::List() << d->m_strURL, d->m_window, QString(), QString(), d->m_asn)) {
+        }
+
+        // could be a scheme handler, attempt to launch it
+        const KService::Ptr service = KMimeTypeTrader::self()->preferredService(QString::fromLatin1("x-scheme-handler/") + d->m_strURL.protocol());
+        if (service) {
+            kDebug(7010) << "Helper protocol service is" << service->name() << service->entryPath();
+            QString errorstr;
+            if (KToolInvocation::startServiceByDesktopPath(service->entryPath(), d->m_strURL.url(), &errorstr, d->m_asn) == 0) {
                 d->m_bFinished = true;
                 d->startTimer();
                 return;
+            } else {
+                kDebug(7010) << "Error starting the service" << errorstr;
             }
+        }
+
+        if (run(exec, KUrl::List() << d->m_strURL, d->m_window, QString(), QString(), d->m_asn)) {
+            d->m_bFinished = true;
+            d->startTimer();
+            return;
         }
     }
 
