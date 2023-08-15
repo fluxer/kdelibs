@@ -15,6 +15,7 @@ Notes:
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
 
   <mime-type type="application/x-kcsrc">
+    <sub-class-of type="text/plain"/>
     <comment>KDE color scheme</comment>
     <comment xml:lang="ar">مخطط ألوان كدي</comment>
     <comment xml:lang="ast">Esquema de color de KDE</comment>
