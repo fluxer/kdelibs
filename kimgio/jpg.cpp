@@ -36,10 +36,12 @@ static const TJSAMP s_jpegsubsampling = TJSAMP_444;
 static const int s_jpegflags = TJFLAG_FASTDCT;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
+// https://dev.exiv2.org/projects/exiv2/wiki/The_Metadata_in_JPEG_files
 static const uchar s_jpgjfifheader[] = { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01 };
 static const uchar s_jpgheader[] = { 0xFF, 0xD8, 0xFF, 0xE0 };
 static const uchar s_jpg2header[] = { 0xFF, 0xD8, 0xFF, 0xEE };
 static const uchar s_jpegexifheader[] = { 0xFF, 0xD8, 0xFF, 0xE1 };
+static const uchar s_jpegapp1header[] = { 0xFF, 0xD8, 0xFF, 0xED };
 
 static const struct HeadersTblData {
     const uchar *header;
@@ -48,7 +50,8 @@ static const struct HeadersTblData {
     { s_jpgjfifheader, 12 },
     { s_jpgheader, 4 },
     { s_jpg2header, 4 },
-    { s_jpegexifheader, 4 }
+    { s_jpegexifheader, 4 },
+    { s_jpegapp1header, 4 }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
