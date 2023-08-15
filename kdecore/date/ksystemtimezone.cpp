@@ -35,6 +35,8 @@
 #include <sys/time.h>
 #include <time.h>
 
+typedef QPair<float, float> KZoneCoordinates;
+
 static const QString s_localtime = QString::fromLatin1("/etc/localtime");
 
 QString zoneinfoDir()
@@ -80,9 +82,9 @@ static float convertCoordinate(const QByteArray &coordinate)
     return value / 3600.0;
 }
 
-static QList<float> splitZoneTabCoordinates(const QByteArray &zonetabcoordinates)
+static KZoneCoordinates splitZoneTabCoordinates(const QByteArray &zonetabcoordinates)
 {
-    QList<float> result;
+    KZoneCoordinates result = qMakePair(KTimeZone::UNKNOWN, KTimeZone::UNKNOWN);
     int startindex = 0;
     if (zonetabcoordinates.startsWith('+') || zonetabcoordinates.startsWith('-')) {
         startindex = 1;
@@ -96,8 +98,7 @@ static QList<float> splitZoneTabCoordinates(const QByteArray &zonetabcoordinates
     }
     const float latitude = convertCoordinate(zonetabcoordinates.mid(0, signindex));
     const float longitude = convertCoordinate(zonetabcoordinates.mid(signindex, zonetabcoordinates.size() - signindex));
-    result.append(latitude);
-    result.append(longitude);
+    result = qMakePair(latitude, longitude);
     return result;
 }
 
@@ -205,10 +206,11 @@ void KSystemTimeZonesPrivate::update(const QString &path)
             continue;
         }
 
-        const QList<float> zonetabcoordinates = splitZoneTabCoordinates(
+        const KZoneCoordinates zonetabcoordinates = splitZoneTabCoordinates(
             QByteArray::fromRawData(zonecoordinates, qstrlen(zonecoordinates))
         );
-        if (Q_UNLIKELY(zonetabcoordinates.size() != 2)) {
+        if (Q_UNLIKELY(zonetabcoordinates.first == KTimeZone::UNKNOWN
+            || zonetabcoordinates.second == KTimeZone::UNKNOWN)) {
             kWarning() << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
@@ -216,7 +218,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         const KTimeZone ktimezone(
             QString::fromLatin1(zonename),
             QString::fromLatin1(zonecode),
-            zonetabcoordinates.at(0), zonetabcoordinates.at(1),
+            zonetabcoordinates.first, zonetabcoordinates.second,
             QString::fromLatin1(zonecomment)
         );
         m_zones.append(ktimezone);
