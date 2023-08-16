@@ -21,14 +21,7 @@
 #ifndef KTIMERDIALOG_H
 #define KTIMERDIALOG_H
 
-#include <QLabel>
-#include <QTimer>
-#include <QProgressBar>
-#include <QLabel>
-
 #include <kdialog.h>
-#include <kvbox.h>
-#include <khbox.h>
 
 class KTimerDialogPrivate;
 
@@ -150,18 +143,7 @@ private:
      */
     void setupLayout();
 
-    QTimer *totalTimer;
-    QTimer *updateTimer;
-    int msecRemaining, updateInterval, msecTotal;
-
-    ButtonCode buttonOnTimeout;
-    TimerStyle tStyle;
-
-    KHBox *timerWidget;
-    QProgressBar *timerProgress;
-    QLabel *timerLabel;
-    KVBox *mainWidget;
-
+    Q_DISABLE_COPY(KTimerDialog);
     KTimerDialogPrivate *d;
 };
 
