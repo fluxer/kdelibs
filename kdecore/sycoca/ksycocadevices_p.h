@@ -22,6 +22,8 @@
 #ifndef KSYCOCADEVICES_P_H
 #define KSYCOCADEVICES_P_H
 
+#include "ksycoca_p.h"
+
 class KSycocaAbstractDevice
 {
 public:
@@ -67,6 +69,10 @@ class KSycocaBufferDevice : public KSycocaAbstractDevice
 public:
     KSycocaBufferDevice() {
         m_buffer = new QBuffer();
+        m_buffer->open(QIODevice::ReadWrite); // can't fail
+        QDataStream str(m_buffer);
+        str << qint32(KSYCOCA_VERSION);
+        str << qint32(0);
     }
     ~KSycocaBufferDevice() {
         delete m_buffer;

@@ -44,19 +44,7 @@
 
 #include "ksycocadevices_p.h"
 
-/**
- * Sycoca file version number.
- * If the existing file is outdated, it will not get read
- * but instead we'll ask kded to regenerate a new one...
- */
-#define KSYCOCA_VERSION 244
-
-/**
- * Sycoca file name, used internally (by kbuildsycoca)
- */
-#define KSYCOCA_FILENAME "ksycoca4"
-
-static bool s_autoRebuild = true;
+static bool s_autoRebuild = false;
 
 // The following limitations are in place:
 // Maximum length of a single string: 8192 bytes
@@ -165,9 +153,7 @@ bool KSycocaPrivate::openDatabase(bool openDummyIfNotFound)
             //kDebug(7011) << "No database, opening a dummy one.";
 
             m_sycocaStrategy = StrategyDummyBuffer;
-            QDataStream* str = stream();
-            *str << qint32(KSYCOCA_VERSION);
-            *str << qint32(0);
+            (void)stream();
         } else {
             result = false;
         }
@@ -184,8 +170,7 @@ KSycocaAbstractDevice* KSycocaPrivate::device()
 
     KSycocaAbstractDevice* device = m_device;
     if (m_sycocaStrategy == StrategyDummyBuffer) {
-        device = new KSycocaBufferDevice;
-        device->device()->open(QIODevice::ReadOnly); // can't fail
+        device = new KSycocaBufferDevice();
     } else {
         if (!device) {
             device = new KSycocaFileDevice(m_databasePath);
@@ -303,7 +288,7 @@ bool KSycocaPrivate::checkVersion()
     QDataStream *m_str = device()->stream();
     Q_ASSERT(m_str);
     m_str->device()->seek(0);
-    qint32 aVersion;
+    qint32 aVersion = 0;
     *m_str >> aVersion;
     if ( aVersion < KSYCOCA_VERSION ) {
         kWarning(7011) << "Found version" << aVersion << ", expecting version" << KSYCOCA_VERSION << "or higher.";
