@@ -108,7 +108,7 @@ Test11::Test11(  )
   }
   mEmailClientItem = new MyPrefs::ItemEnum( currentGroup(), QLatin1String( "EmailClient" ), mEmailClient, valuesEmailClient, kmail );
   mEmailClientItem->setLabel( i18nc("@label", "Email client") );
-  mEmailClientItem->setWhatsThis( i18nc("@info:whatsthis", "<para>How to send email when an email alarm is triggered.<list><item>KMail: The email is sent automatically via <application>KMail</application>. <application>KMail</application> is started first if necessary.</item><item>Sendmail: The email is sent automatically. This option will only work if your system is configured to use <application>sendmail</application> or a sendmail compatible mail transport agent.</item></list></para>") );
+  mEmailClientItem->setWhatsThis( i18nc("@info:whatsthis", "<para>How to send email when an email alarm is triggered.<para>KMail: The email is sent automatically via <application>KMail</application>. <application>KMail</application> is started first if necessary.</para><para>Sendmail: The email is sent automatically. This option will only work if your system is configured to use <application>sendmail</application> or a sendmail compatible mail transport agent.</para></para>") );
   addItem( mEmailClientItem, QLatin1String( "EmailClient" ) );
   QList<MyPrefs::ItemEnum::Choice> valuesDefaultReminderUnits;
   {

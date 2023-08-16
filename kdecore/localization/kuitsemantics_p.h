@@ -1,10 +1,9 @@
 /*  This file is part of the KDE libraries
-    Copyright (C) 2007 Chusslove Illich <caslav.ilic@gmx.net>
+    Copyright (C) 2023 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    License version 2, as published by the Free Software Foundation.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,10 +19,16 @@
 #ifndef KUITSEMANTICS_P_H
 #define KUITSEMANTICS_P_H
 
-#include <QString>
+#include "kcatalog_p.h"
 
-class KuitSemantics;
-class KuitSemanticsPrivate;
+#include <QString>
+#include <QMap>
+
+struct KuitFormat
+{
+    QString plain;
+    QString rich;
+};
 
 /**
   * @internal
@@ -32,19 +37,18 @@ class KuitSemanticsPrivate;
   * KuitSemantics resolves semantic markup in user interface text
   * into appropriate visual formatting.
   *
-  * @author Chusslove Illich <caslav.ilic@gmx.net>
+  * @author Ivailo Monev <xakepa10@gmail.com>
   * @short class for formatting semantic markup in UI messages
   */
 class KuitSemantics
 {
-    public:
-
+public:
     /**
      * Constructor.
      *
      * @param lang language to create the formatter for
      */
-    KuitSemantics (const QString &lang);
+    KuitSemantics(const QString &lang);
 
     /**
      * Transforms the semantic markup in the given text into visual formatting.
@@ -54,23 +58,16 @@ class KuitSemantics
      * @param text text containing the semantic markup
      * @param ctxt context of the text
      */
-    QString format (const QString &text, const QString &ctxt) const;
+    QString format(const QString &text, const QString &ctxt) const;
 
-    /**
-     * Destructor.
-     */
-    ~KuitSemantics ();
-
-    private:
-
-    KuitSemantics (const KuitSemantics &t);
-    KuitSemantics &operator= (const KuitSemantics &t);
-
-    KuitSemanticsPrivate *d;
+private:
+    KCatalog m_catalog;
+    QMap<QString,KuitFormat> m_patterns;
 };
 
 // Some stuff needed in klocalizedstring.cpp too.
 #define KUIT_NUMINTG "numintg"
 #define KUIT_NUMREAL "numreal"
+#define KUIT_NUMPREC "numprec"
 
 #endif
