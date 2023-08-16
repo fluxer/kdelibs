@@ -275,6 +275,7 @@ install(
     KTimeEdit
     KTimeZone
     KTimeZoneWidget
+    KTimerDialog
     KTipDatabase
     KTipDialog
     KTitleWidget

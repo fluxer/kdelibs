@@ -103,6 +103,7 @@ set(kdeui_LIB_SRCS
     dialogs/kshortcutsdialog.cpp
     dialogs/ksplashscreen.cpp
     dialogs/kswitchlanguagedialog_p.cpp
+    dialogs/ktimerdialog.cpp
     dialogs/ktip.cpp
     dialogs/kdeprintdialog.cpp
     findreplace/kfind.cpp
@@ -419,6 +420,7 @@ install(
     dialogs/ksplashscreen.h
     dialogs/kshortcutsdialog.h
     dialogs/kshortcutseditor.h
+    dialogs/ktimerdialog.h
     dialogs/ktip.h
     findreplace/kfind.h
     findreplace/kreplace.h
