@@ -37,6 +37,8 @@
 class KTimerDialogPrivate
 {
 public:
+    KTimerDialogPrivate();
+
     QTimer *totalTimer;
     QTimer *updateTimer;
     int msecRemaining, updateInterval, msecTotal;
@@ -49,6 +51,21 @@ public:
     QLabel *timerLabel;
     KVBox *mainWidget;
 };
+
+KTimerDialogPrivate::KTimerDialogPrivate()
+    : totalTimer(nullptr),
+    updateTimer(nullptr),
+    msecRemaining(0),
+    updateInterval(0),
+    msecTotal(0),
+    buttonOnTimeout(KDialog::None),
+    tStyle(KTimerDialog::CountDown),
+    timerWidget(nullptr),
+    timerProgress(nullptr),
+    timerLabel(nullptr),
+    mainWidget(nullptr)
+{
+}
 
 KTimerDialog::KTimerDialog(int msec, TimerStyle style, QWidget *parent,
                            const QString &caption,
