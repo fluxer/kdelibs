@@ -156,6 +156,7 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
                 result.replace(tagstartpos, tagendpos - tagstartpos + endformat.size(), tagsubstitute);
             } else {
                 kWarning() << "found starting but no ending tag for" << format.tag;
+                break;
             }
 
             tagstartpos = result.indexOf(startformat);
