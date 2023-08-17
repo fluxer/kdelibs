@@ -106,6 +106,7 @@ class KLocalizedStringPrivate;
  *  - @ref gen_usage
  *  - @ref spec_usage
  *  - @ref subs_notes
+ *  - @ref markup
  *  - @ref other_ref
  *
  * \section gen_usage General Usage
