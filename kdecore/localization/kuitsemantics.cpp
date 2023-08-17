@@ -67,10 +67,6 @@ KuitSemantics::KuitSemantics(const QString &lang)
     format.plain = m_catalog.translate("@message/plain", "/%1/");
     format.rich = m_catalog.translate("@message/rich", "<i>%1</i>");
     m_formats.append(format);
-    format.tag = QString::fromLatin1("nl");
-    format.plain = m_catalog.translate("@nl/plain", "%1\n");
-    format.rich = m_catalog.translate("@nl/rich", "%1<br/>");
-    m_formats.append(format);
     // strip the tags only
     format.tag = QString::fromLatin1("application");
     format.plain = QString::fromLatin1("%1");
