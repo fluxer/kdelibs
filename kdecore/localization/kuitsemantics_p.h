@@ -22,7 +22,7 @@
 #include "kcatalog_p.h"
 
 #include <QString>
-#include <QMap>
+#include <QList>
 
 struct KuitFormat
 {

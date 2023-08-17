@@ -132,7 +132,7 @@ void KLocalizedStringTest::correctSubs ()
 
     // Visual formatting.
     QCOMPARE(i18n("E = mc^2"), QString("E = mc^2"));
-    QCOMPARE(i18n("E &lt; mc^2"), QString("E < mc^2"));
+    QCOMPARE(i18n("E &lt; mc^2"), QString("E &lt; mc^2"));
     QCOMPARE(
         i18n("E &lt; mc^2<br/>"),
         QString("E &lt; mc^2<br/>")
@@ -151,7 +151,7 @@ void KLocalizedStringTest::correctSubs ()
     );
     QCOMPARE(
         i18n("E &lt; <emphasis>mc^2</emphasis>"),
-        QString("E < *mc^2*")
+        QString("E &lt; <i>mc^2</i>")
     );
     QCOMPARE(
         i18n("<html>E &lt; <emphasis>mc^2</emphasis></html>"),
@@ -167,14 +167,14 @@ void KLocalizedStringTest::correctSubs ()
     );
     QCOMPARE(
         i18nc("@label", "E &lt; <emphasis>mc^2</emphasis>"),
-        QString("E < *mc^2*")
+        QString("E &lt; <i>mc^2</i>")
     );
     QCOMPARE(
         i18nc("@info", "E &lt; <emphasis>mc^2</emphasis>"),
-        QString("<html>E &lt; <i>mc^2</i></html>")
+        QString("E &lt; <i>mc^2</i>")
     );
-    QCOMPARE(i18n("E = mc^&#x0032;"), QString("E = mc^2"));
-    QCOMPARE(i18n("E = mc^&#0050;"), QString("E = mc^2"));
+    QCOMPARE(i18n("E = mc^&#x0032;"), QString("E = mc^&#x0032;"));
+    QCOMPARE(i18n("E = mc^&#0050;"), QString("E = mc^&#0050;"));
 
     // Number formatting.
     QCOMPARE(ki18n("%1").subs(42).toString(), QString("42"));

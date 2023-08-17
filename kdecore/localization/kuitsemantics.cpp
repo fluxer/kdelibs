@@ -161,8 +161,5 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
         }
     }
 
-    // TODO: maybe entities compat, see:
-    // kdecore/tests/klocalizedstringtest.cpp
-
     return result;
 }
