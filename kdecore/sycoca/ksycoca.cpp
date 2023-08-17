@@ -44,7 +44,7 @@
 
 #include "ksycocadevices_p.h"
 
-static bool s_autoRebuild = false;
+static bool s_autoRebuild = true;
 
 // The following limitations are in place:
 // Maximum length of a single string: 8192 bytes
