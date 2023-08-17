@@ -68,7 +68,6 @@ private:
     static const QLatin1String s_numintg;
     static const QLatin1String s_numreal;
     static const QLatin1String s_title;
-    static const QLatin1String s_para;
 };
 
 // Some stuff needed in klocalizedstring.cpp too.

@@ -247,7 +247,6 @@ class KLocalizedStringPrivate;
  * \li emphasis
  * \li email
  * \li title
- * \li para
  * \li warning
  * \li command
  * \li resource
@@ -266,7 +265,6 @@ class KLocalizedStringPrivate;
  *
  * The exceptions, tags which do not apply formatting even if specified in the context, are:
  * \li title
- * \li para
  * \li numargs
  * \li numintg
  * \li numreal

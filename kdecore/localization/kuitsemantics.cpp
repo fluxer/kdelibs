@@ -25,7 +25,6 @@ const QLatin1String KuitSemantics::s_numargs = QLatin1String(KUIT_NUMARGS);
 const QLatin1String KuitSemantics::s_numintg = QLatin1String(KUIT_NUMINTG);
 const QLatin1String KuitSemantics::s_numreal = QLatin1String(KUIT_NUMREAL);
 const QLatin1String KuitSemantics::s_title = QLatin1String("title");
-const QLatin1String KuitSemantics::s_para = QLatin1String("para");
 
 KuitSemantics::KuitSemantics(const QString &lang)
     : m_catalog(QString::fromLatin1("kdelibs4"), lang)
@@ -46,10 +45,6 @@ KuitSemantics::KuitSemantics(const QString &lang)
     format.tag = QString::fromLatin1("title");
     format.plain = m_catalog.translate("@title/plain", "== %1 ==");
     format.rich = m_catalog.translate("@title/rich", "<h2>%1</h2>");
-    m_formats.append(format);
-    format.tag = QString::fromLatin1("para");
-    format.plain = m_catalog.translate("@para/plain", "%1");
-    format.rich = m_catalog.translate("@para/rich", "<p>%1</p>");
     m_formats.append(format);
     format.tag = QString::fromLatin1("warning");
     format.plain = m_catalog.translate("@warning/plain", "WARNING: %1");
@@ -110,8 +105,8 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
     // qDebug() << Q_FUNC_INFO << "formatting" << ctxt << result << isrich;
     foreach (const KuitFormat &format, m_formats) {
         // exceptions
-        if (format.tag == s_title || format.tag == s_para
-            || format.tag == s_numargs || format.tag == s_numintg || format.tag == s_numreal) {
+        if (format.tag == s_title || format.tag == s_numargs
+            || format.tag == s_numintg || format.tag == s_numreal) {
             continue;
         }
         if (ctxt.startsWith(QLatin1String("@") + format.tag)) {
