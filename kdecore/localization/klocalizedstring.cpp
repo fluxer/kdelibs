@@ -330,15 +330,20 @@ QString KLocalizedStringPrivate::postFormat(const QString &text,
     return text;
 }
 
-static QString wrapNum(const QString &tag, const QString &numstr, const int precision)
+static QString wrapNum(const QString &tag, const QString &numstr,
+                       const int width, const QChar &fill, const int precision)
 {
-    QString prtag;
-    if (precision != -1) {
-        prtag = QString::fromLatin1("<%1>%2</%1>").arg(QString::fromLatin1(KUIT_NUMPREC), QString::number(precision));
+    QString numargstag;
+    if (precision != -1 || width != 0 || fill != QLatin1Char(' ')) {
+        numargstag = QString::fromLatin1("<%1>%2:%3:%4</%1>").arg(
+            QString::fromLatin1(KUIT_NUMARGS),
+            QString::number(precision),
+            QString::number(width),
+            QString(fill)
+        );
     }
-    QString optag = QString::fromLatin1("<%1>").arg(tag);
-    QString cltag = QString::fromLatin1("</%1>").arg(tag);
-    return prtag + optag + numstr + cltag;
+    const QString numtag = QString::fromLatin1("<%1>%2</%1>").arg(tag, numstr);
+    return numargstag + numtag;
 }
 
 KLocalizedString KLocalizedString::subs(int a, int fieldWidth, int base,
@@ -353,8 +358,8 @@ KLocalizedString KLocalizedString::subs(int a, int fieldWidth, int base,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMINTG),
-            QString::fromLatin1("%1").arg(a, fieldWidth, base, fillChar),
-            -1
+            QString::number(a, base),
+            fieldWidth, fillChar, -1
         )
     );
     kls.d->vals.append(static_cast<intn>(a));
@@ -373,8 +378,8 @@ KLocalizedString KLocalizedString::subs(uint a, int fieldWidth, int base,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMINTG),
-            QString::fromLatin1("%1").arg(a, fieldWidth, base, fillChar),
-            -1
+            QString::number(a, base),
+            fieldWidth, fillChar, -1
         )
     );
     kls.d->vals.append(static_cast<uintn>(a));
@@ -393,8 +398,8 @@ KLocalizedString KLocalizedString::subs(long a, int fieldWidth, int base,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMINTG),
-            QString::fromLatin1("%1").arg(a, fieldWidth, base, fillChar),
-            -1
+            QString::number(a, base),
+            fieldWidth, fillChar, -1
         )
     );
     kls.d->vals.append(static_cast<intn>(a));
@@ -413,8 +418,8 @@ KLocalizedString KLocalizedString::subs(ulong a, int fieldWidth, int base,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMINTG),
-            QString::fromLatin1("%1").arg(a, fieldWidth, base, fillChar),
-            -1
+            QString::number(a, base),
+            fieldWidth, fillChar, -1
         )
     );
     kls.d->vals.append(static_cast<uintn>(a));
@@ -433,8 +438,8 @@ KLocalizedString KLocalizedString::subs(qlonglong a, int fieldWidth, int base,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMINTG),
-            QString::fromLatin1("%1").arg(a, fieldWidth, base, fillChar),
-            -1
+            QString::number(a, base),
+            fieldWidth, fillChar, -1
         )
     );
     kls.d->vals.append(static_cast<intn>(a));
@@ -453,8 +458,8 @@ KLocalizedString KLocalizedString::subs(qulonglong a, int fieldWidth, int base,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMINTG),
-            QString::fromLatin1("%1").arg(a, fieldWidth, base, fillChar),
-            -1
+            QString::number(a, base),
+            fieldWidth, fillChar, -1
         )
     );
     kls.d->vals.append(static_cast<uintn>(a));
@@ -469,8 +474,8 @@ KLocalizedString KLocalizedString::subs(double a, int fieldWidth,
     kls.d->args.append(
         wrapNum(
             QString::fromLatin1(KUIT_NUMREAL),
-            QString::fromLatin1("%1").arg(a, fieldWidth, format, precision == -1 ? 2 : precision, fillChar),
-            precision
+            QString::number(a, format, precision == -1 ? 2 : precision),
+            fieldWidth, fillChar, precision
         )
     );
     kls.d->vals.append(static_cast<realn>(a));

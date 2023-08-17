@@ -64,16 +64,16 @@ public:
 private:
     KCatalog m_catalog;
     QList<KuitFormat> m_formats;
+    static const QLatin1String s_numargs;
     static const QLatin1String s_numintg;
     static const QLatin1String s_numreal;
-    static const QLatin1String s_numprec;
     static const QLatin1String s_title;
     static const QLatin1String s_para;
 };
 
 // Some stuff needed in klocalizedstring.cpp too.
+#define KUIT_NUMARGS "numargs"
 #define KUIT_NUMINTG "numintg"
 #define KUIT_NUMREAL "numreal"
-#define KUIT_NUMPREC "numprec"
 
 #endif

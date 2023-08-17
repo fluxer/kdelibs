@@ -21,9 +21,9 @@
 #include "klocale.h"
 #include "kdebug.h"
 
+const QLatin1String KuitSemantics::s_numargs = QLatin1String(KUIT_NUMARGS);
 const QLatin1String KuitSemantics::s_numintg = QLatin1String(KUIT_NUMINTG);
 const QLatin1String KuitSemantics::s_numreal = QLatin1String(KUIT_NUMREAL);
-const QLatin1String KuitSemantics::s_numprec = QLatin1String(KUIT_NUMPREC);
 const QLatin1String KuitSemantics::s_title = QLatin1String("title");
 const QLatin1String KuitSemantics::s_para = QLatin1String("para");
 
@@ -79,13 +79,13 @@ KuitSemantics::KuitSemantics(const QString &lang)
     format.tag = QString::fromLatin1("numid");
     m_formats.append(format);
     // special cases
-    format.tag = QString::fromLatin1(KUIT_NUMINTG);
+    format.tag = QString::fromLatin1(KUIT_NUMARGS);
     format.plain = QString();
     format.rich = QString();
     m_formats.append(format);
     format.tag = QString::fromLatin1(KUIT_NUMREAL);
     m_formats.append(format);
-    format.tag = QString::fromLatin1(KUIT_NUMPREC);
+    format.tag = QString::fromLatin1(KUIT_NUMINTG);
     m_formats.append(format);
 }
 
@@ -128,7 +128,9 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
         }
     }
 
-    int precision = -1;
+    int numprec = -1;
+    int numwidth = 0;
+    QChar numfill = QLatin1Char(' ');
     foreach (const KuitFormat &format, m_formats) {
         const QString startformat = QLatin1String("<") + format.tag + QLatin1String(">");
         const QString endformat = QLatin1String("</") + format.tag + QLatin1String(">");
@@ -140,12 +142,26 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
                 const QString tagvalue = result.mid(tagstartpos + startformat.size(), tagendpos - tagstartpos - startformat.size());
                 // qDebug() << Q_FUNC_INFO << "tagvalue" << format.tag << tagvalue << tagstartpos << tagendpos;
                 QString tagsubstitute;
-                if (format.tag == s_numprec) {
-                    precision = tagvalue.toInt();
+                if (format.tag == s_numargs) {
+                    // split alert!
+                    const QStringList numargs = tagvalue.split(QLatin1Char(':'));
+                    if (Q_LIKELY(numargs.size() == 3)) {
+                        numprec = numargs.at(0).toInt();
+                        numwidth = numargs.at(1).toInt();
+                        numfill = numargs.at(2)[0];
+                    } else {
+                        kWarning() << "invalid number arguments tag" << format.tag;
+                    }
                     tagsubstitute = QString();
                 } else if (format.tag == s_numintg || format.tag == s_numreal) {
-                    tagsubstitute = KGlobal::locale()->formatNumber(tagvalue, false, precision);
-                    precision = -1;
+                    // qDebug() << Q_FUNC_INFO << "tagnum" << format.tag << tagvalue << numprec << numwidth << numfill;
+                    tagsubstitute = QString::fromLatin1("%1").arg(
+                        KGlobal::locale()->formatNumber(tagvalue, false, numprec),
+                        numwidth, numfill
+                    );
+                    numprec = -1;
+                    numwidth = 0;
+                    numfill = QLatin1Char(' ');
                 } else if (isrich) {
                     tagsubstitute = format.rich.arg(tagvalue);
                 } else {
@@ -154,7 +170,7 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
                 // qDebug() << Q_FUNC_INFO << "replacing" << result.mid(tagstartpos, tagendpos - tagstartpos + endformat.size()) << tagsubstitute;
                 result.replace(tagstartpos, tagendpos - tagstartpos + endformat.size(), tagsubstitute);
             } else {
-                kWarning() << "found starting but no ending markup tag for" << format.tag;
+                kWarning() << "found starting but no ending tag for" << format.tag;
             }
 
             tagstartpos = result.indexOf(startformat);
