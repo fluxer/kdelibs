@@ -68,8 +68,7 @@ class KLocalizedStringPrivate
     QString toString(const KLocale *locale) const;
     QString selectForEnglish() const;
     QString substituteSimple(const QString &trans,
-                             const QChar &plchar = QLatin1Char('%'),
-                             bool partial = false) const;
+                             const QChar &plchar = QLatin1Char('%')) const;
     QString postFormat(const QString &text,
                        const QString &lang,
                        const QString &ctxt) const;
@@ -192,13 +191,8 @@ QString KLocalizedStringPrivate::selectForEnglish () const
 }
 
 QString KLocalizedStringPrivate::substituteSimple(const QString &trans,
-                                                  const QChar &plchar,
-                                                  bool partial) const
+                                                  const QChar &plchar) const
 {
-#ifdef NDEBUG
-    Q_UNUSED(partial);
-#endif
-
     QStringList tsegs; // text segments per placeholder occurrence
     QList<int> plords; // ordinal numbers per placeholder occurrence
 #ifndef NDEBUG
@@ -272,10 +266,8 @@ QString KLocalizedStringPrivate::substituteSimple(const QString &trans,
             // too little arguments, put back the placeholder
             finalstr.append(QLatin1Char('%') + QString::number(plords.at(i) + 1));
 #ifndef NDEBUG
-            if (!partial) {
-                // spoof the message
-                finalstr.append(QLatin1String("(I18N_ARGUMENT_MISSING)"));
-            }
+            // spoof the message
+            finalstr.append(QLatin1String("(I18N_ARGUMENT_MISSING)"));
 #endif
         } else {
             // just fine
@@ -285,32 +277,30 @@ QString KLocalizedStringPrivate::substituteSimple(const QString &trans,
     finalstr.append(tsegs.last());
 
 #ifndef NDEBUG
-    if (!partial) {
-        // Check that there are no gaps in numbering sequence of placeholders.
-        bool gaps = false;
-        for (int i = 0; i < ords.size(); i++)
-            if (!ords.at(i)) {
-                gaps = true;
-                kDebug(173) << QString::fromLatin1("Placeholder %%1 skipped in message {%2}.")
-                                      .arg(QString::number(i + 1), shortenMessage(trans));
-            }
-        // If no gaps, check for mismatch between number of unique placeholders and
-        // actually supplied arguments.
-        if (!gaps && ords.size() != args.size()) {
-            kDebug(173) << QString::fromLatin1("%1 instead of %2 arguments to message {%3} supplied before conversion.")
-                                  .arg(args.size()).arg(ords.size()).arg(shortenMessage(trans));
+    // Check that there are no gaps in numbering sequence of placeholders.
+    bool gaps = false;
+    for (int i = 0; i < ords.size(); i++)
+        if (!ords.at(i)) {
+            gaps = true;
+            kDebug(173) << QString::fromLatin1("Placeholder %%1 skipped in message {%2}.")
+                                    .arg(QString::number(i + 1), shortenMessage(trans));
         }
+    // If no gaps, check for mismatch between number of unique placeholders and
+    // actually supplied arguments.
+    if (!gaps && ords.size() != args.size()) {
+        kDebug(173) << QString::fromLatin1("%1 instead of %2 arguments to message {%3} supplied before conversion.")
+                                .arg(args.size()).arg(ords.size()).arg(shortenMessage(trans));
+    }
 
-        // Some spoofs.
-        if (gaps) {
-            finalstr.append(QLatin1String("(I18N_GAPS_IN_PLACEHOLDER_SEQUENCE)"));
-        }
-        if (ords.size() < args.size()) {
-            finalstr.append(QLatin1String("(I18N_EXCESS_ARGUMENTS_SUPPLIED)"));
-        }
-        if (!plural.isEmpty() && !numberSet) {
-            finalstr.append(QLatin1String("(I18N_PLURAL_ARGUMENT_MISSING)"));
-        }
+    // Some spoofs.
+    if (gaps) {
+        finalstr.append(QLatin1String("(I18N_GAPS_IN_PLACEHOLDER_SEQUENCE)"));
+    }
+    if (ords.size() < args.size()) {
+        finalstr.append(QLatin1String("(I18N_EXCESS_ARGUMENTS_SUPPLIED)"));
+    }
+    if (!plural.isEmpty() && !numberSet) {
+        finalstr.append(QLatin1String("(I18N_PLURAL_ARGUMENT_MISSING)"));
     }
 #endif
 
