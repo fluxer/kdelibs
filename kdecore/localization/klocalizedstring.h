@@ -251,7 +251,6 @@ class KLocalizedStringPrivate;
  * \li command
  * \li resource
  * \li message
- * \li application - does nothing
  * \li numargs - specifies precision, field width and fill character for the other integer tags,
  *               its value should be in the form:
  *               "<precision>:<field_width>:<fill_character>"
