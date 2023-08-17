@@ -76,8 +76,6 @@ KuitSemantics::KuitSemantics(const QString &lang)
     format.plain = QString::fromLatin1("%1");
     format.rich = QString::fromLatin1("%1");
     m_formats.append(format);
-    format.tag = QString::fromLatin1("numid");
-    m_formats.append(format);
     // special cases
     format.tag = QString::fromLatin1(KUIT_NUMARGS);
     format.plain = QString();
@@ -101,10 +99,10 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
         checkifrich = false;
     }
     if (ctxt.startsWith(QLatin1Char('@'))) {
-        if (ctxt.contains(QLatin1String("plain"))) {
+        if (ctxt.contains(QLatin1String("/plain"))) {
             isrich = false;
             checkifrich = false;
-        } else if (ctxt.contains(QLatin1String("rich"))) {
+        } else if (ctxt.contains(QLatin1String("/rich"))) {
             isrich = true;
             checkifrich = false;
         }
@@ -116,7 +114,8 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
     // qDebug() << Q_FUNC_INFO << "formatting" << ctxt << result << isrich;
     foreach (const KuitFormat &format, m_formats) {
         // exceptions
-        if (format.tag == s_title || format.tag == s_para) {
+        if (format.tag == s_title || format.tag == s_para
+            || format.tag == s_numargs || format.tag == s_numintg || format.tag == s_numreal) {
             continue;
         }
         if (ctxt.startsWith(QLatin1String("@") + format.tag)) {

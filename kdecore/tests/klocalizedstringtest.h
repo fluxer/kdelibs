@@ -25,13 +25,13 @@ class KLocalizedStringTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void initTestCase ();
-    void correctSubs ();
+    void initTestCase();
+    void correctSubs();
     void correctButIllFormed();
-    void wrongSubs ();
-    void miscMethods ();
-    void translateToFrench ();
-    void translateQt ();
+    void wrongSubs();
+    void miscMethods();
+    void translateToFrench();
+    void translateQt();
 
     void testThreads();
 

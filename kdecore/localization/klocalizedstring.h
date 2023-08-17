@@ -33,8 +33,8 @@ class KLocalizedStringPrivate;
 
 #ifndef I18N_NOOP
 /**
- * I18N_NOOP marks a string to be translated without translating it.
- * Do not use this unless you know you need it.
+ * I18N_NOOP marks a string to be translated without translating it. Do not use this unless you
+ * know you need it.
  *
  * Example usage where say_something() returns either "hello" or "goodbye":
  * \code
@@ -49,9 +49,8 @@ class KLocalizedStringPrivate;
 
 #ifndef I18N_NOOP2
 /**
- * If the string is too ambiguous to be translated well to a non-english
- * language, use this instead of I18N_NOOP to separate lookup string and
- * english.
+ * If the string is too ambiguous to be translated well to a non-english language, use this instead
+ * of I18N_NOOP to separate lookup string and english.
  *
  * Example usage where say_something() returns either "hello" or "goodbye":
  * \code
@@ -60,8 +59,7 @@ class KLocalizedStringPrivate;
  *   ...
  *   mystring = i18nc("greeting", say_something());
  * \endcode
- * \warning You need to call i18nc(context, stringVar) later on, not just
- * i18n(stringVar).
+ * \warning You need to call i18nc(context, stringVar) later on, not just i18n(stringVar).
  *
  * @see I18N_NOOP2_NOSTRIP
  */
@@ -72,9 +70,9 @@ class KLocalizedStringPrivate;
 /**
  * @since 4.3
  *
- * Similar to I18N_NOOP2, except that neither of the two arguments is omitted.
- * This is typically used when contexts need to differ between static entries,
- * and only some of the entries need context:
+ * Similar to I18N_NOOP2, except that neither of the two arguments is omitted. This is typically
+ * used when contexts need to differ between static entries, and only some of the entries need
+ * context:
  * \code
  *   struct MyTextLabels
  *   {
@@ -92,8 +90,8 @@ class KLocalizedStringPrivate;
  *   ...
  *   QString itemLabel = i18nc(labels[item].context, labels[item].text);
  * \endcode
- * Note that i18nc() will not have any problems with context being null,
- * it will simply behave as ordinary i18n().
+ * Note that i18nc() will not have any problems with context being null, it will simply behave as
+ * ordinary i18n().
  */
 #define I18N_NOOP2_NOSTRIP(ctxt, text) ctxt, text
 #endif
@@ -101,8 +99,8 @@ class KLocalizedStringPrivate;
 /**
  * @short Class for producing and handling localized messages
  *
- * KLocalizedString handles translation and specific needs of argument
- * substitution and formatting in localized message strings.
+ * KLocalizedString handles translation and specific needs of argument substitution and formatting
+ * in localized message strings.
  *
  * Topics:
  *  - @ref gen_usage
@@ -112,74 +110,64 @@ class KLocalizedStringPrivate;
  *
  * \section gen_usage General Usage
  *
- * This class should mostly not be used directly, but through wrapper i18n
- * calls which return QString, for localization of user visible messages in
- * applications.
+ * This class should mostly not be used directly, but through wrapper i18n calls which return
+ * QString, for localization of user visible messages in applications.
  *
- * For the most frequent message type, the one without any arguments, you would
- * use simply:
+ * For the most frequent message type, the one without any arguments, you would use simply:
  * \code
  *   QString msg = i18n("Just plain info");
  * \endcode
  *
- * If there are arguments to be substitued into the message, you just add them
- * after the message string:
+ * If there are arguments to be substitued into the message, you just add them after the message
+ * string:
  * \code
  *   QString msg = i18n("%1 has scored %2", playerName, score);
  * \endcode
- * There can be up to some final number of arguments added like this (i18n
- * is realized by overloaded templates). If you overrun this number, use
- * ki18n* series of calls (described below). You can use several types as
- * arguments, see subs methods.
+ * There can be up to some final number of arguments added like this (i18n is realized by
+ * overloaded templates). If you overrun this number, use ki18n* series of calls (described below).
+ * You can use several types as arguments, see subs methods.
  *
- * Sometimes a short message can be ambiguous in English, then you would use
- * the context version, i18nc. There the first string is context, and the
- * second is the message which really gets displayed:
+ * Sometimes a short message can be ambiguous in English, then you would use the context version,
+ * i18nc. There the first string is context, and the second is the message which really gets
+ * displayed:
  * \code
  *   QString msg = i18nc("Player name - score", "%1 - %2", playerName, score);
  * \endcode
  *
- * While English diferentiates plural forms only between 1 and else, in other
- * languages it might not be that simple, or it might be simpler. To handle
- * this properly, use plural call, i18np:
+ * While English diferentiates plural forms only between 1 and else, in other languages it might
+ * not be that simple, or it might be simpler. To handle this properly, use plural call, i18np:
  * \code
  *   QString msg = i18np("One image in album %2", "%1 images in album %2",
  *                       numImages, albumName);
  * \endcode
- * Note that the plural form shall be decided by first integer-valued argument,
- * (numImages in the example above). In rare cases when there are two integer
- * arguments, you should take care to order them properly.
+ * Note that the plural form shall be decided by first integer-valued argument, (numImages in the
+ * example above). In rare cases when there are two integer arguments, you should take care to
+ * order them properly.
  *
- * Finally, message might need both context and plural, which is provided by
- * i18ncp call:
+ * Finally, message might need both context and plural, which is provided by i18ncp call:
  * \code
  *   QString msg = i18ncp("Personal file", "One file", "%1 files", numFiles);
  * \endcode
  *
- * Be carefull not to use literal string as first argument after message text
- * in basic i18n() call. In debug mode, it will even trigger the static assert,
- * giving error at compile time. This is in order to prevent misnamed calls:
- * it may happen that you add context or plural to previously basic message,
- * but forget to change the name of the call.
+ * Be carefull not to use literal string as first argument after message text in basic i18n() call.
+ * In debug mode, it will even trigger the static assert, giving error at compile time. This is in
+ * order to prevent misnamed calls: it may happen that you add context or plural to previously
+ * basic message, but forget to change the name of the call.
  *
- * All message strings are expected to pass for well-formed XML, whether or
- * not the output device supports some form of markup.
- * Thus, predefined XML entities are always available: &amp;lt;, &amp;gt;,
- * &amp;amp;, &amp;apos;, and &amp;quot;. E.g. if you need a non-tag
- * less-than sign, use &amp;lt; entity instead.
- * The exception to the well-formed XML requirement is the ampersand (&amp;),
- * which is used a lot for marking accelerators, so you should not write it
- * as &amp;amp; (except in the very unlikely case when the construct with
- * the naked ampersand can be interpreted as an entity in itself).
+ * All message strings are expected to pass for well-formed XML, whether or not the output device
+ * supports some form of markup. Thus, predefined XML entities are always available: &amp;lt;,
+ * &amp;gt;, &amp;amp;, &amp;apos;, and &amp;quot;. E.g. if you need a non-tag less-than sign, use
+ * &amp;lt; entity instead. The exception to the well-formed XML requirement is the ampersand
+ * (&amp;), which is used a lot for marking accelerators, so you should not write it as &amp;amp;
+ * (except in the very unlikely case when the construct with the naked ampersand can be interpreted
+ * as an entity in itself).
  *
  * \section spec_usage Specialized Usage
  *
- * There are some situations where i18n* calls are not sufficient or
- * convenient. For one, if you need to substitute many arguments. Or, if you
- * find that you need to defer the substitution. For this you can use the
- * ki18n call which returns a KLocalizedString, substitute arguments
- * using its subs methods, and finalize the translation by calling
- * its toString method. For example:
+ * There are some situations where i18n* calls are not sufficient or convenient. For one, if you
+ * need to substitute many arguments. Or, if you find that you need to defer the substitution. For
+ * this you can use the ki18n call which returns a KLocalizedString, substitute arguments using its
+ * subs methods, and finalize the translation by calling its toString method. For example:
  * \code
  *   KLocalizedString ks;
  *   case (reportSource) {
@@ -191,10 +179,10 @@ class KLocalizedStringPrivate;
  *   QString msg = ks.subs(reportText).toString();
  * \endcode
  *
- * Another case is when you want extra formatting of arguments, like field
- * width or number of decimals. subs methods can take these formatting
- * parameters. In particular, you should @e never use some custom way to
- * format arguments, as subs methods will also properly localize them:
+ * Another case is when you want extra formatting of arguments, like field width or number of
+ * decimals. subs methods can take these formatting parameters. In particular, you should
+ * @e never use some custom way to format arguments, as subs methods will also properly localize
+ * them:
  * \code
  *   QString s = i18n("Rounds: %1", myNumberFormat(n, 8)); // bad, number not localized
  *   QString s = ki18n("Rounds: %1").subs(n, 8).toString(); // good, number localized
@@ -207,61 +195,107 @@ class KLocalizedStringPrivate;
  *   QString s = ki18ncp("Personal file", "One file", "%1 files").subs(n).toString();
  * \endcode
  *
- * If you need translation using locale (ie. KLocale object) other than the
- * default, you can use overloaded toString method which takes pointer to a
- * locale:
+ * If you need translation using locale (ie. KLocale object) other than the default, you can use
+ * overloaded toString method which takes pointer to a locale:
  * \code
  *   KLocale *myLocale;
  *   ...
  *   QString msg = ki18n("Welcome").toString(myLocale);
  * \endcode
  *
- * Normally all loaded catalogs are searched for translation,
- * and the first found translation is returned.
- * Sometimes this may lead to clashes, especially when dealing with
- * specialized collection catalogs (country names, language names, etc.)
- * in which messages are not equipped with contexts.
- * In such situations, toString method can take the name of
- * the specific catalog in which to look for translation:
+ * Normally all loaded catalogs are searched for translation, and the first found translation is
+ * returned. Sometimes this may lead to clashes, especially when dealing with specialized
+ * collection catalogs (country names, language names, etc.) in which messages are not equipped
+ * with contexts. In such situations, toString method can take the name of the specific catalog in
+ * which to look for translation:
  * \code
  *   QString trName = ki18n("Georgia").toString("countries");
  * \endcode
  *
  * \section subs_notes Placeholder Substitution
  *
- * Hopefully, for the most part placeholders are being substituted the way
- * you would intuitively expect them to be. Nevertheless:
+ * Hopefully, for the most part placeholders are being substituted the way you would intuitively
+ * expect them to be. Nevertheless:
  *
- * \li Placeholders are substituted in one pass, so no need to worry about
- *     argument itself containing a placeholder.
+ * \li Placeholders are substituted in one pass, so no need to worry about argument itself
+ *     containing a placeholder.
  *
  * \li All same-numbered placeholders are substituted with same argument.
  *
- * \li Placeholders directly index arguments: they should be numbered from 1
- *     upwards, without gaps in the sequence so that each argument is indexed.
- *     Otherwise you will get error marks in messages at runtime (when compiled
- *     in debug mode), and any invalid placeholder will be left unsubstituted.
- *     The exception is plural-deciding argument in plural call, where it is
- *     allowed to drop its placeholder in either singular or plural form.
+ * \li Placeholders directly index arguments: they should be numbered from 1 upwards, without gaps
+ *     in the sequence so that each argument is indexed. Otherwise you will get error marks in
+ *     messages at runtime (when compiled in debug mode), and any invalid placeholder will be left
+ *     unsubstituted. The exception is plural-deciding argument in plural call, where it is allowed
+ *     to drop its placeholder in either singular or plural form.
  *
- * \li If none of the arguments supplied to a plural call is integer-valued,
- *     you will get an error mark in message at runtime (in debug mode).
+ * \li If none of the arguments supplied to a plural call is integer-valued, you will get an error
+ *     mark in message at runtime (in debug mode).
  *
- * \li Plain number arguments will be normally formatted as if they denote
- *     amounts, according to language rules (thousands separation, etc.)
- *     But sometimes a number is a numerical identifier (e.g. port number),
- *     and to be treated as such, wrap the placeholder with the numid tag:
+ * \li Plain number arguments will be normally formatted as if they denote amounts, according to
+ *     language rules (thousands separation, etc.) But sometimes a number is a numerical identifier
+ *     (e.g. port number), and to be treated as such, convert the integer to string:
  *     \code
- *       QString msg = i18n("Using port <numid>%1</numid>", port);
+ *       QString msg = i18n("Using port %1", QString::number(port));
  *     \endcode
+ *
+ * \section markup
+ * Several HTML tags and even message context can apply format to the final string altering it in
+ * the process depending on wheather the message is rich text or not. Currently, the following HTML
+ * tags are recognized in the message:
+ * \li filename
+ * \li emphasis
+ * \li email
+ * \li title
+ * \li para
+ * \li warning
+ * \li command
+ * \li resource
+ * \li message
+ * \li nl - new line
+ * \li application - does nothing
+ * \li numargs - specifies precision, field width and fill character for the other integer tags,
+ *               its value should be in the form:
+ *               "<precision>:<field_width>:<fill_character>"
+ * \li numintg - converts the integer to its localized form
+ * \li numreal - converts the float/double to its localized form
+ *
+ * Most HTML tags are also recognized in the message context, for the context to apply format it
+ * has to be in one of the the following forms:
+ * \li @tag
+ * \li @tag/<rich|plain>
+ *
+ * The exceptions, tags which do not apply formatting even if specified in the context, are:
+ * \li title
+ * \li para
+ * \li numargs
+ * \li numintg
+ * \li numreal
+ *
+ * For example the following message will be formatted in plain format:
+ * \code
+ *   QString s = ki18nc("@info/plain", "Hello").toString();
+ * \endcode
+ *
+ * The following message will be formatted in rich format:
+ * \code
+ *   QString s = ki18nc("@info/rich", "Bye").toString();
+ * \endcode
+ *
+ * While the following message will be formatted depending on wheather it is rich or plain,
+ * detected via Qt::mightBeRichText():
+ * \code
+ *   QString s = ki18nc("@info", "Hi, bye!").toString();
+ * \endcode
+ *
+ * Note that for integers substitution the number tags are automatically applied, if localization
+ * of number is not desired simply convert it to string before substitution.
  *
  * \section other_ref Further References
  *
- * All i18n'd messages, whether sent to widgets expecting plain text or
- * allowing Katie rich text (HTML), support the new KDE semantic markup for
- * user interface text, KUIT in short. Semantic markup both increases the
- * consistency of visual presentation for the end user, and provides extra
- * information to translators, so that translations can be of higher quality.
+ * All i18n'd messages, whether sent to widgets expecting plain text or allowing Katie rich text
+ * (HTML), support the new KDE semantic markup for user interface text, KUIT in short. Semantic
+ * markup both increases the consistency of visual presentation for the end user, and provides
+ * extra information to translators, so that translations can be of higher quality.
  *
  * @see KLocale
  * @author Chusslove Illich \<caslav.ilic@gmx.net\>
