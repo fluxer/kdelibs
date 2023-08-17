@@ -1,6 +1,3 @@
-# FIXME: they are bogus
-# add_subdirectory(kconfig_compiler)
-
 include_directories( ${KDE4_KDEUI_INCLUDES} )
 
 MACRO(KDEUI_UNIT_TESTS)
