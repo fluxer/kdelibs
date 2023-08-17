@@ -26,6 +26,7 @@
 
 struct KuitFormat
 {
+    QString tag;
     QString plain;
     QString rich;
 };
@@ -62,7 +63,12 @@ public:
 
 private:
     KCatalog m_catalog;
-    QMap<QString,KuitFormat> m_patterns;
+    QList<KuitFormat> m_formats;
+    static const QLatin1String s_numintg;
+    static const QLatin1String s_numreal;
+    static const QLatin1String s_numprec;
+    static const QLatin1String s_title;
+    static const QLatin1String s_para;
 };
 
 // Some stuff needed in klocalizedstring.cpp too.

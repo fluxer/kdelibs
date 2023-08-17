@@ -21,51 +21,72 @@
 #include "klocale.h"
 #include "kdebug.h"
 
+const QLatin1String KuitSemantics::s_numintg = QLatin1String(KUIT_NUMINTG);
+const QLatin1String KuitSemantics::s_numreal = QLatin1String(KUIT_NUMREAL);
+const QLatin1String KuitSemantics::s_numprec = QLatin1String(KUIT_NUMPREC);
+const QLatin1String KuitSemantics::s_title = QLatin1String("title");
+const QLatin1String KuitSemantics::s_para = QLatin1String("para");
+
 KuitSemantics::KuitSemantics(const QString &lang)
     : m_catalog(QString::fromLatin1("kdelibs4"), lang)
 {
     KuitFormat format;
+    format.tag = QString::fromLatin1("filename");
     format.plain = m_catalog.translate("@filename/plain", "‘%1’");
     format.rich = m_catalog.translate("@filename/rich", "<tt>%1</tt>");
-    m_patterns.insert(QString::fromLatin1("filename"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("emphasis");
     format.plain = m_catalog.translate("@emphasis/plain", "*%1*");
     format.rich = m_catalog.translate("@emphasis/rich", "<i>%1</i>");
-    m_patterns.insert(QString::fromLatin1("emphasis"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("email");
     format.plain = m_catalog.translate("@email/plain", "&lt;%1&gt;");
     format.rich = m_catalog.translate("@email/rich", "&lt;<a href=\"mailto:%1\">%1</a>&gt;");
-    m_patterns.insert(QString::fromLatin1("email"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("title");
     format.plain = m_catalog.translate("@title/plain", "== %1 ==");
     format.rich = m_catalog.translate("@title/rich", "<h2>%1</h2>");
-    m_patterns.insert(QString::fromLatin1("title"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("para");
     format.plain = m_catalog.translate("@para/plain", "%1");
     format.rich = m_catalog.translate("@para/rich", "<p>%1</p>");
-    m_patterns.insert(QString::fromLatin1("para"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("warning");
     format.plain = m_catalog.translate("@warning/plain", "WARNING: %1");
     format.rich = m_catalog.translate("@warning/rich", "<b>Warning</b>: %1");
-    m_patterns.insert(QString::fromLatin1("warning"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("command");
     format.plain = m_catalog.translate("@command/plain", "%1");
     format.rich = m_catalog.translate("@command/rich", "<tt>%1</tt>");
-    m_patterns.insert(QString::fromLatin1("command"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("resource");
     format.plain = m_catalog.translate("@resource/plain", "“%1”");
     format.rich = m_catalog.translate("@resource/rich", "“%1”");
-    m_patterns.insert(QString::fromLatin1("resource"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("message");
     format.plain = m_catalog.translate("@message/plain", "/%1/");
     format.rich = m_catalog.translate("@message/rich", "<i>%1</i>");
-    m_patterns.insert(QString::fromLatin1("message"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("nl");
     format.plain = m_catalog.translate("@nl/plain", "%1\n");
     format.rich = m_catalog.translate("@nl/rich", "%1<br/>");
-    m_patterns.insert(QString::fromLatin1("nl"), format);
+    m_formats.append(format);
     // strip the tags only
+    format.tag = QString::fromLatin1("application");
     format.plain = QString::fromLatin1("%1");
     format.rich = QString::fromLatin1("%1");
-    m_patterns.insert(QString::fromLatin1("application"), format);
-    m_patterns.insert(QString::fromLatin1("numid"), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1("numid");
+    m_formats.append(format);
     // special cases
+    format.tag = QString::fromLatin1(KUIT_NUMINTG);
     format.plain = QString();
     format.rich = QString();
-    m_patterns.insert(QString::fromLatin1(KUIT_NUMINTG), format);
-    m_patterns.insert(QString::fromLatin1(KUIT_NUMREAL), format);
-    m_patterns.insert(QString::fromLatin1(KUIT_NUMPREC), format);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1(KUIT_NUMREAL);
+    m_formats.append(format);
+    format.tag = QString::fromLatin1(KUIT_NUMPREC);
+    m_formats.append(format);
 }
 
 QString KuitSemantics::format(const QString &text, const QString &ctxt) const
@@ -93,63 +114,55 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
     }
 
     // qDebug() << Q_FUNC_INFO << "formatting" << ctxt << result << isrich;
-
-    static const QStringList s_exceptions = QStringList()
-        << QString::fromLatin1("title")
-        << QString::fromLatin1("para");
-    QMapIterator<QString,KuitFormat> patternsit(m_patterns);
-    while (patternsit.hasNext()) {
-        patternsit.next();
-        const QString pattern = patternsit.key();
-        if (s_exceptions.contains(pattern)) {
+    foreach (const KuitFormat &format, m_formats) {
+        // exceptions
+        if (format.tag == s_title || format.tag == s_para) {
             continue;
         }
-        if (ctxt.startsWith(QLatin1String("@") + pattern)) {
+        if (ctxt.startsWith(QLatin1String("@") + format.tag)) {
             if (isrich) {
-                result = patternsit.value().rich.arg(result);
+                result = format.rich.arg(result);
             } else {
-                result = patternsit.value().plain.arg(result);
+                result = format.plain.arg(result);
             }
         }
     }
 
-    patternsit.toFront();
     int precision = -1;
-    while (patternsit.hasNext()) {
-        patternsit.next();
-        const QString pattern = patternsit.key();
-        const QString startpattern = QLatin1String("<") + pattern + QLatin1String(">");
-        const QString endpattern = QLatin1String("</") + pattern + QLatin1String(">");
-        int tagstartpos = result.indexOf(startpattern);
-        // qDebug() << Q_FUNC_INFO << pattern << tagstartpos;
+    foreach (const KuitFormat &format, m_formats) {
+        const QString startformat = QLatin1String("<") + format.tag + QLatin1String(">");
+        const QString endformat = QLatin1String("</") + format.tag + QLatin1String(">");
+        int tagstartpos = result.indexOf(startformat);
+        // qDebug() << Q_FUNC_INFO << format.tag << tagstartpos;
         while (tagstartpos >= 0) {
-            const int tagendpos = result.indexOf(endpattern, tagstartpos);
+            const int tagendpos = result.indexOf(endformat, tagstartpos);
             if (tagendpos >= tagstartpos) {
-                const QString tagvalue = result.mid(tagstartpos + startpattern.size(), tagendpos - tagstartpos - startpattern.size());
-                // qDebug() << Q_FUNC_INFO << "tagvalue" << pattern << tagvalue << tagstartpos << tagendpos;
+                const QString tagvalue = result.mid(tagstartpos + startformat.size(), tagendpos - tagstartpos - startformat.size());
+                // qDebug() << Q_FUNC_INFO << "tagvalue" << format.tag << tagvalue << tagstartpos << tagendpos;
                 QString tagsubstitute;
-                if (pattern == QLatin1String(KUIT_NUMPREC)) {
+                if (format.tag == s_numprec) {
                     precision = tagvalue.toInt();
                     tagsubstitute = QString();
-                } else if (pattern == QLatin1String(KUIT_NUMINTG) || pattern == QLatin1String(KUIT_NUMREAL)) {
+                } else if (format.tag == s_numintg || format.tag == s_numreal) {
                     tagsubstitute = KGlobal::locale()->formatNumber(tagvalue, false, precision);
                     precision = -1;
                 } else if (isrich) {
-                    tagsubstitute = patternsit.value().rich.arg(tagvalue);
+                    tagsubstitute = format.rich.arg(tagvalue);
                 } else {
-                    tagsubstitute = patternsit.value().plain.arg(tagvalue);
+                    tagsubstitute = format.plain.arg(tagvalue);
                 }
-                // qDebug() << Q_FUNC_INFO << "replacing" << result.mid(tagstartpos, tagendpos - tagstartpos + endpattern.size()) << tagsubstitute;
-                result.replace(tagstartpos, tagendpos - tagstartpos + endpattern.size(), tagsubstitute);
+                // qDebug() << Q_FUNC_INFO << "replacing" << result.mid(tagstartpos, tagendpos - tagstartpos + endformat.size()) << tagsubstitute;
+                result.replace(tagstartpos, tagendpos - tagstartpos + endformat.size(), tagsubstitute);
             } else {
-                kWarning() << "found starting but no ending markup tag for" << pattern;
+                kWarning() << "found starting but no ending markup tag for" << format.tag;
             }
 
-            tagstartpos = result.indexOf(startpattern);
+            tagstartpos = result.indexOf(startformat);
         }
     }
 
     // TODO: maybe entities compat, see:
     // kdecore/tests/klocalizedstringtest.cpp
+
     return result;
 }
