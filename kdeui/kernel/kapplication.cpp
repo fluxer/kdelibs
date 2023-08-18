@@ -78,7 +78,6 @@
 KApplication* KApplication::KApp = 0L;
 
 #ifdef Q_WS_X11
-static Atom atom_NetSupported = None;
 static QByteArray* startup_id_tmp = nullptr;
 #endif
 
@@ -383,9 +382,6 @@ void KApplicationPrivate::init()
   (void) QApplication::clipboard();
 
   parseCommandLine();
-#ifdef Q_WS_X11
-  atom_NetSupported = XInternAtom( QX11Info::display(), "_NET_SUPPORTED", False );
-#endif
 
   // sanity checking, to make sure we've connected
   QDBusConnection sessionBus = QDBusConnection::sessionBus();
@@ -683,7 +679,8 @@ void KApplicationPrivate::parseCommandLine( )
         int format;
         unsigned long length, after;
         unsigned char *data;
-        while ( XGetWindowProperty( QX11Info::display(), QX11Info::appRootWindow(), atom_NetSupported,
+        Atom netSupported = XInternAtom( QX11Info::display(), "_NET_SUPPORTED", False );
+        while ( XGetWindowProperty( QX11Info::display(), QX11Info::appRootWindow(), netSupported,
                     0, 1, false, AnyPropertyType, &type, &format,
                                     &length, &after, &data ) != Success || !length ) {
             if ( data )
