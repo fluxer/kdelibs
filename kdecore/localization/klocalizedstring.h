@@ -240,6 +240,7 @@ class KLocalizedStringPrivate;
  *     \endcode
  *
  * \section markup
+ *
  * Several HTML tags and even message context can apply format to the final string altering it in
  * the process depending on wheather the message is rich text or not. Currently, the following HTML
  * tags are recognized in the message:
@@ -258,7 +259,7 @@ class KLocalizedStringPrivate;
  * \li numreal - converts the float/double to its localized form
  *
  * Most HTML tags are also recognized in the message context, for the context to apply format it
- * has to be in one of the the following forms:
+ * has to be in one of the following forms:
  * \li @tag
  * \li @tag/<rich|plain>
  *
@@ -268,7 +269,7 @@ class KLocalizedStringPrivate;
  * \li numintg
  * \li numreal
  *
- * For example the following message will be formatted in plain format:
+ * For example, the following message will be formatted in plain format:
  * \code
  *   QString s = ki18nc("@info/plain", "Hello").toString();
  * \endcode
@@ -308,9 +309,8 @@ class KDECORE_EXPORT KLocalizedString
 
 public:
     /**
-     * Constructs an empty message, which is not valid for finalization.
-     * Useful when you later need to assign KLocalizedString obtained by one
-     * of ki18n* calls.
+     * Constructs an empty message, which is not valid for finalization. Useful when you later need
+     * to assign KLocalizedString obtained by one of ki18n* calls.
      *
      * @see isEmpty()
      */
@@ -332,23 +332,23 @@ public:
     ~KLocalizedString ();
 
     /**
-     * Finalizes the translation, creates QString with placeholders
-     * substituted. Translation is obtained from default locale.
+     * Finalizes the translation, creates QString with placeholders substituted. Translation is
+     * obtained from default locale.
      *
-     * If there was any mismatch between placeholders and arguments
-     * returned string will contain error marks (in debug mode).
+     * If there was any mismatch between placeholders and arguments returned string will contain
+     * error marks (in debug mode).
      *
      * @return finalized translation
      */
     QString toString () const;
 
     /**
-     * Finalizes the translation, creates QString with placeholders
-     * substituted. Translation is obtained from given locale. If locale
-     * is NULL, original message is used instead of translated.
+     * Finalizes the translation, creates QString with placeholders substituted. Translation is
+     * obtained from given locale. If locale is NULL, original message is used instead of
+     * translated.
      *
-     * If there was any mismatch between placeholders and arguments
-     * returned string will contain error marks (in debug mode).
+     * If there was any mismatch between placeholders and arguments returned string will contain
+     * error marks (in debug mode).
      *
      * @param locale locale from which translations are to be taken
      * @return finalized translation
@@ -356,11 +356,11 @@ public:
     QString toString (const KLocale *locale) const;
 
     /**
-     * Checks whether the message is empty. This will happen if you just
-     * constructed the object via default constructor.
+     * Checks whether the message is empty. This will happen if you just constructed the object via
+     * default constructor.
      *
-     * Empty messages are not valid for finalization; if you use toString() on
-     * them, you will get error mark instead of empty QString (in debug mode).
+     * Empty messages are not valid for finalization; if you use toString() on them, you will get
+     * error mark instead of empty QString (in debug mode).
      *
      * @return @c true if the message is empty, else @c false
      */
@@ -370,12 +370,12 @@ public:
      * Substitutes an int argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param base the radix used to represent the number as a string.
-     *             Valid values range from 2 to 36
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param base the radix used to represent the number as a string. Valid values range from 2 to
+     *             36
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (int a, int fieldWidth = 0, int base = 10,
@@ -385,12 +385,12 @@ public:
      * Substitutes an unsigned int argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param base the radix used to represent the number as a string.
-     *             Valid values range from 2 to 36
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param base the radix used to represent the number as a string. Valid values range from 2 to
+     *             36
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (uint a, int fieldWidth = 0, int base = 10,
@@ -400,12 +400,12 @@ public:
      * Substitutes a long argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param base the radix used to represent the number as a string.
-     *             Valid values range from 2 to 36
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param base the radix used to represent the number as a string. Valid values range from 2
+     *             to 36
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (long a, int fieldWidth = 0, int base = 10,
@@ -415,12 +415,12 @@ public:
      * Substitutes an unsigned long argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param base the radix used to represent the number as a string.
-     *             Valid values range from 2 to 36
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param base the radix used to represent the number as a string. Valid values range from 2
+     *             to 36
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (ulong a, int fieldWidth = 0, int base = 10,
@@ -430,12 +430,12 @@ public:
      * Substitutes a long long argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param base the radix used to represent the number as a string.
-     *             Valid values range from 2 to 36
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param base the radix used to represent the number as a string. Valid values range from 2 to
+     *             36
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (qlonglong a, int fieldWidth = 0, int base = 10,
@@ -445,12 +445,12 @@ public:
      * Substitutes an unsigned long long argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param base the radix used to represent the number as a string.
-     *             Valid values range from 2 to 36
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param base the radix used to represent the number as a string. Valid values range from 2 to
+     *             36
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (qulonglong a, int fieldWidth = 0, int base = 10,
@@ -460,12 +460,12 @@ public:
      * Substitutes a double argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
      * @param format type of floating point formating, like in QString::arg
      * @param precision number of digits after the decimal separator
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (double a, int fieldWidth = 0,
@@ -476,8 +476,8 @@ public:
      * Substitutes a QChar argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
      * @param fillChar the character used to fill up the empty places when
      *                 field width is greater than argument width
      * @return resultant KLocalizedString
@@ -489,10 +489,10 @@ public:
      * Substitutes a QString argument into the message.
      *
      * @param a the argument
-     * @param fieldWidth width of the formatted field, padded by spaces.
-     *                   Positive value aligns right, negative aligns left
-     * @param fillChar the character used to fill up the empty places when
-     *                 field width is greater than argument width
+     * @param fieldWidth width of the formatted field, padded by spaces. Positive value aligns
+     *                   right, negative aligns left
+     * @param fillChar the character used to fill up the empty places when field width is greater
+     *                 than argument width
      * @return resultant KLocalizedString
      */
     KLocalizedString subs (const QString &a, int fieldWidth = 0,
