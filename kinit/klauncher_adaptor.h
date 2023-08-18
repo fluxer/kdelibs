@@ -88,6 +88,7 @@ private:
     QMutex m_mutex;
     QProcessEnvironment m_environment;
     QDBusConnectionInterface* m_dbusconnectioninterface;
+    qint64 m_startuptimeout;
     KStartupInfoId m_kstartupinfoid;
     KStartupInfoData m_kstartupinfodata;
     QList<QProcess*> m_processes;

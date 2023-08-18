@@ -22,6 +22,7 @@
 #include "kservice.h"
 #include "kautostart.h"
 #include "kshell.h"
+#include "kconfiggroup.h"
 #include "kdebug.h"
 
 #include <QDir>
@@ -41,7 +42,7 @@ static const int s_sleeptime = 50;
 // NOTE: keep in sync with:
 // kde-workspace/kwin/effects/startupfeedback/startupfeedback.cpp
 // kde-workspace/kcontrol/launch/kcmlaunch.cpp
-static const qint64 s_servicetimeout = 10000; // 10sec
+static const qint64 s_startuptimeout = 10; // 10sec
 // klauncher is the last process to quit in a session (see kde-workspace/startkde.cmake) so 5sec
 // for each child process is more than enough
 static const qint64 s_processtimeout = 5000; // 5sec
@@ -60,10 +61,19 @@ static inline int getExitStatus(const pid_t pid)
 
 KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
     : QDBusAbstractAdaptor(parent),
-    m_dbusconnectioninterface(nullptr)
+    m_dbusconnectioninterface(nullptr),
+    m_startuptimeout(s_startuptimeout * 1000)
 {
     m_environment = QProcessEnvironment::systemEnvironment();
     m_dbusconnectioninterface = QDBusConnection::sessionBus().interface();
+
+    // TODO: config watch
+    KConfig klauncherconfig("klaunchrc", KConfig::NoGlobals);
+    KConfigGroup kconfiggroup = klauncherconfig.group("BusyCursorSettings");
+    const int busytimeout = kconfiggroup.readEntry("Timeout", s_startuptimeout);
+    kconfiggroup = klauncherconfig.group("TaskbarButtonSettings");
+    const int tasktimeout = kconfiggroup.readEntry("Timeout", s_startuptimeout);
+    m_startuptimeout = (qMax(busytimeout, tasktimeout) * 1000);
 }
 
 KLauncherAdaptor::~KLauncherAdaptor()
@@ -277,7 +287,7 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         dbusServiceName.append(QLatin1Char('-'));
         dbusServiceName.append(QString::number(pid));
     }
-    kDebug() << "waiting for" << pid << dbusServiceName;
+    kDebug() << "waiting for" << pid << dbusServiceName << m_startuptimeout;
     QElapsedTimer elapsedtime;
     elapsedtime.start();
     while (true) {
@@ -298,7 +308,7 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
             break;
         }
         // or the program is just not registering the service at all
-        if (elapsedtime.elapsed() >= s_servicetimeout && dbusstartuptype != KService::DBusWait) {
+        if (elapsedtime.elapsed() >= m_startuptimeout && dbusstartuptype != KService::DBusWait) {
             kWarning() << "timed out while waiting for service" << dbusServiceName;
             break;
         }
