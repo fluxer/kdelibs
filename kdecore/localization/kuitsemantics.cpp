@@ -110,6 +110,7 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
             } else {
                 result = format.plain.arg(result);
             }
+            break;
         }
     }
 
