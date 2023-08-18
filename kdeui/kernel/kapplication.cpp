@@ -77,10 +77,6 @@
 
 KApplication* KApplication::KApp = 0L;
 
-#ifdef Q_WS_X11
-static QByteArray* startup_id_tmp = nullptr;
-#endif
-
 static const int s_quit_signals[] = {
     SIGTERM,
     SIGHUP,
@@ -168,9 +164,6 @@ public:
   QString sessionConfigName() const;
   void init();
   void parseCommandLine( ); // Handle KDE arguments (Using KCmdLineArgs)
-  static void preqapplicationhack();
-  static void preread_app_startup_id();
-  void read_app_startup_id();
 
   KApplication *q;
   KComponentData componentData;
@@ -295,10 +288,9 @@ static SmcConn mySmcConnection = 0;
 #endif
 
 KApplication::KApplication()
-    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv()),
+    : QApplication(KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv()),
     d(new KApplicationPrivate(this))
 {
-    d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
     setApplicationVersion(d->componentData.aboutData()->version());
@@ -308,10 +300,9 @@ KApplication::KApplication()
 
 #ifdef Q_WS_X11
 KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap)
-    : QApplication((KApplicationPrivate::preqapplicationhack(),dpy), KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), visual, colormap),
+    : QApplication(dpy, KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), visual, colormap),
     d(new KApplicationPrivate(this))
 {
-    d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
     setApplicationVersion(d->componentData.aboutData()->version());
@@ -320,10 +311,9 @@ KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap)
 }
 
 KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap, const KComponentData &cData)
-    : QApplication((KApplicationPrivate::preqapplicationhack(),dpy), KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), visual, colormap),
+    : QApplication(dpy, KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), visual, colormap),
     d (new KApplicationPrivate(this, cData))
 {
-    d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
     setApplicationVersion(d->componentData.aboutData()->version());
@@ -333,10 +323,9 @@ KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap,
 #endif
 
 KApplication::KApplication(const KComponentData &cData)
-    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv()),
+    : QApplication(KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv()),
     d (new KApplicationPrivate(this, cData))
 {
-    d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
     setApplicationVersion(d->componentData.aboutData()->version());
@@ -346,25 +335,15 @@ KApplication::KApplication(const KComponentData &cData)
 
 #ifdef Q_WS_X11
 KApplication::KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName)
-    : QApplication((KApplicationPrivate::preqapplicationhack(),display)),
+    : QApplication(display),
     d(new KApplicationPrivate(this, rAppName))
 {
-    d->read_app_startup_id();
     setApplicationName(QString::fromLocal8Bit(rAppName.constData(), rAppName.size()));
     installSigpipeHandler();
     KCmdLineArgs::initIgnore(argc, argv, rAppName);
     d->init();
 }
 #endif
-
-// this function is called in KApplication ctors while evaluating arguments to QApplication ctor,
-// i.e. before QApplication ctor is called
-void KApplicationPrivate::preqapplicationhack()
-{
-    preread_app_startup_id();
-
-    KGlobal::config(); // initialize qt plugin path (see KComponentDataPrivate::lazyInit)
-}
 
 void KApplicationPrivate::init()
 {
@@ -380,6 +359,15 @@ void KApplicationPrivate::init()
 
   // make sure the clipboard is created before setting the window icon (bug 209263)
   (void) QApplication::clipboard();
+
+  // initialize qt plugin path (see KComponentDataPrivate::lazyInit)
+  (void) KGlobal::config();
+
+#if defined Q_WS_X11
+  KStartupInfoId id = KStartupInfo::currentStartupIdEnv();
+  KStartupInfo::resetStartupEnv();
+  startup_id = id.id();
+#endif
 
   parseCommandLine();
 
@@ -858,29 +846,6 @@ void KApplication::setStartupId( const QByteArray& startup_id )
 void KApplication::clearStartupId()
 {
     d->startup_id = "0";
-}
-
-// Qt reads and unsets the value and doesn't provide any way to reach the value,
-// so steal it from it beforehand. If Qt gets API for taking (reading and unsetting)
-// the startup id from it, this can be dumped.
-void KApplicationPrivate::preread_app_startup_id()
-{
-#if defined Q_WS_X11
-    KStartupInfoId id = KStartupInfo::currentStartupIdEnv();
-    KStartupInfo::resetStartupEnv();
-    startup_id_tmp = new QByteArray( id.id());
-#endif
-}
-
-// read the startup notification env variable, save it and unset it in order
-// not to propagate it to processes started from this app
-void KApplicationPrivate::read_app_startup_id()
-{
-#if defined Q_WS_X11
-    startup_id = *startup_id_tmp;
-    delete startup_id_tmp;
-    startup_id_tmp = nullptr;
-#endif
 }
 
 void KApplicationPrivate::_k_disableAutorestartSlot()
