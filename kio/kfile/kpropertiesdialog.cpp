@@ -3078,11 +3078,7 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
     d->m_terminalOptionStr = config.readEntry( "TerminalOptions");
     d->m_suidBool = config.readEntry("X-KDE-SubstituteUID", false);
     d->m_suidUserStr = config.readEntry("X-KDE-Username");
-    if (config.hasKey("StartupNotify")) {
-        d->m_startupBool = config.readEntry("StartupNotify", true);
-    } else {
-        d->m_startupBool = config.readEntry("X-KDE-StartupNotify", true);
-    }
+    d->m_startupBool = config.readEntry("StartupNotify", true);
     d->m_dbusStartupType = config.readEntry("X-DBUS-StartupType").toLower();
     // ### should there be a GUI for this setting?
     // At least we're copying it over to the local file, to avoid side effects (#157853)

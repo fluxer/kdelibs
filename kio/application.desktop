@@ -118,12 +118,6 @@ Type=QString
 [PropertyDef::StartupNotify]
 Type=bool
 
-[PropertyDef::X-KDE-WMClass]
-Type=QString
-
-[PropertyDef::X-KDE-StartupNotify]
-Type=bool
-
 [PropertyDef::X-DBUS-ServiceName]
 Type=QString
 

@@ -594,9 +594,6 @@ bool KRun::checkStartupNotify(const KService* service, bool* silent_arg, QByteAr
     if (service->property("StartupNotify").isValid()) {
         silent = !service->property("StartupNotify").toBool();
         wmclass = service->property("StartupWMClass").toString().toLatin1();
-    } else if (service->property("X-KDE-StartupNotify").isValid()) {
-        silent = !service->property("X-KDE-StartupNotify").toBool();
-        wmclass = service->property("X-KDE-WMClass").toString().toLatin1();
     } else {
         // non-compliant app
         if (service->isApplication()) {
