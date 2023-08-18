@@ -94,9 +94,8 @@ class KDEUI_EXPORT KIntValidator : public QValidator {
 
    KDoubleValidator extends QDoubleValidator to be
    locale-aware. That means that - subject to not being disabled -
-   KLocale::decimalSymbol(), KLocale::thousandsSeparator()
-   and KLocale::positiveSign() and KLocale::negativeSign()
-   are respected.
+   the system locale decimal point, thousand separator, positive
+   and negative sign are used for validation.
 
    @author Marc Mutz <mutz@kde.org>
    @see KIntValidator
