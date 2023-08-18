@@ -26,6 +26,7 @@ set(kdeclarative_LIB_SRCS
     bindings/i18n.cpp
     bindings/icon.cpp
     bindings/image.cpp
+    bindings/locale.cpp
     bindings/url.cpp
 )
 
