@@ -68,6 +68,20 @@ static QScriptValue imageHeight(QScriptContext *ctx, QScriptEngine *eng)
     return self->height();
 }
 
+static QScriptValue imageDepth(QScriptContext *ctx, QScriptEngine *eng)
+{
+    Q_UNUSED(eng)
+    DECLARE_SELF(QImage, depth);
+    return self->depth();
+}
+
+static QScriptValue imageHasAlphaChannel(QScriptContext *ctx, QScriptEngine *eng)
+{
+    Q_UNUSED(eng)
+    DECLARE_SELF(QImage, hasAlphaChannel);
+    return self->hasAlphaChannel();
+}
+
 QScriptValue constructImageClass(QScriptEngine *eng)
 {
     QScriptValue proto = qScriptValueFromValue(eng, QImage());
@@ -76,6 +90,8 @@ QScriptValue constructImageClass(QScriptEngine *eng)
     proto.setProperty("null", eng->newFunction(imageIsNull), getter);
     proto.setProperty("width", eng->newFunction(imageWidth), getter);
     proto.setProperty("height", eng->newFunction(imageHeight), getter);
+    proto.setProperty("depth", eng->newFunction(imageDepth), getter);
+    proto.setProperty("hasAlphaChannel", eng->newFunction(imageHasAlphaChannel), getter);
 
     QScriptValue ctorFun = eng->newFunction(imageCtor, proto);
 
