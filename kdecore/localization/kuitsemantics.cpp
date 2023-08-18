@@ -79,12 +79,12 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
 
     bool checkifrich = true;
     bool isrich = false;
-    if (ctxt.startsWith(QLatin1String("@info"))) {
-        // rich by default (compat)
-        isrich = true;
-        checkifrich = false;
-    }
     if (ctxt.startsWith(QLatin1Char('@'))) {
+        if (ctxt.startsWith(QLatin1String("@info"))) {
+            // rich by default (compat)
+            isrich = true;
+            checkifrich = false;
+        }
         if (ctxt.contains(QLatin1String("/plain"))) {
             isrich = false;
             checkifrich = false;
