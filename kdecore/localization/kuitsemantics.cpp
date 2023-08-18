@@ -122,7 +122,7 @@ QString KuitSemantics::format(const QString &text, const QString &ctxt) const
         int tagstartpos = result.indexOf(startformat);
         // qDebug() << Q_FUNC_INFO << format.tag << tagstartpos;
         while (tagstartpos >= 0) {
-            const int tagendpos = result.indexOf(endformat, tagstartpos);
+            const int tagendpos = result.indexOf(endformat, tagstartpos + startformat.size());
             if (Q_LIKELY(tagendpos >= tagstartpos)) {
                 const QString tagvalue = result.mid(tagstartpos + startformat.size(), tagendpos - tagstartpos - startformat.size());
                 // qDebug() << Q_FUNC_INFO << "tagvalue" << format.tag << tagvalue << tagstartpos << tagendpos;

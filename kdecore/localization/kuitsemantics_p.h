@@ -35,8 +35,8 @@ struct KuitFormat
   * @internal
   * (used by KLocalizedString)
   *
-  * KuitSemantics resolves semantic markup in user interface text
-  * into appropriate visual formatting.
+  * KuitSemantics resolves semantic markup in user interface text into appropriate visual
+  * formatting.
   *
   * @author Ivailo Monev <xakepa10@gmail.com>
   * @short class for formatting semantic markup in UI messages
