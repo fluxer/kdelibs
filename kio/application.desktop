@@ -118,6 +118,12 @@ Type=QString
 [PropertyDef::StartupNotify]
 Type=bool
 
+[PropertyDef::SingleMainWindow]
+Type=bool
+
+[PropertyDef::Implements]
+Type=QStringList
+
 [PropertyDef::X-KDE-ParentApp]
 Type=QString
 

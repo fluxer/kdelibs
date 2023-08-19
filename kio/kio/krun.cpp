@@ -40,6 +40,8 @@
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
+#include <QtDBus/QDBusReply>
+#include <QtDBus/QDBusConnectionInterface>
 
 #include <kmimetypetrader.h>
 #include <kmimetype.h>
@@ -594,10 +596,33 @@ bool KRun::checkStartupNotify(const KService* service, bool* silent_arg, QByteAr
     if (service->property("StartupNotify").isValid()) {
         silent = !service->property("StartupNotify").toBool();
         wmclass = service->property("StartupWMClass").toString().toLatin1();
+
+        // NOTE: this is using spec properties but probably not for the purpose the properties were
+        // ment for
+        if (service->property("SingleMainWindow").toBool()) {
+            const QStringList implements = service->property("Implements").toStringList();
+            if (!implements.isEmpty()) {
+                // TODO: where is the interface supposed to be registered?
+                QDBusConnectionInterface* dbusconnectioninterface = QDBusConnection::sessionBus().interface();
+                if (dbusconnectioninterface) {
+                    QDBusReply<bool> implementedreply;
+                    foreach (const QString &implemented, implements) {
+                        implementedreply = dbusconnectioninterface->isServiceRegistered(implemented);
+                        if (implementedreply.isValid() && implementedreply.value() == true) {
+                            kDebug(7010) << "implemented interface" << implemented << ", disabling startup notification";
+                            return false;
+                        }
+                    }
+                } else {
+                    kDebug(7010) << "null D-Bus connection interface";
+                }
+            }
+        }
     } else {
         // non-compliant app
         if (service->isApplication()) {
             // doesn't have .desktop entries needed, start as non-compliant
+            silent = true;
             wmclass = "0";
         } else {
             return false; // no startup notification at all
