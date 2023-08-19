@@ -20,14 +20,40 @@
 #define KLAUNCHER_ADAPTOR_H
 
 #include "kstartupinfo.h"
+#include "kservice.h"
 
 #include <QDBusAbstractAdaptor>
-#include <QDBusMessage>
-#include <QDBusConnectionInterface>
 #include <QProcess>
-#include <QMutex>
+#include <QTimer>
 
 // #define KLAUNCHER_DEBUG
+
+class KLauncherProcess : public QProcess
+{
+    Q_OBJECT
+public:
+    explicit KLauncherProcess(QObject *parent);
+
+    void setupStartup(const QByteArray &startup_id, const QString &appexe,
+                      const KService::Ptr kservice, const qint64 timeout);
+
+private Q_SLOTS:
+    void slotProcessStateChanged(QProcess::ProcessState state);
+    void slotStartupRemoved(const KStartupInfoId &id, const KStartupInfoData &data);
+    void slotStartupTimeout();
+
+private:
+    Q_DISABLE_COPY(KLauncherProcess);
+
+    void sendSIStart(const qint64 timeout);
+    void sendSIChange();
+    void sendSIFinish();
+
+    KStartupInfo* m_kstartupinfo;
+    QTimer* m_startuptimer;
+    KStartupInfoId m_kstartupinfoid;
+    KStartupInfoData m_kstartupinfodata;
+};
 
 // Adaptor class for interface org.kde.KLauncher
 class KLauncherAdaptor: public QDBusAbstractAdaptor
@@ -40,8 +66,7 @@ public:
         ServiceError = -1,
         FindError = -2,
         ArgumentsError = -3,
-        ExecError = -4,
-        DBusError = -5
+        ExecError = -4
     };
 
     KLauncherAdaptor(QObject *parent);
@@ -75,23 +100,17 @@ Q_SIGNALS:
     void autoStart2Done();
 
 private Q_SLOTS:
-    void slotProcessStateChanged(QProcess::ProcessState state);
     void slotProcessFinished(int exitcode);
 
 private:
     QString findExe(const QString &app) const;
-    int startProgram(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id, const QString &workdir, qint64 &pid);
-    void sendSIStart() const;
-    void sendSIChange();
-    void sendSIFinish();
+    int startProgram(const QString &app, const QStringList &args, const QStringList &envs,
+                     const QString &startup_id, const QString &workdir, qint64 &pid,
+                     const qint64 timeout, const KService::Ptr kservice = KService::Ptr(nullptr));
 
-    QMutex m_mutex;
     QProcessEnvironment m_environment;
-    QDBusConnectionInterface* m_dbusconnectioninterface;
     qint64 m_startuptimeout;
-    KStartupInfoId m_kstartupinfoid;
-    KStartupInfoData m_kstartupinfodata;
-    QList<QProcess*> m_processes;
+    QList<KLauncherProcess*> m_processes;
     QStringList m_autostart;
 };
 

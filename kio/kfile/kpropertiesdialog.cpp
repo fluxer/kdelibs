@@ -2989,6 +2989,10 @@ public:
     KDesktopPropsPluginPrivate()
         : w(new Ui_KPropertiesDesktopBase())
         , m_frame(new QFrame())
+        , m_terminalBool(false)
+        , m_suidBool(false)
+        , m_startupBool(false)
+        , m_systrayBool(false)
     {
     }
     ~KDesktopPropsPluginPrivate()
@@ -3002,8 +3006,6 @@ public:
     QString m_origCommandStr;
     QString m_terminalOptionStr;
     QString m_suidUserStr;
-    QString m_dbusStartupType;
-    QString m_dbusServiceName;
     QString m_origDesktopFile;
     bool m_terminalBool;
     bool m_suidBool;
@@ -3078,11 +3080,7 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
     d->m_terminalOptionStr = config.readEntry( "TerminalOptions");
     d->m_suidBool = config.readEntry("X-KDE-SubstituteUID", false);
     d->m_suidUserStr = config.readEntry("X-KDE-Username");
-    d->m_startupBool = config.readEntry("StartupNotify", true);
-    d->m_dbusStartupType = config.readEntry("X-DBUS-StartupType").toLower();
-    // ### should there be a GUI for this setting?
-    // At least we're copying it over to the local file, to avoid side effects (#157853)
-    d->m_dbusServiceName = config.readEntry("X-DBUS-ServiceName");
+    d->m_startupBool = config.readEntry("StartupNotify", false);
 
     const QStringList mimeTypes = config.readXdgListEntry("MimeType");
 
@@ -3183,8 +3181,6 @@ void KDesktopPropsPlugin::checkCommandChanged()
 {
     if (KRun::binaryName(d->w->commandEdit->text(), true) != KRun::binaryName(d->m_origCommandStr, true)) {
         d->m_origCommandStr = d->w->commandEdit->text();
-        d->m_dbusStartupType.clear(); // Reset
-        d->m_dbusServiceName.clear();
     }
 }
 
@@ -3254,8 +3250,7 @@ void KDesktopPropsPlugin::applyChanges()
     config.writeEntry("X-KDE-SubstituteUID", d->m_suidBool);
     config.writeEntry("X-KDE-Username", d->m_suidUserStr);
     config.writeEntry("StartupNotify", d->m_startupBool);
-    config.writeEntry("X-DBUS-StartupType", d->m_dbusStartupType);
-    config.writeEntry("X-DBUS-ServiceName", d->m_dbusServiceName);
+#warning TODO: StartupWMClass
     config.sync();
 
     // KSycoca update needed?
@@ -3327,16 +3322,6 @@ void KDesktopPropsPlugin::slotAdvanced()
     w.startupInfoCheck->setChecked(d->m_startupBool);
     w.systrayCheck->setChecked(d->m_systrayBool);
 
-    if (d->m_dbusStartupType == QLatin1String("unique")) {
-        w.dbusCombo->setCurrentIndex(2);
-    } else if (d->m_dbusStartupType == QLatin1String("multi")) {
-        w.dbusCombo->setCurrentIndex(1);
-    } else if (d->m_dbusStartupType == QLatin1String("wait")) {
-        w.dbusCombo->setCurrentIndex(3);
-    } else {
-        w.dbusCombo->setCurrentIndex(0);
-    }
-
     // Provide username completion up to 1000 users.
     KCompletion *kcom = new KCompletion;
     kcom->setOrder(KCompletion::Sorted);
@@ -3361,7 +3346,6 @@ void KDesktopPropsPlugin::slotAdvanced()
     connect(w.suidEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
     connect(w.startupInfoCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()) );
     connect(w.systrayCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()) );
-    connect(w.dbusCombo, SIGNAL(activated(int)), this, SIGNAL(changed()) );
 
     if (dlg.exec() == QDialog::Accepted) {
         d->m_terminalOptionStr = w.terminalEdit->text().trimmed();
@@ -3373,13 +3357,6 @@ void KDesktopPropsPlugin::slotAdvanced()
 
         if (w.terminalCloseCheck->isChecked()) {
             d->m_terminalOptionStr.append(" --noclose");
-        }
-
-        switch(w.dbusCombo->currentIndex()) {
-            case 1:  d->m_dbusStartupType = "multi"; break;
-            case 2:  d->m_dbusStartupType = "unique"; break;
-            case 3:  d->m_dbusStartupType = "wait"; break;
-            default: d->m_dbusStartupType = "none"; break;
         }
     }
 }

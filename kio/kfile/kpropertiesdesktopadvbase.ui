@@ -144,67 +144,12 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="textLabel12" >
-        <property name="text" >
-         <string>&amp;D-Bus registration:</string>
-        </property>
-        <property name="buddy" >
-         <cstring>dbusCombo</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" >
-       <widget class="KComboBox" name="dbusCombo" >
-        <item>
-         <property name="text" >
-          <string>None</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Multiple Instances</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Single Instance</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Run Until Finished</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="2" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType" >
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0" >
-         <size>
-          <width>50</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>

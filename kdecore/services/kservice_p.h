@@ -87,7 +87,6 @@ public:
     QVector<KService::ServiceTypeAndPreference> m_serviceTypes;
 
     QString m_strDesktopEntryName;
-    KService::DBusStartupType m_DBUSStartusType;
     QMap<QString,QVariant> m_mapProps;
     QStringList m_lstKeywords;
     QString m_strGenName;

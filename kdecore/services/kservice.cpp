@@ -242,17 +242,6 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
         parseActions(config, q);
     }
 
-    QString dbusStartupType = desktopGroup.readEntry("X-DBUS-StartupType").toLower();
-    entryMap.remove(QLatin1String("X-DBUS-StartupType"));
-    if (dbusStartupType == QLatin1String("unique"))
-        m_DBUSStartusType = KService::DBusUnique;
-    else if (dbusStartupType == QLatin1String("multi"))
-        m_DBUSStartusType = KService::DBusMulti;
-    else if (dbusStartupType == QLatin1String("wait"))
-        m_DBUSStartusType = KService::DBusWait;
-    else
-        m_DBUSStartusType = KService::DBusNone;
-
     m_strDesktopEntryName = _name.toLower();
 
     m_bAllowAsDefault = desktopGroup.readEntry("AllowDefault", true);
@@ -319,14 +308,13 @@ void KServicePrivate::parseActions(const KDesktopFile *config, KService* q)
 void KServicePrivate::load(QDataStream& s)
 {
     qint8 def, term;
-    qint8 dst, initpref;
+    qint8 initpref;
 
     // NOTE: make sure to update the version number in ksycoca.cpp
     s >> m_strType >> m_strName >> m_strExec >> m_strIcon
       >> term >> m_strTerminalOptions
       >> m_strPath >> m_strComment >> def >> m_mapProps
       >> m_strLibrary
-      >> dst
       >> m_strDesktopEntryName
       >> initpref
       >> m_lstKeywords >> m_strGenName
@@ -334,7 +322,6 @@ void KServicePrivate::load(QDataStream& s)
 
     m_bAllowAsDefault = (bool)def;
     m_bTerminal = (bool)term;
-    m_DBUSStartusType = (KService::DBusStartupType) dst;
     m_initialPreference = initpref;
 
     m_bValid = true;
@@ -345,14 +332,12 @@ void KServicePrivate::save(QDataStream& s)
     KSycocaEntryPrivate::save( s );
     qint8 def = m_bAllowAsDefault, initpref = m_initialPreference;
     qint8 term = m_bTerminal;
-    qint8 dst = (qint8) m_DBUSStartusType;
 
     // NOTE: make sure to update the version number in ksycoca.cpp
     s << m_strType << m_strName << m_strExec << m_strIcon
       << term << m_strTerminalOptions
       << m_strPath << m_strComment << def << m_mapProps
       << m_strLibrary
-      << dst
       << m_strDesktopEntryName
       << initpref
       << m_lstKeywords << m_strGenName
@@ -827,12 +812,6 @@ QString KService::desktopEntryName() const
 {
     Q_D(const KService);
     return d->m_strDesktopEntryName;
-}
-
-KService::DBusStartupType KService::dbusStartupType() const
-{
-    Q_D(const KService);
-    return d->m_DBUSStartusType;
 }
 
 QString KService::path() const

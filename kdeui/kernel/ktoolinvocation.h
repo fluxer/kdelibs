@@ -33,33 +33,7 @@
 class KUrl;
 
 /**
- * KToolInvocation: for starting other programs
- *
- * @section desktopfiles Desktop files for startServiceBy
- *
- * The way a service gets started depends on the 'X-DBUS-StartupType'
- * entry in the desktop file of the service:
- *
- * There are three possibilities:
- * @li X-DBUS-StartupType=None (default)
- *    Always start a new service,
- *    don't wait till the service registers with D-Bus.
- * @li X-DBUS-StartupType=Multi
- *    Always start a new service,
- *    wait until the service has registered with D-Bus.
- * @li X-DBUS-StartupType=Unique
- *    Only start the service if it isn't already running,
- *    wait until the service has registered with D-Bus.
- * The .desktop file can specify the name that the application will use when registering
- * using X-DBUS-ServiceName=org.domain.mykapp. Otherwise org.kde.binaryname is assumed.
- *
- * @section thread Multi-threading
- *
- * The static members (apart from self()), have to be called from the QApplication main thread.
- * Calls to members are only allowed if there is a Q(Core)Application object created
- * If you call the members with signal/slot connections across threads, you can't use the return values
- * If a function is called from the wrong thread and it has a return value -1 is returned
- * Investigate if this is really needed or if D-Bus is threadsafe anyway
+ * KToolInvocation starts other programs
  */
 class KDECORE_EXPORT KToolInvocation : public QObject
 {
@@ -275,13 +249,6 @@ public:
    */
   static int kdeinitExecWait(const QString &name, const QStringList &args = QStringList(),
                              QString *error = 0, const QByteArray &startup_id = QByteArray());
-
-Q_SIGNALS:
-  /**
-   * Hook for KApplication in kdeui
-   * @internal
-   */
-  void kapplication_hook(QStringList &env , QByteArray &startup_id);
 
 private:
   /**

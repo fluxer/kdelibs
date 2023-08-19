@@ -373,9 +373,6 @@ public:
      *
      * Used by the automatic registration to D-Bus done by KApplication and KUniqueApplication.
      *
-     * IMPORTANT: if the organization domain is set, the .desktop file that describes your
-     * application should have an entry like X-DBUS-ServiceName=reversed_domain.kmyapp.
-     *
      * @param domain the domain name, for instance kde.org, koffice.org, kdevelop.org, etc.
      */
     KAboutData& setOrganizationDomain(const QByteArray &domain);

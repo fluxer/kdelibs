@@ -230,20 +230,6 @@ static bool offerListHasService( const KService::List& offers,
     return found;
 }
 
-void KServiceTest::testDBUSStartupType()
-{
-    if ( !KSycoca::isAvailable() )
-        QSKIP( "ksycoca not available", SkipAll );
-    if ( !m_hasKde4Konsole )
-        QSKIP( "kde4-konsole.desktop not available", SkipAll );
-    //KService::Ptr konsole = KService::serviceByMenuId( "kde4-konsole.desktop" );
-    KService::Ptr konsole = KService::serviceByDesktopName( "konsole" );
-    QVERIFY(konsole);
-    QCOMPARE(konsole->menuId(), QString("kde4-konsole.desktop"));
-    //qDebug() << konsole->entryPath();
-    QCOMPARE((int)konsole->dbusStartupType(), (int)KService::DBusMulti);
-}
-
 void KServiceTest::testByStorageId()
 {
     if ( !KSycoca::isAvailable() )

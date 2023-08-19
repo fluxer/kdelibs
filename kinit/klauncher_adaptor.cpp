@@ -19,7 +19,6 @@
 #include "klauncher_adaptor.h"
 #include "krun.h"
 #include "kstandarddirs.h"
-#include "kservice.h"
 #include "kautostart.h"
 #include "kshell.h"
 #include "kconfiggroup.h"
@@ -28,10 +27,6 @@
 #include <QDir>
 #include <QApplication>
 #include <QThread>
-#include <QElapsedTimer>
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
-#include <QDBusReply>
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -59,13 +54,138 @@ static inline int getExitStatus(const pid_t pid)
     return WEXITSTATUS(pidstate);
 }
 
+static inline bool isASNValid(const QByteArray &asn)
+{
+    return (!asn.isEmpty() && asn != "0");
+}
+
+KLauncherProcess::KLauncherProcess(QObject *parent)
+    : QProcess(parent),
+    m_kstartupinfo(nullptr),
+    m_startuptimer(nullptr)
+{
+    connect(
+        this, SIGNAL(stateChanged(QProcess::ProcessState)),
+        this, SLOT(slotProcessStateChanged(QProcess::ProcessState))
+    );
+}
+
+void KLauncherProcess::setupStartup(const QByteArray &startup_id, const QString &appexe,
+                                    const KService::Ptr kservice, const qint64 timeout)
+{
+    Q_ASSERT(m_kstartupinfoid.none() == true);
+    bool startupsilent = false;
+    QByteArray startupwmclass;
+    if (KRun::checkStartupNotify(kservice.data(), &startupsilent, &startupwmclass)) {
+        m_kstartupinfoid.initId(!isASNValid(startup_id) ? KStartupInfo::createNewStartupId() : startup_id);
+        kDebug() << "setting up ASN for" << kservice->entryPath() << m_kstartupinfoid.id();
+        m_kstartupinfodata.setHostname();
+        m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
+        m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
+        m_kstartupinfodata.setIcon(kservice->icon());
+        m_kstartupinfodata.setApplicationId(kservice->entryPath());
+        m_kstartupinfodata.setSilent(startupsilent ? KStartupInfoData::Yes : KStartupInfoData::No);
+        m_kstartupinfodata.setWMClass(startupwmclass);
+        QProcessEnvironment processenv = QProcess::processEnvironment();
+        processenv.insert(QString::fromLatin1("DESKTOP_STARTUP_ID"), m_kstartupinfoid.id());
+        QProcess::setProcessEnvironment(processenv);
+        sendSIStart(timeout);
+    } else if (isASNValid(startup_id)) {
+        kDebug() << "setting up ASN for" << startup_id;
+        m_kstartupinfoid.initId(startup_id);
+        m_kstartupinfodata.setHostname();
+        m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
+        m_kstartupinfodata.setDescription(i18n("Launching %1", m_kstartupinfodata.bin()));
+        QProcessEnvironment processenv = QProcess::processEnvironment();
+        processenv.insert(QString::fromLatin1("DESKTOP_STARTUP_ID"), QString::fromLatin1(startup_id.constData(), startup_id.size()));
+        QProcess::setProcessEnvironment(processenv);
+        sendSIStart(timeout);
+    } else {
+        kDebug() << "no ASN for" << appexe;
+    }
+}
+
+void KLauncherProcess::slotProcessStateChanged(QProcess::ProcessState state)
+{
+    kDebug() << "process state changed" << this << state;
+    if (state == QProcess::Starting && !m_kstartupinfoid.none()) {
+        m_kstartupinfodata.addPid(QProcess::pid());
+        sendSIChange();
+    } else if (state == QProcess::NotRunning && !m_kstartupinfoid.none()) {
+        sendSIFinish();
+    }
+}
+
+void KLauncherProcess::slotStartupRemoved(const KStartupInfoId &kstartupinfoid,
+                                          const KStartupInfoData &kstartupinfodata)
+{
+    if (m_kstartupinfoid.none()) {
+        return;
+    }
+
+    kDebug() << "startup removed" << kstartupinfoid.id() << m_kstartupinfoid.id();
+    if (kstartupinfoid.id() == m_kstartupinfoid.id() || kstartupinfodata.is_pid(QProcess::pid())) {
+        kDebug() << "startup done for process" << this;
+        sendSIFinish();
+    }
+}
+
+void KLauncherProcess::slotStartupTimeout()
+{
+    kWarning() << "timed out while waiting for process" << this;
+    sendSIFinish();
+}
+
+void KLauncherProcess::sendSIStart(const qint64 timeout)
+{
+    if (m_kstartupinfoid.none()) {
+        return;
+    }
+
+    kDebug() << "sending ASN start for" << m_kstartupinfodata.bin();
+    m_kstartupinfo = new KStartupInfo(this);
+    connect(
+        m_kstartupinfo, SIGNAL(gotRemoveStartup(KStartupInfoId,KStartupInfoData)),
+        this, SLOT(slotStartupRemoved(KStartupInfoId,KStartupInfoData))
+    );
+
+    m_startuptimer = new QTimer(this);
+    m_startuptimer->setSingleShot(true);
+    m_startuptimer->setInterval(timeout);
+    connect(m_startuptimer, SIGNAL(timeout()), this, SLOT(slotStartupTimeout()));
+    m_startuptimer->start();
+
+    KStartupInfo::sendStartup(m_kstartupinfoid, m_kstartupinfodata);
+}
+
+void KLauncherProcess::sendSIChange()
+{
+    if (m_kstartupinfoid.none()) {
+        return;
+    }
+    kDebug() << "sending ASN change for" << m_kstartupinfodata.bin();
+    KStartupInfo::sendChange(m_kstartupinfoid, m_kstartupinfodata);
+}
+
+void KLauncherProcess::sendSIFinish()
+{
+    if (m_kstartupinfoid.none()) {
+        return;
+    }
+    kDebug() << "sending ASN finish for" << m_kstartupinfodata.bin();
+    KStartupInfo::sendFinish(m_kstartupinfoid, m_kstartupinfodata);
+    m_kstartupinfoid = KStartupInfoId();
+    m_kstartupinfodata = KStartupInfoData();
+    if (m_startuptimer) {
+        m_startuptimer->stop();
+    }
+}
+
 KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
     : QDBusAbstractAdaptor(parent),
-    m_dbusconnectioninterface(nullptr),
-    m_startuptimeout(s_startuptimeout * 1000)
+    m_startuptimeout(0)
 {
     m_environment = QProcessEnvironment::systemEnvironment();
-    m_dbusconnectioninterface = QDBusConnection::sessionBus().interface();
 
     // TODO: config watch
     KConfig klauncherconfig("klaunchrc", KConfig::NoGlobals);
@@ -78,7 +198,6 @@ KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
 
 KLauncherAdaptor::~KLauncherAdaptor()
 {
-    kDebug() << "terminating processes" << m_processes.size();
     cleanup();
 }
 
@@ -154,8 +273,9 @@ void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_li
 
 void KLauncherAdaptor::cleanup()
 {
+    kDebug() << "terminating processes" << m_processes.size();
     while (!m_processes.isEmpty()) {
-        QProcess* process = m_processes.takeLast();
+        KLauncherProcess* process = m_processes.takeLast();
         disconnect(process, 0, this, 0);
         process->terminate();
         if (!process->waitForFinished(s_processtimeout)) {
@@ -173,9 +293,8 @@ int KLauncherAdaptor::kdeinit_exec(const QString &app, const QStringList &args, 
 
 int KLauncherAdaptor::kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id)
 {
-    QMutexLocker locker(&m_mutex);
     qint64 pid = 0;
-    int result = startProgram(app, args, envs, startup_id, QDir::currentPath(), pid);
+    int result = startProgram(app, args, envs, startup_id, QDir::currentPath(), pid, m_startuptimeout);
     if (result != KLauncherAdaptor::NoError) {
         return result;
     }
@@ -191,9 +310,8 @@ int KLauncherAdaptor::kdeinit_exec_wait(const QString &app, const QStringList &a
 
 int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id, const QString &workdir)
 {
-    QMutexLocker locker(&m_mutex);
     qint64 pid = 0;
-    return startProgram(app, args, envs, startup_id, workdir, pid);
+    return startProgram(app, args, envs, startup_id, workdir, pid, m_startuptimeout);
 }
 
 void KLauncherAdaptor::setLaunchEnv(const QString &name, const QString &value)
@@ -218,29 +336,12 @@ int KLauncherAdaptor::start_service_by_desktop_name(const QString &serviceName, 
 
 int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id)
 {
-    QMutexLocker locker(&m_mutex);
     KService::Ptr kservice = KService::serviceByStorageId(serviceName);
     if (!kservice) {
         kWarning() << "invalid service path" << serviceName;
         return KLauncherAdaptor::ServiceError;
     }
-    const KService::DBusStartupType dbusstartuptype = kservice->dbusStartupType();
-    QString dbusServiceName = kservice->property(QString::fromLatin1("X-DBUS-ServiceName"), QVariant::String).toString();
-    // any unique Katana application/service checks if another instance is running, if it is
-    // already running starting it may raise its window instead (if it uses KUniqueApplication)
-    if (dbusstartuptype == KService::DBusUnique && !dbusServiceName.startsWith(QLatin1String("org.kde."))) {
-        QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
-        if (!sessionreply.isValid()) {
-            kWarning() << "invalid D-Bus reply for" << dbusServiceName;
-            return KLauncherAdaptor::DBusError;
-        }
-        if (sessionreply.value() == true) {
-            kDebug() << "service already started" << dbusServiceName;
-            return KLauncherAdaptor::NoError;
-        }
-    }
     if (urls.size() > 1 && !kservice->allowMultipleFiles()) {
-        // TODO: start multiple instances for each URL
         kWarning() << "service does not support multiple files" << serviceName;
         return KLauncherAdaptor::ServiceError;
     }
@@ -249,80 +350,10 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         kWarning() << "could not process service" << kservice->entryPath();
         return KLauncherAdaptor::ArgumentsError;
     }
-    kDebug() << "starting" << kservice->entryPath() << urls << dbusServiceName;
+    kDebug() << "starting" << kservice->entryPath() << urls;
     const QString program = programandargs.takeFirst();
-    const QStringList programargs = programandargs;
-    Q_ASSERT(m_kstartupinfoid.none() == true);
-    m_kstartupinfoid = KStartupInfoId();
-    m_kstartupinfodata = KStartupInfoData();
-    bool startupsilent = false;
-    QByteArray startupwmclass;
-    if (KRun::checkStartupNotify(kservice.data(), &startupsilent, &startupwmclass)) {
-        m_kstartupinfoid.initId(startup_id.toLatin1());
-        m_kstartupinfodata.setBin(QFileInfo(program).fileName());
-        m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
-        m_kstartupinfodata.setIcon(kservice->icon());
-        m_kstartupinfodata.setApplicationId(kservice->entryPath());
-        m_kstartupinfodata.setSilent(startupsilent ? KStartupInfoData::Yes : KStartupInfoData::No);
-        m_kstartupinfodata.setWMClass(startupwmclass);
-        sendSIStart();
-    } else {
-        kDebug() << "no ASN for" << kservice->entryPath();
-    }
     qint64 pid = 0;
-    int result = startProgram(program, programargs, envs, QString(), QDir::currentPath(), pid);
-    if (result != KLauncherAdaptor::NoError) {
-        // sendSIFinish() is called on exec error
-        return result;
-    }
-    if (dbusstartuptype == KService::DBusNone) {
-        sendSIFinish();
-        return result;
-    } else if (dbusstartuptype != KService::DBusNone && dbusServiceName.isEmpty()) {
-        // not going to guess what service to wait for, bud
-        kWarning() << "X-DBUS-ServiceName not specified in" << kservice->entryPath();
-        sendSIFinish();
-        return result;
-    } else if (dbusstartuptype == KService::DBusMulti) {
-        dbusServiceName.append(QLatin1Char('-'));
-        dbusServiceName.append(QString::number(pid));
-    }
-    kDebug() << "waiting for" << pid << dbusServiceName << m_startuptimeout;
-    QElapsedTimer elapsedtime;
-    elapsedtime.start();
-    while (true) {
-        QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
-        if (!sessionreply.isValid()) {
-            kWarning() << "invalid D-Bus reply for" << dbusServiceName;
-            sendSIFinish();
-            return KLauncherAdaptor::DBusError;
-        }
-        // the service unregistered
-        if (sessionreply.value() == false && dbusstartuptype == KService::DBusWait) {
-            kDebug() << "service unregistered" << dbusServiceName;
-            break;
-        }
-        // the service registered
-        if (sessionreply.value() == true && dbusstartuptype != KService::DBusWait) {
-            kDebug() << "service registered" << dbusServiceName;
-            break;
-        }
-        // or the program is just not registering the service at all
-        if (elapsedtime.elapsed() >= m_startuptimeout && dbusstartuptype != KService::DBusWait) {
-            kWarning() << "timed out while waiting for service" << dbusServiceName;
-            break;
-        }
-        // or the program is not even running
-        if (!isPIDAlive(pid)) {
-            kWarning() << "service process is not running" << dbusServiceName;
-            result = getExitStatus(pid);
-            break;
-        }
-        QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
-        QThread::msleep(s_sleeptime);
-    }
-    sendSIFinish();
-    return result;
+    return startProgram(program, programandargs, envs, QString(), QDir::currentPath(), pid, m_startuptimeout, kservice);
 }
 
 #ifdef KLAUNCHER_DEBUG
@@ -332,21 +363,9 @@ QStringList KLauncherAdaptor::environment() const
 }
 #endif
 
-void KLauncherAdaptor::slotProcessStateChanged(QProcess::ProcessState state)
-{
-    QProcess* process = qobject_cast<QProcess*>(sender());
-    kDebug() << "process state changed" << process << state;
-    if (state == QProcess::Starting && !m_kstartupinfoid.none()) {
-        m_kstartupinfodata.addPid(process->pid());
-        sendSIChange();
-    } else if (state == QProcess::NotRunning && m_kstartupinfodata.is_pid(process->pid())) {
-        sendSIFinish();
-    }
-}
-
 void KLauncherAdaptor::slotProcessFinished(int exitcode)
 {
-    QProcess* process = qobject_cast<QProcess*>(sender());
+    KLauncherProcess* process = qobject_cast<KLauncherProcess*>(sender());
     kDebug() << "process finished" << process << exitcode;
     m_processes.removeAll(process);
 }
@@ -364,7 +383,9 @@ QString KLauncherAdaptor::findExe(const QString &app) const
     return KStandardDirs::findExe(app, environmentpath);
 }
 
-int KLauncherAdaptor::startProgram(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id, const QString &workdir, qint64 &pid)
+int KLauncherAdaptor::startProgram(const QString &app, const QStringList &args, const QStringList &envs,
+                                   const QString &startup_id, const QString &workdir, qint64 &pid,
+                                   const qint64 timeout, const KService::Ptr kservice)
 {
     const QString appexe = findExe(app);
     if (appexe.isEmpty()) {
@@ -372,8 +393,7 @@ int KLauncherAdaptor::startProgram(const QString &app, const QStringList &args, 
         return KLauncherAdaptor::FindError;
     }
 
-    QProcess* process = new QProcess(this);
-    connect(process, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(slotProcessStateChanged(QProcess::ProcessState)));
+    KLauncherProcess* process = new KLauncherProcess(this);
     connect(process, SIGNAL(finished(int)), this, SLOT(slotProcessFinished(int)));
     m_processes.append(process);
     QProcessEnvironment processenv = m_environment;
@@ -390,61 +410,20 @@ int KLauncherAdaptor::startProgram(const QString &app, const QStringList &args, 
     }
     process->setProcessEnvironment(processenv);
     process->setWorkingDirectory(workdir);
-    kDebug() << "starting" << appexe << args << envs;
-    if (!startup_id.isEmpty()) {
-        Q_ASSERT(m_kstartupinfoid.none() == true);
-        m_kstartupinfoid = KStartupInfoId();
-        m_kstartupinfodata = KStartupInfoData();
-        m_kstartupinfoid.initId(startup_id.toLatin1());
-        m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
-        m_kstartupinfodata.setDescription(i18n("Launching %1", m_kstartupinfodata.bin()));
-        sendSIStart();
-    }
+    process->setupStartup(startup_id.toLatin1(), appexe, kservice, timeout);
+    kDebug() << "starting" << appexe << args << envs << workdir;
     process->start(appexe, args);
     while (process->state() == QProcess::Starting) {
         QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
         QThread::msleep(s_sleeptime);
     }
     if (process->error() == QProcess::FailedToStart || process->error() == QProcess::Crashed) {
-        sendSIFinish();
         kWarning() << "could not start" << appexe;
         return KLauncherAdaptor::ExecError;
-    }
-    if (!startup_id.isEmpty()) {
-        sendSIFinish();
     }
 
     pid = process->pid();
     return KLauncherAdaptor::NoError;
-}
-
-void KLauncherAdaptor::sendSIStart() const
-{
-    if (m_kstartupinfoid.none()) {
-        return;
-    }
-    kDebug() << "sending ASN start for" << m_kstartupinfodata.bin();
-    KStartupInfo::sendStartup(m_kstartupinfoid, m_kstartupinfodata);
-}
-
-void KLauncherAdaptor::sendSIChange()
-{
-    if (m_kstartupinfoid.none()) {
-        return;
-    }
-    kDebug() << "sending ASN change for" << m_kstartupinfodata.bin();
-    KStartupInfo::sendChange(m_kstartupinfoid, m_kstartupinfodata);
-}
-
-void KLauncherAdaptor::sendSIFinish()
-{
-    if (m_kstartupinfoid.none()) {
-        return;
-    }
-    kDebug() << "sending ASN finish for" << m_kstartupinfodata.bin();
-    KStartupInfo::sendFinish(m_kstartupinfoid, m_kstartupinfodata);
-    m_kstartupinfoid = KStartupInfoId();
-    m_kstartupinfodata = KStartupInfoData();
 }
 
 #include "moc_klauncher_adaptor.cpp"

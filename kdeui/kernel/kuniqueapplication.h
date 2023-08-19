@@ -39,9 +39,6 @@
  * your application can only be opened once per user or once per host, you
  * need to ensure this independently of KUniqueApplication.
  *
- * The .desktop file for the application should state X-DBUS-StartupType=Unique,
- * see ktoolinvocation.h
- *
  * If your application is used to open files, it should also support the --tempfile
  * option (see KCmdLineArgs::addTempFileOption()), to delete tempfiles after use.
  * Add X-KDE-HasTempFileOption=true to the .desktop file to indicate this.

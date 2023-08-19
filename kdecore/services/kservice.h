@@ -164,26 +164,6 @@ public:
     QString storageId() const;
 
     /**
-     * Describes the DBUS Startup type of the service.
-     * @li None - This service has no DBUS support
-     * @li Unique - This service provides a unique DBUS service.
-     *              The service name is equal to the desktopEntryName.
-     * @li Multi - This service provides a DBUS service which can be run
-     *             with multiple instances in parallel. The service name of
-     *             an instance is equal to the desktopEntryName + "-" +
-     *             the PID of the process.
-     * @li Wait - This service has no DBUS support, the launcher will wait
-     *            till it is finished.
-     */
-    enum DBusStartupType { DBusNone = 0, DBusUnique, DBusMulti, DBusWait };
-
-    /**
-     * Returns the DBUSStartupType supported by this service.
-     * @return the DBUSStartupType supported by this service
-     */
-    DBusStartupType dbusStartupType() const;
-
-    /**
      * Returns the working directory to run the program in.
      * @return the working directory to run the program in,
      *         or QString() if not set
@@ -268,8 +248,8 @@ public:
     QList<KServiceAction> actions() const;
 
     /**
-     * Checks whether this service can handle several files as
-     * startup arguments.
+     * Checks whether this service can handle several files as startup arguments.
+     *
      * @return true if multiple files may be passed to this service at
      * startup. False if only one file at a time may be passed.
      */
