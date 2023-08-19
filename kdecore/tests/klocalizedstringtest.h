@@ -27,7 +27,6 @@ class KLocalizedStringTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void correctSubs();
-    void correctButIllFormed();
     void wrongSubs();
     void miscMethods();
     void translateToFrench();

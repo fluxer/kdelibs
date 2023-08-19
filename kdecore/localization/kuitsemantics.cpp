@@ -34,10 +34,6 @@ KuitSemantics::KuitSemantics(const QString &lang)
     format.plain = m_catalog.translate("@filename/plain", "‘%1’");
     format.rich = m_catalog.translate("@filename/rich", "<tt>%1</tt>");
     m_formats.append(format);
-    format.tag = QString::fromLatin1("emphasis");
-    format.plain = m_catalog.translate("@emphasis/plain", "*%1*");
-    format.rich = m_catalog.translate("@emphasis/rich", "<i>%1</i>");
-    m_formats.append(format);
     format.tag = QString::fromLatin1("email");
     format.plain = m_catalog.translate("@email/plain", "&lt;%1&gt;");
     format.rich = m_catalog.translate("@email/rich", "&lt;<a href=\"mailto:%1\">%1</a>&gt;");

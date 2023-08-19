@@ -245,7 +245,6 @@ class KLocalizedStringPrivate;
  * the process depending on wheather the message is rich text or not. Currently, the following HTML
  * tags are recognized in the message:
  * \li filename
- * \li emphasis
  * \li email
  * \li title
  * \li warning
