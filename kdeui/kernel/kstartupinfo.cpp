@@ -1076,9 +1076,9 @@ unsigned long KStartupInfoId::timestamp() const
     int pos = d->id.lastIndexOf( "_TIME" );
     if( pos >= 0 ) {
         bool ok;
-        unsigned long time = QString( d->id.mid( pos + 5 ) ).toULong( &ok );
+        unsigned long time = d->id.mid( pos + 5 ).toULong( &ok );
         if( !ok && d->id[ pos + 5 ] == '-' ) // try if it's as a negative signed number perhaps
-            time = QString( d->id.mid( pos + 5 ) ).toLong( &ok );
+            time = d->id.mid( pos + 5 ).toLong( &ok );
         if( ok )
             return time;
     }
@@ -1092,9 +1092,9 @@ unsigned long KStartupInfoId::timestamp() const
         int pos2 = d->id.lastIndexOf( '/', pos1 - 1 );
         if( pos2 >= 0 ) {
             bool ok;
-            unsigned long time = QString( d->id.mid( pos2 + 1, pos1 - pos2 - 1 ) ).toULong( &ok );
+            unsigned long time = d->id.mid( pos2 + 1, pos1 - pos2 - 1 ).toULong( &ok );
             if( !ok && d->id[ pos2 + 1 ] == '-' )
-                time = QString( d->id.mid( pos2 + 1, pos1 - pos2 - 1 ) ).toLong( &ok );
+                time = d->id.mid( pos2 + 1, pos1 - pos2 - 1 ).toLong( &ok );
             if( ok )
                 return time;
         }
