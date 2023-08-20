@@ -861,7 +861,7 @@ KCmdLineArgsStatic::parseAllArgs()
            for (QList<KAboutPerson>::ConstIterator it = authors.begin(); it != authors.end(); ++it ) {
              QString email;
              if ( !(*it).emailAddress().isEmpty() )
-               email = QString::fromLatin1(" &lt;") + (*it).emailAddress() + QLatin1String("&gt;");
+               email = QString::fromLatin1(" <") + (*it).emailAddress() + QLatin1String(">");
              authorlist += QString::fromLatin1("    ") + (*it).name() + email + QLatin1Char('\n');
            }
            s->printQ( i18nc("the 2nd argument is a list of name+address, one on each line","%1 was written by\n%2",   QString(s->about->programName()) ,  authorlist ) );
