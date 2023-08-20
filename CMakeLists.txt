@@ -102,7 +102,7 @@ endif()
 find_package(Katie 4.13.0)
 set_package_properties(Katie PROPERTIES
     DESCRIPTION "C++ toolkit derived from the Qt 4.8 framework"
-    URL "https://osdn.net/projects/kde/"
+    URL "https://bitbucket.org/smil3y/workspace/projects/KATANA"
     TYPE REQUIRED
 )
 

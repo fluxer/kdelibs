@@ -43,10 +43,10 @@
 #define KDE_DEFAULT_FIXED_FONT "DejaVu Sans Mono"
 #define KDE_DEFAULT_CURSOR_THEME "Oxygen_White"
 
-#define KDE_HOME_URL "https://osdn.net/projects/kde/"
-#define KDE_BUG_REPORT_URL "https://osdn.net/projects/kde/ticket/"
+#define KDE_HOME_URL "https://bitbucket.org/smil3y/workspace/projects/KATANA"
+#define KDE_BUG_REPORT_URL "https://bitbucket.org/smil3y/katana/jira"
 #define KDE_BUG_REPORT_EMAIL "xakepa10@gmail.com"
-#define KDE_HELP_URL "https://osdn.net/projects/kde/wiki/"
+#define KDE_HELP_URL "https://bitbucket.org/smil3y/katana/jira"
 
 class KUrl;
 
