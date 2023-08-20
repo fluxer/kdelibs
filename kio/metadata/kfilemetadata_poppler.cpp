@@ -61,34 +61,33 @@ KFileMetaDataPopplerPlugin::~KFileMetaDataPopplerPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QString urlpath = url.toLocalFile();
     poppler::document* popplerdocument = nullptr;
     // NOTE: data has be kept for as long as the document is open
     QByteArray popplerbytes;
-    const KDecompressor::KDecompressorType pathtype = KDecompressor::typeForFile(urlpath);
+    const KDecompressor::KDecompressorType pathtype = KDecompressor::typeForFile(path);
     if (pathtype != KDecompressor::TypeUnknown) {
-        QFile pathfile(urlpath);
+        QFile pathfile(path);
         if (!pathfile.open(QFile::ReadOnly)) {
-            kWarning() << "Could not open" << urlpath;
+            kWarning() << "Could not open" << path;
             return result;
         }
         KDecompressor kdecompressor;
         kdecompressor.setType(pathtype);
         if (!kdecompressor.process(pathfile.readAll())) {
-            kWarning() << "Could not decompress" << urlpath;
+            kWarning() << "Could not decompress" << path;
             return result;
         }
         popplerbytes = kdecompressor.result();
         popplerdocument = poppler::document::load_from_raw_data(popplerbytes.constData(), popplerbytes.size());
     } else {
-        const QByteArray urlpathbytes = QFile::encodeName(urlpath);
-        popplerdocument = poppler::document::load_from_file(std::string(urlpathbytes.constData(), urlpathbytes.size()));
+        const QByteArray pathbytes = QFile::encodeName(path);
+        popplerdocument = poppler::document::load_from_file(std::string(pathbytes.constData(), pathbytes.size()));
     }
     if (!popplerdocument) {
-        kWarning() << "Could not open" << urlpath;
+        kWarning() << "Could not open" << path;
         return result;
     }
     const QString popplertitle = getString(popplerdocument->get_title());

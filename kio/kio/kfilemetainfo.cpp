@@ -72,6 +72,7 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url)
 
     // none of the plugins supports remote files
     if (url.isLocalFile()) {
+        const QString urlpath = url.toLocalFile();
         KConfig config("kmetainformationrc", KConfig::NoGlobals);
         KConfigGroup pluginsgroup = config.group("Plugins");
         const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
@@ -98,7 +99,7 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url)
                         kDebug() << "Extracting metadata via" << kfmdname;
                         KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
                         if (kfmdplugininstance) {
-                            items.append(kfmdplugininstance->metaData(url));
+                            items.append(kfmdplugininstance->metaData(urlpath));
                             delete kfmdplugininstance;
                         } else {
                             kWarning() << "Could not create KFileMetaDataPlugin instance";

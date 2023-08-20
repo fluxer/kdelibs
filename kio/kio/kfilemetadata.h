@@ -20,12 +20,11 @@
 #define KFILEMETADATA_H
 
 #include "kio_export.h"
-#include "kurl.h"
 #include "kfilemetainfo.h"
 #include "kfilemetainfoitem.h"
 
 #include <QObject>
-#include <QStringList>
+#include <QVariantList>
 
 /*!
     Base class for plugins to retrieve file metadata.
@@ -46,7 +45,7 @@ public:
     KFileMetaDataPlugin(QObject *parent = nullptr);
     ~KFileMetaDataPlugin();
 
-    virtual QList<KFileMetaInfoItem> metaData(const KUrl &url);
+    virtual QList<KFileMetaInfoItem> metaData(const QString &path);
 };
 
 #endif // KFILEMETADATA_H

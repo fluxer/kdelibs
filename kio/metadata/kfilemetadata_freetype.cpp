@@ -20,6 +20,8 @@
 #include "kpluginfactory.h"
 #include "kdebug.h"
 
+#include <QFile>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
@@ -34,10 +36,10 @@ KFileMetaDataFreetypePlugin::~KFileMetaDataFreetypePlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataFreetypePlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataFreetypePlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
+    const QByteArray pathbytes = QFile::encodeName(path);
     FT_Library ftlibrary;
     FT_Init_FreeType(&ftlibrary);
     if (!ftlibrary) {
@@ -45,8 +47,8 @@ QList<KFileMetaInfoItem> KFileMetaDataFreetypePlugin::metaData(const KUrl &url)
         return result;
     }
     FT_Face ftface;
-    if (FT_New_Face(ftlibrary, urlpath.constData(), 0, &ftface) != 0) {
-        kWarning() << "Could not open" << urlpath;
+    if (FT_New_Face(ftlibrary, pathbytes.constData(), 0, &ftface) != 0) {
+        kWarning() << "Could not open" << pathbytes;
         FT_Done_FreeType(ftlibrary);
         return result;
     }

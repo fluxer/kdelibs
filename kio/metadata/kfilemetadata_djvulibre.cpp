@@ -39,16 +39,16 @@ KFileMetaDataDjVuLibrePlugin::~KFileMetaDataDjVuLibrePlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataDjVuLibrePlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataDjVuLibrePlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toUtf8();
+    const QByteArray pathbytes = path.toUtf8();
     ddjvu_context_t* djvuctx = ddjvu_context_create("kfilemetadata_djvulibre");
     if (!djvuctx) {
         kWarning() << "Could not create DjVu context";
         return result;
     }
-    ddjvu_document_t* djvudoc = ddjvu_document_create_by_filename_utf8(djvuctx, urlpath.constData(), FALSE);
+    ddjvu_document_t* djvudoc = ddjvu_document_create_by_filename_utf8(djvuctx, pathbytes.constData(), FALSE);
     if (!djvudoc) {
         kWarning() << "Could not create DjVu document";
         ddjvu_context_release(djvuctx);

@@ -30,9 +30,9 @@ KFileMetaDataPlugin::~KFileMetaDataPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataPlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataPlugin::metaData(const QString &path)
 {
-    Q_UNUSED(url);
+    Q_UNUSED(path);
     return QList<KFileMetaInfoItem>();
 }
 

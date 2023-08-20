@@ -39,10 +39,10 @@ KFileMetaDataExiv2Plugin::~KFileMetaDataExiv2Plugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const KExiv2 kexiv2(url.toLocalFile());
+    const KExiv2 kexiv2(path);
     foreach (const KExiv2Property &kexiv2property, kexiv2.metadata()) {
         // qDebug() << Q_FUNC_INFO << kexiv2property.name << kexiv2property.value;
         // for reference:

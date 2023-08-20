@@ -23,6 +23,8 @@
 #include "kmimetype.h"
 #include "kdebug.h"
 
+#include <QFile>
+
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
@@ -42,14 +44,14 @@ KFileMetaDataFFmpegPlugin::~KFileMetaDataFFmpegPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
+    const QByteArray pathbytes = QFile::encodeName(path);
     AVFormatContext *ffmpegcontext = NULL;
-    const int ffmpegresult = avformat_open_input(&ffmpegcontext, urlpath.constData(), NULL, NULL);
+    const int ffmpegresult = avformat_open_input(&ffmpegcontext, pathbytes.constData(), NULL, NULL);
     if (ffmpegresult != 0 || !ffmpegcontext) {
-        kWarning() << "Could not open" << urlpath;
+        kWarning() << "Could not open" << pathbytes;
         return result;
     }
     for (uint i = 0; i < ffmpegcontext->nb_streams; i++) {

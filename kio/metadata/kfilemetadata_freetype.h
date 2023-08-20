@@ -28,7 +28,7 @@ public:
     KFileMetaDataFreetypePlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataFreetypePlugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
+    QList<KFileMetaInfoItem> metaData(const QString &path) final;
 };
 
 #endif // KFILEMETADATA_FREETYPE_H

@@ -28,7 +28,7 @@ public:
     KFileMetaDataFFmpegPlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataFFmpegPlugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
+    QList<KFileMetaInfoItem> metaData(const QString &path) final;
 };
 
 #endif // KFILEMETADATA_FFMPEG_H

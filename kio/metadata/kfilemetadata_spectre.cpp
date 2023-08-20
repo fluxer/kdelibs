@@ -20,6 +20,8 @@
 #include "kpluginfactory.h"
 #include "kdebug.h"
 
+#include <QFile>
+
 #include <libspectre/spectre.h>
 
 KFileMetaDataSpectrePlugin::KFileMetaDataSpectrePlugin(QObject* parent, const QVariantList &args)
@@ -32,19 +34,19 @@ KFileMetaDataSpectrePlugin::~KFileMetaDataSpectrePlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
+    const QByteArray pathbytes = QFile::encodeName(path);
     SpectreDocument *spectredocument = spectre_document_new();
     if (!spectredocument) {
         kWarning() << "Could not create document";
         return result;
     }
-    spectre_document_load(spectredocument, urlpath.constData());
+    spectre_document_load(spectredocument, pathbytes.constData());
     const SpectreStatus spectrestatus = spectre_document_status(spectredocument);
     if (spectrestatus != SPECTRE_STATUS_SUCCESS) {
-        kWarning() << "Could not open" << urlpath;
+        kWarning() << "Could not open" << pathbytes;
         spectre_document_free(spectredocument);
         return result;
     }

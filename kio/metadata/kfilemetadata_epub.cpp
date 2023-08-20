@@ -20,6 +20,8 @@
 #include "kpluginfactory.h"
 #include "kdebug.h"
 
+#include <QFile>
+
 #include <epub.h>
 
 static QString getEPubMetadata(struct epub *epubdocument, enum epub_metadata epubmetadata)
@@ -53,13 +55,13 @@ KFileMetaDataEPubPlugin::~KFileMetaDataEPubPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataEPubPlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataEPubPlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
-    struct epub *epubdocument = epub_open(urlpath.constData(), 1);
+    const QByteArray pathbytes = QFile::encodeName(path);
+    struct epub *epubdocument = epub_open(pathbytes.constData(), 1);
     if (!epubdocument) {
-        kWarning() << "Could not open" << urlpath;
+        kWarning() << "Could not open" << pathbytes;
         return result;
     }
     const QString epubid = getEPubMetadata(epubdocument, EPUB_ID);

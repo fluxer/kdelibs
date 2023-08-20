@@ -28,7 +28,7 @@ public:
     KFileMetaDataExiv2Plugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataExiv2Plugin();
 
-    QList<KFileMetaInfoItem> metaData(const KUrl &url) final;
+    QList<KFileMetaInfoItem> metaData(const QString &path) final;
 };
 
 #endif // KFILEMETADATA_EXIV2_H

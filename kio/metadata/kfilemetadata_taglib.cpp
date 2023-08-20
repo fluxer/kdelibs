@@ -22,6 +22,8 @@
 #include "klocale.h"
 #include "kdebug.h"
 
+#include <QFile>
+
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 
@@ -35,18 +37,18 @@ KFileMetaDataTagLibPlugin::~KFileMetaDataTagLibPlugin()
 {
 }
 
-QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url)
+QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const QString &path)
 {
     QList<KFileMetaInfoItem> result;
-    const QByteArray urlpath = url.toLocalFile().toLocal8Bit();
-    TagLib::FileRef taglibfile(urlpath);
+    const QByteArray pathbytes = QFile::encodeName(path);
+    TagLib::FileRef taglibfile(pathbytes);
     if (taglibfile.isNull()) {
-        kWarning() << "Could not open" << urlpath;
+        kWarning() << "Could not open" << pathbytes;
         return result;
     }
     TagLib::Tag *taglibtag = taglibfile.tag();
     if (!taglibtag) {
-        kDebug() << "Null tag for" << urlpath;
+        kDebug() << "Null tag for" << pathbytes;
     } else {
         const QString taglibtitle = QString::fromStdString(taglibtag->title().to8Bit(true));
         if (!taglibtitle.isEmpty()) {
@@ -114,7 +116,7 @@ QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url)
     }
     TagLib::AudioProperties *taglibaudio = taglibfile.audioProperties();
     if (!taglibaudio) {
-        kDebug() << "Null audio properties for" << urlpath;
+        kDebug() << "Null audio properties for" << pathbytes;
     } else {
         const qlonglong tagliblength = taglibaudio->length();
         if (tagliblength > 0) {
