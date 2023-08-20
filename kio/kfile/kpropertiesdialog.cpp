@@ -3006,6 +3006,7 @@ public:
     QString m_origCommandStr;
     QString m_terminalOptionStr;
     QString m_suidUserStr;
+    QString m_startupClassStr;
     QString m_origDesktopFile;
     bool m_terminalBool;
     bool m_suidBool;
@@ -3081,6 +3082,7 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
     d->m_suidBool = config.readEntry("X-KDE-SubstituteUID", false);
     d->m_suidUserStr = config.readEntry("X-KDE-Username");
     d->m_startupBool = config.readEntry("StartupNotify", false);
+    d->m_startupClassStr = config.readEntry("StartupWMClass", QString());
 
     const QStringList mimeTypes = config.readXdgListEntry("MimeType");
 
@@ -3250,7 +3252,7 @@ void KDesktopPropsPlugin::applyChanges()
     config.writeEntry("X-KDE-SubstituteUID", d->m_suidBool);
     config.writeEntry("X-KDE-Username", d->m_suidUserStr);
     config.writeEntry("StartupNotify", d->m_startupBool);
-#warning TODO: StartupWMClass
+    config.writeEntry("StartupWMClass", d->m_startupClassStr);
     config.sync();
 
     // KSycoca update needed?
@@ -3320,6 +3322,9 @@ void KDesktopPropsPlugin::slotAdvanced()
     w.suidEditLabel->setEnabled(d->m_suidBool);
 
     w.startupInfoCheck->setChecked(d->m_startupBool);
+    w.startupClassEdit->setText(d->m_startupClassStr);
+    w.startupClassEdit->setEnabled(d->m_startupBool);
+    w.startupClassLabel->setEnabled(d->m_startupBool);
     w.systrayCheck->setChecked(d->m_systrayBool);
 
     // Provide username completion up to 1000 users.
@@ -3345,6 +3350,7 @@ void KDesktopPropsPlugin::slotAdvanced()
     connect(w.suidCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
     connect(w.suidEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
     connect(w.startupInfoCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()) );
+    connect(w.startupClassEdit, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );
     connect(w.systrayCheck, SIGNAL(toggled(bool)), this, SIGNAL(changed()) );
 
     if (dlg.exec() == QDialog::Accepted) {
@@ -3353,6 +3359,7 @@ void KDesktopPropsPlugin::slotAdvanced()
         d->m_suidBool = w.suidCheck->isChecked();
         d->m_suidUserStr = w.suidEdit->text().trimmed();
         d->m_startupBool = w.startupInfoCheck->isChecked();
+        d->m_startupClassStr = w.startupClassEdit->text().trimmed();
         d->m_systrayBool = w.systrayCheck->isChecked();
 
         if (w.terminalCloseCheck->isChecked()) {
