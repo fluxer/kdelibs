@@ -5,20 +5,25 @@
 #  KDELIBS4_FOUND           - set to TRUE if everything required for building KDE software has been found
 #
 #  KDE4_DEFINITIONS         - compiler definitions required for compiling KDE software
+#  KDE_DEFAULT_HOME         - default home directory
+#  KDE4_TARGET_PREFIX       - namespace of the exported libraries
+#  KDE4_ENABLE_EXCEPTIONS   - compiler flags required for compiling software with exceptions enabled
 #  KDE4_INCLUDES            - all include directories required for KDE, i.e.
 #                             KDE4_INCLUDE_INSTALL_DIR, but also the Katie and X11 include directories
-#  KDE4_LIB_INSTALL_DIR     - the directory where libraries from kdelibs are installed
-#  KDE4_LIBEXEC_INSTALL_DIR - the directory where libexec executables from kdelibs are installed
-#  KDE4_INCLUDE_INSTALL_DIR - the directory where headers from kdelibs are installed
-#  KDE4_BIN_INSTALL_DIR     - the directory where executables from kdelibs are installed
-#  KDE4_SBIN_INSTALL_DIR    - the directory where system executables from kdelibs are installed
-#  KDE4_DATA_INSTALL_DIR    - the parent directory where kdelibs applications install their data
-#  KDE4_CONFIG_INSTALL_DIR  - the directory where config files from kdelibs are installed
-#  KDE4_ICON_INSTALL_DIR    - the directory where icons from kdelibs are
-#  KDE4_IMPORTS_INSTALL_DIR - the directory where imports from kdelibs are
-#  KDE4_LOCALE_INSTALL_DIR  - the directory where translations from kdelibs are installed
-#  KDE4_MIME_INSTALL_DIR    - the directory where mimetype desktop files from kdelibs are installed
-#  KDE4_SOUND_INSTALL_DIR   - the directory where sound files from kdelibs are installed
+#  KDE4_EXEC_INSTALL_PREFIX  - the general executable prefix
+#  KDE4_SHARE_INSTALL_PREFIX - the general shared data prefix
+#  KDE4_LIB_INSTALL_DIR      - the directory where libraries from kdelibs are installed
+#  KDE4_LIBEXEC_INSTALL_DIR  - the directory where libexec executables from kdelibs are installed
+#  KDE4_PLUGIN_INSTALL_DIR   - the directory where plugins from kdelibs are installed
+#  KDE4_INCLUDE_INSTALL_DIR  - the directory where headers from kdelibs are installed
+#  KDE4_BIN_INSTALL_DIR      - the directory where executables from kdelibs are installed
+#  KDE4_SBIN_INSTALL_DIR     - the directory where system executables from kdelibs are installed
+#  KDE4_DATA_INSTALL_DIR     - the parent directory where kdelibs applications install their data
+#  KDE4_CONFIG_INSTALL_DIR   - the directory where config files from kdelibs are installed
+#  KDE4_ICON_INSTALL_DIR     - the directory where icons from kdelibs are installed
+#  KDE4_IMPORTS_INSTALL_DIR  - the directory where imports from kdelibs are installed
+#  KDE4_LOCALE_INSTALL_DIR   - the directory where translations from kdelibs are installed
+#  KDE4_SOUND_INSTALL_DIR    - the directory where sound files from kdelibs are installed
 #  KDE4_TEMPLATES_INSTALL_DIR     - the directory where templates (Create new file...) from kdelibs are installed
 #  KDE4_WALLPAPER_INSTALL_DIR     - the directory where wallpapers from kdelibs are installed
 #  KDE4_AUTOSTART_INSTALL_DIR     - the directory where autostart from kdelibs are installed
@@ -28,7 +33,7 @@
 #  KDE4_SYSCONF_INSTALL_DIR       - the directory where sysconfig files from kdelibs are installed
 #  KDE4_SERVICES_INSTALL_DIR      - the directory where service (desktop, protocol, ...) files from kdelibs are installed
 #  KDE4_SERVICETYPES_INSTALL_DIR  - the directory where servicestypes desktop files from kdelibs are installed
-#  KDE4_DBUS_INTERFACES_DIR       - the directory where dbus interfaces from kdelibs are installed
+#  KDE4_DBUS_INTERFACES_INSTALL_DIR      - the directory where dbus interfaces from kdelibs are installed
 #  KDE4_DBUS_SERVICES_INSTALL_DIR        - the directory where dbus service files from kdelibs are installed
 #  KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR - the directory where dbus system services from kdelibs are installed
 #
@@ -58,30 +63,29 @@ if(NOT KDELIBS4_FOUND)
     set(KDE4_TARGET_PREFIX "@KDE4_TARGET_PREFIX@")
     set(KDE4_ENABLE_EXCEPTIONS "@KDE4_ENABLE_EXCEPTIONS@")
 
-    set(KDE4_INSTALL_DIR             "@CMAKE_INSTALL_PREFIX@")
-    set(KDE4_EXEC_INSTALL_PREFIX  "@KDE4_EXEC_INSTALL_PREFIX@")
+    set(KDE4_EXEC_INSTALL_PREFIX "@KDE4_EXEC_INSTALL_PREFIX@")
     set(KDE4_SHARE_INSTALL_PREFIX "@KDE4_SHARE_INSTALL_PREFIX@")
-    set(KDE4_BIN_INSTALL_DIR      "@KDE4_BIN_INSTALL_DIR@")
-    set(KDE4_SBIN_INSTALL_DIR     "@KDE4_SBIN_INSTALL_DIR@")
-    set(KDE4_LIB_INSTALL_DIR      "@KDE4_LIB_INSTALL_DIR@")
-    set(KDE4_LIBEXEC_INSTALL_DIR  "@KDE4_LIBEXEC_INSTALL_DIR@")
-    set(KDE4_INCLUDE_INSTALL_DIR  "@KDE4_INCLUDE_INSTALL_DIR@")
-    set(KDE4_PLUGIN_INSTALL_DIR       "@KDE4_PLUGIN_INSTALL_DIR@")
-    set(KDE4_IMPORTS_INSTALL_DIR      "@KDE4_IMPORTS_INSTALL_DIR@")
-    set(KDE4_CONFIG_INSTALL_DIR       "@KDE4_CONFIG_INSTALL_DIR@")
-    set(KDE4_DATA_INSTALL_DIR         "@KDE4_DATA_INSTALL_DIR@")
-    set(KDE4_ICON_INSTALL_DIR         "@KDE4_ICON_INSTALL_DIR@")
-    set(KDE4_LOCALE_INSTALL_DIR       "@KDE4_LOCALE_INSTALL_DIR@")
-    set(KDE4_SERVICES_INSTALL_DIR     "@KDE4_SERVICES_INSTALL_DIR@")
+    set(KDE4_BIN_INSTALL_DIR "@KDE4_BIN_INSTALL_DIR@")
+    set(KDE4_SBIN_INSTALL_DIR "@KDE4_SBIN_INSTALL_DIR@")
+    set(KDE4_LIB_INSTALL_DIR "@KDE4_LIB_INSTALL_DIR@")
+    set(KDE4_LIBEXEC_INSTALL_DIR "@KDE4_LIBEXEC_INSTALL_DIR@")
+    set(KDE4_INCLUDE_INSTALL_DIR "@KDE4_INCLUDE_INSTALL_DIR@")
+    set(KDE4_PLUGIN_INSTALL_DIR "@KDE4_PLUGIN_INSTALL_DIR@")
+    set(KDE4_IMPORTS_INSTALL_DIR "@KDE4_IMPORTS_INSTALL_DIR@")
+    set(KDE4_CONFIG_INSTALL_DIR "@KDE4_CONFIG_INSTALL_DIR@")
+    set(KDE4_DATA_INSTALL_DIR "@KDE4_DATA_INSTALL_DIR@")
+    set(KDE4_ICON_INSTALL_DIR "@KDE4_ICON_INSTALL_DIR@")
+    set(KDE4_LOCALE_INSTALL_DIR "@KDE4_LOCALE_INSTALL_DIR@")
+    set(KDE4_SERVICES_INSTALL_DIR "@KDE4_SERVICES_INSTALL_DIR@")
     set(KDE4_SERVICETYPES_INSTALL_DIR "@KDE4_SERVICETYPES_INSTALL_DIR@")
-    set(KDE4_SOUND_INSTALL_DIR        "@KDE4_SOUND_INSTALL_DIR@")
-    set(KDE4_TEMPLATES_INSTALL_DIR    "@KDE4_TEMPLATES_INSTALL_DIR@")
-    set(KDE4_WALLPAPER_INSTALL_DIR    "@KDE4_WALLPAPER_INSTALL_DIR@")
-    set(KDE4_AUTOSTART_INSTALL_DIR    "@KDE4_AUTOSTART_INSTALL_DIR@")
-    set(KDE4_XDG_APPS_INSTALL_DIR     "@KDE4_XDG_APPS_INSTALL_DIR@")
+    set(KDE4_SOUND_INSTALL_DIR "@KDE4_SOUND_INSTALL_DIR@")
+    set(KDE4_TEMPLATES_INSTALL_DIR "@KDE4_TEMPLATES_INSTALL_DIR@")
+    set(KDE4_WALLPAPER_INSTALL_DIR "@KDE4_WALLPAPER_INSTALL_DIR@")
+    set(KDE4_AUTOSTART_INSTALL_DIR "@KDE4_AUTOSTART_INSTALL_DIR@")
+    set(KDE4_XDG_APPS_INSTALL_DIR "@KDE4_XDG_APPS_INSTALL_DIR@")
     set(KDE4_XDG_DIRECTORY_INSTALL_DIR "@KDE4_XDG_DIRECTORY_INSTALL_DIR@")
-    set(KDE4_XDG_MIME_INSTALL_DIR     "@KDE4_XDG_MIME_INSTALL_DIR@")
-    set(KDE4_SYSCONF_INSTALL_DIR      "@KDE4_SYSCONF_INSTALL_DIR@")
+    set(KDE4_XDG_MIME_INSTALL_DIR "@KDE4_XDG_MIME_INSTALL_DIR@")
+    set(KDE4_SYSCONF_INSTALL_DIR "@KDE4_SYSCONF_INSTALL_DIR@")
     set(KDE4_DBUS_INTERFACES_INSTALL_DIR "@KDE4_DBUS_INTERFACES_INSTALL_DIR@")
     set(KDE4_DBUS_SERVICES_INSTALL_DIR "@KDE4_DBUS_SERVICES_INSTALL_DIR@")
     set(KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR "@KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR@")
