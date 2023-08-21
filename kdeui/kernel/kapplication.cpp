@@ -151,12 +151,6 @@ public:
   {
   }
 
-  ~KApplicationPrivate()
-  {
-  }
-
-  KConfig *config() { return KGlobal::config().data(); }
-
   void _k_x11FilterDestroyed();
   void _k_checkAppStartedSlot();
   void _k_disableAutorestartSlot();
@@ -359,9 +353,6 @@ void KApplicationPrivate::init()
 
   // make sure the clipboard is created before setting the window icon (bug 209263)
   (void) QApplication::clipboard();
-
-  // initialize qt plugin path (see KComponentDataPrivate::lazyInit)
-  (void) KGlobal::config();
 
 #if defined Q_WS_X11
   KStartupInfoId id = KStartupInfo::currentStartupIdEnv();
@@ -622,16 +613,6 @@ bool KApplication::sessionSaving() const
 void KApplicationPrivate::parseCommandLine( )
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
-
-    if (args && args->isSet("style"))
-    {
-        extern QString kde_overrideStyle; // see KGlobalSettings. Should we have a static setter?
-        QString reqStyle(args->getOption("style").toLower());
-        if (QStyleFactory::keys().contains(reqStyle, Qt::CaseInsensitive))
-            kde_overrideStyle = reqStyle;
-        else
-            qWarning() << i18n("The style '%1' was not found", reqStyle);
-    }
 
     if (args && args->isSet("config"))
     {

@@ -65,10 +65,6 @@ class KGlobalSettings::Private
         Private(KGlobalSettings *q)
             : q(q), activated(false), paletteCreated(false)
         {
-            kdeFullSession = !qgetenv("KDE_FULL_SESSION").isEmpty();
-            if (!kdeFullSession) {
-                kdeFullSession = (QProcess::execute("kcheckrunning") == 0);
-            }
         }
 
         QPalette createApplicationPalette(const KSharedConfigPtr &config);
@@ -79,12 +75,10 @@ class KGlobalSettings::Private
         void kdisplaySetPalette();
         void kdisplaySetStyle();
         void kdisplaySetFont();
-        void applyGUIStyle();
 
         KGlobalSettings *q;
         bool activated;
         bool paletteCreated;
-        bool kdeFullSession;
         QPalette applicationPalette;
 };
 
@@ -507,28 +501,6 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
     }
 }
 
-// Set by KApplication
-QString kde_overrideStyle;
-
-void KGlobalSettings::Private::applyGUIStyle()
-{
-    if (!kdeFullSession) {
-        return;
-    }
-
-    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
-        if (kde_overrideStyle.isEmpty()) {
-            const KConfigGroup pConfig(KGlobal::config(), "General");
-            kde_overrideStyle = pConfig.readEntry("widgetStyle", KStyle::defaultStyle());
-        }
-        if (!kde_overrideStyle.isEmpty()) {
-            qApp->setStyle(kde_overrideStyle);
-        }
-    }
-
-    emit q->kdisplayStyleChanged();
-}
-
 QPalette KGlobalSettings::createApplicationPalette(const KSharedConfigPtr &config)
 {
     return self()->d->createApplicationPalette(config);
@@ -601,23 +573,12 @@ QPalette KGlobalSettings::Private::createNewApplicationPalette(const KSharedConf
 
 void KGlobalSettings::Private::kdisplaySetPalette()
 {
-    if (!kdeFullSession) {
-        return;
-    }
-
-    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
-        QApplication::setPalette(q->createApplicationPalette());
-    }
     emit q->kdisplayPaletteChanged();
     emit q->appearanceChanged();
 }
 
 void KGlobalSettings::Private::kdisplaySetFont()
 {
-    if (!kdeFullSession) {
-        return;
-    }
-
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
         QApplication::setFont(KGlobalSettings::generalFont());
         const QFont menuFont = KGlobalSettings::menuFont();
@@ -632,7 +593,7 @@ void KGlobalSettings::Private::kdisplaySetFont()
 void KGlobalSettings::Private::kdisplaySetStyle()
 {
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
-        applyGUIStyle();
+        emit q->kdisplayStyleChanged();
 
         // Reread palette from config file.
         kdisplaySetPalette();

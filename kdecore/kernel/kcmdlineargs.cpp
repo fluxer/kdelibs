@@ -269,6 +269,7 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("title <title>", ki18n("sets the application title (caption)"));
     qt_options.add("reverse", ki18n("mirrors the whole layout of widgets"));
     qt_options.add("stylesheet <file.qss>", ki18n("applies the Katie stylesheet to the application widgets"));
+    qt_options.add("style <style>", ki18n("sets the application GUI style"));
     // KDE options
     kde_options.add("caption <caption>",   ki18n("Use 'caption' as name in the titlebar"));
     kde_options.add("icon <icon>",         ki18n("Use 'icon' as the application icon"));
@@ -277,7 +278,6 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
 #ifdef Q_WS_X11
     kde_options.add("waitforwm",           ki18n("Waits for a WM_NET compatible windowmanager"));
 #endif
-    kde_options.add("style <style>",       ki18n("sets the application GUI style"));
     kde_options.add("geometry <geometry>", ki18n("sets the client geometry of the main widget - see man X for the argument format (usually WidthxHeight+XPos+YPos)"));
     kde_options.add("smkey <sessionKey>"); // this option is obsolete and exists only to allow smooth upgrades from sessions
 }

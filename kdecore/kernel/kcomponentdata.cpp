@@ -31,7 +31,23 @@
 #include "klocale.h"
 #include "kconfiggroup.h"
 #include "kstandarddirs.h"
-#include <QtCore/qdebug.h>
+
+static int kInitAddLibraryAndPluginPaths()
+{
+    foreach (const QString &it, KGlobal::dirs()->resourceDirs("lib")) {
+        QCoreApplication::addLibraryPath(it);
+    }
+    foreach (const QString &it, KGlobal::dirs()->resourceDirs("module")) {
+        QCoreApplication::addLibraryPath(it);
+    }
+
+    foreach (const QString &it, KGlobal::dirs()->resourceDirs("qtplugins")) {
+        QCoreApplication::addPluginPath(it);
+    }
+    return 0;
+}
+Q_CONSTRUCTOR_FUNCTION(kInitAddLibraryAndPluginPaths);
+
 
 KComponentData::KComponentData()
     : d(0)
@@ -67,8 +83,7 @@ bool KComponentData::operator==(const KComponentData &rhs) const
 
 enum KdeLibraryPathsAdded {
     NeedLazyInit,
-    LazyInitDone,
-    KdeLibraryPathsAddedDone
+    LazyInitDone
 };
 static KdeLibraryPathsAdded kdeLibraryPathsAdded = NeedLazyInit;
 
@@ -145,21 +160,6 @@ void KComponentDataPrivate::lazyInit(const KComponentData &component)
 
         if (!sharedConfig) {
             sharedConfig = KSharedConfig::openConfig(component);
-        }
-    }
-
-    // the first KComponentData adds the KDE plugin paths
-    if (kdeLibraryPathsAdded != KdeLibraryPathsAddedDone) {
-        kdeLibraryPathsAdded = KdeLibraryPathsAddedDone;
-        foreach (const QString &it, dirs->resourceDirs("lib")) {
-            QCoreApplication::addLibraryPath(it);
-        }
-        foreach (const QString &it, dirs->resourceDirs("module")) {
-            QCoreApplication::addLibraryPath(it);
-        }
-
-        foreach (const QString &it, dirs->resourceDirs("qtplugins")) {
-            QCoreApplication::addPluginPath(it);
         }
     }
 }
