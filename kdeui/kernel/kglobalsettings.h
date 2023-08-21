@@ -578,8 +578,6 @@ Q_SIGNALS:
     void naturalSortingChanged();
 
 private:
-    friend class KApplication;
-
     KGlobalSettings();
 
     class Private;
