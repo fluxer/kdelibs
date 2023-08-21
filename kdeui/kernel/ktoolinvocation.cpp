@@ -62,9 +62,6 @@ static inline QString getKLauncherError(const int result, const QString &app)
         case -4: {
             return i18n("Application failed to start: %1.", app);
         }
-        case -5: {
-            return i18n("D-Bus error occured while starting application: %1.", app);
-        }
     }
     return i18n("Unknown KLauncher error for application: %1.", app);
 }
