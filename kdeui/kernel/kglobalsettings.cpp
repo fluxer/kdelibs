@@ -475,28 +475,26 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
         case SettingsChanged: {
             KGlobal::config()->reparseConfiguration();
             SettingsCategory category = static_cast<SettingsCategory>(arg);
-            if (category == SETTINGS_QT) {
-                if (activated) {
+            switch (category) {
+                case SETTINGS_MOUSE: {
                     propagateQtSettings();
+                    break;
                 }
-            } else {
-                switch (category) {
-                    case SETTINGS_LOCALE: {
-                        KGlobal::locale()->reparseConfiguration();
-                        // KLocale is reponsible for both so event for locale and language change
-                        // is send
-                        QEvent localeevent(QEvent::LocaleChange);
-                        QApplication::sendEvent(qApp, &localeevent);
-                        QEvent languageevent(QEvent::LanguageChange);
-                        QApplication::sendEvent(qApp, &languageevent);
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
+                case SETTINGS_LOCALE: {
+                    KGlobal::locale()->reparseConfiguration();
+                    // KLocale is reponsible for both so event for locale and language change
+                    // is send
+                    QEvent localeevent(QEvent::LocaleChange);
+                    QApplication::sendEvent(qApp, &localeevent);
+                    QEvent languageevent(QEvent::LanguageChange);
+                    QApplication::sendEvent(qApp, &languageevent);
+                    break;
                 }
-                emit q->settingsChanged(category);
+                default: {
+                    break;
+                }
             }
+            emit q->settingsChanged(category);
             break;
         }
         case IconChanged: {
@@ -710,9 +708,6 @@ void KGlobalSettings::Private::propagateQtSettings()
     QApplication::setWheelScrollLines(num);
     bool showIcons = cg.readEntry("ShowIconsInMenuItems", !QApplication::testAttribute(Qt::AA_DontShowIconsInMenus));
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus, !showIcons);
-
-    // KDE5: this seems fairly pointless
-    emit q->settingsChanged(SETTINGS_QT);
 }
 
 #include "moc_kglobalsettings.cpp"
