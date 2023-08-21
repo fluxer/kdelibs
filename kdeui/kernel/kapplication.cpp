@@ -689,8 +689,6 @@ void KApplicationPrivate::parseCommandLine( )
     }
 }
 
-extern void kDebugCleanup();
-
 KApplication::~KApplication()
 {
   delete d;
