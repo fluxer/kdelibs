@@ -423,7 +423,9 @@ void KApplicationPrivate::init()
 #endif
 
     // Trigger initial settings
-    KGlobalSettings::self()->activate();
+    KGlobalSettings::self()->activate(
+        KGlobalSettings::ApplySettings | KGlobalSettings::ListenForChanges
+    );
 
     KMessage::setMessageHandler( new KMessageBoxMessageHandler(0) );
 

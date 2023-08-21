@@ -482,13 +482,6 @@ public:
      *
      * This is usually called only by the KApplication constructor.
      *
-     * @since 4.3.3
-     */
-    void activate(); //KDE5: Merge with the overloaded method below
-
-    /**
-     * @overload
-     *
      * @since 4.6
      */
     void activate(ActivateOptions options);

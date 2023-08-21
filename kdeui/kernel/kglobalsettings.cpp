@@ -119,11 +119,6 @@ KGlobalSettings::~KGlobalSettings()
     delete d;
 }
 
-void KGlobalSettings::activate()
-{
-    activate(ApplySettings | ListenForChanges);
-}
-
 void KGlobalSettings::activate(ActivateOptions options)
 {
     if (!d->activated) {
