@@ -70,7 +70,7 @@ void KDBusMenuImporter::updateMenu()
 {
     kDebug(s_kdbusmenuarea) << "Updating menu";
     if (!d->menu) {
-        d->menu = KDBusMenuImporter::createMenu(nullptr);
+        d->menu = createMenu(nullptr);
     } else {
         d->menu->clear();
     }
@@ -81,7 +81,7 @@ void KDBusMenuImporter::updateMenu()
     }
     const KDBusMenu menuproperties = menureply.value();
     d->menu->setTitle(menuproperties.title);
-    QIcon menuicon = KDBusMenuImporter::iconForName(menuproperties.icon);
+    QIcon menuicon = iconForName(menuproperties.icon);
     if (menuicon.isNull()) {
         menuicon = kDBusMenuIcon(menuproperties.icondata);
     }
@@ -95,7 +95,7 @@ void KDBusMenuImporter::updateMenu()
     foreach (const KDBusMenuAction &actionproperties, actionsreply.value()) {
         const quint64 actionid = actionproperties.id;
         kDebug(s_kdbusmenuarea) << "Importing action" << actionid;
-        QIcon actionicon = KDBusMenuImporter::iconForName(actionproperties.icon);
+        QIcon actionicon = iconForName(actionproperties.icon);
         if (actionicon.isNull()) {
             actionicon = kDBusMenuIcon(actionproperties.icondata);
         }
@@ -112,9 +112,9 @@ void KDBusMenuImporter::updateMenu()
                 kWarning(s_kdbusmenuarea) << "Invalid sub-actions reply" << subactionsreply.error();
                 return;
             }
-            QMenu* subactionmenu = KDBusMenuImporter::createMenu(d->menu);
+            QMenu* subactionmenu = createMenu(d->menu);
             foreach (const KDBusMenuAction &subactionproperties, subactionsreply.value()) {
-                QIcon subactionicon = KDBusMenuImporter::iconForName(subactionproperties.icon);
+                QIcon subactionicon = iconForName(subactionproperties.icon);
                 if (subactionicon.isNull()) {
                     subactionicon = kDBusMenuIcon(subactionproperties.icondata);
                 }
