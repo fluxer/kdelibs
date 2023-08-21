@@ -79,21 +79,7 @@ class KGlobalSettings::Private
         void kdisplaySetPalette();
         void kdisplaySetStyle();
         void kdisplaySetFont();
-        void kdisplaySetCursor();
         void applyGUIStyle();
-
-        /**
-         * @internal
-         *
-         * Ensures that cursors are loaded from the theme KDE is configured
-         * to use. Note that calling this function doesn't cause existing
-         * cursors to be reloaded. Reloading already created cursors is
-         * handled by the KCM when a cursor theme is applied.
-         *
-         * It is not necessary to call this function when KGlobalSettings
-         * is initialized.
-         */
-        void applyCursorTheme();
 
         KGlobalSettings *q;
         bool activated;
@@ -132,7 +118,6 @@ void KGlobalSettings::activate(ActivateOptions options)
         if (options & ApplySettings) {
             d->kdisplaySetStyle(); // implies palette setup
             d->kdisplaySetFont();
-            d->kdisplaySetCursor();
             d->propagateQtSettings();
         }
     }
@@ -504,7 +489,7 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
             break;
         }
         case CursorChanged: {
-            applyCursorTheme();
+            emit q->cursorChanged();
             break;
         }
         case BlockShortcuts: {
@@ -644,15 +629,6 @@ void KGlobalSettings::Private::kdisplaySetFont()
     emit q->appearanceChanged();
 }
 
-void KGlobalSettings::Private::kdisplaySetCursor()
-{
-    if (!kdeFullSession) {
-        return;
-    }
-
-    applyCursorTheme();
-}
-
 void KGlobalSettings::Private::kdisplaySetStyle()
 {
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
@@ -662,32 +638,6 @@ void KGlobalSettings::Private::kdisplaySetStyle()
         kdisplaySetPalette();
     }
 }
-
-void KGlobalSettings::Private::applyCursorTheme()
-{
-#if defined(Q_WS_X11) && defined(HAVE_XCURSOR)
-    KConfig config("kcminputrc");
-    KConfigGroup g = config.group("Mouse");
-
-    QByteArray theme = g.readEntry("cursorTheme", QByteArray(KDE_DEFAULT_CURSOR_THEME));
-    int size = g.readEntry("cursorSize", -1);
-
-    // Default cursor size is 16 points
-    if (size == -1) {
-        size = qApp->desktop()->screen(0)->logicalDpiY() * 16 / 72;
-    }
-
-    // Note that in X11R7.1 and earlier, calling XcursorSetTheme()
-    // with a NULL theme would cause Xcursor to use "default", but
-    // in 7.2 and later it will cause it to revert to the theme that
-    // was configured when the application was started.
-    XcursorSetTheme(QX11Info::display(), theme.constData());
-    XcursorSetDefaultSize(QX11Info::display(), size);
-
-    emit q->cursorChanged();
-#endif
-}
-
 
 void KGlobalSettings::Private::propagateQtSettings()
 {
