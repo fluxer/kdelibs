@@ -136,4 +136,13 @@ static QAction* kDBusMenuAction(QMenu *menu, const KDBusMenuAction &actionproper
     return action;
 }
 
+static void kDBusSetIcon(QAction *action, const QIcon &icon)
+{
+    // because KIcon is never null setting icon on separator makes it look odd
+    if (action->isSeparator()) {
+        return;
+    }
+    action->setIcon(icon);
+}
+
 #endif // KDBUSMENU_H

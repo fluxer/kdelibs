@@ -119,13 +119,13 @@ void KDBusMenuImporter::updateMenu()
                     subactionicon = kDBusMenuIcon(subactionproperties.icondata);
                 }
                 QAction* subaction = kDBusMenuAction(subactionmenu, subactionproperties);
-                subaction->setIcon(subactionicon);
+                kDBusSetIcon(subaction, subactionicon);
                 connect(subaction, SIGNAL(triggered()), this, SLOT(slotActionTriggered()));
                 subactionmenu->addAction(subaction);
             }
             action->setMenu(subactionmenu);
         }
-        action->setIcon(actionicon);
+        kDBusSetIcon(action, actionicon);
         connect(action, SIGNAL(triggered()), this, SLOT(slotActionTriggered()));
         d->menu->addAction(action);
     }
