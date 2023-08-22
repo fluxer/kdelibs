@@ -100,6 +100,11 @@ bool KImageIO::isSupported(const QString &mimeType, Mode mode)
         if (mimeType == mime) {
             return true;
         }
+        // check aliases
+        const KMimeType::Ptr kmimetype = KMimeType::mimeType(mime);
+        if (kmimetype && kmimetype->is(mimeType)) {
+            return true;
+        }
     }
     return false;
 }
