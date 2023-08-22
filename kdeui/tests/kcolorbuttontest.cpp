@@ -17,15 +17,15 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QtTest/QtTestGui>
-
-#include "kcolorbuttontest.h"
-
-#include "qtest_kde.h"
-#include <kcolorbutton.h>
-#include <kcolordialog.h>
+#include <QtTestGui>
 #include <QComboBox>
 #include <QDialogButtonBox>
+
+#include "kcolorbuttontest.h"
+#include "qtest_kde.h"
+#include "kcolorbutton.h"
+#include "kcolordialog.h"
+#include "kstandarddirs.h"
 
 QTEST_KDEMAIN(KColorButtonTest, GUI)
 
@@ -33,6 +33,11 @@ QTEST_KDEMAIN(KColorButtonTest, GUI)
 
 void KColorButtonTest::initTestCase()
 {
+    if (KStandardDirs::locate("config", "colors/40.colors").isEmpty()) {
+        // e.g. kdelibs not installed
+        QSKIP("40.colors not found", SkipAll);
+    }
+
     black40Colors.setHsv(-1, 0, 0);
 }
 
