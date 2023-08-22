@@ -18,6 +18,7 @@
 
 #include "qtest_kde.h"
 #include "kexiv2.h"
+#include "kimageio.h"
 #include "kdebug.h"
 
 class KExiv2Test : public QObject
@@ -41,6 +42,9 @@ void KExiv2Test::initTestCase()
 {
     if (!KExiv2::isSupported()) {
         QSKIP("Built without Exiv2", SkipAll);
+    }
+    if (!KImageIO::isSupported(QString::fromLatin1("image/jpeg"), KImageIO::Reading)) {
+        QSKIP("No plugin for image/jpeg", SkipAll);
     }
 }
 
