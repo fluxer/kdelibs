@@ -79,6 +79,7 @@ static bool g_changed = false;
 static KSycocaEntry::List g_tempStorage;
 static VFolderMenu *g_vfolder = 0;
 static QByteArray g_sycocaPath = 0;
+static QLatin1String g_defaultMenu = QLatin1String("kde-applications.menu");
 
 static bool bGlobalDatabase = false;
 static bool bMenuTest = false;
@@ -307,11 +308,16 @@ bool KBuildSycoca::build()
      if (!m_trackId.isEmpty())
         g_vfolder->setTrackId(m_trackId);
 
-     QString applicationsMenu = QLatin1String("kde-applications.menu");
+     QString applicationsMenu = g_defaultMenu;
      const QString xdgMenuPrefix = QString::fromLocal8Bit(qgetenv("XDG_MENU_PREFIX"));
      if (!xdgMenuPrefix.isEmpty())
      {
         applicationsMenu = xdgMenuPrefix + QLatin1String("applications.menu");
+        const bool isValid = !KStandardDirs::locate("xdgconf-menu", applicationsMenu).isEmpty();
+        if (!isValid) {
+            kWarning() << "Specified XDG_MENU_PREFIX results in invalid menu" << applicationsMenu;
+            applicationsMenu = g_defaultMenu;
+        }
      }
      VFolderMenu::SubMenu *kdeMenu = g_vfolder->parseMenu(applicationsMenu);
 
