@@ -422,6 +422,11 @@ void KGlobalSettings::emitChange(ChangeType changeType, int arg)
 void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
 {
     switch(changeType) {
+        case SettingsChanged: {
+            KGlobal::config()->reparseConfiguration();
+            emit q->settingsChanged();
+            break;
+        }
         case StyleChanged: {
             if (activated) {
                 KGlobal::config()->reparseConfiguration();

@@ -446,8 +446,8 @@ public:
      * \see emitChange
      */
     enum ChangeType {
-        PaletteChanged = 0, FontChanged, StyleChanged,
-        IconChanged, MouseChanged, LocaleChanged,
+        SettingsChanged = 0, PaletteChanged, FontChanged,
+        StyleChanged, IconChanged, MouseChanged, LocaleChanged,
         ToolbarStyleChanged, PathsChanged, NaturalSortingChanged,
         ShortcutsChanged, BlockShortcuts
     };
@@ -488,6 +488,11 @@ public:
     void activate(ActivateOptions options);
 
 Q_SIGNALS:
+    /**
+     * Emitted when the global settings have been changed.
+     */
+    void settingsChanged();
+
     /**
      * Emitted when the application has changed its palette due to a KControl request.
      *
