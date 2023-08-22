@@ -52,7 +52,6 @@ void KGlobalSettingsTest::initTestCase()
     QSignalSpy palette_spy( settings, SIGNAL(kdisplayPaletteChanged()) ); \
     QSignalSpy font_spy( settings, SIGNAL(kdisplayFontChanged()) ); \
     QSignalSpy style_spy( settings, SIGNAL(kdisplayStyleChanged()) ); \
-    QSignalSpy settings_spy( settings, SIGNAL(settingsChanged(int)) ); \
     QSignalSpy appearance_spy( settings, SIGNAL(appearanceChanged()) )
 
 static void callClient( const QString& opt, const char* signalToWaitFor ) {
@@ -69,7 +68,6 @@ void KGlobalSettingsTest::testPaletteChange()
     QCOMPARE(palette_spy.size(), 1);
     QCOMPARE(font_spy.size(), 0);
     QCOMPARE(style_spy.size(), 0);
-    QCOMPARE(settings_spy.size(), 0);
     QCOMPARE(appearance_spy.size(), 1);
 }
 
@@ -80,18 +78,5 @@ void KGlobalSettingsTest::testFontChange()
     QCOMPARE(palette_spy.size(), 0);
     QCOMPARE(font_spy.size(), 1);
     QCOMPARE(style_spy.size(), 0);
-    QCOMPARE(settings_spy.size(), 0);
     QCOMPARE(appearance_spy.size(), 1);
-}
-
-void KGlobalSettingsTest::testSettingsChange()
-{
-    CREATE_ALL_SPYS;
-    callClient("--ps", SIGNAL(settingsChanged(int)));
-    QCOMPARE(palette_spy.size(), 0);
-    QCOMPARE(font_spy.size(), 0);
-    QCOMPARE(style_spy.size(), 0);
-    QCOMPARE(settings_spy.size(), 1);
-    QCOMPARE(settings_spy.at(0).at(0).toInt(), (int)KGlobalSettings::SETTINGS_PATHS);
-    QCOMPARE(appearance_spy.size(), 0);
 }

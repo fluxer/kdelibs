@@ -37,7 +37,7 @@ class KListWidget::KListWidgetPrivate
 
         void _k_slotItemEntered(QListWidgetItem*);
         void _k_slotOnViewport();
-        void _k_slotSettingsChanged(int);
+        void _k_slotMouseChanged();
         void _k_slotAutoSelect();
         void _k_slotEmitExecute(QListWidgetItem *item);
 
@@ -58,8 +58,8 @@ KListWidget::KListWidget( QWidget *parent )
              this, SLOT(_k_slotOnViewport()) );
     connect( this, SIGNAL(itemEntered(QListWidgetItem*)),
              this, SLOT(_k_slotItemEntered(QListWidgetItem*)) );
-    d->_k_slotSettingsChanged(KGlobalSettings::SETTINGS_MOUSE);
-    connect( KGlobalSettings::self(), SIGNAL(settingsChanged(int)), SLOT(_k_slotSettingsChanged(int)) );
+    d->_k_slotMouseChanged();
+    connect( KGlobalSettings::self(), SIGNAL(mouseChanged()), SLOT(_k_slotMouseChanged()) );
 
     d->m_pAutoSelect = new QTimer( this );
     connect( d->m_pAutoSelect, SIGNAL(timeout()),
@@ -93,10 +93,8 @@ void KListWidget::KListWidgetPrivate::_k_slotOnViewport()
 }
 
 
-void KListWidget::KListWidgetPrivate::_k_slotSettingsChanged(int category)
+void KListWidget::KListWidgetPrivate::_k_slotMouseChanged()
 {
-    if (category != KGlobalSettings::SETTINGS_MOUSE)
-        return;
     m_bUseSingle = KGlobalSettings::singleClick();
 
     q->disconnect(q, SIGNAL(itemClicked(QListWidgetItem*)));

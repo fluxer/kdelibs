@@ -171,7 +171,7 @@ private:
     class KPushButtonPrivate;
     KPushButtonPrivate * const d;
 
-    Q_PRIVATE_SLOT(d, void slotSettingsChanged( int ))
+    Q_PRIVATE_SLOT(d, void slotToolbarAppearanceChanged( int ))
     Q_PRIVATE_SLOT(d, void slotPressedInternal())
     Q_PRIVATE_SLOT(d, void slotClickedInternal())
     Q_PRIVATE_SLOT(d, void slotDelayedMenuTimeout())

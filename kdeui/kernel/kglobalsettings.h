@@ -447,8 +447,9 @@ public:
      */
     enum ChangeType {
         PaletteChanged = 0, FontChanged, StyleChanged,
-        SettingsChanged, IconChanged, CursorChanged,
-        ToolbarStyleChanged, BlockShortcuts, NaturalSortingChanged
+        IconChanged, MouseChanged, LocaleChanged,
+        ToolbarStyleChanged, PathsChanged, NaturalSortingChanged,
+        ShortcutsChanged, BlockShortcuts
     };
 
     /**
@@ -485,14 +486,6 @@ public:
      * @since 4.6
      */
     void activate(ActivateOptions options);
-
-    /**
-     * Valid values for the settingsChanged signal
-     */
-    enum SettingsCategory {
-        SETTINGS_MOUSE, SETTINGS_COMPLETION, SETTINGS_PATHS,
-        SETTINGS_SHORTCUTS, SETTINGS_LOCALE, SETTINGS_STYLE
-    };
 
 Q_SIGNALS:
     /**
@@ -547,23 +540,30 @@ Q_SIGNALS:
     void toolbarAppearanceChanged(int);
 
     /**
-     * Emitted when the global settings have been changed.
-     * KGlobalSettings takes care of calling reparseConfiguration on KGlobal::config()
-     * so that applications/classes using this only have to re-read the configuration
-     * @param category the category among the SettingsCategory enum.
-     */
-    void settingsChanged(int category);
-
-    /**
      * Emitted when the global icon settings have been changed.
      * @param group the new group
      */
     void iconChanged(int group);
 
     /**
-     * Emitted when the cursor theme has been changed.
+     * Emitted when the mouse settings have been changed.
      */
-    void cursorChanged();
+    void mouseChanged();
+
+    /**
+     * Emitted when the locale settings have been changed.
+     */
+    void localeChanged();
+
+    /**
+     * Emitted when the paths settings have been changed.
+     */
+    void pathsChanged();
+
+    /**
+     * Emitted when the shortcut settings have been changed.
+     */
+    void shortcutsChanged();
 
     /**
      * Emitted by BlockShortcuts

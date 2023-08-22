@@ -625,7 +625,7 @@ protected:
 
     KMainWindowPrivate * const k_ptr;
 private:
-    Q_PRIVATE_SLOT(k_func(), void _k_slotSettingsChanged(int))
+    Q_PRIVATE_SLOT(k_func(), void _k_slotStyleChanged())
     Q_PRIVATE_SLOT(k_func(), void _k_slotSaveAutoSaveSize())
 };
 

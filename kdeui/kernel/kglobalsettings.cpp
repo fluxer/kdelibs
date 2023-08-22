@@ -49,12 +49,12 @@
 #include "qplatformdefs.h"
 
 #ifdef Q_WS_X11
-#include <X11/Xlib.h>
+#  include <X11/Xlib.h>
 #ifdef HAVE_XCURSOR
-#include <X11/Xcursor/Xcursor.h>
+#  include <X11/Xcursor/Xcursor.h>
 #endif
-#include "fixx11h.h"
-#include <QtGui/qx11info_x11.h>
+#  include "fixx11h.h"
+#  include <QtGui/qx11info_x11.h>
 #endif
 
 #include <stdlib.h>
@@ -71,7 +71,6 @@ class KGlobalSettings::Private
         QPalette createNewApplicationPalette(const KSharedConfigPtr &config);
         void _k_slotNotifyChange(int, int);
 
-        void propagateQtSettings();
         void kdisplaySetPalette();
         void kdisplaySetStyle();
         void kdisplaySetFont();
@@ -112,7 +111,6 @@ void KGlobalSettings::activate(ActivateOptions options)
         if (options & ApplySettings) {
             d->kdisplaySetStyle(); // implies palette setup
             d->kdisplaySetFont();
-            d->propagateQtSettings();
         }
     }
 }
@@ -451,29 +449,16 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
             }
             break;
         }
-        case SettingsChanged: {
+        case LocaleChanged: {
             KGlobal::config()->reparseConfiguration();
-            SettingsCategory category = static_cast<SettingsCategory>(arg);
-            switch (category) {
-                case SETTINGS_MOUSE: {
-                    propagateQtSettings();
-                    break;
-                }
-                case SETTINGS_LOCALE: {
-                    KGlobal::locale()->reparseConfiguration();
-                    // KLocale is reponsible for both so event for locale and language change
-                    // is send
-                    QEvent localeevent(QEvent::LocaleChange);
-                    QApplication::sendEvent(qApp, &localeevent);
-                    QEvent languageevent(QEvent::LanguageChange);
-                    QApplication::sendEvent(qApp, &languageevent);
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-            emit q->settingsChanged(category);
+            KGlobal::locale()->reparseConfiguration();
+            // KLocale is reponsible for both so event for locale and language change
+            // is send
+            QEvent localeevent(QEvent::LocaleChange);
+            QApplication::sendEvent(qApp, &localeevent);
+            QEvent languageevent(QEvent::LanguageChange);
+            QApplication::sendEvent(qApp, &languageevent);
+            emit q->localeChanged();
             break;
         }
         case IconChanged: {
@@ -482,17 +467,27 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
             emit q->iconChanged(arg);
             break;
         }
-        case CursorChanged: {
-            emit q->cursorChanged();
+        case MouseChanged: {
+            KGlobal::config()->reparseConfiguration();
+            emit q->mouseChanged();
+            break;
+        }
+        case NaturalSortingChanged: {
+            KGlobal::config()->reparseConfiguration();
+            emit q->naturalSortingChanged();
+            break;
+        }
+        case PathsChanged: {
+            emit q->pathsChanged();
+            break;
+        }
+        case ShortcutsChanged: {
+             emit q->shortcutsChanged();
             break;
         }
         case BlockShortcuts: {
             // NOTE: KGlobalAccel connects to this signal
             emit q->blockShortcuts(arg); // see kwin
-            break;
-        }
-        case NaturalSortingChanged: {
-            emit q->naturalSortingChanged();
             break;
         }
         default: {
@@ -603,27 +598,6 @@ void KGlobalSettings::Private::kdisplaySetStyle()
         // Reread palette from config file.
         kdisplaySetPalette();
     }
-}
-
-void KGlobalSettings::Private::propagateQtSettings()
-{
-    KConfigGroup cg( KGlobal::config(), "KDE" );
-    int num = cg.readEntry("CursorBlinkRate", QApplication::cursorFlashTime());
-    if ((num != 0) && (num < 200))
-        num = 200;
-    if (num > 2000)
-        num = 2000;
-    QApplication::setCursorFlashTime(num);
-    num = cg.readEntry("DoubleClickInterval", QApplication::doubleClickInterval());
-    QApplication::setDoubleClickInterval(num);
-    num = cg.readEntry("StartDragTime", QApplication::startDragTime());
-    QApplication::setStartDragTime(num);
-    num = cg.readEntry("StartDragDist", QApplication::startDragDistance());
-    QApplication::setStartDragDistance(num);
-    num = cg.readEntry("WheelScrollLines", QApplication::wheelScrollLines());
-    QApplication::setWheelScrollLines(num);
-    bool showIcons = cg.readEntry("ShowIconsInMenuItems", !QApplication::testAttribute(Qt::AA_DontShowIconsInMenus));
-    QApplication::setAttribute(Qt::AA_DontShowIconsInMenus, !showIcons);
 }
 
 #include "moc_kglobalsettings.cpp"

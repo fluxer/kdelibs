@@ -94,10 +94,8 @@ public:
         delete style.data();
     }
 
-    void _k_slotSettingsChanged(int category)
+    void _k_slotStyleChanged()
     {
-        Q_UNUSED(category);
-
         if (clearButton) {
             clearButton->setAnimationsEnabled(KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects);
         }
@@ -255,7 +253,7 @@ void KLineEdit::init()
                       mode == KGlobalSettings::CompletionAuto);
     connect( this, SIGNAL(selectionChanged()), this, SLOT(slotRestoreSelectionColors()));
 
-    connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this, SLOT(_k_slotSettingsChanged(int)));
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayStyleChanged()), this, SLOT(_k_slotStyleChanged()));
 
     const QPalette p = palette();
     if ( !d->previousHighlightedTextColor.isValid() )

@@ -32,7 +32,6 @@ int main(int argc, char **argv)
     KCmdLineOptions options;
     options.add("p", ki18n("emit paletteChanged()"));
     options.add("f", ki18n("emit fontChanged()"));
-    options.add("ps", ki18n("emit settingsChanged(SETTINGS_PATH)"));
 
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -47,10 +46,6 @@ int main(int argc, char **argv)
     } else if (args->isSet("f")) {
         kDebug() << "emitChange(FontChanged)";
         KGlobalSettings::self()->emitChange(KGlobalSettings::FontChanged);
-        return 0;
-    } else if (args->isSet("ps")) {
-        kDebug() << "emitChange(SettingsChanged)";
-        KGlobalSettings::self()->emitChange(KGlobalSettings::SettingsChanged, KGlobalSettings::SETTINGS_PATHS);
         return 0;
     }
 

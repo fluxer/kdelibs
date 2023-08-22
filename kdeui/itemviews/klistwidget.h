@@ -103,7 +103,7 @@ private:
 
   Q_PRIVATE_SLOT(d, void _k_slotItemEntered(QListWidgetItem*))
   Q_PRIVATE_SLOT(d, void _k_slotOnViewport())
-  Q_PRIVATE_SLOT(d, void _k_slotSettingsChanged(int))
+  Q_PRIVATE_SLOT(d, void _k_slotMouseChanged())
   Q_PRIVATE_SLOT(d, void _k_slotAutoSelect())
   Q_PRIVATE_SLOT(d, void _k_slotEmitExecute(QListWidgetItem*))
 };

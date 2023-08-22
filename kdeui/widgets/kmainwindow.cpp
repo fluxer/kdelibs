@@ -236,8 +236,8 @@ void KMainWindowPrivate::init(KMainWindow *_q)
     helpMenu = 0;
 
     //actionCollection()->setWidget( this );
-    QObject::connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)),
-                     q, SLOT(_k_slotSettingsChanged(int)));
+    QObject::connect(KGlobalSettings::self(), SIGNAL(kdisplayStyleChanged()),
+                     q, SLOT(_k_slotStyleChanged()));
 
     // force KMWSessionManager creation - someone a better idea?
     ksm->dummyInit();
@@ -1012,10 +1012,8 @@ KStatusBar *KMainWindow::statusBar()
     return sb;
 }
 
-void KMainWindowPrivate::_k_slotSettingsChanged(int category)
+void KMainWindowPrivate::_k_slotStyleChanged()
 {
-    Q_UNUSED(category);
-
     // This slot will be called when the style KCM changes settings that need
     // to be set on the already running applications.
 

@@ -54,14 +54,14 @@ public:
     bool m_dragEnabled;
     QPoint startPos;
 
-    void slotSettingsChanged( int );
+    void slotToolbarAppearanceChanged( int );
     void slotPressedInternal();
     void slotClickedInternal();
     void slotDelayedMenuTimeout();
     void readSettings();
 };
 
-void KPushButton::KPushButtonPrivate::slotSettingsChanged( int /* category */ )
+void KPushButton::KPushButtonPrivate::slotToolbarAppearanceChanged( int /* arg */ )
 {
     readSettings();
     parent->setIcon( item.icon() );
@@ -156,8 +156,8 @@ void KPushButton::init( const KGuiItem &item )
 
     setWhatsThis(item.whatsThis());
 
-    connect( KGlobalSettings::self(), SIGNAL(settingsChanged(int)),
-             SLOT(slotSettingsChanged(int)) );
+    connect( KGlobalSettings::self(), SIGNAL(toolbarAppearanceChanged(int)),
+             SLOT(slotToolbarAppearanceChanged(int)) );
 }
 
 bool KPushButton::isDragEnabled() const

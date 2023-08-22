@@ -29,7 +29,6 @@ private Q_SLOTS:
     void initTestCase();
     void testPaletteChange();
     void testFontChange();
-    void testSettingsChange();
 
 };
 
