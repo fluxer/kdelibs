@@ -36,7 +36,7 @@ KIconEngine::KIconEngine(const QString &iconName, KIconLoader* iconLoader, const
 
 KIconEngine::KIconEngine(const QString &iconName, KIconLoader* iconLoader)
     : mIconName(iconName),
-      mIconLoader(iconLoader)
+    mIconLoader(iconLoader)
 {
 }
 
@@ -60,31 +60,48 @@ static inline int qIconModeToKIconState(QIcon::Mode mode)
 
 QSize KIconEngine::actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state)
 {
-    Q_UNUSED(state)
-    Q_UNUSED(mode)
+    Q_UNUSED(state);
+    Q_UNUSED(mode);
     const int iconSize = qMin(size.width(), size.height());
     return QSize(iconSize, iconSize);
 }
 
 QList<QSize> KIconEngine::availableSizes(QIcon::Mode mode, QIcon::State state) const
 {
-    static QList<QSize> s_avaiablesizes = QList<QSize>()
-        << QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall)
-        << QSize(KIconLoader::SizeSmallMedium, KIconLoader::SizeSmallMedium)
-        << QSize(KIconLoader::SizeMedium, KIconLoader::SizeMedium)
-        << QSize(KIconLoader::SizeLarge, KIconLoader::SizeLarge)
-        << QSize(KIconLoader::SizeHuge, KIconLoader::SizeHuge)
-        << QSize(KIconLoader::SizeEnormous, KIconLoader::SizeEnormous);
-    return s_avaiablesizes;
+    Q_UNUSED(mode);
+    Q_UNUSED(state);
+
+    // TODO: maybe cache via mAvailableSizes member
+    static QList<QSize> avaiablesizes;
+    if (mIconLoader && !mIconName.isEmpty() && avaiablesizes.isEmpty()) {
+        static const int s_stdiconsizes[] = {
+            KIconLoader::SizeSmall,
+            KIconLoader::SizeSmallMedium,
+            KIconLoader::SizeMedium,
+            KIconLoader::SizeLarge,
+            KIconLoader::SizeHuge,
+            KIconLoader::SizeEnormous,
+            0
+        };
+        int counter = 0;
+        while (s_stdiconsizes[counter]) {
+            const QString iconpath = mIconLoader.data()->iconPath(mIconName, -s_stdiconsizes[counter], true);
+            if (!iconpath.isEmpty()) {
+                avaiablesizes.append(QSize(s_stdiconsizes[counter], s_stdiconsizes[counter]));
+            }
+            counter++;
+        }
+    }
+    return avaiablesizes;
 }
 
 void KIconEngine::paint(QPainter* painter, const QRect &rect, QIcon::Mode mode, QIcon::State state)
 {
+    Q_UNUSED(state);
+
     if (!mIconLoader) {
         return;
     }
-
-    Q_UNUSED(state)
 
     const int kstate = qIconModeToKIconState(mode);
     KIconLoader::Group group = KIconLoader::Desktop;
@@ -104,29 +121,22 @@ void KIconEngine::paint(QPainter* painter, const QRect &rect, QIcon::Mode mode, 
 
 QPixmap KIconEngine::pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state)
 {
-    Q_UNUSED(state)
+    Q_UNUSED(state);
 
     if (!mIconLoader) {
-        QPixmap pm(size);
-        pm.fill(Qt::transparent);
-        return pm;
+        return QPixmap();
     }
 
     const int kstate = qIconModeToKIconState(mode);
     const int iconSize = qMin(size.width(), size.height());
-    QPixmap pix = mIconLoader.data()->loadIcon(mIconName, KIconLoader::Desktop, iconSize, kstate, mOverlays);
-
+    const QPixmap pix = mIconLoader.data()->loadIcon(mIconName, KIconLoader::Desktop, iconSize, kstate, mOverlays);
+    if (pix.isNull()) {
+        return pix;
+    }
     if (pix.size() == size) {
         return pix;
     }
-
-    QPixmap pm(size);
-    pm.fill(Qt::transparent);
-    QPainter painter(&pm);
-    painter.drawPixmap(QPoint(), pix);
-    painter.end();
-
-    return pm;
+    return pix.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 QString KIconEngine::key() const
