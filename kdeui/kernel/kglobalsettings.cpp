@@ -573,6 +573,11 @@ QPalette KGlobalSettings::Private::createNewApplicationPalette(const KSharedConf
 
 void KGlobalSettings::Private::kdisplaySetPalette()
 {
+    // full session or not KColorScheme and even KGlobalSettings itself read settings from configs
+    // thus if appearance settings are set in said configs the palette has to be applied here
+    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
+        QApplication::setPalette(q->createApplicationPalette());
+    }
     emit q->kdisplayPaletteChanged();
     emit q->appearanceChanged();
 }
