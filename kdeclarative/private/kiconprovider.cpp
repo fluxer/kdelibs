@@ -26,7 +26,7 @@
 #include <kiconeffect.h>
 
 KIconProvider::KIconProvider()
-  : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
 {
 }
 
@@ -34,6 +34,9 @@ QPixmap KIconProvider::requestPixmap(const QString &id, QSize *size, const QSize
 {
     // We need to handle QIcon::state
     const QStringList source = id.split('/');
+    if (source.size() < 1) {
+        return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
+    }
 
     QPixmap pixmap;
     if (requestedSize.isValid()) {
