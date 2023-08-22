@@ -57,7 +57,7 @@ public:
 };
 
 KTimeZoneTransition::KTimeZoneTransition()
-    : trasitiontime(QDate(1970, 1, 1)),
+    : trasitiontime(QDate(1970, 1, 1), QTime(0, 0, 0), Qt::UTC),
     transitionindex(0),
     utcoffset(KTimeZone::InvalidOffset)
 {
@@ -253,9 +253,15 @@ KTimeZoneTransition KTimeZonePrivate::findTransition(const QDateTime &datetime) 
     for (int i = transitions.size(); i > 0; i--) {
         const KTimeZoneTransition transition = transitions[i - 1];
         if (datetime >= transition.trasitiontime) {
+#ifdef KTIMEZONE_DUMP
+            qDebug() << "Found transition for" << datetime << transition.trasitiontime;
+#endif
             return transition;
         }
     }
+#ifdef KTIMEZONE_DUMP
+    qDebug() << "No transition found for" << datetime;
+#endif
     return KTimeZoneTransition();
 }
 
