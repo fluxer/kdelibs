@@ -497,6 +497,7 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
         }
         default: {
             kWarning() << "Unknown type of change in KGlobalSettings::slotNotifyChange: " << changeType;
+            break;
         }
     }
 }

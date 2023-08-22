@@ -52,7 +52,7 @@ public:
      * @param name the name of the cursor to try and load
      * @param fallback the cursor to load if @p name cursor can not be loaded
      */
-    static QCursor fromName( const QString & name, Qt::CursorShape fallback = Qt::ArrowCursor );
+    static QCursor fromName(const QString &name, Qt::CursorShape fallback = Qt::ArrowCursor);
 
     /**
      * Sets auto-hiding the cursor for widget @p w. Enabling it will result in
@@ -76,8 +76,8 @@ public:
      * a QCanvasView, then you have to pass all key-events that should trigger
      * auto-hiding to autoHideEventFilter().
      */
-    static void setAutoHideCursor( QWidget *w, bool enable,
-                                   bool customEventFilter = false );
+    static void setAutoHideCursor(QWidget *w, bool enable,
+                                  bool customEventFilter = false);
 
     /**
      * Sets the delay time in milliseconds for auto-hiding. When no keyboard
@@ -85,7 +85,7 @@ public:
      *
      * Default is 5000, i.e. 5 seconds.
      */
-    static void setHideCursorDelay( int ms );
+    static void setHideCursorDelay(int ms);
 
     /**
      * @returns the current auto-hide delay time.
@@ -104,13 +104,13 @@ public:
      * to tell KCursor not to install an eventFilter. Then you call this method
      * from the beginning of your eventFilter, for example:
      * \code
-     * edit = new KEdit( this, "some edit widget" );
-     * edit->installEventFilter( this );
-     * KCursor::setAutoHideCursor( edit, true, true );
+     * edit = new KTextEdit(this, "some edit widget");
+     * edit->installEventFilter(this);
+     * KCursor::setAutoHideCursor(edit, true, true);
      *
      * [...]
      *
-     * bool YourClass::eventFilter( QObject *o, QEvent *e )
+     * bool YourClass::eventFilter(QObject *o, QEvent *e )
      * {
      *     if ( o == edit ) // only that widget where you enabled auto-hide!
      *         KCursor::autoHideEventFilter( o, e );
@@ -123,7 +123,7 @@ public:
      * Note that you must not call KCursor::autoHideEventFilter() when you
      * didn't enable or after disabling auto-hiding.
      */
-    static void autoHideEventFilter( QObject *, QEvent * );
+    static void autoHideEventFilter(QObject *o, QEvent *e);
 };
 
 

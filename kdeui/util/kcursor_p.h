@@ -40,10 +40,10 @@ class KCursorPrivateAutoHideEventFilter : public QObject
     Q_OBJECT
 
 public:
-    KCursorPrivateAutoHideEventFilter( QWidget* widget );
+    KCursorPrivateAutoHideEventFilter(QWidget*widget);
     ~KCursorPrivateAutoHideEventFilter();
 
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
     void resetWidget();
 
@@ -75,14 +75,14 @@ class KCursorPrivate : public QObject
 public:
     static KCursorPrivate *self();
 
-    void setAutoHideCursor( QWidget *w, bool enable, bool customEventFilter );
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    void setAutoHideCursor(QWidget *w, bool enable, bool customEventFilter);
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
     int hideCursorDelay;
 
 private Q_SLOTS:
-    void slotViewportDestroyed(QObject *);
-    void slotWidgetDestroyed( QObject* );
+    void slotViewportDestroyed(QObject *o);
+    void slotWidgetDestroyed(QObject *o);
 
 private:
     KCursorPrivate();
