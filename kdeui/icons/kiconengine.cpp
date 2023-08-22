@@ -17,8 +17,8 @@
 */
 
 #include "kiconengine_p.h"
-
-#include <kiconloader.h>
+#include "kiconloader.h"
+#include "kdebug.h"
 
 #include <QtGui/QPainter>
 #include <QtGui/QMenu>
@@ -64,6 +64,18 @@ QSize KIconEngine::actualSize(const QSize &size, QIcon::Mode mode, QIcon::State 
     Q_UNUSED(mode)
     const int iconSize = qMin(size.width(), size.height());
     return QSize(iconSize, iconSize);
+}
+
+QList<QSize> KIconEngine::availableSizes(QIcon::Mode mode, QIcon::State state) const
+{
+    static QList<QSize> s_avaiablesizes = QList<QSize>()
+        << QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall)
+        << QSize(KIconLoader::SizeSmallMedium, KIconLoader::SizeSmallMedium)
+        << QSize(KIconLoader::SizeMedium, KIconLoader::SizeMedium)
+        << QSize(KIconLoader::SizeLarge, KIconLoader::SizeLarge)
+        << QSize(KIconLoader::SizeHuge, KIconLoader::SizeHuge)
+        << QSize(KIconLoader::SizeEnormous, KIconLoader::SizeEnormous);
+    return s_avaiablesizes;
 }
 
 void KIconEngine::paint(QPainter* painter, const QRect &rect, QIcon::Mode mode, QIcon::State state)

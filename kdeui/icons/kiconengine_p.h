@@ -53,8 +53,9 @@ class KIconEngine : public QIconEngineV2
      */
     KIconEngine(const QString &iconName, KIconLoader* iconLoader);
 
-    /// Reimplementations
+    // Reimplementations
     QSize actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state) final;
+    QList<QSize> availableSizes(QIcon::Mode mode, QIcon::State state) const final;
     void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state) final;
     QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) final;
 
