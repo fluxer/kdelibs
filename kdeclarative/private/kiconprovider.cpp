@@ -18,12 +18,12 @@
  ***************************************************************************/
 
 #include "kiconprovider_p.h"
+#include "kicon.h"
+#include "kiconloader.h"
+#include "kiconeffect.h"
 
 #include <QPixmap>
 #include <QSize>
-#include <kicon.h>
-#include <kiconloader.h>
-#include <kiconeffect.h>
 
 KIconProvider::KIconProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
@@ -32,7 +32,7 @@ KIconProvider::KIconProvider()
 
 QPixmap KIconProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    // We need to handle QIcon::state
+    // handle QIcon::state
     const QStringList source = id.split('/');
     if (source.size() < 1) {
         return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
@@ -52,11 +52,11 @@ QPixmap KIconProvider::requestPixmap(const QString &id, QSize *size, const QSize
         const QString state(source.at(1));
         int finalState = KIconLoader::DefaultState;
 
-        if (state == "active") {
+        if (state == QLatin1String("active")) {
             finalState = KIconLoader::ActiveState;
-        } else if (state == "disabled") {
+        } else if (state == QLatin1String("disabled")) {
             finalState = KIconLoader::DisabledState;
-        } else if (state == "last") {
+        } else if (state == QLatin1String("last")) {
             finalState = KIconLoader::LastState;
         }
 
