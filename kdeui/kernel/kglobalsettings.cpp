@@ -117,8 +117,9 @@ void KGlobalSettings::activate(ActivateOptions options)
 
 int KGlobalSettings::dndEventDelay()
 {
-    KConfigGroup g(KGlobal::config(), "General");
-    return g.readEntry("StartDragDist", QApplication::startDragDistance());
+    // NOTE: set by the platform plugin, see:
+    // kde-workspace/qguiplatformplugin_kde/qguiplatformplugin_kde.cpp
+    return QApplication::startDragDistance();
 }
 
 bool KGlobalSettings::singleClick()
