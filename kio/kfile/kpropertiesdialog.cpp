@@ -2993,6 +2993,7 @@ public:
         , m_suidBool(false)
         , m_startupBool(false)
         , m_systrayBool(false)
+        , m_canSystrayBool(false)
     {
     }
     ~KDesktopPropsPluginPrivate()
@@ -3012,6 +3013,7 @@ public:
     bool m_suidBool;
     bool m_startupBool;
     bool m_systrayBool;
+    bool m_canSystrayBool;
 };
 
 KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
@@ -3068,8 +3070,8 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
     QString genNameStr = _config.readGenericName();
     QString commentStr = _config.readComment();
     QString commandStr = config.readEntry("Exec", QString());
-    if (commandStr.startsWith(QLatin1String("ksystraycmd "))) {
-        commandStr.remove(0, 12);
+    if (commandStr.endsWith(QLatin1String(" -tray"))) {
+        commandStr.chop(6);
         d->m_systrayBool = true;
     } else {
         d->m_systrayBool = false;
@@ -3083,6 +3085,7 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
     d->m_suidUserStr = config.readEntry("X-KDE-Username");
     d->m_startupBool = config.readEntry("StartupNotify", false);
     d->m_startupClassStr = config.readEntry("StartupWMClass", QString());
+    d->m_canSystrayBool = config.readEntry("X-KDE-SysTray", false);
 
     const QStringList mimeTypes = config.readXdgListEntry("MimeType");
 
@@ -3220,7 +3223,7 @@ void KDesktopPropsPlugin::applyChanges()
     config.writeEntry("GenericName", d->w->genNameEdit->text(), KConfigGroup::Persistent | KConfigGroup::Localized ); // for compat
 
     if (d->m_systrayBool) {
-        config.writeEntry("Exec", d->w->commandEdit->text().prepend("ksystraycmd "));
+        config.writeEntry("Exec", d->w->commandEdit->text().append(" -tray"));
     } else {
         config.writeEntry("Exec", d->w->commandEdit->text());
     }
@@ -3253,6 +3256,7 @@ void KDesktopPropsPlugin::applyChanges()
     config.writeEntry("X-KDE-Username", d->m_suidUserStr);
     config.writeEntry("StartupNotify", d->m_startupBool);
     config.writeEntry("StartupWMClass", d->m_startupClassStr);
+    config.writeEntry("X-KDE-SysTray", d->m_canSystrayBool);
     config.sync();
 
     // KSycoca update needed?
@@ -3326,6 +3330,7 @@ void KDesktopPropsPlugin::slotAdvanced()
     w.startupClassEdit->setEnabled(d->m_startupBool);
     w.startupClassLabel->setEnabled(d->m_startupBool);
     w.systrayCheck->setChecked(d->m_systrayBool);
+    w.systrayCheck->setEnabled(d->m_canSystrayBool);
 
     // Provide username completion up to 1000 users.
     KCompletion *kcom = new KCompletion;

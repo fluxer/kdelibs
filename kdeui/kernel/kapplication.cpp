@@ -55,8 +55,12 @@
 #include "kmessageboxmessagehandler.h"
 #include "kwindowsystem.h"
 #include "kde_file.h"
-#include <kstartupinfo.h>
-#include <kcomponentdata.h>
+#include "kstartupinfo.h"
+#include "kcomponentdata.h"
+#include "kstatusnotifieritem.h"
+#include "kmainwindow.h"
+#include "kmenu.h"
+#include "kactioncollection.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -112,6 +116,155 @@ static void quit_handler(int sig)
     qApp->quit();
 }
 
+class KAppStatusNotifierItem : public KStatusNotifierItem
+{
+    Q_OBJECT
+public:
+    KAppStatusNotifierItem(const KComponentData &componentData, QObject* parent = nullptr);
+
+private Q_SLOTS:
+    void slotActivateRequested(bool active, const QPoint &pos);
+    void slotSkipTaskBar();
+    void slotSkipPager();
+    void slotWindowChanged(WId id);
+
+private:
+    void updateStatus(const QString &name, const QString &icon);
+
+private:
+    QAction* m_skiptaskbaraction;
+    QAction* m_skippageraction;
+};
+
+KAppStatusNotifierItem::KAppStatusNotifierItem(const KComponentData &componentData, QObject* parent)
+    : KStatusNotifierItem(QString::number(::getpid()), parent),
+    m_skiptaskbaraction(nullptr),
+    m_skippageraction(nullptr)
+{
+    setCategory(KStatusNotifierItem::ApplicationStatus);
+    setStatus(KStatusNotifierItem::Active);
+
+    // TODO: -icon argument override
+    updateStatus(
+        componentData.aboutData()->programName(),
+        componentData.aboutData()->programIconName()
+    );
+
+    connect(
+        this, SIGNAL(activateRequested(bool,QPoint)),
+        this, SLOT(slotActivateRequested(bool,QPoint))
+    );
+
+    bool skiptaskbar = false;
+    bool skippager = false;
+    const QList<KMainWindow*> mainwindows = KMainWindow::memberList();
+    foreach (const KMainWindow* mainwindow, mainwindows) {
+        const WId mainwindowid = mainwindow->winId();
+        NETWinInfo netwininfo(
+            QX11Info::display(), mainwindowid, QX11Info::appRootWindow(),
+            NET::XAWMState | NET::WMState
+        );
+        if (netwininfo.state() & NET::SkipTaskbar) {
+            skiptaskbar = true;
+        }
+        if (netwininfo.state() & NET::SkipPager) {
+            skippager = true;
+        }
+    }
+
+    m_skiptaskbaraction = new QAction(i18n("&Skip Taskbar"), contextMenu()->contextMenu());
+    m_skiptaskbaraction->setCheckable(true);
+    m_skiptaskbaraction->setChecked(skiptaskbar);
+    connect(m_skiptaskbaraction, SIGNAL(triggered()), this, SLOT(slotSkipTaskBar()));
+    actionCollection()->addAction("tray_skiptaskbar", m_skiptaskbaraction);
+    contextMenu()->addAction(m_skiptaskbaraction);
+
+    m_skippageraction = new QAction(i18n("&Skip Pager"), contextMenu()->contextMenu());
+    m_skippageraction->setCheckable(true);
+    m_skippageraction->setChecked(skippager);
+    connect(m_skippageraction, SIGNAL(triggered()), this, SLOT(slotSkipPager()));
+    actionCollection()->addAction("tray_skippager", m_skippageraction);
+    contextMenu()->addAction(m_skippageraction);
+
+    connect(KWindowSystem::self(), SIGNAL(windowChanged(WId)), this, SLOT(slotWindowChanged(WId)));
+}
+
+void KAppStatusNotifierItem::updateStatus(const QString &name, const QString &icon)
+{
+    if (!name.isEmpty()) {
+        setTitle(name);
+    } else {
+        setTitle(i18n("KAppStatusNotifierItem"));
+    }
+    if (!icon.isEmpty()) {
+        setIconByName(icon);
+    } else {
+        setIconByName("xorg");
+    }
+    setToolTip(icon, name, QString());
+}
+
+void KAppStatusNotifierItem::slotActivateRequested(bool active, const QPoint &pos)
+{
+    Q_UNUSED(active);
+    Q_UNUSED(pos);
+    const QList<KMainWindow*> mainwindows = KMainWindow::memberList();
+    foreach (const KMainWindow* mainwindow, mainwindows) {
+        const WId mainwindowid = mainwindow->winId();
+        NETWinInfo netwininfo(
+            QX11Info::display(), mainwindowid, QX11Info::appRootWindow(),
+            NET::XAWMState | NET::WMState
+        );
+        kDebug() << "window state is" << mainwindowid << netwininfo.mappingState();
+        if (netwininfo.mappingState() != NET::Visible) {
+            KWindowSystem::activateWindow(mainwindowid);
+        } else {
+            KWindowSystem::minimizeWindow(mainwindowid);
+        }
+    }
+}
+
+void KAppStatusNotifierItem::slotSkipTaskBar()
+{
+    const bool skiptaskbar = m_skiptaskbaraction->isChecked();
+    const QList<KMainWindow*> mainwindows = KMainWindow::memberList();
+    foreach (const KMainWindow* mainwindow, mainwindows) {
+        const WId mainwindowid = mainwindow->winId();
+        if (skiptaskbar) {
+            KWindowSystem::clearState(mainwindowid, NET::SkipTaskbar);
+        } else {
+            KWindowSystem::setState(mainwindowid, NET::SkipTaskbar);
+        }
+    }
+    m_skiptaskbaraction->setChecked(!skiptaskbar);
+}
+
+void KAppStatusNotifierItem::slotSkipPager()
+{
+    const bool skippager = m_skippageraction->isChecked();
+    const QList<KMainWindow*> mainwindows = KMainWindow::memberList();
+    foreach (const KMainWindow* mainwindow, mainwindows) {
+        const WId mainwindowid = mainwindow->winId();
+        if (skippager) {
+            KWindowSystem::clearState(mainwindowid, NET::SkipPager);
+        } else {
+            KWindowSystem::setState(mainwindowid, NET::SkipPager);
+        }
+    }
+    m_skippageraction->setChecked(!skippager);
+}
+
+void KAppStatusNotifierItem::slotWindowChanged(WId id)
+{
+    Q_UNUSED(id);
+    QString subtitle;
+    const QList<KMainWindow*> mainwindows = KMainWindow::memberList();
+    foreach (const KMainWindow* mainwindow, mainwindows) {
+        subtitle.append(QString::fromLatin1("<p>%1</p>").arg(mainwindow->windowTitle()));
+    }
+    setToolTipSubTitle(subtitle);
+}
+
 /*
   Private data to make keeping binary compatibility easier
  */
@@ -122,10 +275,11 @@ public:
       : q(q)
       , componentData(cName)
       , startup_id("0")
-      , app_started_timer(0)
+      , app_started_timer(nullptr)
       , session_save(false)
-      , pSessionConfig( 0 )
-      , bSessionManagement( true )
+      , pSessionConfig(nullptr)
+      , bSessionManagement(true)
+      , statusNotifier(nullptr)
   {
   }
 
@@ -133,21 +287,23 @@ public:
       : q(q)
       , componentData(cData)
       , startup_id("0")
-      , app_started_timer(0)
+      , app_started_timer(nullptr)
       , session_save(false)
-      , pSessionConfig( 0 )
-      , bSessionManagement( true )
+      , pSessionConfig(nullptr)
+      , bSessionManagement(true)
+      , statusNotifier(nullptr)
   {
   }
 
   KApplicationPrivate(KApplication *q)
       : q(q)
       , componentData(KCmdLineArgs::aboutData())
-      , startup_id( "0" )
-      , app_started_timer( 0 )
-      , session_save( false )
-      , pSessionConfig( 0 )
-      , bSessionManagement( true )
+      , startup_id("0")
+      , app_started_timer(nullptr)
+      , session_save(false)
+      , pSessionConfig(nullptr)
+      , bSessionManagement(true)
+      , statusNotifier(nullptr)
   {
   }
 
@@ -160,17 +316,42 @@ public:
   void parseCommandLine( ); // Handle KDE arguments (Using KCmdLineArgs)
 
   KApplication *q;
+
   KComponentData componentData;
   QByteArray startup_id;
   QTimer* app_started_timer;
+
   bool session_save;
-
   QString sessionKey;
-
   KConfig* pSessionConfig; //instance specific application config object
   bool bSessionManagement;
+
+  KAppStatusNotifierItem *statusNotifier;
 };
 
+
+void kAppCreateTray()
+{
+    if (!kapp || kapp->d->statusNotifier) {
+        return;
+    }
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
+    if (!args) {
+        return;
+    }
+    if (args->isSet("tray")) {
+        kapp->d->statusNotifier = new KAppStatusNotifierItem(kapp->d->componentData, kapp);
+    }
+}
+
+void kAppDestroyTray()
+{
+    if (!kapp) {
+        return;
+    }
+    delete kapp->d->statusNotifier;
+    kapp->d->statusNotifier = nullptr;
+}
 
 static QList< QWeakPointer< QWidget > > *x11Filter = 0;
 
@@ -579,8 +760,14 @@ void KApplication::saveState( QSessionManager& sm )
             restartCommand.append(QLatin1String("-display"));
             restartCommand.append(QLatin1String(displayname));
         }
-        sm.setRestartCommand( restartCommand );
     }
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
+    if (args && args->isSet("tray")) {
+        restartCommand.append(QLatin1String("-tray"));
+    }
+
+    sm.setRestartCommand( restartCommand );
 
     // finally: do session management
     bool canceled = false;
@@ -637,8 +824,7 @@ void KApplicationPrivate::parseCommandLine( )
     if (!args)
         return;
 
-    if (qgetenv("KDE_DEBUG").isEmpty() && args->isSet("crashhandler"))
-    {
+    if (qgetenv("KDE_DEBUG").isEmpty() && args->isSet("crashhandler")) {
         // setup default crash handler
         KCrash::setFlags(KCrash::Notify | KCrash::Log);
     }
@@ -664,8 +850,7 @@ void KApplicationPrivate::parseCommandLine( )
     }
 #endif
 
-    if (args->isSet("smkey"))
-    {
+    if (args->isSet("smkey")) {
         sessionKey = args->getOption("smkey");
     }
 }
@@ -835,4 +1020,4 @@ void KApplicationPrivate::_k_disableAutorestartSlot()
 }
 
 #include "moc_kapplication.cpp"
-
+#include "kapplication.moc"

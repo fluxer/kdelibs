@@ -307,6 +307,8 @@ private:
   KApplication& operator=(const KApplication&);
 
   friend class KApplicationPrivate;
+  friend void kAppCreateTray();
+  friend void kAppDestroyTray();
   KApplicationPrivate* const d;
 
   Q_PRIVATE_SLOT(d, void _k_x11FilterDestroyed())

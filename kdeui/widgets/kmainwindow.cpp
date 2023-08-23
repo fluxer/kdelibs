@@ -197,6 +197,9 @@ K_GLOBAL_STATIC(KMWSessionManager, ksm)
 K_GLOBAL_STATIC(QList<KMainWindow*>, sMemberList)
 static bool being_first = true;
 
+extern void kAppCreateTray();
+extern void kAppDestroyTray();
+
 KMainWindow::KMainWindow( QWidget* parent, Qt::WindowFlags f )
     : QMainWindow(parent, f), k_ptr(new KMainWindowPrivate)
 {
@@ -270,6 +273,8 @@ void KMainWindowPrivate::init(KMainWindow *_q)
     letDirtySettings = true;
 
     sizeApplied = false;
+
+    kAppCreateTray();
 }
 
 static bool endsWithHashNumber( const QString& s )
@@ -450,6 +455,9 @@ KMainWindow::~KMainWindow()
     sMemberList->removeAll( this );
     delete static_cast<QObject *>(k_ptr->dockResizeListener);  //so we don't get anymore events after k_ptr is destroyed
     delete k_ptr;
+    if (sMemberList->isEmpty()) {
+        kAppDestroyTray();
+    }
     KGlobal::deref();
 }
 

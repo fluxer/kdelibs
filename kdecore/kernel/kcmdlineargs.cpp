@@ -278,6 +278,7 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
 #ifdef Q_WS_X11
     kde_options.add("waitforwm",           ki18n("Waits for a WM_NET compatible windowmanager"));
 #endif
+    kde_options.add("tray",                ki18n("Show tray icon"));
     kde_options.add("geometry <geometry>", ki18n("sets the client geometry of the main widget - see man X for the argument format (usually WidthxHeight+XPos+YPos)"));
     kde_options.add("smkey <sessionKey>"); // this option is obsolete and exists only to allow smooth upgrades from sessions
 }
