@@ -912,13 +912,21 @@ KDbusImageVector KStatusNotifierItemPrivate::iconToVector(const QIcon &icon)
 
     QPixmap iconPixmap;
 
-    //if an icon exactly that size wasn't found don't add it to the vector
-    foreach (const QSize &size, icon.availableSizes()) {
-        //hopefully huge and enormous not necessary right now, since it's quite costly
+    bool imageAdded = false;
+    const QList<QSize> availableSizes = icon.availableSizes();
+    foreach (const QSize &size, availableSizes) {
+        // hopefully huge and enormous not necessary right now since it's quite costly
         if (size.width() <= KIconLoader::SizeLarge) {
+            imageAdded = true;
             iconPixmap = icon.pixmap(size);
             iconVector.append(imageToStruct(iconPixmap.toImage()));
         }
+    }
+    if (!imageAdded && !availableSizes.isEmpty()) {
+        // but if only enormous size is available scale it down and add that, this happens to be
+        // the case for some window icons
+        iconPixmap = icon.pixmap(KIconLoader::SizeLarge);
+        iconVector.append(imageToStruct(iconPixmap.toImage()));
     }
 
     return iconVector;
