@@ -32,7 +32,7 @@
  */
 class KNotificationManager : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public: 
     static KNotificationManager* self();
     ~KNotificationManager();
@@ -40,8 +40,8 @@ public:
     /**
      * send the dbus call to the knotify server
      */
-    bool notify(KNotification *n, const QPixmap& pix, const QStringList &action,
-                const KNotification::ContextList& contexts, const QString &appname);
+    bool notify(KNotification *n, const QPixmap &pix, const QStringList &action,
+                const KNotification::ContextList &contexts, const QString &appname);
 
     /**
      * send the close dcop call to the knotify server for the notification with the identifier @p id .

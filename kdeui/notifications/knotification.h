@@ -477,7 +477,7 @@ private Q_SLOTS:
 private:
     struct Private;
     Private *const d;
-	
+
 protected:
     /**
      * reimplemented for internal reasons
@@ -571,14 +571,14 @@ public:
                                 const NotificationFlags &flags = CloseOnTimeout);
 
     /**
-    * This is a simple substitution for QApplication::beep()
-    *
-    * @param reason a short text explaining what has happened (may be empty)
-    * @param widget the widget the notification refers to
-    */
+     * This is a simple substitution for QApplication::beep()
+     *
+     * @param reason a short text explaining what has happened (may be empty)
+     * @param widget the widget the notification refers to
+     */
     static void beep(const QString &reason = QString() , QWidget *widget = nullptr);
     
-    //prevent warning
+    // prevent warning
     using QObject::event;
 };
 

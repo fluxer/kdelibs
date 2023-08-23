@@ -71,7 +71,7 @@ struct KNotification::Private
 
 KNotification::KNotification(const QString &eventId, QWidget *parent, const NotificationFlags &flags)
     : QObject(parent),
-    d(new Private)
+    d(new Private())
 {
     d->eventId = eventId;
     d->flags = flags;
@@ -83,7 +83,7 @@ KNotification::KNotification(const QString &eventId, QWidget *parent, const Noti
 
 KNotification::KNotification( const QString& eventId, const NotificationFlags& flags, QObject *parent)
     : QObject(parent),
-    d(new Private)
+    d(new Private())
 {
     d->eventId = eventId;
     d->flags = flags;
@@ -244,7 +244,8 @@ void KNotification::close()
     if (d->id >= 0) {
         KNotificationManager::self()->close(d->id);
     }
-    if (d->id != -1) { // still waiting for receiving the id
+    if (d->id != -1) {
+        // still waiting for receiving the id
         deleteLater();
     }
     d->id = -2;
@@ -260,9 +261,9 @@ void KNotification::raiseWidget()
     Private::raiseWidget(d->widget);
 }
 
+//TODO  this function is far from finished.
 void KNotification::Private::raiseWidget(QWidget *w)
 {
-    //TODO  this function is far from finished.
     if (w->isTopLevel()) {
         w->raise();
         KWindowSystem::activateWindow(w->winId());
@@ -314,8 +315,8 @@ KNotification* KNotification::event(StandardEvent eventid , const QString &title
             message = QLatin1String("catastrophe");
             break;
         }
-        case Notification: { // fall through
-        default:
+        case Notification: // fall through
+        default: {
             message = QLatin1String("notification");
             break;
         }
@@ -366,7 +367,7 @@ void KNotification::sendEvent()
     } else if (d->id > 0) {
         KNotificationManager::self()->reemit(this, d->id);
     } else if (d->id == -1) {
-        //schedule an update.
+        // schedule an update.
         d->needUpdate = true;
     }
 }
