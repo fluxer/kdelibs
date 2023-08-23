@@ -257,7 +257,6 @@ void KNotification::raiseWidget()
     if (!d->widget) {
         return;
     }
-
     Private::raiseWidget(d->widget);
 }
 
@@ -277,29 +276,29 @@ void KNotification::Private::raiseWidget(QWidget *w)
     }
 }
 
-KNotification *KNotification::event(const QString &eventid , const QString &title, const QString &text,
-        const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags, const KComponentData &componentData)
+KNotification* KNotification::event(const QString &eventid , const QString &title, const QString &text,
+                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags,
+                                    const KComponentData &componentData)
 {
     KNotification *notify = new KNotification(eventid, widget, flags);
     notify->setTitle(title);
     notify->setText(text);
     notify->setPixmap(pixmap);
     notify->setComponentData(componentData);
-
     QTimer::singleShot(0, notify, SLOT(sendEvent()));
-
     return notify;
 }
 
-KNotification *KNotification::event(const QString &eventid, const QString &text,
-        const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags, const KComponentData &componentData)
+KNotification* KNotification::event(const QString &eventid, const QString &text,
+                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags,
+                                    const KComponentData &componentData)
 {
     return event(eventid, QString(), text, pixmap, widget, flags, componentData);
 }
 
 
-KNotification *KNotification::event(StandardEvent eventid , const QString &title, const QString &text,
-        const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
+KNotification* KNotification::event(StandardEvent eventid , const QString &title, const QString &text,
+                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
 {
     QString message;
     switch (eventid) {
@@ -325,7 +324,7 @@ KNotification *KNotification::event(StandardEvent eventid , const QString &title
 }
 
 KNotification *KNotification::event(StandardEvent eventid, const QString &text,
-        const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
+                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
 {
     return event(eventid, QString(), text, pixmap, widget , flags);
 }
