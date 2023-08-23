@@ -206,30 +206,22 @@ bool KGlobalSettings::shadeSortColumn()
 // NOTE: keep in sync with kde-workspace/kcontrol/fonts/fonts.cpp
 QFont KGlobalSettings::generalFont()
 {
-    static const QFont defaultFont(KDE_DEFAULT_FONT, 9);
-    KConfigGroup g(KGlobal::config(), "General");
-    return g.readEntry("font", defaultFont);
+    return QApplication::font();
 }
 
 QFont KGlobalSettings::fixedFont()
 {
-    static const QFont defaultFont(KDE_DEFAULT_FIXED_FONT, 9);
-    KConfigGroup g(KGlobal::config(), "General");
-    return g.readEntry("fixed", defaultFont);
+    return QApplication::font("QTextEdit");
 }
 
 QFont KGlobalSettings::toolBarFont()
 {
-    static const QFont defaultFont(KDE_DEFAULT_FIXED_FONT, 8);
-    KConfigGroup g(KGlobal::config(), "General");
-    return g.readEntry("toolBarFont", defaultFont);
+    return QApplication::font("QToolBar");
 }
 
 QFont KGlobalSettings::menuFont()
 {
-    static const QFont defaultFont(KDE_DEFAULT_FONT, 9);
-    KConfigGroup g(KGlobal::config(), "General");
-    return g.readEntry("menuFont", defaultFont);
+    return QApplication::font("QMenu");
 }
 
 QFont KGlobalSettings::windowTitleFont()
@@ -586,11 +578,21 @@ void KGlobalSettings::Private::kdisplaySetPalette()
 void KGlobalSettings::Private::kdisplaySetFont()
 {
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
-        QApplication::setFont(KGlobalSettings::generalFont());
-        const QFont menuFont = KGlobalSettings::menuFont();
+        QFont defaultFont(KDE_DEFAULT_FONT, 9);
+        KConfigGroup g(KGlobal::config(), "General");
+        const QFont generalFont = g.readEntry("font", defaultFont);
+        const QFont menuFont = g.readEntry("menuFont", defaultFont);
+        defaultFont = QFont(KDE_DEFAULT_FIXED_FONT, 8);
+        const QFont toolBarFont = g.readEntry("toolBarFont", defaultFont);
+        defaultFont = QFont(KDE_DEFAULT_FIXED_FONT, 9);
+        const QFont fixedFont = g.readEntry("fixed", defaultFont);
+
+        QApplication::setFont(generalFont);
         QApplication::setFont(menuFont, "QMenuBar");
         QApplication::setFont(menuFont, "QMenu");
-        QApplication::setFont(KGlobalSettings::toolBarFont(), "QToolBar");
+        QApplication::setFont(toolBarFont, "QToolBar");
+        QApplication::setFont(fixedFont, "QTextEdit");
+        QApplication::setFont(fixedFont, "QPlainTextEdit");
     }
     emit q->kdisplayFontChanged();
     emit q->appearanceChanged();
