@@ -80,7 +80,7 @@ void KNotificationManager::notificationActivated(int id, int action)
 void KNotificationManager::notificationClosed(int id)
 {
     if (m_notifications.contains(id)) {
-        kDebug( 299 ) << id;
+        kDebug(299) << id;
         KNotification *n = m_notifications[id];
         m_notifications.remove(id);
         n->close();
@@ -92,7 +92,7 @@ void KNotificationManager::close(int id, bool force)
 {
     if (force || m_notifications.contains(id)) {
         m_notifications.remove(id);
-        kDebug( 299 ) << id;
+        kDebug(299) << id;
         m_knotify->closeNotification(id);
     }
 }
@@ -110,7 +110,7 @@ bool KNotificationManager::notify(KNotification* n, const QPixmap &pix,
     pix.save(&buffer, imageFormat);
 
     QVariantList contextList;
-    foreach (const KNotification::Context& ctx, contexts) {
+    foreach (const KNotification::Context &ctx, contexts) {
         QVariantList vl;
         vl << ctx.first << ctx.second;
         contextList << vl;
@@ -124,7 +124,7 @@ bool KNotificationManager::notify(KNotification* n, const QPixmap &pix,
     args << n->eventId() << (appname.isEmpty() ? KGlobal::mainComponent().componentName() : appname);
     args.append(QVariant(contextList)); 
     args << n->title() << n->text() <<  pixmapData << QVariant(actions) << timeout << qlonglong(winId) ;
-    return m_knotify->callWithCallback( "event", args, n, SLOT(slotReceivedId(int)), SLOT(slotReceivedIdError(QDBusError)));
+    return m_knotify->callWithCallback("event", args, n, SLOT(slotReceivedId(int)), SLOT(slotReceivedIdError(QDBusError)));
 }
 
 void KNotificationManager::insert(KNotification *n, int id)
@@ -151,7 +151,7 @@ void KNotificationManager::update(KNotification * n, int id)
 void KNotificationManager::reemit(KNotification * n, int id)
 {
     QVariantList contextList;
-    foreach (const KNotification::Context& ctx, n->contexts()) {
+    foreach (const KNotification::Context &ctx, n->contexts()) {
         // kDebug(299) << "add context " << ctx.first << "-" << ctx.second;
         QVariantList vl;
         vl << ctx.first << ctx.second;
