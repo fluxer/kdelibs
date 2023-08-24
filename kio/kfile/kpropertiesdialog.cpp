@@ -3085,7 +3085,7 @@ KDesktopPropsPlugin::KDesktopPropsPlugin(KPropertiesDialog *props)
     d->m_suidUserStr = config.readEntry("X-KDE-Username");
     d->m_startupBool = config.readEntry("StartupNotify", false);
     d->m_startupClassStr = config.readEntry("StartupWMClass", QString());
-    d->m_canSystrayBool = config.readEntry("X-KDE-SysTray", false);
+    d->m_canSystrayBool = config.readEntry("X-KDE-HasTrayOption", false);
 
     const QStringList mimeTypes = config.readXdgListEntry("MimeType");
 
@@ -3256,7 +3256,7 @@ void KDesktopPropsPlugin::applyChanges()
     config.writeEntry("X-KDE-Username", d->m_suidUserStr);
     config.writeEntry("StartupNotify", d->m_startupBool);
     config.writeEntry("StartupWMClass", d->m_startupClassStr);
-    config.writeEntry("X-KDE-SysTray", d->m_canSystrayBool);
+    config.writeEntry("X-KDE-HasTrayOption", d->m_canSystrayBool);
     config.sync();
 
     // KSycoca update needed?
