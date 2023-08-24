@@ -172,14 +172,14 @@ KAppStatusNotifierItem::KAppStatusNotifierItem(const KComponentData &componentDa
         }
     }
 
-    m_skiptaskbaraction = new QAction(i18n("&Skip Taskbar"), contextMenu()->contextMenu());
+    m_skiptaskbaraction = new QAction(i18n("Skip &Taskbar"), contextMenu()->contextMenu());
     m_skiptaskbaraction->setCheckable(true);
     m_skiptaskbaraction->setChecked(skiptaskbar);
     connect(m_skiptaskbaraction, SIGNAL(triggered()), this, SLOT(slotSkipTaskBar()));
     actionCollection()->addAction("tray_skiptaskbar", m_skiptaskbaraction);
     contextMenu()->addAction(m_skiptaskbaraction);
 
-    m_skippageraction = new QAction(i18n("&Skip Pager"), contextMenu()->contextMenu());
+    m_skippageraction = new QAction(i18n("Skip &Pager"), contextMenu()->contextMenu());
     m_skippageraction->setCheckable(true);
     m_skippageraction->setChecked(skippager);
     connect(m_skippageraction, SIGNAL(triggered()), this, SLOT(slotSkipPager()));
