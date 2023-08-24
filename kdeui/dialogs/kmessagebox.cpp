@@ -117,16 +117,16 @@ static void sendNotification( QString message, //krazy:exclude=passbyvalue
     QString messageType;
     switch (icon) {
     case QMessageBox::Warning:
-        messageType = "messageWarning";
+        messageType = "kde/messageWarning";
         break;
     case QMessageBox::Critical:
-        messageType = "messageCritical";
+        messageType = "kde/messageCritical";
         break;
     case QMessageBox::Question:
-        messageType = "messageQuestion";
+        messageType = "kde/messageQuestion";
         break;
     default:
-        messageType = "messageInformation";
+        messageType = "kde/messageInformation";
         break;
     }
 
@@ -137,8 +137,9 @@ static void sendNotification( QString message, //krazy:exclude=passbyvalue
     }
 
     if ( !message.isEmpty() ) {
-        KNotification::event( messageType, message, QPixmap(), QWidget::find( parent_id ),
-                              KNotification::DefaultEvent | KNotification::CloseOnTimeout );
+        KNotification::event(
+            messageType, QString(), message, QString(), QWidget::find( parent_id )
+        );
     }
 }
 

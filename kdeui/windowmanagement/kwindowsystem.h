@@ -164,8 +164,6 @@ public:
      * of activating the window, which could be obtrusive, the window
      * will be marked specially as demanding user's attention.
      * See also explanation in description of activateWindow().
-     *
-     * Note that it's usually better to use KNotifyClient.
      */
     static void demandAttention( WId win, bool set = true );
 

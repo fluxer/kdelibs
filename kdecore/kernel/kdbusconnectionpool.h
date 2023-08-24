@@ -22,19 +22,24 @@
 #define KDBUSCONNECTIONPOOL_H
 
 #include <kdecore_export.h>
+
 #include <QtDBus/qdbusconnection.h>
 
 namespace KDBusConnectionPool
 {
+
 /**
- * The KDBusConnectionPool works around the problem
- * of QDBusConnection not being thread-safe. As soon as that
- * has been fixed (either directly in libdbus or with a work-
- * around in Qt) this method can be dropped in favor of
- * QDBusConnection::sessionBus().
+ * The KDBusConnectionPool works around the problem of QDBusConnection not being thread-safe.
  * @since 4.10.4
  */
 KDECORE_EXPORT QDBusConnection threadConnection();
+
+/**
+ * Checks if service is registered on the give connection.
+ * @since 4.24.0
+ */
+KDECORE_EXPORT bool isServiceRegistered(const QString &service, const QDBusConnection &connection);
+
 }
 
 #endif

@@ -36,7 +36,6 @@
 #include <QPolygon>
 #include <QTimer>
 #include <QToolTip>
-#include <QSystemTrayIcon>
 #include <QDesktopWidget>
 #include <QX11Info>
 
@@ -519,25 +518,6 @@ KPassivePopup *KPassivePopup::message(const QString &caption, const QString &tex
     return message(DEFAULT_POPUP_TYPE, caption, text, icon, parent, timeout);
 }
 
-KPassivePopup *KPassivePopup::message(const QString &caption, const QString &text,
-                                      const QPixmap &icon,
-                                      QSystemTrayIcon *parent, int timeout)
-{
-    return message(DEFAULT_POPUP_TYPE, caption, text, icon, parent, timeout);
-}
-
-KPassivePopup *KPassivePopup::message(const QString &text, QSystemTrayIcon *parent)
-{
-    return message(DEFAULT_POPUP_TYPE, QString(), text, QPixmap(), parent);
-}
-
-KPassivePopup *KPassivePopup::message(const QString &caption, const QString &text,
-                                      QSystemTrayIcon *parent)
-{
-    return message(DEFAULT_POPUP_TYPE, caption, text, QPixmap(), parent);
-}
-
-
 KPassivePopup *KPassivePopup::message(int popupStyle, const QString &caption, const QString &text,
                                       const QPixmap &icon,
                                       QWidget *parent, int timeout)
@@ -572,32 +552,6 @@ KPassivePopup *KPassivePopup::message(int popupStyle, const QString &caption, co
     pop->d->hideDelay = timeout;
     pop->show();
     return pop;
-}
-
-KPassivePopup *KPassivePopup::message(int popupStyle, const QString &caption, const QString &text,
-                                      const QPixmap &icon,
-                                      QSystemTrayIcon *parent, int timeout)
-{
-    KPassivePopup *pop = new KPassivePopup();
-    pop->setPopupStyle(popupStyle);
-    pop->setAutoDelete(true);
-    pop->setView(caption, text, icon);
-    pop->d->hideDelay = timeout;
-    QPoint pos = pop->calculateNearbyPoint(parent->geometry());
-    pop->show(pos);
-    pop->moveNear(parent->geometry());
-    return pop;
-}
-
-KPassivePopup *KPassivePopup::message(int popupStyle, const QString &text, QSystemTrayIcon *parent)
-{
-    return message(popupStyle, QString(), text, QPixmap(), parent);
-}
-
-KPassivePopup *KPassivePopup::message(int popupStyle, const QString &caption, const QString &text,
-                                      QSystemTrayIcon *parent)
-{
-    return message(popupStyle, caption, text, QPixmap(), parent);
 }
 
 #include "moc_kpassivepopup.cpp"

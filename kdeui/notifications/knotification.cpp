@@ -1,109 +1,293 @@
-/* This file is part of the KDE libraries
-   Copyright (C) 2005-2006 Olivier Goffart <ogoffart at kde.org>
+/*  This file is part of the KDE libraries
+    Copyright (C) 2023 Ivailo Monev <xakepa10@gmail.com>
 
-   code from KNotify/KNotifyClient
-   Copyright (c) 1997 Christian Esken (esken@kde.org)
-                 2000 Charles Samuels (charles@kde.org)
-                 2000 Stefan Schimanski (1Stein@gmx.de)
-                 2000 Matthias Ettrich (ettrich@kde.org)
-                 2000 Waldo Bastian <bastian@kde.org>
-                 2000-2003 Carsten Pfeiffer <pfeiffer@kde.org>
-                 2005 Allan Sandfeld Jensen <kde@carewolf.com>
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2, as published by the Free Software Foundation.
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License version 2 as published by the Free Software Foundation.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #include "knotification.h"
-#include "knotificationmanager_p.h"
+#include "kglobal.h"
+#include "kcomponentdata.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
+#include "kstandarddirs.h"
+#include "kwindowsystem.h"
+#include "kdbusconnectionpool.h"
+#include "kiconloader.h"
+#include "kpassivepopup.h"
+#include "kdebug.h"
 
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kiconloader.h>
-#include <kconfig.h>
-#include <kpassivepopup.h>
-#include <kdialog.h>
-#include <kwindowsystem.h>
-#include <kdebug.h>
-#include <kapplication.h>
-
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusReply>
 #include <QTimer>
-#include <QTabWidget>
-#include <QDBusError>
 
-struct KNotification::Private
+// for reference:
+// https://specifications.freedesktop.org/notification-spec/notification-spec-latest.html
+
+// see kdebug.areas
+static const int s_knotificationarea = 299;
+static const QString s_notifications = QString::fromLatin1("org.freedesktop.Notifications");
+
+class KNotificationManager : public QObject
 {
-    QString eventId;
-    int id;
-    int ref;
+    Q_OBJECT
+public:
+    KNotificationManager();
 
-    QWidget *widget;
+    void send(KNotification *notification, const bool persistent);
+    void close(KNotification *notification);
+
+private Q_SLOTS:
+    void slotNotificationClosed(uint eventid, uint reason);
+    void slotActionInvoked(uint eventid, const QString &action);
+
+private:
+    KConfig m_config;
+    QDBusInterface* m_notificationsiface;
+    QDBusInterface* m_kaudioplayeriface;
+    QMap<KNotification*,uint> m_notifications;
+};
+K_GLOBAL_STATIC(KNotificationManager, kNotificationManager);
+
+KNotificationManager::KNotificationManager()
+    : m_config(KGlobal::mainComponent().componentName() + ".notifyrc", KConfig::NoGlobals),
+    m_notificationsiface(nullptr),
+    m_kaudioplayeriface(nullptr)
+{
+    const QStringList notifyconfigs = KGlobal::dirs()->findAllResources("config", "notifications/*.notifyrc");
+    m_config.addConfigSources(notifyconfigs);
+}
+
+void KNotificationManager::send(KNotification *notification, const bool persistent)
+{
+    const QString eventid = notification->eventID();
+    const QStringList spliteventid = eventid.split(QLatin1Char('/'));
+    // qDebug() << Q_FUNC_INFO << spliteventid;
+    if (spliteventid.size() != 2) {
+        kWarning(s_knotificationarea) << "invalid notification ID" << eventid;
+        return;
+    }
+    KConfigGroup globalgroup(&m_config, spliteventid.at(0));
+    KConfigGroup eventgroup(&m_config, eventid);
+    QString eventtitle = notification->title();
+    if (eventtitle.isEmpty()) {
+        eventtitle = eventgroup.readEntry("Comment");
+    }
+    if (eventtitle.isEmpty()) {
+        eventtitle = globalgroup.readEntry("Comment");
+    }
+
+    QString eventtext = notification->text();
+    if (eventtext.isEmpty()) {
+        eventtext = eventgroup.readEntry("Name");
+    }
+    if (eventtext.isEmpty()) {
+        eventtext = globalgroup.readEntry("Name");
+    }
+
+    QString eventicon = notification->icon();
+    if (eventicon.isEmpty()) {
+        eventicon = eventgroup.readEntry("IconName");
+    }
+    if (eventicon.isEmpty()) {
+        eventicon = globalgroup.readEntry("IconName");
+    }
+
+    QStringList eventactions = eventgroup.readEntry("Actions", QStringList());
+    if (eventactions.isEmpty()) {
+        eventactions = globalgroup.readEntry("Actions", QStringList());
+    }
+    // qDebug() << Q_FUNC_INFO << eventactions << notification->actions();
+    if (eventactions.contains(QString::fromLatin1("Popup"))) {
+        if (!m_notificationsiface
+            && KDBusConnectionPool::isServiceRegistered(s_notifications, QDBusConnection::sessionBus())) {
+            m_notificationsiface = new QDBusInterface(
+                s_notifications, "/org/freedesktop/Notifications", s_notifications,
+                QDBusConnection::sessionBus(), this
+            );
+            connect(m_notificationsiface, SIGNAL(NotificationClosed(uint,uint)), this, SLOT(slotNotificationClosed(uint,uint)));
+            connect(m_notificationsiface, SIGNAL(ActionInvoked(uint,QString)), this, SLOT(slotActionInvoked(uint,QString)));
+        }
+        const int eventtimeout = (persistent ? 0 : -1);
+        if (!m_notificationsiface || !m_notificationsiface->isValid()) {
+            kWarning(s_knotificationarea) << "notifications interface is not valid";
+            const QPixmap eventpixmap = KIconLoader::global()->loadIcon(eventicon, KIconLoader::Small);
+            KPassivePopup* kpassivepopup = new KPassivePopup(notification->widget());
+            kpassivepopup->setTimeout(eventtimeout);
+            kpassivepopup->setView(eventtitle, eventtext, eventpixmap);
+            kpassivepopup->setAutoDelete(true);
+            // NOTE: KPassivePopup positions itself depending on the windows
+            kpassivepopup->show();
+        } else {
+            const uint eventid = m_notifications.value(notification);
+            // NOTE: there has to be id for each action, starting from 1
+            int actionscounter = 1;
+            QStringList eventactions;
+            foreach (const QString &eventaction, notification->actions()) {
+                eventactions.append(QString::number(actionscounter));
+                eventactions.append(eventaction);
+                actionscounter++;
+            }
+            const QString eventapp = KGlobal::mainComponent().componentName();
+            QVariantMap eventhints;
+            // NOTE: has to be set to be configurable via plasma notifications applet
+            eventhints.insert("x-kde-appname", eventapp);
+            QDBusReply<uint> notifyreply = m_notificationsiface->call(
+                QString::fromLatin1("Notify"),
+                eventapp,
+                eventid,
+                eventicon,
+                eventtitle,
+                eventtext,
+                eventactions,
+                eventhints,
+                eventtimeout
+            );
+            if (!notifyreply.isValid()) {
+                kWarning(s_knotificationarea) << "invalid notify reply" << notifyreply.error().message();
+            } else {
+                m_notifications.insert(notification, notifyreply.value());
+            }
+        }
+    }
+
+    if (eventactions.contains(QString::fromLatin1("Sound"))) {
+        QString eventsound = notification->icon();
+        if (eventsound.isEmpty()) {
+            eventsound = eventgroup.readEntry("Sound");
+        }
+        if (eventsound.isEmpty()) {
+            eventsound = globalgroup.readEntry("Sound");
+        }
+        const QString eventsoundfile = KStandardDirs::locate("sound", eventsound);
+        if (eventsoundfile.isEmpty()) {
+            kWarning(s_knotificationarea) << "sound not found" << eventsound;
+        } else {
+            kDebug(s_knotificationarea) << "playing notification sound" << eventsound;
+            if (!m_kaudioplayeriface) {
+                m_kaudioplayeriface = new QDBusInterface(
+                    "org.kde.kded", "/modules/kaudioplayer", "org.kde.kaudioplayer",
+                    QDBusConnection::sessionBus(), this
+                );
+            }
+            // TODO: configurable player
+            QDBusReply<void> playreply = m_kaudioplayeriface->call(
+                QString::fromLatin1("play"), eventsoundfile, QString::fromLatin1("knotification")
+            );
+            if (!playreply.isValid()) {
+                kWarning(s_knotificationarea) << "invalid play reply" << playreply.error().message();
+            }
+        }
+    }
+
+    if (eventactions.contains(QString::fromLatin1("Taskbar"))) {
+        const QWidget* eventwidget = notification->widget();
+        if (!eventwidget) {
+            kWarning(s_knotificationarea) << "taskbar event with no widget set" << eventid;
+        } else {
+            const WId eventwidgetid = eventwidget->winId();
+            kDebug(s_knotificationarea) << "marking notification task" << eventid << eventwidgetid;
+            KWindowSystem::demandAttention(eventwidgetid);
+        }
+    }
+}
+
+void KNotificationManager::close(KNotification *notification)
+{
+    QMutableMapIterator<KNotification*,uint> iter(m_notifications);
+    while (iter.hasNext()) {
+        iter.next();
+        if (iter.key() == notification) {
+            iter.remove();
+                QDBusReply<void> closereply = m_notificationsiface->call(
+                QString::fromLatin1("CloseNotification"),
+                iter.value()
+            );
+            if (!closereply.isValid()) {
+                kWarning(s_knotificationarea) << "invalid close reply" << closereply.error().message();
+            }
+        }
+    }
+}
+
+void KNotificationManager::slotNotificationClosed(uint eventid, uint reason)
+{
+    kDebug(s_knotificationarea) << "closing notifications due to interface" << reason;
+    QMutableMapIterator<KNotification*,uint> iter(m_notifications);
+    while (iter.hasNext()) {
+        iter.next();
+        if (iter.value() == eventid) {
+            KNotification* notification = iter.key();
+            notification->close();
+        }
+    }
+}
+
+void KNotificationManager::slotActionInvoked(uint eventid, const QString &action)
+{
+    kDebug(s_knotificationarea) << "notification action invoked" << action;
+    QMutableMapIterator<KNotification*,uint> iter(m_notifications);
+    while (iter.hasNext()) {
+        iter.next();
+        if (iter.value() == eventid) {
+            KNotification* notification = iter.key();
+            notification->activate(action.toUInt());
+        }
+    }
+}
+
+class KNotificationPrivate
+{
+public:
+    KNotificationPrivate();
+
+    QString eventid;
     QString title;
     QString text;
+    QString icon;
+    QWidget *widget;
     QStringList actions;
-    QPixmap pixmap;
-    ContextList contexts;
-    NotificationFlags flags;
-    KComponentData componentData;
-
-    QTimer updateTimer;
-    bool needUpdate;
-
-    Private() : id(0), ref(1), widget(0l), needUpdate(false) {}
-    /**
-     * recursive function that raise the widget. @p w
-     *
-     * @see raiseWidget()
-     */
-    static void raiseWidget(QWidget *w);
+    KNotification::NotificationFlags flags;
 };
 
-KNotification::KNotification(const QString &eventId, QWidget *parent, const NotificationFlags &flags)
-    : QObject(parent),
-    d(new Private())
+KNotificationPrivate::KNotificationPrivate()
+    : widget(nullptr)
 {
-    d->eventId = eventId;
-    d->flags = flags;
-    setWidget(parent);
-    connect(&d->updateTimer,SIGNAL(timeout()), this, SLOT(update()));
-    d->updateTimer.setSingleShot(true);
-    d->updateTimer.setInterval(100);
 }
 
-KNotification::KNotification(const QString &eventId, const NotificationFlags &flags, QObject *parent)
-    : QObject(parent),
-    d(new Private())
-{
-    d->eventId = eventId;
-    d->flags = flags;
-    connect(&d->updateTimer,SIGNAL(timeout()), this, SLOT(update()));
-    d->updateTimer.setSingleShot(true);
-    d->updateTimer.setInterval(100);
-}
 
+KNotification::KNotification(QObject *parent)
+    : QObject(parent),
+    d(new KNotificationPrivate())
+{
+}
 
 KNotification::~KNotification()
 {
-    if (d->id > 0) {
-        KNotificationManager::self()->close(d->id);
-    }
+    close();
     delete d;
 }
 
-QString KNotification::eventId() const
+QString KNotification::eventID() const
 {
-    return d->eventId;
+    return d->eventid;
+}
+
+void KNotification::setEventID(const QString &eventid)
+{
+    d->eventid = eventid;
 }
 
 QString KNotification::title() const
@@ -111,54 +295,42 @@ QString KNotification::title() const
     return d->title;
 }
 
+void KNotification::setTitle(const QString &title)
+{
+    d->title = title;
+}
+
 QString KNotification::text() const
 {
     return d->text;
 }
 
-QWidget *KNotification::widget() const
+void KNotification::setText(const QString &text)
+{
+    d->text = text;
+}
+
+QString KNotification::icon() const
+{
+    return d->icon;
+}
+
+void KNotification::setIcon(const QString &icon)
+{
+    d->icon = icon;
+}
+
+QWidget* KNotification::widget() const
 {
     return d->widget;
 }
 
-void KNotification::setWidget(QWidget *wid)
+void KNotification::setWidget(QWidget *widget)
 {
-    d->widget = wid;
-    setParent(wid);
-    if (wid && (d->flags & CloseWhenWidgetActivated)) {
-        wid->installEventFilter(this);
-    }
-}
-
-void KNotification::setTitle(const QString &title)
-{
-    d->needUpdate = true;
-    d->title = title;
-    if (d->id > 0) {
-        d->updateTimer.start();
-    }
-}
-
-void KNotification::setText(const QString &text)
-{
-    d->needUpdate = true;
-    d->text = text;
-    if (d->id > 0) {
-        d->updateTimer.start();
-    }
-}
-
-QPixmap KNotification::pixmap() const
-{
-    return d->pixmap;
-}
-
-void KNotification::setPixmap(const QPixmap &pix)
-{
-    d->needUpdate = true;
-    d->pixmap = pix;
-    if (d->id > 0) {
-        d->updateTimer.start();
+    d->widget = widget;
+    setParent(widget);
+    if (widget && (d->flags & KNotification::CloseWhenWidgetActivated)) {
+        widget->installEventFilter(this);
     }
 }
 
@@ -167,33 +339,9 @@ QStringList KNotification::actions() const
     return d->actions;
 }
 
-void KNotification::setActions(const QStringList &as)
+void KNotification::setActions(const QStringList &actions)
 {
-    d->needUpdate = true;
-    d->actions = as;
-    if (d->id > 0) {
-        d->updateTimer.start();
-    }
-}
-
-KNotification::ContextList KNotification::contexts() const
-{
-    return d->contexts;
-}
-
-void KNotification::setContexts(const KNotification::ContextList &contexts)
-{
-    d->contexts = contexts;
-}
-
-void KNotification::addContext(const KNotification::Context &context)
-{
-    d->contexts << context;
-}
-
-void KNotification::addContext(const QString &context_key, const QString &context_value)
-{
-    d->contexts << qMakePair(context_key , context_value);
+    d->actions = actions;
 }
 
 KNotification::NotificationFlags KNotification::flags() const
@@ -206,18 +354,20 @@ void KNotification::setFlags(const NotificationFlags &flags)
     d->flags = flags;
 }
 
-void KNotification::setComponentData(const KComponentData &c)
+void KNotification::send()
 {
-    d->componentData = c;
+    kDebug(s_knotificationarea) << "sending notification" << d->eventid;
+    const bool persistent = (flags() & KNotification::Persistent);
+    kNotificationManager->send(this, persistent);
+    if (!persistent) {
+        close();
+    }
 }
 
 void KNotification::activate(unsigned int action)
 {
+    kDebug(s_knotificationarea) << "activating notification action" << d->eventid << action;
     switch (action) {
-        case 0: {
-            emit activated();
-            break;
-        }
         case 1: {
             emit action1Activated();
             break;
@@ -230,197 +380,56 @@ void KNotification::activate(unsigned int action)
             emit action3Activated();
             break;
         }
+        default: {
+            kWarning(s_knotificationarea) << "invalid action" << action;
+            break;
+        }
     }
-    emit activated(action);
-    if (d->id != -1) {
-        deleteLater();
-    }
-    d->id = -2;
+    close();
 }
-
 
 void KNotification::close()
 {
-    if (d->id >= 0) {
-        KNotificationManager::self()->close(d->id);
-    }
-    if (d->id != -1) {
-        // still waiting for receiving the id
-        deleteLater();
-    }
-    d->id = -2;
+    kDebug(s_knotificationarea) << "closing notification" << d->eventid;
+    kNotificationManager->close(this);
     emit closed();
-}
-
-
-void KNotification::raiseWidget()
-{
-    if (!d->widget) {
-        return;
-    }
-    Private::raiseWidget(d->widget);
-}
-
-//TODO  this function is far from finished.
-void KNotification::Private::raiseWidget(QWidget *w)
-{
-    if (w->isTopLevel()) {
-        w->raise();
-        KWindowSystem::activateWindow(w->winId());
-    } else {
-        QWidget *pw = w->parentWidget();
-        raiseWidget(pw);
-
-        if (QTabWidget *tab_widget = qobject_cast<QTabWidget*>(pw)) {
-            tab_widget->setCurrentIndex(tab_widget->indexOf(w));
-        }
-    }
-}
-
-KNotification* KNotification::event(const QString &eventid , const QString &title, const QString &text,
-                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags,
-                                    const KComponentData &componentData)
-{
-    KNotification *notify = new KNotification(eventid, widget, flags);
-    notify->setTitle(title);
-    notify->setText(text);
-    notify->setPixmap(pixmap);
-    notify->setComponentData(componentData);
-    QTimer::singleShot(0, notify, SLOT(sendEvent()));
-    return notify;
-}
-
-KNotification* KNotification::event(const QString &eventid, const QString &text,
-                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags,
-                                    const KComponentData &componentData)
-{
-    return event(eventid, QString(), text, pixmap, widget, flags, componentData);
-}
-
-
-KNotification* KNotification::event(StandardEvent eventid , const QString &title, const QString &text,
-                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
-{
-    QString message;
-    switch (eventid) {
-        case Warning: {
-            message = QLatin1String("warning");
-            break;
-        }
-        case Error: {
-            message = QLatin1String("fatalerror");
-            break;
-        }
-        case Catastrophe: {
-            message = QLatin1String("catastrophe");
-            break;
-        }
-        case Notification: // fall through
-        default: {
-            message = QLatin1String("notification");
-            break;
-        }
-    }
-    return event(message, title, text, pixmap, widget, flags | DefaultEvent);
-}
-
-KNotification *KNotification::event(StandardEvent eventid, const QString &text,
-                                    const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
-{
-    return event(eventid, QString(), text, pixmap, widget , flags);
-}
-
-void KNotification::ref()
-{
-    d->ref++;
-}
-
-void KNotification::deref()
-{
-    d->ref--;
-    if (d->ref == 0) {
-        close();
-    }
-}
-
-void KNotification::beep(const QString &reason, QWidget *widget)
-{
-    event(QLatin1String("beep"), reason, QPixmap(), widget, CloseOnTimeout | DefaultEvent);
-}
-
-void KNotification::sendEvent()
-{
-    d->needUpdate = false;
-    if (d->id == 0) {
-        QString appname;
-        if (d->flags & DefaultEvent) {
-            appname = QLatin1String("kde");
-        } else if(d->componentData.isValid()) {
-            appname = d->componentData.componentName();
-        } else {
-            appname = KGlobal::mainComponent().componentName();
-        }
-
-        if (KNotificationManager::self()->notify(this, d->pixmap, d->actions, d->contexts, appname)) {
-            d->id = -1;
-        }
-    } else if (d->id > 0) {
-        KNotificationManager::self()->reemit(this, d->id);
-    } else if (d->id == -1) {
-        // schedule an update.
-        d->needUpdate = true;
-    }
-}
-
-void KNotification::slotReceivedId(int id)
-{
-    if (d->id == -2) { //we are already closed
-        KNotificationManager::self()->close(id, /*force=*/ true);
-        deleteLater();
-        return;
-    }
-    d->id = id;
-    if (d->id > 0) {
-        KNotificationManager::self()->insert(this, d->id);
-        if (d->needUpdate) {
-            sendEvent();
-        }
-    } else {
-        //if there is no presentation, delete the object
-        QTimer::singleShot(0, this, SLOT(deref()));
-    }
-}
-
-void KNotification::slotReceivedIdError(const QDBusError &error)
-{
-    if (d->id == -2) { //we are already closed
-        deleteLater();
-        return;
-    }
-    kWarning(299) << "Error while contacting notify daemon" << error.message();
-    d->id = -3;
-    QTimer::singleShot(0, this, SLOT(deref()));
-}
-
-
-void KNotification::update()
-{
-    KNotificationManager::self()->update(this, d->id);
+    deleteLater();
 }
 
 bool KNotification::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == d->widget) {
-        if (event->type() == QEvent::WindowActivate) {
-            if (d->flags & CloseWhenWidgetActivated) {
-                QTimer::singleShot(500, this, SLOT(close()));
-            }
+        if (event->type() == QEvent::WindowActivate
+            && d->flags & KNotification::CloseWhenWidgetActivated) {
+            kDebug(s_knotificationarea) << "closing due to widget activation" << d->eventid;
+            QTimer::singleShot(500, this, SLOT(close()));
         }
-        // kDebug(299) << event->type();
     }
-
     return false;
 }
 
+KNotification* KNotification::event(const QString &eventid, const QString &title, const QString &text,
+                                    const QString &icon, QWidget *widget,
+                                    const NotificationFlags &flags)
+{
+    KNotification* knotification = new KNotification(widget);
+    knotification->setEventID(eventid);
+    knotification->setTitle(title);
+    knotification->setText(text);
+    knotification->setIcon(icon);
+    knotification->setWidget(widget);
+    knotification->setFlags(flags);
+    QTimer::singleShot(0, knotification, SLOT(send()));
+    return knotification;
+}
+
+void KNotification::beep(const QString &reason, QWidget *widget)
+{
+    event(
+        QString::fromLatin1("kde/beep"), QString(), reason, QString(), widget,
+        KNotification::CloseOnTimeout
+    );
+}
 
 #include "moc_knotification.cpp"
+#include "knotification.moc"

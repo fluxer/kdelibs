@@ -55,35 +55,24 @@ bool KNetworkManagerModule::enable(const bool enable)
 
 void KNetworkManagerModule::slotStatusChanged(const KNetworkManager::KNetworkStatus status)
 {
-    KNotification *knotification = nullptr;
     switch (status) {
         case KNetworkManager::UnknownStatus: {
-            knotification = new KNotification("Unknown");
-            knotification->setComponentData(KComponentData("knetworkmanager"));
-            knotification->setTitle(i18n("Network status changed"));
-            knotification->setText(i18n("Network status is unknown"));
+            KNotification::event("knetworkmanager/Unknown");
             break;
         }
         case KNetworkManager::ConnectedStatus: {
-            knotification = new KNotification("Connected");
-            knotification->setComponentData(KComponentData("knetworkmanager"));
-            knotification->setTitle(i18n("Network status changed"));
-            knotification->setText(i18n("Network status is connected"));
+            KNotification::event("knetworkmanager/Connected");
             break;
         }
         case KNetworkManager::DisconnectedStatus: {
-            knotification = new KNotification("Disconnected");
-            knotification->setComponentData(KComponentData("knetworkmanager"));
-            knotification->setTitle(i18n("Network status changed"));
-            knotification->setText(i18n("Network status is disconnected"));
+            KNotification::event("knetworkmanager/Disconnected");
             break;
         }
         case KNetworkManager::IntermediateStatus: {
             // no notification for intermediate status changes
-            return;
+            break;
         }
     }
-    knotification->sendEvent();
 }
 
 #include "moc_kded_knetworkmanager.cpp"

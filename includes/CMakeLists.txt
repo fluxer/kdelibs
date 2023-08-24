@@ -189,7 +189,7 @@ install(
     KNewPasswordDialog
     KNotification
     KNotificationRestrictions
-    KNotifyConfigWidget
+    KNotificationConfigWidget
     KNumInput
     KOpenWithDialog
     KPageDialog

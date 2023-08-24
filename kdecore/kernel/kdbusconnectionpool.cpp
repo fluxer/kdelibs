@@ -20,10 +20,15 @@
  */
 
 #include "kdbusconnectionpool.h"
+#include "kdebug.h"
+
 #include <QCoreApplication>
 #include <QThread>
+#include <QDBusConnectionInterface>
+#include <QDBusReply>
 
 namespace {
+
 QAtomicInt s_connectionCounter(0);
 
 class KDBusConnectionPoolPrivate
@@ -68,5 +73,20 @@ QDBusConnection KDBusConnectionPool::threadConnection()
     }
 
     return s_perThreadConnection->connection();
+}
+
+bool KDBusConnectionPool::isServiceRegistered(const QString &service, const QDBusConnection &connection)
+{
+    QDBusConnectionInterface* dbusinterface = connection.interface();
+    if (!dbusinterface) {
+        kDebug() << "Null D-Bus interface" << service;
+        return false;
+    }
+    QDBusReply<bool> reply = dbusinterface->isServiceRegistered(service);
+    if (reply.value() == false) {
+        kDebug() << "Service not registered" << service;
+        return false;
+    }
+    return true;
 }
 

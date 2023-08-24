@@ -353,7 +353,7 @@ public:
      * @li nextMatch() or previousMatch() hit the last possible
      *     match -> rotation
      *
-     * For playing the sounds, KNotifyClient() is used.
+     * For playing the sounds, KNotification is used.
      *
      * @param enable true to enable sounds
      * @see soundsEnabled

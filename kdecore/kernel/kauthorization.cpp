@@ -17,6 +17,7 @@
 */
 
 #include "kauthorization.h"
+#include "kdbusconnectionpool.h"
 #include "klocale.h"
 #include "kdebug.h"
 
@@ -56,21 +57,6 @@ void kAuthMessageHandler(QtMsgType type, const char *msg)
             break;
         }
     }
-}
-
-static bool isDBusServiceRegistered(const QString &helper)
-{
-    QDBusConnectionInterface* dbusinterface = QDBusConnection::systemBus().interface();
-    if (!dbusinterface) {
-        kDebug(s_kauthorizationarea) << "Null D-Bus interface" << helper;
-        return false;
-    }
-    QDBusReply<bool> reply = dbusinterface->isServiceRegistered(helper);
-    if (reply.value() == false) {
-        kDebug(s_kauthorizationarea) << "Service not registered" << helper;
-        return false;
-    }
-    return true;
 }
 
 class KAuthorizationAdaptor: public QDBusAbstractAdaptor
@@ -159,7 +145,7 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
 {
     kDebug(s_kauthorizationarea) << "Executing" << helper << "method" << method;
 
-    while (isDBusServiceRegistered(helper)) {
+    while (KDBusConnectionPool::isServiceRegistered(helper, QDBusConnection::systemBus())) {
         kDebug(s_kauthorizationarea) << "Waiting for service to unregister" << helper;
         QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
         QThread::msleep(KAUTHORIZATION_SLEEPTIME);

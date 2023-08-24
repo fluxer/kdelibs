@@ -79,7 +79,6 @@
 # kde-workspace
 101         kioclient
 900         kdesudo
-901         knotify
 1203        libkonq
 1204        plasma
 1207        krunner

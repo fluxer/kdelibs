@@ -152,7 +152,7 @@ set(kdeui_LIB_SRCS
     kernel/ktoolinvocation.cpp
     kernel/ktoolinvocation_x11.cpp
     notifications/knotification.cpp
-    notifications/knotificationmanager.cpp
+    notifications/knotificationconfigwidget.cpp
     notifications/knotificationrestrictions.cpp
     notifications/kdbusmenuexporter.cpp
     notifications/kdbusmenuimporter.cpp
@@ -289,9 +289,6 @@ set(kglobalaccel_component_xml shortcuts/org.kde.kglobalaccel.Component.xml)
 set_source_files_properties(${kglobalaccel_component_xml} PROPERTIES INCLUDE "kglobalshortcutinfo_p.h")
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${kglobalaccel_component_xml} kglobalaccel_component_interface )
 install(FILES ${kglobalaccel_component_xml} DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR})
-
-set(knotify_xml notifications/org.kde.KNotify.xml)
-qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 
 set_source_files_properties(
     ${CMAKE_SOURCE_DIR}/kdeui/colors/kcolordialog.cpp
@@ -460,6 +457,7 @@ install(
     notifications/kstatusnotifieritem.h
     notifications/ksystemtrayicon.h
     notifications/knotification.h
+    notifications/knotificationconfigwidget.h
     notifications/knotificationrestrictions.h
     notifications/kdbusmenuexporter.h
     notifications/kdbusmenuimporter.h

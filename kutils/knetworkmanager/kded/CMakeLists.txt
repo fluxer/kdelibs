@@ -32,5 +32,5 @@ install(
 
 install(
     FILES knetworkmanager.notifyrc
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/knetworkmanager
+    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}/notifications
 )
