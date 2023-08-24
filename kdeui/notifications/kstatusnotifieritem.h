@@ -382,17 +382,6 @@ public:
      */
     bool standardActionsEnabled() const;
 
-    /**
-     * Shows the user a notification. If possible use KNotify instead
-     *
-     * @param title message title
-     * @param message the actual text shown to the user
-     * @param icon icon to be shown to the user
-     * @param timeout how much time will elaps before hiding the message
-     */
-    void showMessage(const QString &title, const QString &message, const QString &icon, int timeout = 10000);
-
-
 public Q_SLOTS:
 
     /**

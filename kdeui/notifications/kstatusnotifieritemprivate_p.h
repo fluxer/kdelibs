@@ -31,7 +31,6 @@
 #include "kstatusnotifieritemdbus_p.h"
 
 #include "statusnotifierwatcher_interface.h"
-#include "notifications_interface.h"
 
 class KActionCollection;
 class KSystemTrayIcon;
@@ -60,7 +59,7 @@ public:
         return false;
     }
 
-signals:
+Q_SIGNALS:
     void wheel(int);
 };
 
@@ -120,14 +119,13 @@ public:
     QWidget *associatedWidget;
     QAction* titleAction;
     org::kde::StatusNotifierWatcher *statusNotifierWatcher;
-    org::freedesktop::Notifications *notificationsClient;
 
     KSystemTrayIcon *systemTrayIcon;
     KStatusNotifierItemDBus *statusNotifierItemDBus;
 
-    bool hasQuit : 1;
-    bool onAllDesktops : 1;
-    bool standardActionsEnabled : 1;
+    bool hasQuit;
+    bool onAllDesktops;
+    bool standardActionsEnabled;
 };
 
 #endif

@@ -64,7 +64,6 @@ KStatusNotifierItem::KStatusNotifierItem(const QString &id, QObject *parent)
 KStatusNotifierItem::~KStatusNotifierItem()
 {
     delete d->statusNotifierWatcher;
-    delete d->notificationsClient;
     delete d->systemTrayIcon;
     if (!qApp->closingDown()) {
         delete d->menu;
@@ -472,23 +471,10 @@ bool KStatusNotifierItem::standardActionsEnabled() const
     return d->standardActionsEnabled;
 }
 
-void KStatusNotifierItem::showMessage(const QString & title, const QString & message, const QString &icon, int timeout)
-{
-    if (!d->notificationsClient) {
-        d->notificationsClient = new org::freedesktop::Notifications("org.freedesktop.Notifications", "/org/freedesktop/Notifications",
-                                                QDBusConnection::sessionBus());
-    }
-
-    uint id = 0;
-    d->notificationsClient->Notify(d->title, id, icon, title, message, QStringList(), QVariantMap(), timeout);
-}
-
 QString KStatusNotifierItem::title() const
 {
     return d->title;
 }
-
-
 
 void KStatusNotifierItem::activate(const QPoint &pos)
 {
@@ -623,7 +609,6 @@ KStatusNotifierItemPrivate::KStatusNotifierItemPrivate(KStatusNotifierItem *item
       menu(0),
       titleAction(0),
       statusNotifierWatcher(0),
-      notificationsClient(0),
       systemTrayIcon(0),
       hasQuit(false),
       onAllDesktops(false),

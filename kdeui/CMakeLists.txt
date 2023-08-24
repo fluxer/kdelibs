@@ -280,11 +280,6 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS
     jobviewiface
 )
 
-qt4_add_dbus_interface(kdeui_LIB_SRCS
-    notifications/org.freedesktop.Notifications.xml
-    notifications_interface
-)
-
 set(kglobalaccel_xml shortcuts/org.kde.KGlobalAccel.xml)
 set_source_files_properties(${kglobalaccel_xml} PROPERTIES INCLUDE "kglobalshortcutinfo_p.h")
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${kglobalaccel_xml} kglobalaccel_interface )
