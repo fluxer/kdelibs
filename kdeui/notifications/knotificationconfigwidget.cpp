@@ -54,7 +54,7 @@ KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate(KNotification
     disabledi18n = i18n("Disabled");
     popuptooltipi18n = i18n("Show a message in a popup");
     soundtooltipi18n = i18n("Play a sound");
-    taskbartooltipi18n = i18n("Mark tasbar entry");
+    taskbartooltipi18n = i18n("Mark taskbar entry");
 }
 
 void KNotificationConfigWidgetPrivate::_k_slotItemChanged(QTreeWidgetItem *item, int column)
