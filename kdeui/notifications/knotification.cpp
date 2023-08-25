@@ -183,10 +183,8 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
                     QDBusConnection::sessionBus(), this
                 );
             }
-            // TODO: configurable player
-            QDBusReply<void> playreply = m_kaudioplayeriface->call(
-                QString::fromLatin1("play"), eventsoundfile, QString::fromLatin1("knotification")
-            );
+            // the sound player is configurable and is used by the bball plasma applet for example
+            QDBusReply<void> playreply = m_kaudioplayeriface->call(QString::fromLatin1("play"), eventsoundfile);
             if (!playreply.isValid()) {
                 kWarning(s_knotificationarea) << "invalid play reply" << playreply.error().message();
             }
