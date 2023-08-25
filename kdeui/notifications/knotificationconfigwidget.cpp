@@ -25,6 +25,7 @@
 
 #include <QVBoxLayout>
 #include <QTreeWidget>
+#include <QHeaderView>
 
 class KNotificationConfigWidgetPrivate
 {
@@ -64,7 +65,7 @@ void KNotificationConfigWidgetPrivate::_k_slotItemChanged(QTreeWidgetItem *item,
         kWarning() << "null tree item";
         return;
     }
-    if (item->flags() & Qt::ItemIsUserCheckable) {
+    if (column >= 1 && column <= 3) {
         item->setText(column, item->checkState(column) == Qt::Checked ? enabledi18n : disabledi18n);
     }
     const QString eventgroup = item->data(0, Qt::UserRole).toString();
@@ -177,8 +178,8 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         eventitem->setToolTip(3, d->taskbartooltipi18n);
         d->treewidget->addTopLevelItem(eventitem);
     }
-    d->treewidget->resizeColumnToContents(0);
-    d->treewidget->resizeColumnToContents(1);
+    d->treewidget->header()->setStretchLastSection(false);
+    d->treewidget->header()->setResizeMode(0, QHeaderView::Stretch);
 }
 
 void KNotificationConfigWidget::configure(const QString &app, QWidget *parent)
