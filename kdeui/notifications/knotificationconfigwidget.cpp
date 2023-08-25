@@ -142,7 +142,6 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
     KConfig notificationconfig("knotificationrc", KConfig::NoGlobals);
     notificationconfig.addConfigSources(QStringList() << notifyconfig);
     KConfigGroup globalgroupconfig(&notificationconfig, notification);
-    KIcon soundicon = KIcon("media-playback-start");
     foreach (const QString &eventgroup, notificationconfig.groupList()) {
         if (!eventgroup.startsWith(notification + QLatin1Char('/'))) {
             continue;
