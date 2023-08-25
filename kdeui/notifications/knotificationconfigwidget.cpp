@@ -18,28 +18,88 @@
 
 #include "knotificationconfigwidget.h"
 #include "kdialog.h"
+#include "klineedit.h"
 #include "klocale.h"
+
+#include <QGridLayout>
+#include <QTreeWidget>
+#include <QCheckBox>
 
 class KNotificationConfigWidgetPrivate
 {
 public:
-    KNotificationConfigWidgetPrivate();
+    KNotificationConfigWidgetPrivate(KNotificationConfigWidget *q);
+
+    void _k_slotChanged();
+
+    KNotificationConfigWidget* parent;
+    KConfig* config;
+    QGridLayout* layout;
+    QTreeWidget* treewidget;
+    QCheckBox* soundbox;
+    KLineEdit* soundedit;
+    QCheckBox* popupbox;
+    QCheckBox* taskbarbox;
 };
 
-KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate()
+void KNotificationConfigWidgetPrivate::_k_slotChanged()
+{
+    emit parent->changed(true);
+}
+
+KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate(KNotificationConfigWidget *q)
+    : parent(q),
+    config(nullptr),
+    layout(nullptr),
+    treewidget(nullptr),
+    soundbox(nullptr),
+    soundedit(nullptr),
+    popupbox(nullptr),
+    taskbarbox(nullptr)
 {
 }
 
 KNotificationConfigWidget::KNotificationConfigWidget(const QString &app, QWidget *parent)
     : QWidget(parent),
-    d(new KNotificationConfigWidgetPrivate())
+    d(new KNotificationConfigWidgetPrivate(this))
 {
-    // TODO:
+    d->layout = new QGridLayout(this);
+    setLayout(d->layout);
+
+    d->treewidget = new QTreeWidget(this);
+    d->layout->addWidget(d->treewidget, 0, 0, 1, 2);
+
+    d->soundbox = new QCheckBox(this);
+    d->soundbox->setText(i18n("Play a sound"));
+    d->soundbox->setIcon(KIcon("media-playback-start"));
+    connect(d->soundbox, SIGNAL(toggled(bool)), this, SLOT(_k_slotChanged()));
+    d->layout->addWidget(d->soundbox, 1, 0);
+    d->soundedit = new KLineEdit(this);
+    connect(d->soundedit, SIGNAL(textChanged(QString)), this, SLOT(_k_slotChanged()));
+    d->layout->addWidget(d->soundedit, 1, 1);
+
+    d->popupbox = new QCheckBox(this);
+    d->popupbox->setText(i18n("Show a message in a popup"));
+    d->popupbox->setIcon(KIcon("dialog-information"));
+    connect(d->popupbox, SIGNAL(toggled(bool)), this, SLOT(_k_slotChanged()));
+    d->layout->addWidget(d->popupbox, 2, 0);
+
+    d->taskbarbox = new QCheckBox(this);
+    d->taskbarbox->setText(i18n("Mark tasbar entry"));
+    d->taskbarbox->setIcon(KIcon("services"));
+    connect(d->taskbarbox, SIGNAL(toggled(bool)), this, SLOT(_k_slotChanged()));
+    d->layout->addWidget(d->taskbarbox, 3, 0);
 }
 
 KNotificationConfigWidget::~KNotificationConfigWidget()
 {
     delete d;
+}
+
+void KNotificationConfigWidget::save()
+{
+    // TODO:
+    emit changed(false);
 }
 
 void KNotificationConfigWidget::configure(const QString &app, QWidget *parent)

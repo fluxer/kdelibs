@@ -146,15 +146,15 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /**
-     * Signal that the first action is activated.
+     * Signals that the first action is activated.
      */
     void action1Activated();
     /**
-     * Signal that the second action is activated.
+     * Signals that the second action is activated.
      */
     void action2Activated();
     /**
-     * Signal that the third action is activated.
+     * Signals that the third action is activated.
      */
     void action3Activated();
 
@@ -165,7 +165,7 @@ Q_SIGNALS:
 
 protected:
     /**
-     * reimplemented for internal reasons
+     * Reimplemented for internal reasons
      */
     virtual bool eventFilter(QObject *watched, QEvent *event);
 

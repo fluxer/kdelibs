@@ -35,14 +35,25 @@ class KDEUI_EXPORT KNotificationConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    KNotificationConfigWidget(const QString &app, QWidget *parent = nullptr);
+    KNotificationConfigWidget(const QString &notification, QWidget *parent = nullptr);
     ~KNotificationConfigWidget();
 
-    static void configure(const QString &app, QWidget *parent = nullptr);
+    void setNotification(const QString &notification);
+
+    static void configure(const QString &notification, QWidget *parent = nullptr);
+
+public Q_SLOTS:
+    void save();
+
+Q_SIGNALS:
+    void changed(bool state);
 
 private:
+    friend KNotificationConfigWidgetPrivate;
     Q_DISABLE_COPY(KNotificationConfigWidget);
     KNotificationConfigWidgetPrivate *d;
+
+    Q_PRIVATE_SLOT(d, void _k_slotChanged());
 };
 
 #endif // KNOTIFICATIONCONFIGWIDGET_H

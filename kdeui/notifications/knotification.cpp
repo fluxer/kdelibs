@@ -68,6 +68,7 @@ KNotificationManager::KNotificationManager()
 {
     const QStringList notifyconfigs = KGlobal::dirs()->findAllResources("config", "notifications/*.notifyrc");
     m_config.addConfigSources(notifyconfigs);
+    // qDebug() << Q_FUNC_INFO << notifyconfigs;
 }
 
 void KNotificationManager::send(KNotification *notification, const bool persistent)
