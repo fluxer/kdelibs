@@ -87,6 +87,7 @@ bool KDBusConnectionPool::isServiceRegistered(const QString &service, const QDBu
         kDebug() << "Service not registered" << service;
         return false;
     }
+    kDebug() << "Service is registered" << service;
     return true;
 }
 
