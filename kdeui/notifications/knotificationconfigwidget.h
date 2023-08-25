@@ -22,6 +22,7 @@
 #include <kdeui_export.h>
 
 #include <QWidget>
+#include <QTreeWidgetItem>
 
 class KNotificationConfigWidgetPrivate;
 
@@ -53,7 +54,7 @@ private:
     Q_DISABLE_COPY(KNotificationConfigWidget);
     KNotificationConfigWidgetPrivate *d;
 
-    Q_PRIVATE_SLOT(d, void _k_slotChanged());
+    Q_PRIVATE_SLOT(d, void _k_slotItemChanged(QTreeWidgetItem *item, int column));
 };
 
 #endif // KNOTIFICATIONCONFIGWIDGET_H

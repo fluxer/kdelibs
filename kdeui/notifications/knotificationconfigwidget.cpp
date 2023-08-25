@@ -19,76 +19,88 @@
 #include "knotificationconfigwidget.h"
 #include "kdialog.h"
 #include "klineedit.h"
+#include "kstandarddirs.h"
 #include "klocale.h"
+#include "kdebug.h"
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QTreeWidget>
-#include <QCheckBox>
 
 class KNotificationConfigWidgetPrivate
 {
 public:
     KNotificationConfigWidgetPrivate(KNotificationConfigWidget *q);
+    ~KNotificationConfigWidgetPrivate();
 
-    void _k_slotChanged();
+    void _k_slotItemChanged(QTreeWidgetItem *item, int column);
 
     KNotificationConfigWidget* parent;
-    KConfig* config;
-    QGridLayout* layout;
+    QMap<QString,KConfig*> configs;
+    QVBoxLayout* layout;
     QTreeWidget* treewidget;
-    QCheckBox* soundbox;
-    KLineEdit* soundedit;
-    QCheckBox* popupbox;
-    QCheckBox* taskbarbox;
+    QString enabledi18n;
+    QString disabledi18n;
+    QString popuptooltipi18n;
+    QString soundtooltipi18n;
+    QString taskbartooltipi18n;
 };
-
-void KNotificationConfigWidgetPrivate::_k_slotChanged()
-{
-    emit parent->changed(true);
-}
 
 KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate(KNotificationConfigWidget *q)
     : parent(q),
-    config(nullptr),
     layout(nullptr),
-    treewidget(nullptr),
-    soundbox(nullptr),
-    soundedit(nullptr),
-    popupbox(nullptr),
-    taskbarbox(nullptr)
+    treewidget(nullptr)
 {
+    // translate once
+    enabledi18n = i18n("Enabled");
+    disabledi18n = i18n("Disabled");
+    popuptooltipi18n = i18n("Show a message in a popup");
+    soundtooltipi18n = i18n("Play a sound");
+    taskbartooltipi18n = i18n("Mark tasbar entry");
 }
 
-KNotificationConfigWidget::KNotificationConfigWidget(const QString &app, QWidget *parent)
+KNotificationConfigWidgetPrivate::~KNotificationConfigWidgetPrivate()
+{
+    QMutableMapIterator<QString,KConfig*> iter(configs);
+    while (iter.hasNext()) {
+        iter.next();
+        KConfig* config = iter.value();
+        delete config;
+        iter.remove();
+    }
+}
+
+void KNotificationConfigWidgetPrivate::_k_slotItemChanged(QTreeWidgetItem *item, int column)
+{
+    emit parent->changed(true);
+    if (item && item->flags() & Qt::ItemIsUserCheckable) {
+        item->setText(column, item->checkState(column) == Qt::Checked ? enabledi18n : disabledi18n);
+    }
+}
+
+
+KNotificationConfigWidget::KNotificationConfigWidget(const QString &notification, QWidget *parent)
     : QWidget(parent),
     d(new KNotificationConfigWidgetPrivate(this))
 {
-    d->layout = new QGridLayout(this);
+    d->layout = new QVBoxLayout(this);
     setLayout(d->layout);
 
     d->treewidget = new QTreeWidget(this);
-    d->layout->addWidget(d->treewidget, 0, 0, 1, 2);
+    d->treewidget->setColumnCount(4);
+    QStringList treeheaders = QStringList()
+        << i18n("Event")
+        << i18n("Popup")
+        << i18n("Sound")
+        << i18n("Taskbar");
+    d->treewidget->setHeaderLabels(treeheaders);
+    d->treewidget->setRootIsDecorated(false);
+    connect(
+        d->treewidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+        this, SLOT(_k_slotItemChanged(QTreeWidgetItem*,int))
+    );
+    d->layout->addWidget(d->treewidget);
 
-    d->soundbox = new QCheckBox(this);
-    d->soundbox->setText(i18n("Play a sound"));
-    d->soundbox->setIcon(KIcon("media-playback-start"));
-    connect(d->soundbox, SIGNAL(toggled(bool)), this, SLOT(_k_slotChanged()));
-    d->layout->addWidget(d->soundbox, 1, 0);
-    d->soundedit = new KLineEdit(this);
-    connect(d->soundedit, SIGNAL(textChanged(QString)), this, SLOT(_k_slotChanged()));
-    d->layout->addWidget(d->soundedit, 1, 1);
-
-    d->popupbox = new QCheckBox(this);
-    d->popupbox->setText(i18n("Show a message in a popup"));
-    d->popupbox->setIcon(KIcon("dialog-information"));
-    connect(d->popupbox, SIGNAL(toggled(bool)), this, SLOT(_k_slotChanged()));
-    d->layout->addWidget(d->popupbox, 2, 0);
-
-    d->taskbarbox = new QCheckBox(this);
-    d->taskbarbox->setText(i18n("Mark tasbar entry"));
-    d->taskbarbox->setIcon(KIcon("services"));
-    connect(d->taskbarbox, SIGNAL(toggled(bool)), this, SLOT(_k_slotChanged()));
-    d->layout->addWidget(d->taskbarbox, 3, 0);
+    setNotification(notification);
 }
 
 KNotificationConfigWidget::~KNotificationConfigWidget()
@@ -100,6 +112,61 @@ void KNotificationConfigWidget::save()
 {
     // TODO:
     emit changed(false);
+}
+
+void KNotificationConfigWidget::setNotification(const QString &notification)
+{
+    d->treewidget->clear();
+
+    KConfig* notificationconfig = d->configs.value(notification, nullptr);
+    if (!notificationconfig) {
+        const QString notifyconfig = KStandardDirs::locate("config", "notifications/" + notification+ ".notifyrc");
+        if (notifyconfig.isEmpty()) {
+            kWarning() << "invalid notification" << notification;
+            return;
+        }
+        notificationconfig = new KConfig(notifyconfig, KConfig::NoGlobals);
+        d->configs.insert(notification, notificationconfig);
+    }
+    KConfigGroup globalgroupconfig(notificationconfig, notification);
+    KIcon soundicon = KIcon("media-playback-start");
+    foreach (const QString &eventgroup, notificationconfig->groupList()) {
+        if (!eventgroup.contains(QLatin1Char('/'))) {
+            continue;
+        }
+        KConfigGroup eventgroupconfig(notificationconfig, eventgroup);
+        QString eventtext = eventgroupconfig.readEntry("Name");
+        if (eventtext.isEmpty()) {
+            eventtext = globalgroupconfig.readEntry("Name");
+        }
+        QString eventicon = eventgroupconfig.readEntry("IconName");
+        if (eventicon.isEmpty()) {
+            eventicon = globalgroupconfig.readEntry("IconName");
+        }
+        QStringList eventactions = eventgroupconfig.readEntry("Actions", QStringList());
+        if (eventactions.isEmpty()) {
+            eventactions = globalgroupconfig.readEntry("Actions", QStringList());
+        }
+        const bool eventpopup = eventactions.contains(QString::fromLatin1("Popup"));
+        const bool eventsound = eventactions.contains(QString::fromLatin1("Sound"));
+        const bool eventtaskbar = eventactions.contains(QString::fromLatin1("Taskbar"));
+        QTreeWidgetItem* eventitem = new QTreeWidgetItem();
+        eventitem->setData(0, Qt::UserRole, eventgroup);
+        eventitem->setIcon(0, KIcon(eventicon));
+        eventitem->setText(0, eventtext);
+        eventitem->setText(1, eventpopup ? d->enabledi18n : d->disabledi18n);
+        eventitem->setCheckState(1, eventpopup ? Qt::Checked : Qt::Unchecked);
+        eventitem->setToolTip(1, d->popuptooltipi18n);
+        eventitem->setText(2, eventsound ? d->enabledi18n : d->disabledi18n);
+        eventitem->setCheckState(2, eventsound ? Qt::Checked : Qt::Unchecked);
+        eventitem->setToolTip(2, d->soundtooltipi18n);
+        eventitem->setText(3, eventtaskbar ? d->enabledi18n : d->disabledi18n);
+        eventitem->setCheckState(3, eventtaskbar ? Qt::Checked : Qt::Unchecked);
+        eventitem->setToolTip(3, d->taskbartooltipi18n);
+        d->treewidget->addTopLevelItem(eventitem);
+    }
+    d->treewidget->resizeColumnToContents(0);
+    d->treewidget->resizeColumnToContents(1);
 }
 
 void KNotificationConfigWidget::configure(const QString &app, QWidget *parent)
