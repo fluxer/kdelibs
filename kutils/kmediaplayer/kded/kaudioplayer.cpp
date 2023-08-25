@@ -30,6 +30,7 @@ KAudioPlayerModule::KAudioPlayerModule(QObject *parent, const QList<QVariant>&)
 void KAudioPlayerModule::play(const QString &path)
 {
     KAudioPlayer* newplayer = new KAudioPlayer(this);
+    newplayer->setPlayerID(QString::fromLatin1("kded_kaudioplayer"));
     connect(newplayer, SIGNAL(finished()), this, SLOT(_removeFinished()));
     newplayer->load(path);
 }
