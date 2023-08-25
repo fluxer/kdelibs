@@ -62,12 +62,15 @@ private:
 K_GLOBAL_STATIC(KNotificationManager, kNotificationManager);
 
 KNotificationManager::KNotificationManager()
-    : m_config(KGlobal::mainComponent().componentName() + ".notifyrc", KConfig::NoGlobals),
+    : m_config("knotificationrc", KConfig::NoGlobals),
     m_notificationsiface(nullptr),
     m_kaudioplayeriface(nullptr)
 {
+    // TODO: config watch
     const QStringList notifyconfigs = KGlobal::dirs()->findAllResources("config", "notifications/*.notifyrc");
-    m_config.addConfigSources(notifyconfigs);
+    if (!notifyconfigs.isEmpty()) {
+        m_config.addConfigSources(notifyconfigs);
+    }
     // qDebug() << Q_FUNC_INFO << notifyconfigs;
 }
 

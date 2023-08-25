@@ -30,12 +30,10 @@ class KNotificationConfigWidgetPrivate
 {
 public:
     KNotificationConfigWidgetPrivate(KNotificationConfigWidget *q);
-    ~KNotificationConfigWidgetPrivate();
 
     void _k_slotItemChanged(QTreeWidgetItem *item, int column);
 
     KNotificationConfigWidget* parent;
-    QMap<QString,KConfig*> configs;
     QVBoxLayout* layout;
     QTreeWidget* treewidget;
     QString enabledi18n;
@@ -43,6 +41,7 @@ public:
     QString popuptooltipi18n;
     QString soundtooltipi18n;
     QString taskbartooltipi18n;
+    QMap<QString,QStringList> notificationchanges;
 };
 
 KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate(KNotificationConfigWidget *q)
@@ -58,23 +57,31 @@ KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate(KNotification
     taskbartooltipi18n = i18n("Mark tasbar entry");
 }
 
-KNotificationConfigWidgetPrivate::~KNotificationConfigWidgetPrivate()
-{
-    QMutableMapIterator<QString,KConfig*> iter(configs);
-    while (iter.hasNext()) {
-        iter.next();
-        KConfig* config = iter.value();
-        delete config;
-        iter.remove();
-    }
-}
-
 void KNotificationConfigWidgetPrivate::_k_slotItemChanged(QTreeWidgetItem *item, int column)
 {
     emit parent->changed(true);
-    if (item && item->flags() & Qt::ItemIsUserCheckable) {
+    if (!item) {
+        kWarning() << "null tree item";
+        return;
+    }
+    if (item->flags() & Qt::ItemIsUserCheckable) {
         item->setText(column, item->checkState(column) == Qt::Checked ? enabledi18n : disabledi18n);
     }
+    const QString eventgroup = item->data(0, Qt::UserRole).toString();
+    QStringList eventactions;
+    const bool eventpopup = (item->checkState(1) == Qt::Checked);
+    const bool eventsound = (item->checkState(2) == Qt::Checked);
+    const bool eventtaskbar = (item->checkState(3) == Qt::Checked);
+    if (eventpopup) {
+        eventactions.append(QString::fromLatin1("Popup"));
+    }
+    if (eventsound) {
+        eventactions.append(QString::fromLatin1("Sound"));
+    }
+    if (eventtaskbar) {
+        eventactions.append(QString::fromLatin1("Taskbar"));
+    }
+    notificationchanges.insert(eventgroup, eventactions);
 }
 
 
@@ -110,7 +117,15 @@ KNotificationConfigWidget::~KNotificationConfigWidget()
 
 void KNotificationConfigWidget::save()
 {
-    // TODO:
+    KConfig notificationsconfig("knotificationrc", KConfig::NoGlobals);
+    QMapIterator<QString,QStringList> iter(d->notificationchanges);
+    while (iter.hasNext()) {
+        iter.next();
+        KConfigGroup eventgroupconfig(&notificationsconfig, iter.key());
+        eventgroupconfig.writeEntry("Actions", iter.value());
+    }
+    notificationsconfig.sync();
+    d->notificationchanges.clear();
     emit changed(false);
 }
 
@@ -118,23 +133,20 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
 {
     d->treewidget->clear();
 
-    KConfig* notificationconfig = d->configs.value(notification, nullptr);
-    if (!notificationconfig) {
-        const QString notifyconfig = KStandardDirs::locate("config", "notifications/" + notification+ ".notifyrc");
-        if (notifyconfig.isEmpty()) {
-            kWarning() << "invalid notification" << notification;
-            return;
-        }
-        notificationconfig = new KConfig(notifyconfig, KConfig::NoGlobals);
-        d->configs.insert(notification, notificationconfig);
+    const QString notifyconfig = KStandardDirs::locate("config", "notifications/" + notification+ ".notifyrc");
+    if (notifyconfig.isEmpty()) {
+        kWarning() << "invalid notification" << notification;
+        return;
     }
-    KConfigGroup globalgroupconfig(notificationconfig, notification);
+    KConfig notificationconfig("knotificationrc", KConfig::NoGlobals);
+    notificationconfig.addConfigSources(QStringList() << notifyconfig);
+    KConfigGroup globalgroupconfig(&notificationconfig, notification);
     KIcon soundicon = KIcon("media-playback-start");
-    foreach (const QString &eventgroup, notificationconfig->groupList()) {
-        if (!eventgroup.contains(QLatin1Char('/'))) {
+    foreach (const QString &eventgroup, notificationconfig.groupList()) {
+        if (!eventgroup.startsWith(notification + QLatin1Char('/'))) {
             continue;
         }
-        KConfigGroup eventgroupconfig(notificationconfig, eventgroup);
+        KConfigGroup eventgroupconfig(&notificationconfig, eventgroup);
         QString eventtext = eventgroupconfig.readEntry("Name");
         if (eventtext.isEmpty()) {
             eventtext = globalgroupconfig.readEntry("Name");
