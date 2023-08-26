@@ -59,7 +59,6 @@ static ModInfo g_rgModInfo[4] =
 // Initialization
 //---------------------------------------------------------------------
 static bool g_bInitializedKKeyLabels = false;
-static bool g_bMacLabels = false;
 
 static void intializeKKeyLabels()
 {
@@ -68,7 +67,6 @@ static void intializeKKeyLabels()
     g_rgModInfo[1].sLabel = new QString(cg.readEntry("Label Ctrl", i18nc(KEYCTXT, g_rgModInfo[1].psName)));
     g_rgModInfo[2].sLabel = new QString(cg.readEntry("Label Alt", i18nc(KEYCTXT, g_rgModInfo[2].psName)));
     g_rgModInfo[3].sLabel = new QString(cg.readEntry("Label Win", i18nc(KEYCTXT, g_rgModInfo[3].psName)));
-    g_bMacLabels = (*g_rgModInfo[2].sLabel == "Command");
     g_bInitializedKKeyLabels = true;
 }
 
