@@ -58,8 +58,8 @@ static ModInfo g_rgModInfo[4] =
 //---------------------------------------------------------------------
 // Initialization
 //---------------------------------------------------------------------
-static bool g_bInitializedKKeyLabels;
-static bool g_bMacLabels;
+static bool g_bInitializedKKeyLabels = false;
+static bool g_bMacLabels = false;
 
 static void intializeKKeyLabels()
 {
