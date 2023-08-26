@@ -267,6 +267,7 @@ private Q_SLOTS:
     void _processHandleEvents();
 
 private:
+    Q_DISABLE_COPY(KAudioPlayer);
     KAbstractPlayerPrivate *d;
 };
 
@@ -331,6 +332,7 @@ private Q_SLOTS:
     void _processHandleEvents();
 
 private:
+    Q_DISABLE_COPY(KMediaPlayer);
     KAbstractPlayerPrivate *d;
 };
 
