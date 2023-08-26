@@ -410,9 +410,8 @@ bool KNotification::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
-KNotification* KNotification::event(const QString &eventid, const QString &title, const QString &text,
-                                    const QString &icon, QWidget *widget,
-                                    const NotificationFlags &flags)
+void KNotification::event(const QString &eventid, const QString &title, const QString &text,
+                          const QString &icon, QWidget *widget, const NotificationFlags &flags)
 {
     KNotification* knotification = new KNotification(widget);
     knotification->setEventID(eventid);
@@ -421,8 +420,7 @@ KNotification* KNotification::event(const QString &eventid, const QString &title
     knotification->setIcon(icon);
     knotification->setWidget(widget);
     knotification->setFlags(flags);
-    QTimer::singleShot(0, knotification, SLOT(send()));
-    return knotification;
+    knotification->send();
 }
 
 void KNotification::beep(const QString &reason, QWidget *widget)

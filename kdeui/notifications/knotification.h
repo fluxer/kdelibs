@@ -112,14 +112,11 @@ public:
 
     /**
      * Convenience method - creates KNotification, sets it up and automatically sends the event.
-     *
-     * @warning Do not use this method if additional setup, such as signals connection, is
-     * required.
      */
-    static KNotification* event(const QString &eventid,
-                                const QString &title = QString(), const QString &text = QString(),
-                                const QString &icon = QString(), QWidget *widget = nullptr,
-                                const NotificationFlags &flags = CloseOnTimeout);
+    static void event(const QString &eventid,
+                      const QString &title = QString(), const QString &text = QString(),
+                      const QString &icon = QString(), QWidget *widget = nullptr,
+                      const NotificationFlags &flags = CloseOnTimeout);
 
     /**
      * This is a simple substitution for QApplication::beep().
