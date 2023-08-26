@@ -84,13 +84,14 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
         return;
     }
     KConfigGroup globalgroup(&m_config, spliteventid.at(0));
+    const QString globalcomment = globalgroup.readEntry("Comment");
     KConfigGroup eventgroup(&m_config, eventid);
     QString eventtitle = notification->title();
     if (eventtitle.isEmpty()) {
         eventtitle = eventgroup.readEntry("Comment");
     }
     if (eventtitle.isEmpty()) {
-        eventtitle = globalgroup.readEntry("Comment");
+        eventtitle = globalcomment;
     }
 
     QString eventtext = notification->text();
@@ -145,11 +146,15 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
                 actionscounter++;
             }
             QVariantMap eventhints;
+            QString eventapp = globalcomment;
+            if (eventapp.isEmpty()) {
+                eventapp = KGlobal::mainComponent().componentName();
+            }
             // NOTE: has to be set to be configurable via plasma notifications applet
             eventhints.insert("x-kde-appname", spliteventid.at(0));
             QDBusReply<uint> notifyreply = m_notificationsiface->call(
                 QString::fromLatin1("Notify"),
-                KGlobal::mainComponent().componentName(),
+                eventapp,
                 eventid,
                 eventicon,
                 eventtitle,
