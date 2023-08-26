@@ -31,11 +31,44 @@
 
 Q_DECLARE_METATYPE(QTreeWidgetItem*);
 
+class KNotificationConfigDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    KNotificationConfigDialog(const QString &notification, QWidget *parent = nullptr);
+    ~KNotificationConfigDialog();
+};
+
+KNotificationConfigDialog::KNotificationConfigDialog(const QString &notification, QWidget *parent)
+    : KDialog(parent, 0)
+{
+    setCaption(i18n("Configure Notifications"));
+    KNotificationConfigWidget *widget = new KNotificationConfigWidget(notification, this);
+    setMainWidget(widget);
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    connect(this, SIGNAL(applyClicked()), widget, SLOT(save()));
+    connect(this, SIGNAL(okClicked()), widget, SLOT(save()));
+    connect(widget, SIGNAL(changed(bool)), this , SLOT(enableButtonApply(bool)));
+
+    KConfigGroup kconfiggroup(KGlobal::config(), "KNotificationConfigDialog");
+    restoreDialogSize(kconfiggroup);
+}
+
+KNotificationConfigDialog::~KNotificationConfigDialog()
+{
+    KConfigGroup kconfiggroup(KGlobal::config(), "KNotificationConfigDialog");
+    saveDialogSize(kconfiggroup);
+    KGlobal::config()->sync();
+}
+
+
 struct KNotificationChanges
 {
     QStringList eventactions;
     QString eventsound;
 };
+
 
 class KNotificationConfigWidgetPrivate
 {
@@ -239,19 +272,11 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
     }
 }
 
-void KNotificationConfigWidget::configure(const QString &app, QWidget *parent)
+void KNotificationConfigWidget::configure(const QString &notification, QWidget *parent)
 {
-    KDialog *dialog = new KDialog(parent);
-    dialog->setCaption(i18n("Configure Notifications"));
-    KNotificationConfigWidget *widget = new KNotificationConfigWidget(app, dialog);
-    dialog->setMainWidget(widget);
-    
-    connect(dialog, SIGNAL(applyClicked()), widget, SLOT(save()));
-    connect(dialog, SIGNAL(okClicked()), widget, SLOT(save()));
-    connect(widget, SIGNAL(changed(bool)), dialog , SLOT(enableButtonApply(bool)));
-
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    KNotificationConfigDialog *dialog = new KNotificationConfigDialog(notification, parent);
     dialog->show();
 }
 
 #include "moc_knotificationconfigwidget.cpp"
+#include "knotificationconfigwidget.moc"
