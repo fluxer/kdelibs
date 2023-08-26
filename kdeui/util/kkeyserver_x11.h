@@ -122,7 +122,7 @@ namespace KKeyServer
      * @param sym if successful, the symbol will be written here
      * @return true if successful, false otherwise
      */
-    KDEUI_EXPORT bool keyQtToSymX( int keyQt, int* sym );
+    KDEUI_EXPORT bool keyQtToSymX(int keyQt, int *sym);
 
     /**
      * Extracts the code from the given Qt key.
@@ -130,7 +130,7 @@ namespace KKeyServer
      * @param keyCode if successful, the symbol will be written here
      * @return true if successful, false otherwise
      */
-    KDEUI_EXPORT bool keyQtToCodeX( int keyQt, int* keyCode );
+    KDEUI_EXPORT bool keyQtToCodeX(int keyQt, int *keyCode);
 
     /**
      * Extracts the modifiers from the given Qt key and
@@ -139,7 +139,7 @@ namespace KKeyServer
      * @param mod if successful, the modifiers will be written here
      * @return true if successful, false otherwise
      */
-    KDEUI_EXPORT bool keyQtToModX( int keyQt, uint* mod );
+    KDEUI_EXPORT bool keyQtToModX(int keyQt, uint *mod);
 
     /**
      * Converts the given symbol to a Qt key code.
@@ -147,7 +147,7 @@ namespace KKeyServer
      * @param keyQt if successful, the qt key code will be written here
      * @return true if successful, false otherwise
      */
-    KDEUI_EXPORT bool symXToKeyQt( uint sym, int* keyQt );
+    KDEUI_EXPORT bool symXToKeyQt(uint sym, int *keyQt);
 
     /**
      * Converts the mask of ORed X11 modifiers to
@@ -157,7 +157,7 @@ namespace KKeyServer
      *        if successful
      * @return true if successful, false otherwise
      */
-    KDEUI_EXPORT bool modXToQt( uint modX, int* modQt );
+    KDEUI_EXPORT bool modXToQt(uint modX, int *modQt);
 
     /**
      * Converts an X keypress event into a Qt key + modifier code
@@ -166,7 +166,7 @@ namespace KKeyServer
      *        if successful
      * @return true if successful, false otherwise
      */
-    KDEUI_EXPORT bool xEventToQt(XEvent* e, int* keyModQt);
+    KDEUI_EXPORT bool xEventToQt(XEvent* e, int *keyModQt);
 }
 
 #endif // !KKEYSERVER_X11_H
