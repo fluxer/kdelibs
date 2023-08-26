@@ -51,6 +51,7 @@ KNotificationConfigDialog::KNotificationConfigDialog(const QString &notification
     connect(this, SIGNAL(okClicked()), widget, SLOT(save()));
     connect(widget, SIGNAL(changed(bool)), this , SLOT(enableButtonApply(bool)));
 
+    setInitialSize(QSize(620, 310));
     KConfigGroup kconfiggroup(KGlobal::config(), "KNotificationConfigDialog");
     restoreDialogSize(kconfiggroup);
 }
