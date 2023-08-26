@@ -73,7 +73,7 @@ static X11ModInfo g_rgX11ModInfo[4] =
     { Qt::META,    Mod4Mask }
 };
 
-// These are the X equivalents to the Qt keycodes 0x1000 - 0x1026
+// These are the X equivalents to the Katie keycodes 0x1000 - 0x1026
 static const TransKey g_rgQtToSymX[] =
 {
     { Qt::Key_Escape,     XK_Escape },
@@ -217,9 +217,9 @@ bool initializeMods()
         // and X.org R6.7 , where for some reason only ( ... , 1 ) works. I have absolutely no
         // idea what the problem is, but searching all possibilities until something valid is
         // found fixes the problem.
-        for( int j = 0; j < xmk->max_keypermod; ++j ) {
+        for (int j = 0; j < xmk->max_keypermod; ++j) {
 
-            for( int k = 0; k < keysyms_per_keycode; ++k ) {
+            for (int k = 0; k < keysyms_per_keycode; ++k) {
 
 #ifdef HAVE_XKB
                 keySymX = XkbKeycodeToKeysym(QX11Info::display(), xmk->modifiermap[xmk->max_keypermod * i + j], 0, k);
@@ -268,12 +268,12 @@ bool initializeMods()
     }
 
     // Check if super overlaps with meta or alt
-    if (g_super_mask&(g_meta_mask|g_alt_mask)) {
+    if (g_super_mask & (g_meta_mask | g_alt_mask)) {
 #ifdef KKEYSERVER_DEBUG
         kDebug() << "Super conflicts with meta or alt.";
 #endif
         // Remove the conflicting masks
-        g_super_mask &= ~(g_meta_mask|g_alt_mask);
+        g_super_mask &= ~(g_meta_mask | g_alt_mask);
     }
 
 
