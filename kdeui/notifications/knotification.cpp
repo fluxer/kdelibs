@@ -144,13 +144,12 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
                 eventactions.append(eventaction);
                 actionscounter++;
             }
-            const QString eventapp = KGlobal::mainComponent().componentName();
             QVariantMap eventhints;
             // NOTE: has to be set to be configurable via plasma notifications applet
-            eventhints.insert("x-kde-appname", eventapp);
+            eventhints.insert("x-kde-appname", spliteventid.at(0));
             QDBusReply<uint> notifyreply = m_notificationsiface->call(
                 QString::fromLatin1("Notify"),
-                eventapp,
+                KGlobal::mainComponent().componentName(),
                 eventid,
                 eventicon,
                 eventtitle,
