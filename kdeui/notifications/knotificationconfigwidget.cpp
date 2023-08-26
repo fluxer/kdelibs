@@ -39,9 +39,11 @@ public:
     QTreeWidget* treewidget;
     QString enabledi18n;
     QString disabledi18n;
+    QString unavailablei18n;
     QString popuptooltipi18n;
     QString soundtooltipi18n;
     QString taskbartooltipi18n;
+    QString unavailabletooltipi18n;
     QMap<QString,QStringList> notificationchanges;
 };
 
@@ -53,9 +55,11 @@ KNotificationConfigWidgetPrivate::KNotificationConfigWidgetPrivate(KNotification
     // translate once
     enabledi18n = i18n("Enabled");
     disabledi18n = i18n("Disabled");
+    unavailablei18n = i18n("Unavailable");
     popuptooltipi18n = i18n("Show a message in a popup");
     soundtooltipi18n = i18n("Play a sound");
     taskbartooltipi18n = i18n("Mark taskbar entry");
+    unavailabletooltipi18n = i18n("The action is not available for this event");
 }
 
 void KNotificationConfigWidgetPrivate::_k_slotItemChanged(QTreeWidgetItem *item, int column)
@@ -66,20 +70,24 @@ void KNotificationConfigWidgetPrivate::_k_slotItemChanged(QTreeWidgetItem *item,
         return;
     }
     if (column >= 1 && column <= 3) {
-        item->setText(column, item->checkState(column) == Qt::Checked ? enabledi18n : disabledi18n);
+        if (column == 2 && !item->data(column, Qt::UserRole).toBool()) {
+            // nada
+        } else {
+            item->setText(column, item->checkState(column) == Qt::Checked ? enabledi18n : disabledi18n);
+        }
     }
     const QString eventgroup = item->data(0, Qt::UserRole).toString();
     QStringList eventactions;
-    const bool eventpopup = (item->checkState(1) == Qt::Checked);
-    const bool eventsound = (item->checkState(2) == Qt::Checked);
-    const bool eventtaskbar = (item->checkState(3) == Qt::Checked);
-    if (eventpopup) {
+    const bool eventactionpopup = (item->checkState(1) == Qt::Checked);
+    const bool eventactionsound = (item->checkState(2) == Qt::Checked);
+    const bool eventactiontaskbar = (item->checkState(3) == Qt::Checked);
+    if (eventactionpopup) {
         eventactions.append(QString::fromLatin1("Popup"));
     }
-    if (eventsound) {
+    if (eventactionsound) {
         eventactions.append(QString::fromLatin1("Sound"));
     }
-    if (eventtaskbar) {
+    if (eventactiontaskbar) {
         eventactions.append(QString::fromLatin1("Taskbar"));
     }
     notificationchanges.insert(eventgroup, eventactions);
@@ -155,25 +163,36 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         if (eventicon.isEmpty()) {
             eventicon = globalgroupconfig.readEntry("IconName");
         }
+        QString eventsound = eventgroupconfig.readEntry("Sound");
+        if (eventsound.isEmpty()) {
+            eventsound = globalgroupconfig.readEntry("Sound");
+        }
         QStringList eventactions = eventgroupconfig.readEntry("Actions", QStringList());
         if (eventactions.isEmpty()) {
             eventactions = globalgroupconfig.readEntry("Actions", QStringList());
         }
-        const bool eventpopup = eventactions.contains(QString::fromLatin1("Popup"));
-        const bool eventsound = eventactions.contains(QString::fromLatin1("Sound"));
-        const bool eventtaskbar = eventactions.contains(QString::fromLatin1("Taskbar"));
+        const bool eventactionpopup = eventactions.contains(QString::fromLatin1("Popup"));
+        const bool eventactionsound = eventactions.contains(QString::fromLatin1("Sound"));
+        const bool eventactiontaskbar = eventactions.contains(QString::fromLatin1("Taskbar"));
         QTreeWidgetItem* eventitem = new QTreeWidgetItem();
         eventitem->setData(0, Qt::UserRole, eventgroup);
         eventitem->setIcon(0, KIcon(eventicon));
         eventitem->setText(0, eventtext);
-        eventitem->setText(1, eventpopup ? d->enabledi18n : d->disabledi18n);
-        eventitem->setCheckState(1, eventpopup ? Qt::Checked : Qt::Unchecked);
+        eventitem->setText(1, eventactionpopup ? d->enabledi18n : d->disabledi18n);
+        eventitem->setCheckState(1, eventactionpopup ? Qt::Checked : Qt::Unchecked);
         eventitem->setToolTip(1, d->popuptooltipi18n);
-        eventitem->setText(2, eventsound ? d->enabledi18n : d->disabledi18n);
-        eventitem->setCheckState(2, eventsound ? Qt::Checked : Qt::Unchecked);
-        eventitem->setToolTip(2, d->soundtooltipi18n);
-        eventitem->setText(3, eventtaskbar ? d->enabledi18n : d->disabledi18n);
-        eventitem->setCheckState(3, eventtaskbar ? Qt::Checked : Qt::Unchecked);
+        if (eventsound.isEmpty()) {
+            eventitem->setData(2, Qt::UserRole, false);
+            eventitem->setText(2, d->unavailablei18n);
+            eventitem->setToolTip(2, d->unavailabletooltipi18n);
+        } else {
+            eventitem->setData(2, Qt::UserRole, true);
+            eventitem->setText(2, eventactionsound ? d->enabledi18n : d->disabledi18n);
+            eventitem->setCheckState(2, eventactionsound ? Qt::Checked : Qt::Unchecked);
+            eventitem->setToolTip(2, d->soundtooltipi18n);
+        }
+        eventitem->setText(3, eventactiontaskbar ? d->enabledi18n : d->disabledi18n);
+        eventitem->setCheckState(3, eventactiontaskbar ? Qt::Checked : Qt::Unchecked);
         eventitem->setToolTip(3, d->taskbartooltipi18n);
         d->treewidget->addTopLevelItem(eventitem);
     }
