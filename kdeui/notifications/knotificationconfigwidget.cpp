@@ -173,7 +173,8 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         return;
     }
 
-    const QStringList sounds = KGlobal::dirs()->findAllResources("sound", "*", KStandardDirs::Recursive);
+    QStringList sounds = KGlobal::dirs()->findAllResources("sound", "*", KStandardDirs::Recursive);
+    sounds.sort();
     KConfig notificationconfig("knotificationrc", KConfig::NoGlobals);
     notificationconfig.addConfigSources(QStringList() << notifyconfig);
     KConfigGroup globalgroupconfig(&notificationconfig, notification);
