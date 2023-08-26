@@ -424,7 +424,7 @@ void KNotification::event(const QString &eventid, const QString &title, const QS
     knotification->setIcon(icon);
     knotification->setWidget(widget);
     knotification->setFlags(flags);
-    knotification->send();
+    QTimer::singleShot(0, knotification, SLOT(send()));
 }
 
 void KNotification::beep(const QString &reason, QWidget *widget)
