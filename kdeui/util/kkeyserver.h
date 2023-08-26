@@ -27,7 +27,7 @@
 
 #include <qglobal.h>
 
-#if defined Q_WS_X11 /*or defined Q_WS_WIN*/
+#if defined(Q_WS_X11)
 #include "kkeyserver_x11.h"
 #endif
 
@@ -39,28 +39,28 @@
 namespace KKeyServer {
     /**
      * Converts the mask of ORed KKey::ModFlag modifiers to a
-	 * user-readable string.
-	 * @param mod the mask of ORed KKey::ModFlag modifiers
-	 * @return the user-readable string
-	 */
-	KDEUI_EXPORT QString modToStringUser( uint mod );
-    
-	/**
-     * Converts the modifier given as user-readable string
-     * to KKey::ModFlag modifier, or 0.
-     * @internal
-	 */
-	KDEUI_EXPORT uint stringUserToMod( const QString& mod );
+     * user-readable string.
+     * @param mod the mask of ORed KKey::ModFlag modifiers
+     * @return the user-readable string
+     */
+    KDEUI_EXPORT QString modToStringUser(uint mod);
 
-	/**
-	* Test if the shift modifier should be recorded for a given key.
-	*
-	* For example, if shift+5 produces '%' Qt wants ctrl+shift+5 recorded as ctrl+% and
-	* in that case this function would return false.
-	*
-	* @since 4.7.1
-	*/
-	KDEUI_EXPORT bool isShiftAsModifierAllowed( int keyQt );
+    /**
+    * Converts the modifier given as user-readable string
+    * to KKey::ModFlag modifier, or 0.
+    * @internal
+        */
+    KDEUI_EXPORT uint stringUserToMod(const QString &mod);
+
+    /**
+    * Test if the shift modifier should be recorded for a given key.
+    *
+    * For example, if shift+5 produces '%' Qt wants ctrl+shift+5 recorded as ctrl+% and
+    * in that case this function would return false.
+    *
+    * @since 4.7.1
+    */
+    KDEUI_EXPORT bool isShiftAsModifierAllowed(int keyQt);
 
 } // namespace KKeyServer
 

@@ -35,9 +35,9 @@ namespace KKeyServer {
     
 struct ModInfo
 {
-	int modQt;
-	const char* psName;
-	QString* sLabel; // this struct is used in static objects, so must use a pointer here.
+    int modQt;
+    const char* psName;
+    QString* sLabel; // this struct is used in static objects, so must use a pointer here.
 };
 
 //---------------------------------------------------------------------
@@ -49,10 +49,10 @@ struct ModInfo
 #define KEYCTXT "keyboard-key-name"
 static ModInfo g_rgModInfo[4] =
 {
-	{ Qt::SHIFT,   "Shift", 0 },
-	{ Qt::CTRL,    "Ctrl", 0 },
-	{ Qt::ALT,     "Alt", 0 },
-	{ Qt::META,    "Meta", 0 }
+    { Qt::SHIFT,   "Shift", 0 },
+    { Qt::CTRL,    "Ctrl",  0 },
+    { Qt::ALT,     "Alt",   0 },
+    { Qt::META,    "Meta",  0 }
 };
 
 //---------------------------------------------------------------------
@@ -63,54 +63,54 @@ static bool g_bMacLabels;
 
 static void intializeKKeyLabels()
 {
-	KConfigGroup cg( KGlobal::config(), "Keyboard" );
-	g_rgModInfo[0].sLabel = new QString( cg.readEntry( "Label Shift", i18nc(KEYCTXT, g_rgModInfo[0].psName) ) );
-	g_rgModInfo[1].sLabel = new QString( cg.readEntry( "Label Ctrl", i18nc(KEYCTXT, g_rgModInfo[1].psName) ) );
-	g_rgModInfo[2].sLabel = new QString( cg.readEntry( "Label Alt", i18nc(KEYCTXT, g_rgModInfo[2].psName) ) );
-	g_rgModInfo[3].sLabel = new QString( cg.readEntry( "Label Win", i18nc(KEYCTXT, g_rgModInfo[3].psName) ) );
-	g_bMacLabels = (*g_rgModInfo[2].sLabel == "Command");
-	g_bInitializedKKeyLabels = true;
-    
+    KConfigGroup cg(KGlobal::config(), "Keyboard");
+    g_rgModInfo[0].sLabel = new QString(cg.readEntry("Label Shift", i18nc(KEYCTXT, g_rgModInfo[0].psName)));
+    g_rgModInfo[1].sLabel = new QString(cg.readEntry("Label Ctrl", i18nc(KEYCTXT, g_rgModInfo[1].psName)));
+    g_rgModInfo[2].sLabel = new QString(cg.readEntry("Label Alt", i18nc(KEYCTXT, g_rgModInfo[2].psName)));
+    g_rgModInfo[3].sLabel = new QString(cg.readEntry("Label Win", i18nc(KEYCTXT, g_rgModInfo[3].psName)));
+    g_bMacLabels = (*g_rgModInfo[2].sLabel == "Command");
+    g_bInitializedKKeyLabels = true;
 }
 
 //---------------------------------------------------------------------
 // Public functions
 //---------------------------------------------------------------------
 
-static QString modToString( uint mod, bool bUserSpace )
+static QString modToString(uint mod, bool bUserSpace)
 {
-	if( bUserSpace && !g_bInitializedKKeyLabels )
-		intializeKKeyLabels();
+    if (bUserSpace && !g_bInitializedKKeyLabels) {
+        intializeKKeyLabels();
+    }
     
-	QString s;
-	for( int i = 3; i >= 0; i-- ) {
-		if( mod & g_rgModInfo[i].modQt ) {
-			if( !s.isEmpty() )
-				s += '+';
-			s += (bUserSpace)
-                ? *g_rgModInfo[i].sLabel
-                : QString(g_rgModInfo[i].psName);
-		}
-	}
-	return s;
+    QString s;
+    for(int i = 3; i >= 0; i--) {
+        if (mod & g_rgModInfo[i].modQt) {
+            if (!s.isEmpty() ) {
+                s += '+';
+            }
+            s += (bUserSpace ? *g_rgModInfo[i].sLabel : QString(g_rgModInfo[i].psName));
+        }
+    }
+    return s;
 }
 
-QString modToStringUser( uint mod )
+QString modToStringUser(uint mod)
 {
-	return modToString( mod, true );
+    return modToString(mod, true);
 }
 
-uint stringUserToMod( const QString& mod )
+uint stringUserToMod(const QString &mod)
 {
-	QString s;
-	for( int i = 3; i >= 0; i-- ) {
-		if( mod.toLower() == g_rgModInfo[i].sLabel->toLower())
-			return g_rgModInfo[i].modQt;
-	}
-	return 0;
+    QString s;
+    for (int i = 3; i >= 0; i--) {
+        if (mod.toLower() == g_rgModInfo[i].sLabel->toLower()) {
+            return g_rgModInfo[i].modQt;
+        }
+    }
+    return 0;
 }
 
-bool isShiftAsModifierAllowed( int keyQt )
+bool isShiftAsModifierAllowed(int keyQt)
 {
     // remove any modifiers
     keyQt &= ~Qt::KeyboardModifierMask;
@@ -119,11 +119,13 @@ bool isShiftAsModifierAllowed( int keyQt )
     // to enter the SHIFT+5 key sequence for me because this is handled as
     // '%' by qt on my keyboard.
     // The working keys are all hardcoded here :-(
-    if (keyQt >= Qt::Key_F1 && keyQt <= Qt::Key_F35)
+    if (keyQt >= Qt::Key_F1 && keyQt <= Qt::Key_F35) {
         return true;
+    }
 
-    if (QChar(keyQt).isLetter())
+    if (QChar(keyQt).isLetter()) {
         return true;
+    }
 
     switch (keyQt) {
         case Qt::Key_Return:

@@ -373,10 +373,11 @@ uint getModsRequired(uint sym)
     if( sym == XK_Sys_Req ) return Qt::ALT;
     if( sym == XK_Break ) return Qt::CTRL;
 
-    if( sym < 0x3000 ) {
+    if (sym < 0x3000) {
         QChar c(sym);
-        if( c.isLetter() && c.toLower() != c.toUpper() && sym == c.toUpper().unicode() )
+        if (c.isLetter() && c.toLower() != c.toUpper() && sym == c.toUpper().unicode()) {
             return Qt::SHIFT;
+        }
     }
 
     uchar code = XKeysymToKeycode( QX11Info::display(), sym );
@@ -394,23 +395,23 @@ uint getModsRequired(uint sym)
         else if( sym == XkbKeycodeToKeysym( QX11Info::display(), code, 0, 3 ) )
             mod = Qt::SHIFT | MODE_SWITCH;
 #else
-        if( sym == XKeycodeToKeysym( QX11Info::display(), code, 0 ) )
+        if (sym == XKeycodeToKeysym(QX11Info::display(), code, 0))
             ;
-        else if( sym == XKeycodeToKeysym( QX11Info::display(), code, 1 ) )
+        else if( sym == XKeycodeToKeysym(QX11Info::display(), code, 1))
             mod = Qt::SHIFT;
-        else if( sym == XKeycodeToKeysym( QX11Info::display(), code, 2 ) )
+        else if( sym == XKeycodeToKeysym(QX11Info::display(), code, 2))
             mod = MODE_SWITCH;
-        else if( sym == XKeycodeToKeysym( QX11Info::display(), code, 3 ) )
+        else if( sym == XKeycodeToKeysym(QX11Info::display(), code, 3))
             mod = Qt::SHIFT | MODE_SWITCH;
 #endif
     }
     return mod;
 }
 
-bool keyQtToCodeX( int keyQt, int* keyCode )
+bool keyQtToCodeX(int keyQt, int *keyCode)
 {
-    int sym;
-    uint mod;
+    int sym = 0;
+    uint mod = 0;
     keyQtToSymX(keyQt, &sym);
     keyQtToModX(keyQt, &mod);
 
@@ -418,58 +419,57 @@ bool keyQtToCodeX( int keyQt, int* keyCode )
     //  E.g., XK_Plus requires SHIFT on the en layout.
     uint modExtra = getModsRequired(sym);
     // Get the X modifier equivalent.
-    if( !sym || !keyQtToModX( (keyQt & Qt::KeyboardModifierMask) | modExtra, &mod ) ) {
+    if (!sym || !keyQtToModX((keyQt & Qt::KeyboardModifierMask) | modExtra, &mod)) {
         *keyCode = 0;
         return false;
     }
 
-    *keyCode = XKeysymToKeycode( QX11Info::display(), sym );
+    *keyCode = XKeysymToKeycode(QX11Info::display(), sym);
     return true;
 }
 
-bool keyQtToSymX( int keyQt, int* keySym )
+bool keyQtToSymX(int keyQt, int *keySym)
 {
     int symQt = keyQt & ~Qt::KeyboardModifierMask;
 
-    if( symQt < 0x1000 ) {
+    if (symQt < 0x1000 ) {
         *keySym = QChar(symQt).toUpper().unicode();
         return true;
     }
 
 
-    for( uint i = 0; i < sizeof(g_rgQtToSymX)/sizeof(TransKey); i++ ) {
-        if( g_rgQtToSymX[i].keySymQt == symQt ) {
+    for (uint i = 0; i < sizeof(g_rgQtToSymX)/sizeof(TransKey); i++) {
+        if (g_rgQtToSymX[i].keySymQt == symQt) {
             *keySym = g_rgQtToSymX[i].keySymX;
             return true;
         }
     }
 
     *keySym = 0;
-    if( symQt != Qt::Key_Shift && symQt != Qt::Key_Control && symQt != Qt::Key_Alt && symQt != Qt::Key_Meta) {
-        kDebug(125) << "Sym::initQt( " << QString::number(keyQt,16) << " ): failed to convert key.";
+    if (symQt != Qt::Key_Shift && symQt != Qt::Key_Control && symQt != Qt::Key_Alt && symQt != Qt::Key_Meta) {
+        kDebug(125) << "Sym::initQt( " << QString::number(keyQt, 16) << " ): failed to convert key.";
     }
     return false;
 }
 
-bool symXToKeyQt( uint keySym, int* keyQt )
+bool symXToKeyQt(uint keySym, int *keyQt)
 {
     *keyQt = Qt::Key_unknown;
     if( keySym < 0x1000 ) {
-        if( keySym >= 'a' && keySym <= 'z' )
+        if (keySym >= 'a' && keySym <= 'z') {
             *keyQt = QChar(keySym).toUpper().unicode();
-        else
+        } else {
             *keyQt = keySym;
-    }
-
-    else if( keySym < 0x3000 )
+        }
+    } else if (keySym < 0x3000) {
         *keyQt = keySym;
-
-    else {
-        for( uint i = 0; i < sizeof(g_rgQtToSymX)/sizeof(TransKey); i++ )
-            if( g_rgQtToSymX[i].keySymX == keySym ) {
+    } else {
+        for (uint i = 0; i < sizeof(g_rgQtToSymX)/sizeof(TransKey); i++) {
+            if (g_rgQtToSymX[i].keySymX == keySym) {
                 *keyQt = g_rgQtToSymX[i].keySymQt;
                 break;
             }
+        }
     }
 
     return (*keyQt != Qt::Key_unknown);
@@ -478,19 +478,20 @@ bool symXToKeyQt( uint keySym, int* keyQt )
 /* are these things actually used anywhere?  there's no way
    they can do anything on non-X11 */
 
-bool keyQtToModX( int modQt, uint* modX )
+bool keyQtToModX(int modQt, uint *modX)
 {
-    if( !g_bInitializedMods )
+    if (!g_bInitializedMods) {
         initializeMods();
+    }
 
     *modX = 0;
     for( int i = 0; i < 4; i++ ) {
 
-        if( modQt & g_rgX11ModInfo[i].modQt ) {
-            if( g_rgX11ModInfo[i].modX ) {
+        if (modQt & g_rgX11ModInfo[i].modQt) {
+            if (g_rgX11ModInfo[i].modX) {
                 *modX |= g_rgX11ModInfo[i].modX;
             } else {
-                // The qt modifier has no x equivalent. Return false
+                // The Katie modifier has no X11 equivalent. Return false
                 return false;
             }
         }
@@ -500,11 +501,12 @@ bool keyQtToModX( int modQt, uint* modX )
 
 bool modXToQt( uint modX, int* modQt )
 {
-    if( !g_bInitializedMods )
+    if (!g_bInitializedMods) {
         initializeMods();
+    }
 
     *modQt = 0;
-    for( int i = 0; i < 4; i++ ) {
+    for (int i = 0; i < 4; i++ ) {
         if( modX & g_rgX11ModInfo[i].modX ) {
             *modQt |= g_rgX11ModInfo[i].modQt;
             continue;
@@ -514,7 +516,7 @@ bool modXToQt( uint modX, int* modQt )
 }
 
 
-bool codeXToSym( uchar codeX, uint modX, uint* sym )
+bool codeXToSym(uchar codeX, uint modX, uint *sym)
 {
     KeySym keySym;
     XKeyPressedEvent event;
@@ -526,19 +528,17 @@ bool codeXToSym( uchar codeX, uint modX, uint* sym )
     event.state = modX;
     event.keycode = codeX;
 
-    XLookupString( &event, 0, 0, &keySym, 0 );
+    XLookupString(&event, 0, 0, &keySym, 0);
     *sym = (uint) keySym;
     return true;
 }
-
 
 uint accelModMaskX()
 {
     return modXShift() | modXCtrl() | modXAlt() | modXMeta();
 }
 
-
-bool xEventToQt( XEvent* e, int* keyQt )
+bool xEventToQt(XEvent *e, int *keyQt)
 {
     Q_ASSERT(e->type == KeyPress || e->type == KeyRelease);
 
