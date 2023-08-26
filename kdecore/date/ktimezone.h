@@ -31,8 +31,8 @@ class KTimeZonePrivate;
 /**
  * Class representing a time zone.
  *
- * The KTimeZone base class contains general descriptive data about the time zone and to translate
- * between UTC and local time.
+ * The KTimeZone class contains general data about time zone and can convert between UTC and local
+ * time.
  *
  * @short class representing a time zone
  * @ingroup timezones
