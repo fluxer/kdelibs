@@ -101,7 +101,6 @@ QString modToStringUser(uint mod)
 
 uint stringUserToMod(const QString &mod)
 {
-    QString s;
     for (int i = 3; i >= 0; i--) {
         if (mod.toLower() == g_rgModInfo[i].sLabel->toLower()) {
             return g_rgModInfo[i].modQt;
