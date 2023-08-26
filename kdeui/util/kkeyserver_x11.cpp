@@ -47,15 +47,6 @@ namespace KKeyServer
 {
 
 //---------------------------------------------------------------------
-// Data Structures
-//---------------------------------------------------------------------
-
-struct Mod
-{
-    int m_mod;
-};
-
-//---------------------------------------------------------------------
 // Array Structures
 //---------------------------------------------------------------------
 
@@ -63,18 +54,6 @@ struct X11ModInfo
 {
     int modQt;
     int modX;
-};
-
-struct SymVariation
-{
-    uint sym, symVariation;
-    bool bActive;
-};
-
-struct SymName
-{
-    uint sym;
-    const char* psName;
 };
 
 struct TransKey {
@@ -360,13 +339,13 @@ bool initializeMods()
 
 uint modXShift()      { return ShiftMask; }
 uint modXCtrl()       { return ControlMask; }
-uint modXAlt()        { if( !g_bInitializedMods ) { initializeMods(); } return g_alt_mask; }
-uint modXMeta()       { if( !g_bInitializedMods ) { initializeMods(); } return g_meta_mask; }
+uint modXAlt()        { if (!g_bInitializedMods) { initializeMods(); } return g_alt_mask; }
+uint modXMeta()       { if (!g_bInitializedMods) { initializeMods(); } return g_meta_mask; }
 
-uint modXNumLock()    { if( !g_bInitializedMods ) { initializeMods(); } return g_modXNumLock; }
+uint modXNumLock()    { if (!g_bInitializedMods) { initializeMods(); } return g_modXNumLock; }
 uint modXLock()       { return LockMask; }
-uint modXScrollLock() { if( !g_bInitializedMods ) { initializeMods(); } return g_modXScrollLock; }
-uint modXModeSwitch() { if( !g_bInitializedMods ) { initializeMods(); } return g_modXModeSwitch; }
+uint modXScrollLock() { if (!g_bInitializedMods) { initializeMods(); } return g_modXScrollLock; }
+uint modXModeSwitch() { if (!g_bInitializedMods) { initializeMods(); } return g_modXModeSwitch; }
 
 bool keyboardHasMetaKey() { return modXMeta() != 0; }
 
