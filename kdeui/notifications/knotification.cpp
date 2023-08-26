@@ -362,7 +362,7 @@ void KNotification::send()
     const bool persistent = (flags() & KNotification::Persistent);
     kNotificationManager->send(this, persistent);
     if (!persistent) {
-        close();
+        QTimer::singleShot(500, this, SLOT(close()));
     }
 }
 
