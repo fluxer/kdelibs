@@ -88,7 +88,7 @@ static QString modToString(uint mod, bool bUserSpace)
             if (!s.isEmpty() ) {
                 s += '+';
             }
-            s += (bUserSpace ? *g_rgModInfo[i].sLabel : QString(g_rgModInfo[i].psName));
+            s += (bUserSpace ? *g_rgModInfo[i].sLabel : QString::fromLatin1(g_rgModInfo[i].psName));
         }
     }
     return s;
