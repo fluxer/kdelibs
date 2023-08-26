@@ -55,6 +55,7 @@ private:
     KNotificationConfigWidgetPrivate *d;
 
     Q_PRIVATE_SLOT(d, void _k_slotItemChanged(QTreeWidgetItem *item, int column));
+    Q_PRIVATE_SLOT(d, void _k_slotSoundChanged(int index));
 };
 
 #endif // KNOTIFICATIONCONFIGWIDGET_H

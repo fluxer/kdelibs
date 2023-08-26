@@ -175,8 +175,8 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
         if (eventsound.isEmpty()) {
             eventsound = globalgroup.readEntry("Sound");
         }
-        const QString eventsoundfile = KStandardDirs::locate("sound", eventsound);
-        if (eventsoundfile.isEmpty()) {
+        const QStringList eventsoundfiles = KGlobal::dirs()->findAllResources("sound", eventsound, KStandardDirs::Recursive);
+        if (eventsoundfiles.isEmpty()) {
             kWarning(s_knotificationarea) << "sound not found" << eventsound;
         } else {
             kDebug(s_knotificationarea) << "playing notification sound" << eventsound;
@@ -187,7 +187,7 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
                 );
             }
             // the sound player is configurable and is used by the bball plasma applet for example
-            QDBusReply<void> playreply = m_kaudioplayeriface->call(QString::fromLatin1("play"), eventsoundfile);
+            QDBusReply<void> playreply = m_kaudioplayeriface->call(QString::fromLatin1("play"), eventsoundfiles.first());
             if (!playreply.isValid()) {
                 kWarning(s_knotificationarea) << "invalid play reply" << playreply.error().message();
             }

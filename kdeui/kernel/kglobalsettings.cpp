@@ -158,7 +158,8 @@ KGlobalSettings::Completion KGlobalSettings::completionMode()
     return (Completion) completion;
 }
 
-// NOTE: keep this in sync with kde-workspace/kcontrol/colors/colorscm.cpp
+// NOTE: keep this in sync with:
+// kde-workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTitleColor()
 {
     KConfigGroup g(KGlobal::config(), "WM");
@@ -204,7 +205,8 @@ bool KGlobalSettings::shadeSortColumn()
     return g.readEntry("shadeSortColumn", KDE_DEFAULT_SHADE_SORT_COLUMN);
 }
 
-// NOTE: keep in sync with kde-workspace/kcontrol/fonts/fonts.cpp
+// NOTE: keep in sync with:
+// kde-workspace/kcontrol/fonts/fonts.cpp
 QFont KGlobalSettings::generalFont()
 {
     return QApplication::font();
