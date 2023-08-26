@@ -2399,6 +2399,12 @@ void KFileWidgetPrivate::addToRecent()
         QStringList::ConstIterator it = files.begin();
         for ( ; it != files.end() && atmost > 0; ++it ) {
             KRecentDocument::add( *it );
+            if (!fileClass.isEmpty()) {
+                const QString itdir = KUrl(*it).directory();
+                if (!itdir.isEmpty()) {
+                    KRecentDirs::add(fileClass, itdir);
+                }
+            }
             atmost--;
         }
     } else {
@@ -2408,6 +2414,12 @@ void KFileWidgetPrivate::addToRecent()
         for ( ; it != urls.end() && atmost > 0; ++it ) {
             if ( (*it).isValid() ) {
                 KRecentDocument::add( *it );
+                if (!fileClass.isEmpty()) {
+                    const QString itdir = it->directory();
+                    if (!itdir.isEmpty()) {
+                        KRecentDirs::add(fileClass, itdir);
+                    }
+                }
                 atmost--;
             }
         }
@@ -2516,7 +2528,7 @@ void KFileWidgetPrivate::_k_toggleBookmarks(bool show)
 KUrl KFileWidget::getStartUrl( const KUrl& startDir,
                                QString& recentDirClass )
 {
-    QString fileName;					// result discarded
+    QString fileName; // result discarded
     return getStartUrl( startDir, recentDirClass, fileName );
 }
 
@@ -2548,12 +2560,12 @@ KUrl KFileWidget::getStartUrl( const KUrl& startDir,
             QString keyword;
             QString urlDir = startDir.directory();
             QString urlFile = startDir.fileName();
-            if ( urlDir == "/" )			// '1'..'4' above
+            if ( urlDir == "/" ) // '1'..'4' above
             {
                 keyword = urlFile;
                 fileName.clear();
             }
-            else					// '5' or '6' above
+            else // '5' or '6' above
             {
                 keyword = urlDir.mid( 1 );
                 fileName = urlFile;
@@ -2566,7 +2578,7 @@ KUrl KFileWidget::getStartUrl( const KUrl& startDir,
 
             ret = KUrl( KRecentDirs::dir(recentDirClass) );
         }
-        else						// not special "kfiledialog" URL
+        else // not special "kfiledialog" URL
         {
             // "foo.png" only gives us a file name, the default start dir will be used.
             // "file:foo.png" (from KHTML/webkit, due to fromPath()) means the same
@@ -2578,14 +2590,14 @@ KUrl KFileWidget::getStartUrl( const KUrl& startDir,
             if (!startDir.directory().isEmpty() ||
                 startDir.fileName().isEmpty()) {
                 // can use start directory
-                ret = startDir;				// will be checked by stat later
+                ret = startDir; // will be checked by stat later
                 // If we won't be able to list it (e.g. http), then use default
                 if ( !KProtocolManager::supportsListing( ret ) ) {
                     useDefaultStartDir = true;
                     fileName = startDir.fileName();
                 }
             }
-            else					// file name only
+            else // file name only
             {
                 fileName = startDir.fileName();
                 useDefaultStartDir = true;
