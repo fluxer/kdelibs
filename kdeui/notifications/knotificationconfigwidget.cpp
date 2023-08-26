@@ -130,6 +130,9 @@ KNotificationConfigWidget::KNotificationConfigWidget(const QString &notification
         << i18n("Taskbar");
     d->treewidget->setHeaderLabels(treeheaders);
     d->treewidget->setRootIsDecorated(false);
+    d->treewidget->header()->setStretchLastSection(false);
+    d->treewidget->header()->setResizeMode(0, QHeaderView::Stretch);
+    d->treewidget->header()->setResizeMode(2, QHeaderView::Stretch);
     connect(
         d->treewidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
         this, SLOT(_k_slotItemChanged(QTreeWidgetItem*,int))
@@ -170,6 +173,7 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         return;
     }
 
+    const QStringList sounds = KGlobal::dirs()->findAllResources("sound", "*", KStandardDirs::Recursive);
     KConfig notificationconfig("knotificationrc", KConfig::NoGlobals);
     notificationconfig.addConfigSources(QStringList() << notifyconfig);
     KConfigGroup globalgroupconfig(&notificationconfig, notification);
@@ -211,7 +215,6 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         d->treewidget->addTopLevelItem(eventitem);
         QComboBox* eventbox = new QComboBox(d->treewidget);
         eventbox->setProperty("_k_eventitem", QVariant::fromValue(eventitem));
-        const QStringList sounds = KGlobal::dirs()->findAllResources("sound", "*", KStandardDirs::Recursive);
         foreach (const QString &sound, sounds) {
             const QString soundfilename = QFileInfo(sound).fileName();
             eventbox->addItem(soundfilename, soundfilename);
@@ -233,9 +236,6 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         connect(eventbox, SIGNAL(currentIndexChanged(int)), this, SLOT(_k_slotSoundChanged(int)));
         d->treewidget->setItemWidget(eventitem, 2, eventbox);
     }
-    d->treewidget->header()->setStretchLastSection(false);
-    d->treewidget->header()->setResizeMode(0, QHeaderView::Stretch);
-    d->treewidget->header()->setResizeMode(2, QHeaderView::Stretch);
 }
 
 void KNotificationConfigWidget::configure(const QString &app, QWidget *parent)
