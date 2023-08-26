@@ -135,7 +135,7 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
             // NOTE: KPassivePopup positions itself depending on the windows
             kpassivepopup->show();
         } else {
-            const uint eventid = m_notifications.value(notification);
+            const uint eventid = m_notifications.value(notification, 0);
             // NOTE: there has to be id for each action, starting from 1
             int actionscounter = 1;
             QStringList eventactions;
