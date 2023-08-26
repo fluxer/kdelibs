@@ -187,7 +187,7 @@ void KNotificationConfigWidget::save()
     while (iter.hasNext()) {
         iter.next();
         KConfigGroup eventgroupconfig(&notificationsconfig, iter.key());
-        KNotificationChanges eventchanges = iter.value();
+        const KNotificationChanges eventchanges = iter.value();
         eventgroupconfig.writeEntry("Actions", eventchanges.eventactions);
         eventgroupconfig.writeEntry("Sound", eventchanges.eventsound);
     }
@@ -200,7 +200,7 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
 {
     d->treewidget->clear();
 
-    const QString notifyconfig = KStandardDirs::locate("config", "notifications/" + notification+ ".notifyrc");
+    const QString notifyconfig = KStandardDirs::locate("config", "notifications/" + notification + ".notifyrc");
     if (notifyconfig.isEmpty()) {
         kWarning() << "invalid notification" << notification;
         return;
