@@ -47,84 +47,83 @@
 class KActionCollectionPrivate
 {
 public:
-  KActionCollectionPrivate()
-    : m_parentGUIClient(0L),
-      configGroup("Shortcuts"),
-      configIsGlobal(false),
-      connectTriggered(false),
-      connectHovered(false),
-      q(0)
+    KActionCollectionPrivate()
+        : m_parentGUIClient(nullptr),
+        configGroup("Shortcuts"),
+        configIsGlobal(false),
+        connectTriggered(false),
+        connectHovered(false),
+        q(nullptr)
 
-  {
-  }
+    {
+    }
 
-  void setComponentForAction(KAction *kaction)
+    void setComponentForAction(KAction *kaction)
     { kaction->d->maybeSetComponentData(m_componentData); }
 
-  static QList<KActionCollection*> s_allCollections;
+    static QList<KActionCollection*> s_allCollections;
 
-  void _k_associatedWidgetDestroyed(QObject *obj);
-  void _k_actionDestroyed(QObject *obj);
+    void _k_associatedWidgetDestroyed(QObject *obj);
+    void _k_actionDestroyed(QObject *obj);
 
-  bool writeKXMLGUIConfigFile();
+    bool writeKXMLGUIConfigFile();
 
-  KComponentData m_componentData;
+    KComponentData m_componentData;
 
-  //! Remove a action from our internal bookkeeping. Returns NULL if the
-  //! action doesn't belong to us.
-  QAction *unlistAction(QAction*);
+    //! Remove a action from our internal bookkeeping. Returns NULL if the
+    //! action doesn't belong to us.
+    QAction *unlistAction(QAction*);
 
-  QMap<QString, QAction*> actionByName;
-  QList<QAction*> actions;
+    QMap<QString, QAction*> actionByName;
+    QList<QAction*> actions;
 
-  const KXMLGUIClient *m_parentGUIClient;
+    const KXMLGUIClient *m_parentGUIClient;
 
-  QString configGroup;
-  bool configIsGlobal : 1;
+    QString configGroup;
+    bool configIsGlobal;
 
-  bool connectTriggered : 1;
-  bool connectHovered : 1;
+    bool connectTriggered;
+    bool connectHovered;
 
-  KActionCollection *q;
+    KActionCollection *q;
 
-  QList<QWidget*> associatedWidgets;
+    QList<QWidget*> associatedWidgets;
 };
 
 QList<KActionCollection*> KActionCollectionPrivate::s_allCollections;
 
 KActionCollection::KActionCollection(QObject *parent, const KComponentData &cData)
-  : QObject( parent )
-  , d(new KActionCollectionPrivate)
+    : QObject(parent),
+    d(new KActionCollectionPrivate())
 {
-  d->q = this;
-  KActionCollectionPrivate::s_allCollections.append(this);
+    d->q = this;
+    KActionCollectionPrivate::s_allCollections.append(this);
 
-  setComponentData(cData);
+    setComponentData(cData);
 }
 
-KActionCollection::KActionCollection( const KXMLGUIClient *parent )
-  : QObject( 0 )
-  , d(new KActionCollectionPrivate)
+KActionCollection::KActionCollection(const KXMLGUIClient *parent)
+    : QObject(nullptr),
+    d(new KActionCollectionPrivate())
 {
-  d->q = this;
-  KActionCollectionPrivate::s_allCollections.append(this);
+    d->q = this;
+    KActionCollectionPrivate::s_allCollections.append(this);
 
-  d->m_parentGUIClient=parent;
-  d->m_componentData = parent->componentData();
+    d->m_parentGUIClient = parent;
+    d->m_componentData = parent->componentData();
 }
 
 KActionCollection::~KActionCollection()
 {
-  KActionCollectionPrivate::s_allCollections.removeAll(this);
-
-  delete d;
+    KActionCollectionPrivate::s_allCollections.removeAll(this);
+    delete d;
 }
 
 void KActionCollection::clear()
 {
-  d->actionByName.clear();
-  qDeleteAll(d->actions);
-  d->actions.clear();
+    d->actionByName.clear();
+    qDeleteAll(d->actions);
+    d->actions.clear();
 }
 
 QAction* KActionCollection::action(const QString &name) const
@@ -154,26 +153,26 @@ bool KActionCollection::isEmpty() const
 
 void KActionCollection::setComponentData(const KComponentData &cData)
 {
-  if (count() > 0) {
-    // Its component name is part of an action's signature in the context of
-    // global shortcuts and the semantics of changing an existing action's
-    // signature are, as it seems, impossible to get right.
-    // As of now this only matters for global shortcuts. We could
-    // thus relax the requirement and only refuse to change the component data
-    // if we have actions with global shortcuts in this collection.
-    kWarning(129) << "this does not work on a KActionCollection containing actions!";
-  }
+    if (count() > 0) {
+        // Its component name is part of an action's signature in the context of
+        // global shortcuts and the semantics of changing an existing action's
+        // signature are, as it seems, impossible to get right.
+        // As of now this only matters for global shortcuts. We could
+        // thus relax the requirement and only refuse to change the component data
+        // if we have actions with global shortcuts in this collection.
+        kWarning(129) << "this does not work on a KActionCollection containing actions!";
+    }
 
-  if (cData.isValid()) {
-    d->m_componentData = cData;
-  } else {
-    d->m_componentData = KGlobal::mainComponent();
-  }
+    if (cData.isValid()) {
+        d->m_componentData = cData;
+    } else {
+        d->m_componentData = KGlobal::mainComponent();
+    }
 }
 
 KComponentData KActionCollection::componentData() const
 {
-  return d->m_componentData;
+    return d->m_componentData;
 }
 
 const KXMLGUIClient *KActionCollection::parentGUIClient() const
@@ -186,22 +185,26 @@ QList<QAction*> KActionCollection::actions() const
     return d->actions;
 }
 
-const QList< QAction* > KActionCollection::actionsWithoutGroup( ) const
+const QList< QAction* > KActionCollection::actionsWithoutGroup() const
 {
-  QList<QAction*> ret;
-  foreach (QAction* action, d->actions)
-    if (!action->actionGroup())
-      ret.append(action);
-  return ret;
+    QList<QAction*> ret;
+    foreach (QAction* action, d->actions) {
+        if (!action->actionGroup()) {
+            ret.append(action);
+        }
+    }
+    return ret;
 }
 
-const QList< QActionGroup * > KActionCollection::actionGroups( ) const
+const QList<QActionGroup*> KActionCollection::actionGroups() const
 {
-  QSet<QActionGroup*> set;
-  foreach (QAction* action, d->actions)
-    if (action->actionGroup())
-      set.insert(action->actionGroup());
-  return set.toList();
+    QSet<QActionGroup*> set;
+    foreach (QAction* action, d->actions) {
+        if (action->actionGroup()) {
+            set.insert(action->actionGroup());
+        }
+    }
+    return set.toList();
 }
 
 KAction *KActionCollection::addAction(const QString &name, KAction *action)
@@ -212,10 +215,11 @@ KAction *KActionCollection::addAction(const QString &name, KAction *action)
     return action;
 }
 
-QAction *KActionCollection::addAction(const QString &name, QAction *action)
+QAction* KActionCollection::addAction(const QString &name, QAction *action)
 {
-    if (!action)
+    if (!action) {
         return action;
+    }
 
     const QString objectName = action->objectName();
     QString indexName = name;
@@ -223,9 +227,7 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
     if (indexName.isEmpty()) {
         // No name provided. Use the objectName.
         indexName = objectName;
-
     } else {
-
         // A name was provided. Check against objectName.
         if ((!objectName.isEmpty()) && (objectName != indexName)) {
             // The user specified a new name and the action already has a
@@ -249,7 +251,7 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
 
     // No name provided and the action had no name. Make one up. This will not
     // work when trying to save shortcuts. Both local and global shortcuts.
-    if( indexName.isEmpty() ) {
+    if (indexName.isEmpty()) {
         indexName = indexName.sprintf("unnamed-%p", (void*)action);
         action->setObjectName(indexName);
     }
@@ -259,15 +261,15 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
     Q_ASSERT(!action->objectName().isEmpty());
 
     // look if we already have THIS action under THIS name ;)
-    if (d->actionByName.value(indexName, 0) == action ) {
+    if (d->actionByName.value(indexName, 0) == action) {
         // This is not a multi map!
-        Q_ASSERT( d->actionByName.count(indexName)==1);
+        Q_ASSERT(d->actionByName.count(indexName) == 1);
         return action;
     }
 
     // Check if we have another action under this name
     if (QAction *oldAction = d->actionByName.value(indexName)) {
-      takeAction(oldAction);
+        takeAction(oldAction);
     }
 
     // Check if we have this action under a different name.
@@ -283,8 +285,8 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
     d->actionByName.insert(indexName, action);
     d->actions.append(action);
 
-    foreach (QWidget* widget, d->associatedWidgets) {
-      widget->addAction(action);
+    foreach (QWidget *widget, d->associatedWidgets) {
+        widget->addAction(action);
     }
 
     connect(action, SIGNAL(destroyed(QObject*)), SLOT(_k_actionDestroyed(QObject*)));
@@ -294,140 +296,144 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
       d->setComponentForAction(kaction);
     }
 
-    if (d->connectHovered)
+    if (d->connectHovered) {
         connect(action, SIGNAL(hovered()), SLOT(slotActionHovered()));
+    }
 
-    if (d->connectTriggered)
+    if (d->connectTriggered) {
         connect(action, SIGNAL(triggered(bool)), SLOT(slotActionTriggered()));
+    }
 
-    emit inserted( action );
+    emit inserted(action);
     return action;
 }
 
-void KActionCollection::removeAction( QAction* action )
+void KActionCollection::removeAction(QAction *action)
 {
-    delete takeAction( action );
+    delete takeAction(action);
 }
 
 QAction* KActionCollection::takeAction(QAction *action)
 {
-  if (!d->unlistAction(action))
-      return NULL;
+    if (!d->unlistAction(action)) {
+        return nullptr;
+    }
 
-  // Remove the action from all widgets
-  foreach (QWidget* widget, d->associatedWidgets) {
-    widget->removeAction(action);
-  }
+    // Remove the action from all widgets
+    foreach (QWidget *widget, d->associatedWidgets) {
+        widget->removeAction(action);
+    }
 
-  action->disconnect(this);
-  return action;
+    action->disconnect(this);
+    return action;
 }
 
-KAction *KActionCollection::addAction(KStandardAction::StandardAction actionType, const QObject *receiver, const char *member)
+KAction* KActionCollection::addAction(KStandardAction::StandardAction actionType, const QObject *receiver, const char *member)
 {
-  KAction *action = KStandardAction::create(actionType, receiver, member, this);
-  return action;
+    return KStandardAction::create(actionType, receiver, member, this);
 }
 
 KAction *KActionCollection::addAction(KStandardAction::StandardAction actionType, const QString &name,
                                       const QObject *receiver, const char *member)
 {
-  // pass 0 as parent, because if the parent is a KActionCollection KStandardAction::create automatically
-  // adds the action to it under the default name. We would trigger the
-  // warning about renaming the action then.
-  KAction *action = KStandardAction::create(actionType, receiver, member, 0);
-  // Give it a parent for gc.
-  action->setParent(this);
-  // Remove the name to get rid of the "rename action" warning above
-  action->setObjectName(name);
-  // And now add it with the desired name.
-  return addAction(name, action);
+    // pass 0 as parent, because if the parent is a KActionCollection KStandardAction::create automatically
+    // adds the action to it under the default name. We would trigger the
+    // warning about renaming the action then.
+    KAction *action = KStandardAction::create(actionType, receiver, member, 0);
+    // Give it a parent for gc.
+    action->setParent(this);
+    // Remove the name to get rid of the "rename action" warning above
+    action->setObjectName(name);
+    // And now add it with the desired name.
+    return addAction(name, action);
 }
 
-KAction *KActionCollection::addAction(const QString &name, const QObject *receiver, const char *member)
+KAction* KActionCollection::addAction(const QString &name, const QObject *receiver, const char *member)
 {
-  KAction *a = new KAction(this);
-  if (receiver && member)
-    connect(a, SIGNAL(triggered(bool)), receiver, member);
-  return addAction(name, a);
+    KAction *a = new KAction(this);
+    if (receiver && member) {
+        connect(a, SIGNAL(triggered(bool)), receiver, member);
+    }
+    return addAction(name, a);
 }
 
-QString KActionCollection::configGroup( ) const
+QString KActionCollection::configGroup() const
 {
-  return d->configGroup;
+    return d->configGroup;
 }
 
-void KActionCollection::setConfigGroup( const QString & group )
+void KActionCollection::setConfigGroup(const QString &group)
 {
-  d->configGroup = group;
+    d->configGroup = group;
 }
 
 bool KActionCollection::configIsGlobal() const
 {
-  return d->configIsGlobal;
+    return d->configIsGlobal;
 }
 
-void KActionCollection::setConfigGlobal( bool global )
+void KActionCollection::setConfigGlobal(bool global)
 {
-  d->configIsGlobal = global;
+    d->configIsGlobal = global;
 }
 
-void KActionCollection::importGlobalShortcuts( KConfigGroup* config )
+void KActionCollection::importGlobalShortcuts(KConfigGroup *config)
 {
-  Q_ASSERT(config);
-  if( !config || !config->exists()) {
-    return;
-  }
+    Q_ASSERT(config);
+    if (!config || !config->exists()) {
+        return;
+    }
 
-  for (QMap<QString, QAction *>::ConstIterator it = d->actionByName.constBegin();
-       it != d->actionByName.constEnd(); ++it) {
-      KAction *kaction = qobject_cast<KAction*>(it.value());
-      if (!kaction)
-          continue;
+    for (QMap<QString, QAction *>::ConstIterator it = d->actionByName.constBegin();
+        it != d->actionByName.constEnd(); ++it) {
+        KAction *kaction = qobject_cast<KAction*>(it.value());
+        if (!kaction) {
+            continue;
+        }
 
-      QString actionName = it.key();
-
-      if( kaction->isShortcutConfigurable() ) {
-          QString entry = config->readEntry(actionName, QString());
-          if( !entry.isEmpty() ) {
-              kaction->setGlobalShortcut( KShortcut(entry), KAction::ActiveShortcut, KAction::NoAutoloading );
-          } else {
-              kaction->setGlobalShortcut( kaction->shortcut(KAction::DefaultShortcut), KAction::ActiveShortcut, KAction::NoAutoloading );
-          }
-      }
-  }
+        const QString actionName = it.key();
+        if (kaction->isShortcutConfigurable()) {
+            const QString entry = config->readEntry(actionName, QString());
+            if (!entry.isEmpty()) {
+                kaction->setGlobalShortcut(KShortcut(entry), KAction::ActiveShortcut, KAction::NoAutoloading);
+            } else {
+                kaction->setGlobalShortcut(kaction->shortcut(KAction::DefaultShortcut), KAction::ActiveShortcut, KAction::NoAutoloading);
+            }
+        }
+    }
 }
 
-
-void KActionCollection::readSettings( KConfigGroup* config )
+void KActionCollection::readSettings(KConfigGroup *config)
 {
-  KConfigGroup cg( KGlobal::config(), configGroup() );
-  if( !config )
-      config = &cg;
+    KConfigGroup cg(KGlobal::config(), configGroup());
+    if (!config) {
+        config = &cg;
+    }
 
-  if( !config->exists()) {
-    return;
-  }
+    if (!config->exists()) {
+        return;
+    }
 
-  for (QMap<QString, QAction *>::ConstIterator it = d->actionByName.constBegin();
-       it != d->actionByName.constEnd(); ++it) {
-      KAction *kaction = qobject_cast<KAction*>(it.value());
-      if (!kaction)
-          continue;
+    for (QMap<QString, QAction*>::ConstIterator it = d->actionByName.constBegin();
+        it != d->actionByName.constEnd(); ++it) {
+        KAction *kaction = qobject_cast<KAction*>(it.value());
+        if (!kaction) {
+            continue;
+        }
 
 
-      if( kaction->isShortcutConfigurable() ) {
-          QString actionName = it.key();
-          QString entry = config->readEntry(actionName, QString());
-          if( !entry.isEmpty() ) {
-              kaction->setShortcut( KShortcut(entry), KAction::ActiveShortcut );
-          } else {
-              kaction->setShortcut( kaction->shortcut(KAction::DefaultShortcut) );
-          }
-      }
-  }
+        if (kaction->isShortcutConfigurable() ) {
+            const QString actionName = it.key();
+            const QString entry = config->readEntry(actionName, QString());
+            if( !entry.isEmpty() ) {
+                kaction->setShortcut(KShortcut(entry), KAction::ActiveShortcut);
+            } else {
+                kaction->setShortcut(kaction->shortcut(KAction::DefaultShortcut));
+            }
+        }
+    }
 
-  //kDebug(125) << " done";
+    // kDebug(125) << "done";
 }
 
 void KActionCollection::exportGlobalShortcuts(KConfigGroup *config, bool writeAll) const
