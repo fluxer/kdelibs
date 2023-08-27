@@ -306,7 +306,6 @@ void KRecentFilesAction::saveEntries(const KConfigGroup &_cg)
     Q_D(KRecentFilesAction);
     QString key;
     QString value;
-    QStringList lst = items();
 
     KConfigGroup cg = _cg;
     if (cg.name().isEmpty()) {
