@@ -147,11 +147,11 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
 
     QFile tzfile(zoneinfoDir() + QDir::separator() + name);
     if (!tzfile.open(QFile::ReadOnly)) {
-        kWarning() << "Could not open" << tzfile.fileName();
+        kWarning(161) << "Could not open" << tzfile.fileName();
         return;
     }
 
-    kDebug() << "Parsing" << tzfile.fileName();
+    kDebug(161) << "Parsing" << tzfile.fileName();
     QDataStream tzstream(&tzfile);
     tzstream.setByteOrder(QDataStream::BigEndian);
 
@@ -159,7 +159,7 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
     ::memset(tzmagic, 0, sizeof(tzmagic) * sizeof(char));
     tzstream.readRawData(tzmagic, 4);
     if (qstrcmp(tzmagic, "TZif") != 0) {
-        kWarning() << "Invalid magic bits" << tzfile.fileName() << tzmagic;
+        kWarning(161) << "Invalid magic bits" << tzfile.fileName() << tzmagic;
         return;
     }
 
@@ -183,7 +183,7 @@ KTimeZonePrivate::KTimeZonePrivate(const QString &nam,
 
     // NOTE: should not be less than or equal to zero
     if (Q_UNLIKELY(tzh_typecnt <= 0)) {
-        kWarning() << "Invalid number of local time types" << tzfile.fileName();
+        kWarning(161) << "Invalid number of local time types" << tzfile.fileName();
         return;
     }
 

@@ -160,7 +160,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
     const QString zonetab = m_zoneinfoDir + QLatin1String("/zone.tab");
     QFile zonetabfile(zonetab);
     if (!zonetabfile.open(QFile::ReadOnly)) {
-        kWarning() << "Could not open zone.tab" << zonetab;
+        kWarning(161) << "Could not open zone.tab" << zonetab;
         return;
     }
 
@@ -180,7 +180,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
     m_watcher->addPaths(watchlist);
     connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(update(QString)));
 
-    kDebug() << "Parsing" << zonetab;
+    kDebug(161) << "Parsing" << zonetab;
     char zonecode[4];
     char zonecoordinates[32];
     char zonename[128];
@@ -202,7 +202,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         );
 
         if (Q_UNLIKELY(sscanfresult < 3 || sscanfresult > 4)) {
-            kWarning() << "Invalid zone.tab entry" << zonetabline;
+            kWarning(161) << "Invalid zone.tab entry" << zonetabline;
             continue;
         }
 
@@ -211,7 +211,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         );
         if (Q_UNLIKELY(zonetabcoordinates.first == KTimeZone::UNKNOWN
             || zonetabcoordinates.second == KTimeZone::UNKNOWN)) {
-            kWarning() << "Invalid zone.tab coordinates" << zonetabline;
+            kWarning(161) << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
 
@@ -229,7 +229,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         const QString localtz = reallocaltime.mid(zonediroffset, reallocaltime.size() - zonediroffset);
         m_localtz = findZone(localtz);
 #ifndef NDEBUG
-        kDebug() << "Zones update took" << updatetimer.elapsed() << "ms";
+        kDebug(161) << "Zones update took" << updatetimer.elapsed() << "ms";
 #endif
         return;
     }
@@ -248,7 +248,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         if (zone.abbreviations().contains(localtz)) {
             m_localtz = zone;
 #ifndef NDEBUG
-            kDebug() << "Zones update took" << updatetimer.elapsed() << "ms";
+            kDebug(161) << "Zones update took" << updatetimer.elapsed() << "ms";
 #endif
             break;
         }
