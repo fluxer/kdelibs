@@ -245,9 +245,9 @@ void saveShortcut(StandardShortcut id, const KShortcut &newShortcut)
     if (sameAsDefault) {
         // If the shortcut is the equal to the hardcoded one we remove it from
         // kdeglobal if necessary and return.
-        if(cg.hasKey(info->name))
+        if (cg.hasKey(info->name)) {
             cg.deleteEntry(info->name, KConfig::Global|KConfig::Persistent);
-
+        }
         return;
     }
 
@@ -263,9 +263,7 @@ QString name(StandardShortcut id)
 QString label(StandardShortcut id)
 {
     KStandardShortcutInfo *info = guardedStandardShortcutInfo( id );
-    return i18nc(
-        info->translation_context,
-        info->description);
+    return i18nc( info->translation_context, info->description);
 }
 
 // TODO: Add psWhatsThis entry to KStandardShortcutInfo
@@ -282,7 +280,7 @@ const KShortcut &shortcut(StandardShortcut id)
 {
     KStandardShortcutInfo *info = guardedStandardShortcutInfo(id);
 
-    if(!info->isInitialized)
+    if (!info->isInitialized)
         initialize(id);
 
     return info->cut;
@@ -290,14 +288,16 @@ const KShortcut &shortcut(StandardShortcut id)
 
 StandardShortcut find(const QKeySequence &seq)
 {
-    if( !seq.isEmpty() ) {
+    if (!seq.isEmpty()) {
         for(uint i = 0; i < sizeof(g_infoStandardShortcut) / sizeof(KStandardShortcutInfo); i++) {
             StandardShortcut id = g_infoStandardShortcut[i].id;
-            if( id != AccelNone ) {
-                if(!g_infoStandardShortcut[i].isInitialized)
+            if (id != AccelNone) {
+                if (!g_infoStandardShortcut[i].isInitialized) {
                     initialize(id);
-                if(g_infoStandardShortcut[i].cut.contains(seq))
+                }
+                if (g_infoStandardShortcut[i].cut.contains(seq)) {
                     return id;
+                }
             }
         }
     }
@@ -306,10 +306,11 @@ StandardShortcut find(const QKeySequence &seq)
 
 StandardShortcut find(const char *keyName)
 {
-    for(uint i = 0; i < sizeof(g_infoStandardShortcut) / sizeof(KStandardShortcutInfo); i++)
-        if (qstrcmp(g_infoStandardShortcut[i].name, keyName))
+    for (uint i = 0; i < sizeof(g_infoStandardShortcut) / sizeof(KStandardShortcutInfo); i++) {
+        if (qstrcmp(g_infoStandardShortcut[i].name, keyName)) {
             return g_infoStandardShortcut[i].id;
-
+        }
+    }
     return AccelNone;
 }
 
