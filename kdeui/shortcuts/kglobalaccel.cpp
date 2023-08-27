@@ -55,12 +55,12 @@ org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QStri
 
         if (reply.error().name() == "org.kde.kglobalaccel.NoSuchComponent") {
             // No problem. The component doesn't exists. That's normal
-            return NULL;
+            return nullptr;
         }
 
         // An unknown error.
         kError() << "Failed to get dbus path for component " << componentUnique << reply.error();
-        return NULL;
+        return nullptr;
     }
 
     // Now get the component
@@ -73,17 +73,16 @@ org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QStri
     // No component no cleaning
     if (!component->isValid()) {
         kDebug() << "Failed to get component" << componentUnique << QDBusConnection::sessionBus().lastError();
-        return NULL;
+        return nullptr;
     }
 
-    if (remember)
-        {
+    if (remember) {
         // Connect to the signals we are interested in.
         q->connect(component, SIGNAL(globalShortcutPressed(QString,QString,qlonglong)),
                 SLOT(_k_invokeAction(QString,QString,qlonglong)));
 
         components[componentUnique] = component;
-        }
+    }
 
     return component;
 }
@@ -346,7 +345,6 @@ QString KGlobalAccelPrivate::componentFriendlyForAction(const KAction *action)
     Q_ASSERT(action->d->componentData.isValid());
     return action->d->componentData.aboutData()->programName();
 }
-
 
 void KGlobalAccelPrivate::_k_invokeAction(
         const QString &componentUnique,

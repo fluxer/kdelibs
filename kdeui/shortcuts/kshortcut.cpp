@@ -42,7 +42,7 @@ public:
 
 
 KShortcut::KShortcut()
-    : d(new KShortcutPrivate)
+    : d(new KShortcutPrivate())
 {
     qRegisterMetaType<KShortcut>();
 }
