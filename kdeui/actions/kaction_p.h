@@ -28,16 +28,10 @@ class KAction;
 class KActionPrivate
 {
 public:
-    KActionPrivate()
-        : componentData(KGlobal::mainComponent()),
-        globalShortcutEnabled(false),
-        q(nullptr)
-    {
-    }
+    KActionPrivate(KAction *q_ptr);
 
     void slotTriggered();
 
-    void init(KAction *q_ptr);
     void setActiveGlobalShortcutNoEnable(const KShortcut &cut);
 
     void maybeSetComponentData(const KComponentData &kcd)
@@ -47,11 +41,12 @@ public:
         }
     }
 
-    KComponentData componentData;   //this is **way** more lightweight than it looks
-    KShortcut globalShortcut, defaultGlobalShortcut;
+    KComponentData componentData; // this is **way** more lightweight than it looks
+    KShortcut globalShortcut;
+    KShortcut defaultGlobalShortcut;
 
-    bool globalShortcutEnabled : 1;
-    bool neverSetGlobalShortcut : 1;
+    bool globalShortcutEnabled;
+    bool neverSetGlobalShortcut;
     KAction *q;
 };
 

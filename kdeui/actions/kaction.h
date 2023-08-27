@@ -253,7 +253,7 @@ public:
      * @param text The visible text for this action.
      * @param parent The parent for this action.
      */
-    KAction(const QString& text, QObject *parent);
+    KAction(const QString &text, QObject *parent);
 
     /**
      * Constructs an action with text and icon; a shortcut may be specified by
@@ -266,7 +266,7 @@ public:
      * @param text The text that will be displayed.
      * @param parent The parent for this action.
      */
-    KAction(const KIcon &icon, const QString& text, QObject *parent);
+    KAction(const KIcon &icon, const QString &text, QObject *parent);
 
     /**
      * Standard destructor

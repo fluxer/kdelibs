@@ -41,11 +41,12 @@
 // KActionPrivate
 //---------------------------------------------------------------------
 
-void KActionPrivate::init(KAction *q_ptr)
+KActionPrivate::KActionPrivate(KAction *q_ptr)
+    : componentData(KGlobal::mainComponent()),
+    globalShortcutEnabled(false),
+    neverSetGlobalShortcut(true),
+    q(q_ptr)
 {
-    q = q_ptr;
-    globalShortcutEnabled = false;
-    neverSetGlobalShortcut = true;
     QObject::connect(q, SIGNAL(triggered(bool)), q, SLOT(slotTriggered()));
     q->setProperty("isShortcutConfigurable", true);
 }
@@ -87,24 +88,21 @@ bool KAction::event(QEvent *event)
 //---------------------------------------------------------------------
 KAction::KAction(QObject *parent)
     : QWidgetAction(parent),
-    d(new KActionPrivate())
+    d(new KActionPrivate(this))
 {
-    d->init(this);
 }
 
 KAction::KAction(const QString &text, QObject *parent)
     : QWidgetAction(parent),
-    d(new KActionPrivate())
+    d(new KActionPrivate(this))
 {
-    d->init(this);
     setText(text);
 }
 
 KAction::KAction(const KIcon &icon, const QString &text, QObject *parent)
     : QWidgetAction(parent),
-    d(new KActionPrivate)
+    d(new KActionPrivate(this))
 {
-    d->init(this);
     setIcon(icon);
     setText(text);
 }
