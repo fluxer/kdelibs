@@ -175,7 +175,7 @@ private:
      */
     void addAction(QAction *action);
 
-    //! KActionCollection needs access to some of our helper methods
+    //! KActionCollection needs access to some of the helper methods
     friend class KActionCollectionPrivate;
 
     //! Implementation details

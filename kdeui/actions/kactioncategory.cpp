@@ -24,14 +24,8 @@
 
 struct KActionCategoryPrivate
 {
-    KActionCategoryPrivate(KActionCategory *host);
-
-    //! Our host
-    KActionCategory *q;
-
     //! The text for this category
     QString text;
-
     //! List of actions
     QList<QAction*> actions;
 
@@ -40,7 +34,7 @@ struct KActionCategoryPrivate
 
 KActionCategory::KActionCategory(const QString &text, KActionCollection *parent)
     : QObject(parent),
-    d(new KActionCategoryPrivate(this))
+    d(new KActionCategoryPrivate())
 {
     d->text = text;
 }
@@ -139,12 +133,6 @@ void KActionCategory::unlistAction(QAction *action)
 
     // Remove the action
     d->actions.takeAt(index);
-}
-
-
-KActionCategoryPrivate::KActionCategoryPrivate( KActionCategory *host )
-    : q(host)
-{
 }
 
 #include "moc_kactioncategory.cpp"
