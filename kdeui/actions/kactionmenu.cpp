@@ -26,49 +26,46 @@
 */
 
 #include "kactionmenu.h"
+#include "kdebug.h"
+#include "klocale.h"
+#include "kmenu.h"
 
 #include <QToolButton>
 #include <QToolBar>
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kmenu.h>
-
 class KActionMenuPrivate
 {
 public:
-  KActionMenuPrivate()
-  {
-    m_delayed = true;
-    m_stickyMenu = true;
-  }
-  ~KActionMenuPrivate()
-  {
-  }
-  bool m_delayed;
-  bool m_stickyMenu;
+    KActionMenuPrivate()
+    {
+        m_delayed = true;
+        m_stickyMenu = true;
+    }
+
+    bool m_delayed;
+    bool m_stickyMenu;
 };
 
 KActionMenu::KActionMenu(QObject *parent)
-  : KAction(parent)
-  , d(new KActionMenuPrivate)
+    : KAction(parent),
+    d(new KActionMenuPrivate())
 {
-  setShortcutConfigurable( false );
+    setShortcutConfigurable(false);
 }
 
 KActionMenu::KActionMenu(const QString &text, QObject *parent)
-  : KAction(parent)
-  , d(new KActionMenuPrivate)
+    : KAction(parent),
+    d(new KActionMenuPrivate())
 {
-  setShortcutConfigurable( false );
-  setText(text);
+    setShortcutConfigurable(false);
+    setText(text);
 }
 
-KActionMenu::KActionMenu(const KIcon & icon, const QString & text, QObject *parent)
-  : KAction(icon, text, parent)
-  , d(new KActionMenuPrivate)
+KActionMenu::KActionMenu(const KIcon &icon, const QString &text, QObject *parent)
+    : KAction(icon, text, parent),
+    d(new KActionMenuPrivate())
 {
-  setShortcutConfigurable( false );
+    setShortcutConfigurable(false);
 }
 
 KActionMenu::~KActionMenu()
@@ -77,95 +74,104 @@ KActionMenu::~KActionMenu()
     delete menu();
 }
 
-QWidget * KActionMenu::createWidget( QWidget * _parent )
+QWidget * KActionMenu::createWidget(QWidget * _parent)
 {
-  QToolBar *parent = qobject_cast<QToolBar *>(_parent);
-  if (!parent)
-    return KAction::createWidget(_parent);
-  QToolButton* button = new QToolButton(parent);
-  button->setAutoRaise(true);
-  button->setFocusPolicy(Qt::NoFocus);
-  button->setIconSize(parent->iconSize());
-  button->setToolButtonStyle(parent->toolButtonStyle());
-  QObject::connect(parent, SIGNAL(iconSizeChanged(QSize)),
-                   button, SLOT(setIconSize(QSize)));
-  QObject::connect(parent, SIGNAL(toolButtonStyleChanged(Qt::ToolButtonStyle)),
-                   button, SLOT(setToolButtonStyle(Qt::ToolButtonStyle)));
-  button->setDefaultAction(this);
-  QObject::connect(button, SIGNAL(triggered(QAction*)), parent, SIGNAL(actionTriggered(QAction*)));
+    QToolBar *parent = qobject_cast<QToolBar*>(_parent);
+    if (!parent) {
+        return KAction::createWidget(_parent);
+    }
+    QToolButton* button = new QToolButton(parent);
+    button->setAutoRaise(true);
+    button->setFocusPolicy(Qt::NoFocus);
+    button->setIconSize(parent->iconSize());
+    button->setToolButtonStyle(parent->toolButtonStyle());
+    QObject::connect(
+        parent, SIGNAL(iconSizeChanged(QSize)),
+        button, SLOT(setIconSize(QSize))
+    );
+    QObject::connect(
+        parent, SIGNAL(toolButtonStyleChanged(Qt::ToolButtonStyle)),
+        button, SLOT(setToolButtonStyle(Qt::ToolButtonStyle))
+    );
+    button->setDefaultAction(this);
+    QObject::connect(
+        button, SIGNAL(triggered(QAction*)),
+        parent, SIGNAL(actionTriggered(QAction*))
+    );
 
-  if (delayed())
-    button->setPopupMode(QToolButton::DelayedPopup);
-  else if (stickyMenu())
-    button->setPopupMode(QToolButton::InstantPopup);
-  else
-    button->setPopupMode(QToolButton::MenuButtonPopup);
+    if (delayed()) {
+        button->setPopupMode(QToolButton::DelayedPopup);
+    } else if (stickyMenu()) {
+        button->setPopupMode(QToolButton::InstantPopup);
+    } else {
+        button->setPopupMode(QToolButton::MenuButtonPopup);
+    }
 
-  return button;
+    return button;
 }
 
-
-void KActionMenu::addAction( QAction * action )
+void KActionMenu::addAction(QAction *action)
 {
-  menu()->addAction(action);
+    menu()->addAction(action);
 }
 
 QAction* KActionMenu::addSeparator()
 {
-  QAction* separator = new QAction(this);
-  separator->setSeparator(true);
-  addAction(separator);
-  return separator;
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    addAction(separator);
+    return separator;
 }
 
-QAction* KActionMenu::insertSeparator(QAction* before)
+QAction* KActionMenu::insertSeparator(QAction *before)
 {
-  QAction* separator = new QAction(this);
-  separator->setSeparator(true);
-  insertAction(before, separator);
-  return separator;
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    insertAction(before, separator);
+    return separator;
 }
 
-void KActionMenu::insertAction( QAction * before, QAction * action )
+void KActionMenu::insertAction(QAction *before, QAction *action)
 {
-  menu()->insertAction(before, action);
+    menu()->insertAction(before, action);
 }
 
-void KActionMenu::removeAction( QAction * action )
+void KActionMenu::removeAction(QAction *action)
 {
-  menu()->removeAction(action);
+    menu()->removeAction(action);
 }
 
-bool KActionMenu::delayed() const {
+bool KActionMenu::delayed() const
+{
     return d->m_delayed;
 }
 
-void KActionMenu::setDelayed(bool _delayed) {
+void KActionMenu::setDelayed(bool _delayed)
+{
     d->m_delayed = _delayed;
 }
 
-bool KActionMenu::stickyMenu() const {
+bool KActionMenu::stickyMenu() const
+{
     return d->m_stickyMenu;
 }
 
-void KActionMenu::setStickyMenu(bool sticky) {
+void KActionMenu::setStickyMenu(bool sticky)
+{
     d->m_stickyMenu = sticky;
 }
 
 KMenu* KActionMenu::menu()
 {
-  if (!KAction::menu())
-    setMenu(new KMenu());
-
-  return qobject_cast<KMenu*>(KAction::menu());
+    if (!KAction::menu()) {
+        setMenu(new KMenu());
+    }
+    return qobject_cast<KMenu*>(KAction::menu());
 }
 
 void KActionMenu::setMenu(KMenu *menu)
 {
-    KAction::setMenu( menu );
+    KAction::setMenu(menu);
 }
-
-/* vim: et sw=2 ts=2
- */
 
 #include "moc_kactionmenu.cpp"

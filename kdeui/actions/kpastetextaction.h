@@ -50,6 +50,8 @@ public:
      */
     explicit KPasteTextAction(QObject *parent);
 
+    virtual ~KPasteTextAction();
+
     /**
      * Constructs an action with text; a shortcut may be specified by
      * the ampersand character (e.g. \"&amp;Option\" creates a shortcut with key \e O )
@@ -77,8 +79,6 @@ public:
      */
     KPasteTextAction(const KIcon &icon, const QString &text, QObject *parent);
 
-    virtual ~KPasteTextAction();
-
     /**
     * Controls the behavior of the clipboard history menu popup.
     *
@@ -94,8 +94,8 @@ public:
 private:
     KPasteTextActionPrivate * const d;
 
-    Q_PRIVATE_SLOT( d, void _k_menuAboutToShow() )
-    Q_PRIVATE_SLOT( d, void _k_slotTriggered(QAction*) )
+    Q_PRIVATE_SLOT(d, void _k_menuAboutToShow())
+    Q_PRIVATE_SLOT(d, void _k_slotTriggered(QAction*))
 };
 
 #endif

@@ -28,11 +28,12 @@
 #include "kactioncategory.h"
 #include "kxmlguiclient.h"
 #include "kxmlguifactory.h"
-
-#include "kdebug.h"
 #include "kglobal.h"
 #include "kaction.h"
 #include "kaction_p.h"
+#include "kcomponentdata.h"
+#include "kconfiggroup.h"
+#include "kdebug.h"
 
 #include <QtXml/qdom.h>
 #include <QtCore/QSet>
@@ -41,8 +42,6 @@
 #include <QtGui/QAction>
 
 #include <stdio.h>
-#include "kcomponentdata.h"
-#include "kconfiggroup.h"
 
 class KActionCollectionPrivate
 {
@@ -54,7 +53,6 @@ public:
         connectTriggered(false),
         connectHovered(false),
         q(nullptr)
-
     {
     }
 
@@ -425,7 +423,7 @@ void KActionCollection::readSettings(KConfigGroup *config)
         if (kaction->isShortcutConfigurable() ) {
             const QString actionName = it.key();
             const QString entry = config->readEntry(actionName, QString());
-            if( !entry.isEmpty() ) {
+            if (!entry.isEmpty()) {
                 kaction->setShortcut(KShortcut(entry), KAction::ActiveShortcut);
             } else {
                 kaction->setShortcut(kaction->shortcut(KAction::DefaultShortcut));
@@ -557,7 +555,7 @@ void KActionCollection::writeSettings(KConfigGroup *config, bool writeAll, QActi
 {
     // If the caller didn't provide a config group we try to save the KXMLGUI
     // Configuration file. If that succeeds we are finished.
-    if (config == 0 && d->writeKXMLGUIConfigFile()) {
+    if (!config && d->writeKXMLGUIConfigFile()) {
         return;
     }
 

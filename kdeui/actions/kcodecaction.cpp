@@ -49,7 +49,7 @@ public:
     {
     }
 
-  	void init();
+    void init();
 
     void _k_subActionTriggered(QAction*);
 

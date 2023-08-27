@@ -46,21 +46,21 @@ class KMenu;
  */
 class KDEUI_EXPORT KActionMenu : public KAction
 {
-  Q_OBJECT
-  Q_PROPERTY( bool delayed READ delayed WRITE setDelayed )
-  Q_PROPERTY( bool stickyMenu READ stickyMenu WRITE setStickyMenu )
+    Q_OBJECT
+    Q_PROPERTY(bool delayed READ delayed WRITE setDelayed)
+    Q_PROPERTY(bool stickyMenu READ stickyMenu WRITE setStickyMenu)
 
 public:
     explicit KActionMenu(QObject *parent);
-    KActionMenu(const QString& text, QObject *parent);
-    KActionMenu(const KIcon& icon, const QString& text, QObject *parent);
+    KActionMenu(const QString &text, QObject *parent);
+    KActionMenu(const KIcon& icon, const QString &text, QObject *parent);
     virtual ~KActionMenu();
 
-    void addAction(QAction* action);
+    void addAction(QAction *action);
     QAction* addSeparator();
-    void insertAction(QAction* before, QAction* action);
+    void insertAction(QAction *before, QAction *action);
     QAction* insertSeparator(QAction* before);
-    void removeAction(QAction* action);
+    void removeAction(QAction *action);
 
     /**
      * Returns this action's menu as a KMenu, if it is one.
@@ -71,7 +71,7 @@ public:
     /*
      * Overload of QAction::setMenu to make sure a KMenu is passed
      **/
-    void setMenu( KMenu *menu );
+    void setMenu(KMenu *menu);
 
     /**
      * Returns true if this action creates a delayed popup menu
