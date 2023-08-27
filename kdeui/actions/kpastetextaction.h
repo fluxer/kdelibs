@@ -50,7 +50,7 @@ public:
      */
     explicit KPasteTextAction(QObject *parent);
 
-    virtual ~KPasteTextAction();
+    ~KPasteTextAction();
 
     /**
      * Constructs an action with text; a shortcut may be specified by
