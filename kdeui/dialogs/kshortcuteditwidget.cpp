@@ -50,9 +50,9 @@ void TabConnectedWidget::paintEvent(QPaintEvent *e)
 
 ShortcutEditWidget::ShortcutEditWidget(QWidget *viewport, const QKeySequence &defaultSeq,
                                        const QKeySequence &activeSeq, bool allowLetterShortcuts)
- : TabConnectedWidget(viewport),
-   m_defaultKeySequence(defaultSeq),
-   m_isUpdating(false)
+    : TabConnectedWidget(viewport),
+    m_defaultKeySequence(defaultSeq),
+    m_isUpdating(false)
 {
     QGridLayout *layout = new QGridLayout(this);
 
@@ -75,12 +75,18 @@ ShortcutEditWidget::ShortcutEditWidget(QWidget *viewport, const QKeySequence &de
 
     setKeySequence(activeSeq);
 
-    connect(m_defaultRadio, SIGNAL(toggled(bool)),
-            this, SLOT(defaultToggled(bool)));
-    connect(m_customEditor, SIGNAL(keySequenceChanged(QKeySequence)),
-            this, SLOT(setCustom(QKeySequence)));
-    connect(m_customEditor, SIGNAL(stealShortcut(QKeySequence,KAction*)),
-        this, SIGNAL(stealShortcut(QKeySequence,KAction*)));
+    connect(
+        m_defaultRadio, SIGNAL(toggled(bool)),
+        this, SLOT(defaultToggled(bool))
+    );
+    connect(
+        m_customEditor, SIGNAL(keySequenceChanged(QKeySequence)),
+        this, SLOT(setCustom(QKeySequence))
+    );
+    connect(
+        m_customEditor, SIGNAL(stealShortcut(QKeySequence,KAction*)),
+        this, SIGNAL(stealShortcut(QKeySequence,KAction*))
+    );
 }
 
 
@@ -92,11 +98,12 @@ KKeySequenceWidget::ShortcutTypes ShortcutEditWidget::checkForConflictsAgainst()
 //slot
 void ShortcutEditWidget::defaultToggled(bool checked)
 {
-    if (m_isUpdating)
+    if (m_isUpdating) {
         return;
+    }
 
     m_isUpdating = true;
-    if  (checked) {
+    if (checked) {
         // The default key sequence should be activated. We check first if this is
         // possible.
         if (m_customEditor->isKeySequenceAvailable(m_defaultKeySequence)) {
@@ -116,8 +123,7 @@ void ShortcutEditWidget::defaultToggled(bool checked)
 }
 
 
-void ShortcutEditWidget::setCheckActionCollections(
-        const QList<KActionCollection*> checkActionCollections)
+void ShortcutEditWidget::setCheckActionCollections(const QList<KActionCollection*> &checkActionCollections)
 {
     // We just forward them to out KKeySequenceWidget.
     m_customEditor->setCheckActionCollections(checkActionCollections);
@@ -130,7 +136,7 @@ void ShortcutEditWidget::setCheckForConflictsAgainst(KKeySequenceWidget::Shortcu
 }
 
 
-void ShortcutEditWidget::setComponentName(const QString componentName)
+void ShortcutEditWidget::setComponentName(const QString &componentName)
 {
     m_customEditor->setComponentName(componentName);
 }
@@ -169,7 +175,6 @@ void ShortcutEditWidget::setCustom(const QKeySequence &seq)
     m_isUpdating = false;
 }
 
-
 void ShortcutEditWidget::setKeySequence(const QKeySequence &activeSeq)
 {
     if (activeSeq == m_defaultLabel->text()) {
@@ -184,4 +189,3 @@ void ShortcutEditWidget::setKeySequence(const QKeySequence &activeSeq)
         }
     }
 }
-

@@ -35,11 +35,11 @@
 #include <QtGui/qtreewidget.h>
 
 KShortcutsEditorItem::KShortcutsEditorItem(QTreeWidgetItem *parent, KAction *action)
-    : QTreeWidgetItem(parent, ActionItem)
-    , m_action(action)
-    , m_isNameBold(false)
-    , m_oldLocalShortcut(0)
-    , m_oldGlobalShortcut(0)
+    : QTreeWidgetItem(parent, ActionItem),
+    m_action(action),
+    m_isNameBold(false),
+    m_oldLocalShortcut(0),
+    m_oldGlobalShortcut(0)
 {
     // Filtering message requested by translators (scripting).
     m_id = m_action->objectName();
@@ -234,20 +234,22 @@ bool KShortcutsEditorItem::isModified(uint column) const
         return false;
     case LocalPrimary:
     case LocalAlternate:
-        if (!m_oldLocalShortcut)
+        if (!m_oldLocalShortcut) {
             return false;
-        if (column == LocalPrimary)
+        }
+        if (column == LocalPrimary) {
             return m_oldLocalShortcut->primary() != m_action->shortcut().primary();
-        else
-            return m_oldLocalShortcut->alternate() != m_action->shortcut().alternate();
+        }
+        return m_oldLocalShortcut->alternate() != m_action->shortcut().alternate();
     case GlobalPrimary:
     case GlobalAlternate:
-        if (!m_oldGlobalShortcut)
+        if (!m_oldGlobalShortcut) {
             return false;
-        if (column == GlobalPrimary)
+        }
+        if (column == GlobalPrimary) {
             return m_oldGlobalShortcut->primary() != m_action->globalShortcut().primary();
-        else
-            return m_oldGlobalShortcut->alternate() != m_action->globalShortcut().alternate();
+        }
+        return m_oldGlobalShortcut->alternate() != m_action->globalShortcut().alternate();
     default:
         return false;
     }
@@ -268,8 +270,7 @@ void KShortcutsEditorItem::undo()
     }
 
     if (m_oldGlobalShortcut) {
-        m_action->setGlobalShortcut(*m_oldGlobalShortcut, KAction::ActiveShortcut,
-                                    KAction::NoAutoloading);
+        m_action->setGlobalShortcut(*m_oldGlobalShortcut, KAction::ActiveShortcut, KAction::NoAutoloading);
     }
 
     updateModified();

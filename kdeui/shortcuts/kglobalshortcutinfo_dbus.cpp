@@ -53,14 +53,14 @@ const QDBusArgument &operator>> (const QDBusArgument &argument, KGlobalShortcutI
              >> shortcut.d->contextFriendlyName;
     argument.beginArray();
     while (!argument.atEnd()) {
-        int key;
+        int key = 0;
         argument >> key;
         shortcut.d->keys.append(QKeySequence(key));
     }
     argument.endArray();
     argument.beginArray();
     while (!argument.atEnd()) {
-        int key;
+        int key = 0;
         argument >> key;
         shortcut.d->defaultKeys.append(QKeySequence(key));
     }

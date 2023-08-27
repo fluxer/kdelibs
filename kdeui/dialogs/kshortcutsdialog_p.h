@@ -163,7 +163,7 @@ public:
                        bool allowLetterShortcuts);
 
     //! @see KKeySequenceWidget::setCheckActionCollections()
-    void setCheckActionCollections( const QList<KActionCollection*> checkActionCollections);
+    void setCheckActionCollections(const QList<KActionCollection*> &checkActionCollections);
 
 
     //@{
@@ -179,7 +179,7 @@ public:
     //@}
 
     //! @see KKeySequenceWidget::setComponentName
-    void setComponentName(const QString componentName);
+    void setComponentName(const QString &componentName);
 
 public Q_SLOTS:
 
@@ -334,7 +334,7 @@ public:
     KShortcutsEditorPrivate(KShortcutsEditor *q);
 
     void initGUI( KShortcutsEditor::ActionTypes actionTypes, KShortcutsEditor::LetterShortcuts allowLetterShortcuts );
-    void appendToView( uint nList, const QString &title = QString() );
+    void appendToView(uint nList, const QString &title = QString());
     //used in appendToView
     QTreeWidgetItem *findOrMakeItem(QTreeWidgetItem *parent, const QString &name);
 
@@ -369,7 +369,7 @@ public:
 
     void printShortcuts() const;
 
-// members
+    // members
     QList<KActionCollection *> actionCollections;
     KShortcutsEditor *q;
 
@@ -380,9 +380,6 @@ public:
 
 };
 
-
-Q_DECLARE_METATYPE(KShortcutsEditorItem *)
+Q_DECLARE_METATYPE(KShortcutsEditorItem*)
 
 #endif /* KSHORTCUTSDIALOG_P_H */
-
-//kate: space-indent on; indent-width 4; replace-tabs on;tab-width 4;

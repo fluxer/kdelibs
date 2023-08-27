@@ -56,27 +56,24 @@
 
 KShortcutsEditor::KShortcutsEditor(KActionCollection *collection, QWidget *parent, ActionTypes actionType,
                                    LetterShortcuts allowLetterShortcuts )
-: QWidget( parent )
-, d(new KShortcutsEditorPrivate(this))
+    : QWidget(parent),
+    d(new KShortcutsEditorPrivate(this))
 {
     d->initGUI(actionType, allowLetterShortcuts);
     addCollection(collection);
 }
 
-
 KShortcutsEditor::KShortcutsEditor(QWidget *parent, ActionTypes actionType, LetterShortcuts allowLetterShortcuts)
-: QWidget(parent)
-, d(new KShortcutsEditorPrivate(this))
+    : QWidget(parent),
+    d(new KShortcutsEditorPrivate(this))
 {
     d->initGUI(actionType, allowLetterShortcuts);
 }
-
 
 KShortcutsEditor::~KShortcutsEditor()
 {
     delete d;
 }
-
 
 bool KShortcutsEditor::isModified() const
 {
@@ -167,46 +164,38 @@ void KShortcutsEditor::addCollection(KActionCollection *collection, const QStrin
     QTimer::singleShot(0, this, SLOT(resizeColumns()));
 }
 
-
 void KShortcutsEditor::clearConfiguration()
 {
     d->clearConfiguration();
 }
 
-
-
-
-void KShortcutsEditor::importConfiguration( KConfigBase *config)
+void KShortcutsEditor::importConfiguration(KConfigBase *config)
 {
     d->importConfiguration(config);
 }
 
-
-
-
-void KShortcutsEditor::exportConfiguration( KConfigBase *config) const
+void KShortcutsEditor::exportConfiguration(KConfigBase *config) const
 {
     Q_ASSERT(config);
     if (!config) return;
 
     if (d->actionTypes & KShortcutsEditor::GlobalAction) {
         QString groupName = "Global Shortcuts";
-        KConfigGroup group( config, groupName );
+        KConfigGroup group(config, groupName);
         foreach (KActionCollection* collection, d->actionCollections) {
-            collection->exportGlobalShortcuts( &group, true );
+            collection->exportGlobalShortcuts(&group, true);
         }
     }
     if (d->actionTypes & ~KShortcutsEditor::GlobalAction) {
         QString groupName = "Shortcuts";
-        KConfigGroup group( config, groupName );
+        KConfigGroup group(config, groupName);
         foreach (KActionCollection* collection, d->actionCollections) {
-            collection->writeSettings( &group, true );
+            collection->writeSettings(&group, true);
         }
     }
 }
 
-
-void KShortcutsEditor::writeConfiguration( KConfigGroup *config) const
+void KShortcutsEditor::writeConfiguration(KConfigGroup *config) const
 {
     foreach (KActionCollection* collection, d->actionCollections)
         collection->writeSettings(config);
@@ -230,7 +219,6 @@ void KShortcutsEditor::commit()
     }
 }
 
-
 void KShortcutsEditor::save()
 {
     writeConfiguration();
@@ -240,7 +228,6 @@ void KShortcutsEditor::save()
     // would vanish for this session.
     commit();
 }
-
 
 // KDE5 : rename to undo()
 void KShortcutsEditor::undoChanges()
@@ -264,23 +251,23 @@ void KShortcutsEditor::allDefault()
     d->allDefault();
 }
 
-
 void KShortcutsEditor::printShortcuts() const
 {
     d->printShortcuts();
 }
 
-
 //---------------------------------------------------------------------
 // KShortcutsEditorPrivate
 //---------------------------------------------------------------------
 
-KShortcutsEditorPrivate::KShortcutsEditorPrivate( KShortcutsEditor *q )
-    :   q(q),
-        delegate(0)
-    {}
+KShortcutsEditorPrivate::KShortcutsEditorPrivate(KShortcutsEditor *q)
+    : q(q),
+    delegate(0)
+    {
+    }
 
-void KShortcutsEditorPrivate::initGUI( KShortcutsEditor::ActionTypes types, KShortcutsEditor::LetterShortcuts allowLetterShortcuts )
+void KShortcutsEditorPrivate::initGUI(KShortcutsEditor::ActionTypes types,
+                                      KShortcutsEditor::LetterShortcuts allowLetterShortcuts)
 {
     actionTypes = types;
 
@@ -288,7 +275,7 @@ void KShortcutsEditorPrivate::initGUI( KShortcutsEditor::ActionTypes types, KSho
     q->layout()->setMargin(0);
     ui.searchFilter->searchLine()->setTreeWidget(ui.list); // Plug into search line
     ui.list->header()->setResizeMode(QHeaderView::ResizeToContents);
-    ui.list->header()->hideSection(GlobalAlternate);  //not expected to be very useful
+    ui.list->header()->hideSection(GlobalAlternate); // not expected to be very useful
     if (!(actionTypes & KShortcutsEditor::GlobalAction)) {
         ui.list->header()->hideSection(GlobalPrimary);
     } else if (!(actionTypes & ~KShortcutsEditor::GlobalAction)) {
@@ -300,7 +287,8 @@ void KShortcutsEditorPrivate::initGUI( KShortcutsEditor::ActionTypes types, KSho
     // really change the shortcuts.
     delegate = new KShortcutsEditorDelegate(
         ui.list,
-        allowLetterShortcuts == KShortcutsEditor::LetterShortcutsAllowed);
+        allowLetterShortcuts == KShortcutsEditor::LetterShortcutsAllowed
+    );
 
     ui.list->setItemDelegate(delegate);
     ui.list->setSelectionBehavior(QAbstractItemView::SelectItems);
@@ -310,15 +298,18 @@ void KShortcutsEditorPrivate::initGUI( KShortcutsEditor::ActionTypes types, KSho
     ui.list->setAlternatingRowColors(true);
 
     //TODO listen to changes to global shortcuts
-    QObject::connect(delegate, SIGNAL(shortcutChanged(QVariant,QModelIndex)),
-                     q, SLOT(capturedShortcut(QVariant,QModelIndex)));
+    QObject::connect(
+        delegate, SIGNAL(shortcutChanged(QVariant,QModelIndex)),
+        q, SLOT(capturedShortcut(QVariant,QModelIndex))
+    );
     //hide the editor widget chen its item becomes hidden
-    QObject::connect(ui.searchFilter->searchLine(), SIGNAL(hiddenChanged(QTreeWidgetItem*,bool)),
-                     delegate, SLOT(hiddenBySearchLine(QTreeWidgetItem*,bool)));
+    QObject::connect(
+        ui.searchFilter->searchLine(), SIGNAL(hiddenChanged(QTreeWidgetItem*,bool)),
+        delegate, SLOT(hiddenBySearchLine(QTreeWidgetItem*,bool))
+    );
 
     ui.searchFilter->setFocus();
 }
-
 
 bool KShortcutsEditorPrivate::addAction(QAction *action, QTreeWidgetItem *hier[], hierarchyLevel level)
 {
@@ -345,8 +336,9 @@ bool KShortcutsEditorPrivate::addAction(QAction *action, QTreeWidgetItem *hier[]
 void KShortcutsEditorPrivate::allDefault()
 {
     for (QTreeWidgetItemIterator it(ui.list); (*it); ++it) {
-        if (!(*it)->parent() || (*it)->type() != ActionItem)
+        if (!(*it)->parent() || (*it)->type() != ActionItem) {
             continue;
+        }
 
         KShortcutsEditorItem *item = static_cast<KShortcutsEditorItem *>(*it);
         KAction *act = item->m_action;
@@ -379,8 +371,9 @@ QTreeWidgetItem *KShortcutsEditorPrivate::findOrMakeItem(QTreeWidgetItem *parent
 {
     for (int i = 0; i < parent->childCount(); i++) {
         QTreeWidgetItem *child = parent->child(i);
-        if (child->text(0) == name)
+        if (child->text(0) == name) {
             return child;
+        }
     }
     QTreeWidgetItem *ret = new QTreeWidgetItem(parent, NonActionItem);
     ret->setText(0, name);
@@ -394,14 +387,16 @@ QTreeWidgetItem *KShortcutsEditorPrivate::findOrMakeItem(QTreeWidgetItem *parent
 void KShortcutsEditorPrivate::capturedShortcut(const QVariant &newShortcut, const QModelIndex &index)
 {
     //dispatch to the right handler
-    if (!index.isValid())
+    if (!index.isValid()) {
         return;
+    }
     int column = index.column();
     KShortcutsEditorItem *item = itemFromIndex(ui.list, index);
     Q_ASSERT(item);
 
-    if (column >= LocalPrimary && column <= GlobalAlternate)
+    if (column >= LocalPrimary && column <= GlobalAlternate) {
         changeKeyShortcut(item, column, newShortcut.value<QKeySequence>());
+    }
 }
 
 
@@ -422,8 +417,9 @@ void KShortcutsEditorPrivate::changeKeyShortcut(KShortcutsEditorItem *item, uint
 void KShortcutsEditorPrivate::clearConfiguration()
 {
     for (QTreeWidgetItemIterator it(ui.list); (*it); ++it) {
-        if (!(*it)->parent())
+        if (!(*it)->parent()) {
             continue;
+        }
 
         KShortcutsEditorItem *item = static_cast<KShortcutsEditorItem *>(*it);
 
@@ -445,12 +441,11 @@ void KShortcutsEditorPrivate::importConfiguration(KConfigBase *config)
     if ((actionTypes & KShortcutsEditor::GlobalAction) && globalShortcutsGroup.exists()) {
 
         for (QTreeWidgetItemIterator it(ui.list); (*it); ++it) {
-
-            if (!(*it)->parent())
+            if (!(*it)->parent()) {
                 continue;
+            }
 
             KShortcutsEditorItem *item = static_cast<KShortcutsEditorItem *>(*it);
-
             QString actionName = item->data(Id).toString();
             KShortcut sc(globalShortcutsGroup.readEntry(actionName, QString()));
             changeKeyShortcut(item, GlobalPrimary, sc.primary());
@@ -459,14 +454,12 @@ void KShortcutsEditorPrivate::importConfiguration(KConfigBase *config)
 
     KConfigGroup localShortcutsGroup(config, QLatin1String("Shortcuts"));
     if (actionTypes & ~KShortcutsEditor::GlobalAction) {
-
         for (QTreeWidgetItemIterator it(ui.list); (*it); ++it) {
-
-            if (!(*it)->parent())
+            if (!(*it)->parent()) {
                 continue;
+            }
 
             KShortcutsEditorItem *item = static_cast<KShortcutsEditorItem *>(*it);
-
             QString actionName = item->data(Name).toString();
             KShortcut sc(localShortcutsGroup.readEntry(actionName, QString()));
             changeKeyShortcut(item, LocalPrimary, sc.primary());
@@ -504,9 +497,13 @@ void KShortcutsEditorPrivate::printShortcuts() const
     QTextCharFormat headerFormat;
     headerFormat.setProperty(QTextFormat::FontSizeAdjustment, 3);
     headerFormat.setFontWeight(QFont::Bold);
-    cursor.insertText(i18nc("header for an applications shortcut list","Shortcuts for %1",
-                            KGlobal::mainComponent().aboutData()->programName()),
-                      headerFormat);
+    cursor.insertText(
+        i18nc(
+            "header for an applications shortcut list","Shortcuts for %1",
+                KGlobal::mainComponent().aboutData()->programName()
+        ),
+        headerFormat
+    );
     QTextCharFormat componentFormat;
     componentFormat.setProperty(QTextFormat::FontSizeAdjustment, 2);
     componentFormat.setFontWeight(QFont::Bold);
@@ -551,8 +548,9 @@ void KShortcutsEditorPrivate::printShortcuts() const
         currow++;
 
         for (QTreeWidgetItemIterator it(item); *it; ++it) {
-            if ((*it)->type() != ActionItem)
+            if ((*it)->type() != ActionItem) {
                 continue;
+            }
 
             KShortcutsEditorItem* editoritem = static_cast<KShortcutsEditorItem*>(*it);
             table->insertRows(table->rows(),1);
@@ -561,23 +559,23 @@ void KShortcutsEditorPrivate::printShortcuts() const
 
             QTextTable* shortcutTable = 0 ;
             for(int k = 0; k < shortcutTitleToColumn.count(); k++) {
-              data = editoritem->data(shortcutTitleToColumn.at(k).second,Qt::DisplayRole);
-              QString key = data.value<QKeySequence>().toString();
+                data = editoritem->data(shortcutTitleToColumn.at(k).second,Qt::DisplayRole);
+                QString key = data.value<QKeySequence>().toString();
 
-              if(!key.isEmpty()) {
-                if( !shortcutTable ) {
-                  shortcutTable = table->cellAt(currow, 1).firstCursorPosition().insertTable(1,2);
-                  QTextTableFormat shortcutTableFormat = tableformat;
-                  shortcutTableFormat.setCellSpacing(0.0);
-                  shortcutTableFormat.setHeaderRowCount(0);
-                  shortcutTableFormat.setBorder(0.0);
-                  shortcutTable->setFormat(shortcutTableFormat);
-                } else {
-                  shortcutTable->insertRows(shortcutTable->rows(),1);
+                if(!key.isEmpty()) {
+                    if (!shortcutTable) {
+                        shortcutTable = table->cellAt(currow, 1).firstCursorPosition().insertTable(1,2);
+                        QTextTableFormat shortcutTableFormat = tableformat;
+                        shortcutTableFormat.setCellSpacing(0.0);
+                        shortcutTableFormat.setHeaderRowCount(0);
+                        shortcutTableFormat.setBorder(0.0);
+                        shortcutTable->setFormat(shortcutTableFormat);
+                    } else {
+                        shortcutTable->insertRows(shortcutTable->rows(),1);
+                    }
+                    shortcutTable->cellAt(shortcutTable->rows()-1,0).firstCursorPosition().insertText(shortcutTitleToColumn.at(k).first);
+                    shortcutTable->cellAt(shortcutTable->rows()-1,1).firstCursorPosition().insertText(key);
                 }
-                shortcutTable->cellAt(shortcutTable->rows()-1,0).firstCursorPosition().insertText(shortcutTitleToColumn.at(k).first);
-                shortcutTable->cellAt(shortcutTable->rows()-1,1).firstCursorPosition().insertText(key);
-              }
             }
 
             KAction* action = editoritem->m_action;

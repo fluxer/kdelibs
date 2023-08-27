@@ -26,11 +26,11 @@ class KShortcutWidgetPrivate
 public:
     KShortcutWidgetPrivate(KShortcutWidget *q) : q(q) {}
 
-//private slots
+    // private slots
     void priKeySequenceChanged(const QKeySequence &);
     void altKeySequenceChanged(const QKeySequence &);
 
-//members
+    // members
     KShortcutWidget *const q;
     Ui::KShortcutWidget ui;
     KShortcut cut;
@@ -39,23 +39,26 @@ public:
 
 
 KShortcutWidget::KShortcutWidget(QWidget *parent)
- : QWidget(parent),
-   d(new KShortcutWidgetPrivate(this))
+    : QWidget(parent),
+    d(new KShortcutWidgetPrivate(this))
 {
     d->holdChangedSignal = false;
     d->ui.setupUi(this);
-    connect(d->ui.priEditor, SIGNAL(keySequenceChanged(QKeySequence)),
-            this, SLOT(priKeySequenceChanged(QKeySequence)));
-    connect(d->ui.altEditor, SIGNAL(keySequenceChanged(QKeySequence)),
-            this, SLOT(altKeySequenceChanged(QKeySequence)));
+    connect(
+        d->ui.priEditor, SIGNAL(keySequenceChanged(QKeySequence)),
+        this, SLOT(priKeySequenceChanged(QKeySequence))
+    );
+    connect(
+        d->ui.altEditor, SIGNAL(keySequenceChanged(QKeySequence)),
+        this, SLOT(altKeySequenceChanged(QKeySequence))
+    );
 }
 
 
 KShortcutWidget::~KShortcutWidget()
 {
-  delete d;
+    delete d;
 }
-
 
 void KShortcutWidget::setModifierlessAllowed(bool allow)
 {
@@ -69,13 +72,11 @@ bool KShortcutWidget::isModifierlessAllowed()
     return d->ui.priEditor->isModifierlessAllowed();
 }
 
-
 void KShortcutWidget::setClearButtonsShown(bool show)
 {
     d->ui.priEditor->setClearButtonShown(show);
     d->ui.altEditor->setClearButtonShown(show);
 }
-
 
 KShortcut KShortcutWidget::shortcut() const
 {
@@ -85,26 +86,23 @@ KShortcut KShortcutWidget::shortcut() const
     return ret;
 }
 
-
-void KShortcutWidget::setCheckActionCollections(const QList<KActionCollection *>& actionCollections)
+void KShortcutWidget::setCheckActionCollections(const QList<KActionCollection *> &actionCollections)
 {
     d->ui.priEditor->setCheckActionCollections(actionCollections);
     d->ui.altEditor->setCheckActionCollections(actionCollections);
 }
 
-//slot
 void KShortcutWidget::applyStealShortcut()
 {
     d->ui.priEditor->applyStealShortcut();
     d->ui.altEditor->applyStealShortcut();
 }
 
-
-//slot
 void KShortcutWidget::setShortcut(const KShortcut &newSc)
 {
-    if (newSc == d->cut)
+    if (newSc == d->cut) {
         return;
+    }
 
     d->holdChangedSignal = true;
     d->ui.priEditor->setKeySequence(newSc.primary());
@@ -114,29 +112,26 @@ void KShortcutWidget::setShortcut(const KShortcut &newSc)
     emit shortcutChanged(d->cut);
 }
 
-
-//slot
 void KShortcutWidget::clearShortcut()
 {
     setShortcut(KShortcut());
 }
 
 
-//private slot
 void KShortcutWidgetPrivate::priKeySequenceChanged(const QKeySequence &seq)
 {
     cut.setPrimary(seq);
-    if (!holdChangedSignal)
+    if (!holdChangedSignal) {
         emit q->shortcutChanged(cut);
+    }
 }
 
-
-//private slot
 void KShortcutWidgetPrivate::altKeySequenceChanged(const QKeySequence &seq)
 {
     cut.setAlternate(seq);
-    if (!holdChangedSignal)
+    if (!holdChangedSignal) {
         emit q->shortcutChanged(cut);
+    }
 }
 
 #include "moc_kshortcutwidget.cpp"

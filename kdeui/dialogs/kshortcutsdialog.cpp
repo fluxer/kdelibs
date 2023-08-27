@@ -55,8 +55,10 @@ class KShortcutsDialog::KShortcutsDialogPrivate
 {
 public:
 
-    KShortcutsDialogPrivate(KShortcutsDialog *q): q(q), m_keyChooser(0), m_schemeEditor(0)
-        {}
+    KShortcutsDialogPrivate(KShortcutsDialog *q)
+        : q(q), m_keyChooser(0), m_schemeEditor(0)
+    {
+    }
 
     QList<KActionCollection*> m_collections;
 
@@ -76,7 +78,7 @@ public:
             // passing an empty stream forces the clients to reread the XML
             KXMLGUIClient *client = const_cast<KXMLGUIClient *>(collection->parentGUIClient());
             if (client) {
-                client->setXMLGUIBuildDocument( QDomDocument() );
+                client->setXMLGUIBuildDocument(QDomDocument());
             }
         }
 
@@ -123,28 +125,30 @@ KShortcutsDialog::KShortcutsDialog( KShortcutsEditor::ActionTypes types, KShortc
     setButtonText(KDialog::User1, i18n("Print"));
     setButtonIcon(KDialog::User1, KIcon("document-print"));
     setModal(true);
-    d->m_keyChooser = new KShortcutsEditor( this, types, allowLetterShortcuts );
+    d->m_keyChooser = new KShortcutsEditor(this, types, allowLetterShortcuts);
     setMainWidget( d->m_keyChooser );
     setButtonText(Reset,i18n("Reset to Defaults"));
 
     d->m_schemeEditor = new KShortcutSchemesEditor(this);
-    connect( d->m_schemeEditor, SIGNAL(shortcutsSchemeChanged(QString)),
-             this, SLOT(changeShortcutScheme(QString)) );
+    connect(
+        d->m_schemeEditor, SIGNAL(shortcutsSchemeChanged(QString)),
+        this, SLOT(changeShortcutScheme(QString))
+    );
     setDetailsWidget(d->m_schemeEditor);
 
-    connect( this, SIGNAL(resetClicked()), d->m_keyChooser, SLOT(allDefault()) );
-    connect( this, SIGNAL(user1Clicked()), d->m_keyChooser, SLOT(printShortcuts()) );
+    connect(this, SIGNAL(resetClicked()), d->m_keyChooser, SLOT(allDefault()));
+    connect(this, SIGNAL(user1Clicked()), d->m_keyChooser, SLOT(printShortcuts()));
     connect(this, SIGNAL(cancelClicked()), SLOT(undoChanges()));
 
-    KConfigGroup group( KGlobal::config(), "KShortcutsDialog Settings" );
-    resize( group.readEntry( "Dialog Size", sizeHint() ) );
+    KConfigGroup group(KGlobal::config(), "KShortcutsDialog Settings");
+    resize(group.readEntry( "Dialog Size", sizeHint()));
 }
 
 
 KShortcutsDialog::~KShortcutsDialog()
 {
-    KConfigGroup group( KGlobal::config(), "KShortcutsDialog Settings" );
-    group.writeEntry( "Dialog Size", size(), KConfigGroup::Persistent|KConfigGroup::Global );
+    KConfigGroup group(KGlobal::config(), "KShortcutsDialog Settings");
+    group.writeEntry("Dialog Size", size(), KConfigGroup::Persistent|KConfigGroup::Global);
     delete d;
 }
 
@@ -154,7 +158,6 @@ void KShortcutsDialog::addCollection(KActionCollection *collection, const QStrin
     d->m_keyChooser->addCollection(collection, title);
     d->m_collections << collection;
 }
-
 
 QList<KActionCollection*> KShortcutsDialog::actionCollections() const
 {
@@ -183,7 +186,7 @@ QSize KShortcutsDialog::sizeHint() const
 }
 
 int KShortcutsDialog::configure(KActionCollection *collection, KShortcutsEditor::LetterShortcuts allowLetterShortcuts,
-                          QWidget *parent, bool saveSettings)
+                                QWidget *parent, bool saveSettings)
 {
     kDebug(125) << "KShortcutsDialog::configureKeys( KActionCollection*, " << saveSettings << " )";
     KShortcutsDialog dlg(KShortcutsEditor::AllActions, allowLetterShortcuts, parent);
@@ -193,5 +196,3 @@ int KShortcutsDialog::configure(KActionCollection *collection, KShortcutsEditor:
 
 #include "moc_kshortcutsdialog.cpp"
 #include "moc_kshortcutsdialog_p.cpp"
-
-//kate: space-indent on; indent-width 4; replace-tabs on;tab-width 4;

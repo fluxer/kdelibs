@@ -95,23 +95,26 @@ KShortcutSchemesEditor::KShortcutSchemesEditor(KShortcutsDialog *parent)
 
 void KShortcutSchemesEditor::newScheme()
 {
-    bool ok;
-    const QString newName = KInputDialog::getText(i18n("Name for New Scheme"),
-        i18n("Name for new scheme:"), i18n("New Scheme"), &ok,this);
-    if (!ok )
+    bool ok = false;
+    const QString newName = KInputDialog::getText(
+        i18n("Name for New Scheme"),
+        i18n("Name for new scheme:"), i18n("New Scheme"),
+        &ok, this
+    );
+    if (!ok) {
         return;
+    }
 
-    if (m_schemesList->findText(newName) != -1)
-    {
+    if (m_schemesList->findText(newName) != -1) {
         KMessageBox::sorry(this, i18n("A scheme with this name already exists."));
         return;
     }
 
     const QString newSchemeFileName = KShortcutSchemesHelper::applicationShortcutSchemeFileName(newName);
-
     QFile schemeFile(newSchemeFileName);
-    if (!schemeFile.open(QFile::WriteOnly | QFile::Truncate))
+    if (!schemeFile.open(QFile::WriteOnly | QFile::Truncate)) {
         return;
+    }
 
     QDomDocument doc;
     QDomElement docElem = doc.createElement("kpartgui");
@@ -142,8 +145,9 @@ Note that this will not remove any system wide shortcut schemes.", currentScheme
     foreach (KActionCollection *collection, m_dialog->actionCollections())
     {
         const KXMLGUIClient *client = collection->parentGUIClient();
-        if (!client)
+        if (!client) {
             continue;
+        }
         QFile::remove(KShortcutSchemesHelper::shortcutSchemeFileName(client, currentScheme()));
     }
 
@@ -161,15 +165,16 @@ void KShortcutSchemesEditor::exportShortcutsScheme()
 {
     // ask user about dir, it is not possible to use KFileDialog here because kfile links against
     // kdeui. the dialog gets replaced anyway with the KDE one at runtime
-    QString exportTo = QFileDialog::getExistingDirectory(this, i18n("Export to Location"),
-        QDir::currentPath());
+    QString exportTo = QFileDialog::getExistingDirectory(
+        this, i18n("Export to Location"),
+        QDir::currentPath()
+    );
     if (exportTo.isEmpty())
         return;
 
     QDir schemeRoot(exportTo);
 
-    if (!schemeRoot.exists(exportTo))
-    {
+    if (!schemeRoot.exists(exportTo)) {
         KMessageBox::error(this, i18n("Could not export shortcuts scheme because the location is invalid."));
         return;
     }
@@ -177,20 +182,22 @@ void KShortcutSchemesEditor::exportShortcutsScheme()
     foreach (KActionCollection *collection, m_dialog->actionCollections())
     {
         const KXMLGUIClient *client = collection->parentGUIClient();
-        if (!client) continue;
-        KShortcutSchemesHelper::exportActionCollection(collection,
-            currentScheme(), exportTo + '/');
+        if (!client) {
+            continue;
+        }
+        KShortcutSchemesHelper::exportActionCollection(collection, currentScheme(), exportTo + '/');
     }
 }
 
 void KShortcutSchemesEditor::saveAsDefaultsForScheme()
 {
-    foreach (KActionCollection *collection, m_dialog->actionCollections())
+    foreach (KActionCollection *collection, m_dialog->actionCollections()) {
         KShortcutSchemesHelper::exportActionCollection(collection, currentScheme());
+    }
 }
 
 
 void KShortcutSchemesEditor::updateDeleteButton()
 {
-    m_deleteScheme->setEnabled(m_schemesList->count()>=1);
+    m_deleteScheme->setEnabled(m_schemesList->count() >= 1);
 }
