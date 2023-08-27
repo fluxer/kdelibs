@@ -430,21 +430,20 @@ void KActionCollection::readSettings( KConfigGroup* config )
   //kDebug(125) << " done";
 }
 
-void KActionCollection::exportGlobalShortcuts( KConfigGroup* config, bool writeAll ) const
+void KActionCollection::exportGlobalShortcuts(KConfigGroup *config, bool writeAll) const
 {
     Q_ASSERT(config);
     if (!config) {
         return;
     }
 
-    QList<QAction*> writeActions = actions();
     for (QMap<QString, QAction *>::ConstIterator it = d->actionByName.constBegin();
         it != d->actionByName.constEnd(); ++it) {
         KAction *kaction = qobject_cast<KAction*>(it.value());
         if (!kaction) {
             continue;
         }
-        QString actionName = it.key();
+        const QString actionName = it.key();
 
         // If the action name starts with unnamed- spit out a warning. That name
         // will change at will and will break loading writing
