@@ -168,18 +168,10 @@ bool KGlobalAccel::isComponentActive(const QString &componentUnique)
     return component->isActive();
 }
 
-
-
-
 org::kde::kglobalaccel::Component *KGlobalAccel::getComponent(const QString &componentUnique)
 {
     return d->getComponent(componentUnique);
 }
-
-
-
-
-
 
 KGlobalAccel *KGlobalAccel::self()
 {
@@ -438,10 +430,9 @@ QList<KGlobalShortcutInfo> KGlobalAccel::getGlobalShortcutsByKey(const QKeySeque
     return self()->d->iface.getGlobalShortcutsByKey(seq[0]);
 }
 
-
 bool KGlobalAccel::isGlobalShortcutAvailable(const QKeySequence &seq, const QString &comp)
 {
-        return self()->d->iface.isGlobalShortcutAvailable(seq[0], comp);
+    return self()->d->iface.isGlobalShortcutAvailable(seq[0], comp);
 }
 
 //static

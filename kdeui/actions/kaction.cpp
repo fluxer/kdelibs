@@ -186,20 +186,6 @@ void KAction::setGlobalShortcut(const KShortcut &shortcut, ShortcutTypes type,
     Q_ASSERT(type);
     bool changed = false;
 
-    // protect against garbage keycode -1 that Qt sometimes produces for exotic keys;
-    // at the moment (~mid 2008) Multimedia PlayPause is one of those keys.
-    int shortcutKeys[8];
-    for (int i = 0; i < 4; i++) {
-        shortcutKeys[i] = shortcut.primary()[i];
-        shortcutKeys[i + 4] = shortcut.alternate()[i];
-    }
-    for (int i = 0; i < 8; i++) {
-        if (shortcutKeys[i] == -1) {
-            kWarning(283) << "Encountered garbage keycode (keycode = -1) in input, not doing anything.";
-            return;
-        }
-    }
-
     if (!d->globalShortcutEnabled) {
         changed = true;
         if (objectName().isEmpty() || objectName().startsWith(QLatin1String("unnamed-"))) {

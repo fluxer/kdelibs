@@ -132,7 +132,6 @@ public:
      */
     void addCollection(KActionCollection *, const QString &title = QString());
 
-
     /**
      * Undo all change made since the last commit().
      */
@@ -197,7 +196,6 @@ public:
      * @param config Config object
      */
     void importConfiguration(KConfigBase *config);
-
 
 Q_SIGNALS:
     /**
