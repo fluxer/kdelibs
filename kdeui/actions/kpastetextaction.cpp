@@ -41,7 +41,9 @@ class KPasteTextActionPrivate
 {
 public:
     KPasteTextActionPrivate(KPasteTextAction *parent)
-        : q(parent)
+        : q(parent),
+        m_popup(nullptr),
+        m_mixedMode(true)
     {
     }
 
@@ -87,7 +89,6 @@ void KPasteTextActionPrivate::init()
     m_popup = new KMenu();
     q->connect(m_popup, SIGNAL(aboutToShow()), q, SLOT(_k_menuAboutToShow()));
     q->connect(m_popup, SIGNAL(triggered(QAction*)), q, SLOT(_k_slotTriggered(QAction*)));
-    m_mixedMode = true;
 }
 
 KPasteTextAction::~KPasteTextAction()
