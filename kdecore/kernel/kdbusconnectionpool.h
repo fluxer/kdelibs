@@ -35,7 +35,7 @@ namespace KDBusConnectionPool
 KDECORE_EXPORT QDBusConnection threadConnection();
 
 /**
- * Checks if service is registered on the give connection.
+ * Checks if service is registered on the given connection.
  * @since 4.24.0
  */
 KDECORE_EXPORT bool isServiceRegistered(const QString &service, const QDBusConnection &connection);
