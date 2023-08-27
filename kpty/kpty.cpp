@@ -136,7 +136,7 @@ bool KPty::open()
     if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0)) {
         d->masterFd = -1;
         d->slaveFd = -1;
-        kWarning(175) << "Can't open a pseudo teletype";
+        kWarning() << "Can't open a pseudo teletype";
         return false;
     }
     d->ttyName = ptsn;
@@ -149,7 +149,7 @@ bool KPty::open(int fd)
 {
     Q_D(KPty);
     if (d->masterFd >= 0) {
-        kWarning(175) << "Attempting to open an already open pty";
+        kWarning() << "Attempting to open an already open pty";
         return false;
     }
     d->ownMaster = false;
@@ -165,7 +165,7 @@ bool KPty::open(int fd)
         d->ttyName = ptsn;
 #endif
     } else {
-        kWarning(175) << "Failed to determine pty slave device for fd" << fd;
+        kWarning() << "Failed to determine pty slave device for fd" << fd;
         return false;
     }
     d->masterFd = fd;
@@ -193,12 +193,12 @@ bool KPty::openSlave()
         return true;
     }
     if (d->masterFd < 0) {
-        kWarning(175) << "Attempting to open pty slave while master is closed";
+        kWarning() << "Attempting to open pty slave while master is closed";
         return false;
     }
     d->slaveFd = KDE_open(d->ttyName.data(), O_RDWR | O_NOCTTY);
     if (d->slaveFd < 0) {
-        kWarning(175) << "Can't open slave pseudo teletype";
+        kWarning() << "Can't open slave pseudo teletype";
         return false;
     }
     fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);

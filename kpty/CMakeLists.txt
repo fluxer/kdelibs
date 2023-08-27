@@ -2,6 +2,8 @@ project(kpty)
 
 include_directories(${KDE4_KDECORE_INCLUDES})
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=175)
+
 set(kpty_LIB_SRCS
     kpty.cpp
     kptydevice.cpp

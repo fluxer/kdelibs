@@ -12,7 +12,7 @@
 161         kdecore (K*TimeZone*)
 172         kdecore (KStartupInfo)
 173         kdecore (KLocale)
-175         kdecore (KPty/K3Process)
+175         kpty (KPty*)
 176         kdeui (KWindowInfo)
 180         kdecore (kdelibs)
 181         kdecore (KUrl)
