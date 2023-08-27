@@ -271,7 +271,7 @@ public:
     /**
      * Standard destructor
      */
-    virtual ~KAction();
+    ~KAction();
 
     /**
      * Sets the help text for the action.
