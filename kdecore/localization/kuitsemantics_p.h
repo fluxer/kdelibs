@@ -19,8 +19,6 @@
 #ifndef KUITSEMANTICS_P_H
 #define KUITSEMANTICS_P_H
 
-#include "kcatalog_p.h"
-
 #include <QString>
 #include <QList>
 
@@ -62,7 +60,6 @@ public:
     QString format(const QString &text, const QString &ctxt) const;
 
 private:
-    KCatalog m_catalog;
     QList<KuitFormat> m_formats;
     static const QLatin1String s_numargs;
     static const QLatin1String s_numintg;

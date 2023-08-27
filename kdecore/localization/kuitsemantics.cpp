@@ -17,6 +17,7 @@
 */
 
 #include "kuitsemantics_p.h"
+#include "kcatalog_p.h"
 #include "kglobal.h"
 #include "klocale.h"
 #include "kdebug.h"
@@ -27,36 +28,36 @@ const QLatin1String KuitSemantics::s_numreal = QLatin1String(KUIT_NUMREAL);
 const QLatin1String KuitSemantics::s_title = QLatin1String("title");
 
 KuitSemantics::KuitSemantics(const QString &lang)
-    : m_catalog(QString::fromLatin1("kdelibs4"), lang)
 {
+    const KCatalog catalog(QString::fromLatin1("kdelibs4"), lang);
     KuitFormat format;
     format.tag = QString::fromLatin1("filename");
-    format.plain = m_catalog.translate("@filename/plain", "‘%1’");
-    format.rich = m_catalog.translate("@filename/rich", "<tt>%1</tt>");
+    format.plain = catalog.translate("@filename/plain", "‘%1’");
+    format.rich = catalog.translate("@filename/rich", "<tt>%1</tt>");
     m_formats.append(format);
     format.tag = QString::fromLatin1("email");
-    format.plain = m_catalog.translate("@email/plain", "<%1>");
-    format.rich = m_catalog.translate("@email/rich", "&lt;<a href=\"mailto:%1\">%1</a>&gt;");
+    format.plain = catalog.translate("@email/plain", "<%1>");
+    format.rich = catalog.translate("@email/rich", "&lt;<a href=\"mailto:%1\">%1</a>&gt;");
     m_formats.append(format);
     format.tag = QString::fromLatin1("title");
-    format.plain = m_catalog.translate("@title/plain", "== %1 ==");
-    format.rich = m_catalog.translate("@title/rich", "<h2>%1</h2>");
+    format.plain = catalog.translate("@title/plain", "== %1 ==");
+    format.rich = catalog.translate("@title/rich", "<h2>%1</h2>");
     m_formats.append(format);
     format.tag = QString::fromLatin1("warning");
-    format.plain = m_catalog.translate("@warning/plain", "WARNING: %1");
-    format.rich = m_catalog.translate("@warning/rich", "<b>Warning</b>: %1");
+    format.plain = catalog.translate("@warning/plain", "WARNING: %1");
+    format.rich = catalog.translate("@warning/rich", "<b>Warning</b>: %1");
     m_formats.append(format);
     format.tag = QString::fromLatin1("command");
-    format.plain = m_catalog.translate("@command/plain", "%1");
-    format.rich = m_catalog.translate("@command/rich", "<tt>%1</tt>");
+    format.plain = catalog.translate("@command/plain", "%1");
+    format.rich = catalog.translate("@command/rich", "<tt>%1</tt>");
     m_formats.append(format);
     format.tag = QString::fromLatin1("resource");
-    format.plain = m_catalog.translate("@resource/plain", "“%1”");
-    format.rich = m_catalog.translate("@resource/rich", "“%1”");
+    format.plain = catalog.translate("@resource/plain", "“%1”");
+    format.rich = catalog.translate("@resource/rich", "“%1”");
     m_formats.append(format);
     format.tag = QString::fromLatin1("message");
-    format.plain = m_catalog.translate("@message/plain", "/%1/");
-    format.rich = m_catalog.translate("@message/rich", "<i>%1</i>");
+    format.plain = catalog.translate("@message/plain", "/%1/");
+    format.rich = catalog.translate("@message/rich", "<i>%1</i>");
     m_formats.append(format);
     // special cases
     format.tag = QString::fromLatin1(KUIT_NUMARGS);
