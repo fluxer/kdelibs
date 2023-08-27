@@ -56,7 +56,6 @@ void KActionPrivate::setActiveGlobalShortcutNoEnable(const KShortcut &cut)
     emit q->globalShortcutChanged(cut.primary());
 }
 
-
 void KActionPrivate::slotTriggered()
 {
     emit q->triggered(QApplication::mouseButtons(), QApplication::keyboardModifiers());
@@ -134,13 +133,13 @@ KShortcut KAction::shortcut(ShortcutTypes type) const
 {
     Q_ASSERT(type);
     if (type == DefaultShortcut) {
-        QKeySequence primary = property("defaultPrimaryShortcut").value<QKeySequence>();
-        QKeySequence secondary = property("defaultAlternateShortcut").value<QKeySequence>();
-        return KShortcut(primary, secondary);
+        return KShortcut(
+            property("defaultPrimaryShortcut").value<QKeySequence>(),
+            property("defaultAlternateShortcut").value<QKeySequence>()
+        );
     }
-    QKeySequence primary = shortcuts().value(0);
-    QKeySequence secondary = shortcuts().value(1);
-    return KShortcut(primary, secondary);
+    const QList cuts = shortcuts();
+    return KShortcut(cuts.value(0), cuts.value(1));
 }
 
 void KAction::setShortcut(const KShortcut &shortcut, ShortcutTypes type)
@@ -222,14 +221,13 @@ bool KAction::isGlobalShortcutEnabled() const
     return d->globalShortcutEnabled;
 }
 
-
 void KAction::forgetGlobalShortcut()
 {
     d->globalShortcut = KShortcut();
     d->defaultGlobalShortcut = KShortcut();
     if (d->globalShortcutEnabled) {
         d->globalShortcutEnabled = false;
-        d->neverSetGlobalShortcut = true;   //it's a fresh start :)
+        d->neverSetGlobalShortcut = true; //it's a fresh start :)
         KGlobalAccel::self()->d->remove(this, KGlobalAccelPrivate::UnRegister);
     }
 }
