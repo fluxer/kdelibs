@@ -42,8 +42,7 @@ class KPasteTextActionPrivate
 public:
     KPasteTextActionPrivate(KPasteTextAction *parent)
         : q(parent),
-        m_popup(nullptr),
-        m_mixedMode(true)
+        m_popup(nullptr)
     {
     }
 
@@ -59,7 +58,6 @@ public:
 
     KPasteTextAction *q;
     KMenu *m_popup;
-    bool m_mixedMode;
 };
 
 KPasteTextAction::KPasteTextAction(QObject *parent)
@@ -94,11 +92,6 @@ void KPasteTextActionPrivate::init()
 KPasteTextAction::~KPasteTextAction()
 {
     delete d;
-}
-
-void KPasteTextAction::setMixedMode(bool mode)
-{
-    d->m_mixedMode = mode;
 }
 
 void KPasteTextActionPrivate::_k_menuAboutToShow()

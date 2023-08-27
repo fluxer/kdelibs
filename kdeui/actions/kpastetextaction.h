@@ -79,18 +79,6 @@ public:
      */
     KPasteTextAction(const KIcon &icon, const QString &text, QObject *parent);
 
-    /**
-    * Controls the behavior of the clipboard history menu popup.
-    *
-    * @param mode If false and the clipboard contains a non-text object
-    *             the popup menu with the clipboard history will appear
-    *             immediately as the user clicks the toolbar action; if
-    *             true, the action works like the standard paste action
-    *             even if the current clipboard object is not text.
-    *             Default value is true.
-    */
-    void setMixedMode(bool mode);
-
 private:
     KPasteTextActionPrivate * const d;
 
