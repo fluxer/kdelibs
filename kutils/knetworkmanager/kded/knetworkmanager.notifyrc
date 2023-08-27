@@ -3,7 +3,7 @@ Name=knetworkmanager
 Comment=Network manager
 IconName=network-workgroup
 
-[knetworkmanager/kUnknown]
+[knetworkmanager/Unknown]
 Name=Network status is unknown
 Actions=Sound|Popup
 Sound=KDE-Im-Cant-Connect.ogg
