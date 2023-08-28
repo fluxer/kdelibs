@@ -73,6 +73,8 @@ KNotificationManager::KNotificationManager()
     m_notificationsiface(nullptr),
     m_kaudioplayeriface(nullptr)
 {
+    // NOTE: the default poll interval of QFileSystemWatcher is 1sec
+    m_configwatch.setInterval(5000);
     const QString knotificationrc = KGlobal::dirs()->saveLocation("config") + QLatin1String("knotificationrc");
     // qDebug() << Q_FUNC_INFO << knotificationrc;
     Q_ASSERT(!knotificationrc.isEmpty());

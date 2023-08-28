@@ -86,6 +86,18 @@ public:
    bool contains(const QString &path) const;
 
    /**
+    * @since 4.24.0
+    * @return the poll interval
+    */
+   int interval() const;
+
+   /**
+    * Sets the poll interval
+    * @since 4.24.0
+    */
+   void setInterval(int interval);
+
+   /**
     * The KDirWatch instance usually globally used in an application.
     * It is automatically deleted when the application exits.
     *
