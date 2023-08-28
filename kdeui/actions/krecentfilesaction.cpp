@@ -139,7 +139,7 @@ void KRecentFilesAction::setMaxItems(int maxItems)
     d->m_maxItems = maxItems;
 
     // remove all excess items
-    while( selectableActionGroup()->actions().count() > maxItems) {
+    while (selectableActionGroup()->actions().count() > maxItems) {
         delete removeAction(selectableActionGroup()->actions().last());
     }
 }
@@ -195,13 +195,14 @@ void KRecentFilesAction::addAction(QAction *action, const KUrl &url, const QStri
         button->insertAction(button->actions().value(0), action);
     }
 
-  foreach (KComboBox* comboBox, d->m_comboBoxes)
-    comboBox->insertAction(comboBox->actions().value(0), action);
+    foreach (KComboBox* comboBox, d->m_comboBoxes) {
+        comboBox->insertAction(comboBox->actions().value(0), action);
+    }
 
-  menu()->insertAction(menu()->actions().value(0), action);
+    menu()->insertAction(menu()->actions().value(0), action);
 
-  d->m_shortNames.insert( action, name );
-  d->m_urls.insert( action, url );
+    d->m_shortNames.insert(action, name);
+    d->m_urls.insert(action, url);
 }
 
 QAction* KRecentFilesAction::removeAction(QAction *action)
@@ -315,13 +316,14 @@ void KRecentFilesAction::saveEntries(const KConfigGroup &_cg)
     cg.deleteGroup();
 
     // write file list
-    for (int i = 1 ; i <= selectableActionGroup()->actions().count(); i++) {
+    const QList<QAction*> lst = selectableActionGroup()->actions();
+    for (int i = 1 ; i <= lst.count(); i++) {
         key = QString("File%1").arg(i);
         // i - 1 because we started from 1
-        value = d->m_urls[ selectableActionGroup()->actions()[i - 1]].pathOrUrl();
+        value = d->m_urls[lst[i - 1]].pathOrUrl();
         cg.writePathEntry(key, value);
         key = QString("Name%1" ).arg(i);
-        value = d->m_shortNames[selectableActionGroup()->actions()[i - 1]];
+        value = d->m_shortNames[lst[i - 1]];
         cg.writePathEntry(key, value);
     }
 
