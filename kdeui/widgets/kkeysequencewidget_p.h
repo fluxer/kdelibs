@@ -24,28 +24,29 @@
 
 class KKeySequenceButton: public QPushButton
 {
-	Q_OBJECT 
-
+    Q_OBJECT 
 public:
-	explicit KKeySequenceButton(KKeySequenceWidgetPrivate *d, QWidget *parent)
-	 : QPushButton(parent),
-	   d(d) {}
+    explicit KKeySequenceButton(KKeySequenceWidgetPrivate *d, QWidget *parent)
+        : QPushButton(parent),
+        d(d)
+    {
+    }
 
-	virtual ~KKeySequenceButton();
+    virtual ~KKeySequenceButton();
 
-	//Reimplemented
-	void setText(const QString &text);
+    // Reimplemented
+    void setText(const QString &text);
 
 protected:
-	/**
-	* Reimplemented for internal reasons.
-	*/
-	virtual bool event (QEvent *event);
-	virtual void keyPressEvent(QKeyEvent *event);
-	virtual void keyReleaseEvent(QKeyEvent *event);
+    /**
+    * Reimplemented for internal reasons.
+    */
+    virtual bool event(QEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
 
 private:
-	KKeySequenceWidgetPrivate *const d;
+    KKeySequenceWidgetPrivate *const d;
 };
 
 #endif //KKEYSEQUENCEWIDGET_P_H

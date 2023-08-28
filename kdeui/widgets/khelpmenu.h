@@ -24,14 +24,13 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-
-class KActionCollection;
-class KMenu;
+#include <QObject>
+#include <QString>
 #include <QWidget>
 #include <QAction>
 
+class KActionCollection;
+class KMenu;
 class KAboutData;
 class KHelpMenuPrivate;
 

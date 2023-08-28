@@ -181,20 +181,20 @@ class KLineEditStyle : public KdeUiProxyStyle
 {
     Q_OBJECT
 public:
-  KLineEditStyle(KLineEdit *parent)
-    : KdeUiProxyStyle(parent),
-      m_overlap(0),
-      m_sentinel(false)
-  {
-      setParent(parent);
-  }
+    KLineEditStyle(KLineEdit *parent)
+        : KdeUiProxyStyle(parent),
+        m_overlap(0),
+        m_sentinel(false)
+    {
+        setParent(parent);
+    }
 
-  QStyle *style() const;
-  QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
+    QStyle *style() const;
+    QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
 
-  int m_overlap;
-  QWeakPointer<QStyle> m_subStyle;
-  bool m_sentinel;
+    int m_overlap;
+    QWeakPointer<QStyle> m_subStyle;
+    bool m_sentinel;
 };
 
 #endif
