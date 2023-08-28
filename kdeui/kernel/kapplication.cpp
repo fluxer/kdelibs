@@ -411,21 +411,23 @@ bool KApplication::notify(QObject *receiver, QEvent *event)
     QEvent::Type t = event->type();
     if( t == QEvent::Show && receiver->isWidgetType())
     {
-        QWidget* w = static_cast< QWidget* >( receiver );
+        QWidget* w = static_cast<QWidget*>(receiver);
 #if defined Q_WS_X11
-        if( w->isTopLevel() && !startupId().isEmpty()) // TODO better done using window group leader?
-            KStartupInfo::setWindowStartupId( w->winId(), startupId());
+        if (w->isTopLevel() && !startupId().isEmpty()) {
+            // TODO better done using window group leader?
+            KStartupInfo::setWindowStartupId(w->winId(), startupId());
 #endif
-        if( w->isTopLevel() && !( w->windowFlags() & Qt::X11BypassWindowManagerHint ) && w->windowType() != Qt::Popup && !event->spontaneous())
+        }
+        if (w->isTopLevel() && !( w->windowFlags() & Qt::X11BypassWindowManagerHint )
+            && w->windowType() != Qt::Popup && !event->spontaneous())
         {
-            if( d->app_started_timer == NULL )
-            {
-                d->app_started_timer = new QTimer( this );
-                connect( d->app_started_timer, SIGNAL(timeout()), SLOT(_k_checkAppStartedSlot()));
+            if (!d->app_started_timer) {
+                d->app_started_timer = new QTimer(this);
+                connect(d->app_started_timer, SIGNAL(timeout()), SLOT(_k_checkAppStartedSlot()));
             }
-            if( !d->app_started_timer->isActive()) {
-                d->app_started_timer->setSingleShot( true );
-                d->app_started_timer->start( 0 );
+            if (!d->app_started_timer->isActive()) {
+                d->app_started_timer->setSingleShot(true);
+                d->app_started_timer->start(0);
             }
         }
     }
@@ -830,23 +832,26 @@ void KApplicationPrivate::parseCommandLine( )
     }
 
 #ifdef Q_WS_X11
-    if ( args->isSet( "waitforwm" ) ) {
+    if (args->isSet("waitforwm")) {
         Atom type;
         (void) q->desktop(); // trigger desktop creation, we need PropertyNotify events for the root window
         int format;
         unsigned long length, after;
         unsigned char *data;
-        Atom netSupported = XInternAtom( QX11Info::display(), "_NET_SUPPORTED", False );
-        while ( XGetWindowProperty( QX11Info::display(), QX11Info::appRootWindow(), netSupported,
-                    0, 1, false, AnyPropertyType, &type, &format,
-                                    &length, &after, &data ) != Success || !length ) {
-            if ( data )
-                XFree( data );
+        Atom netSupported = XInternAtom(QX11Info::display(), "_NET_SUPPORTED", False);
+        while (XGetWindowProperty(QX11Info::display(), QX11Info::appRootWindow(), netSupported,
+                0, 1, false, AnyPropertyType, &type, &format, &length, &after, &data) != Success || !length)
+        {
+            if (data) {
+                XFree(data);
+            }
+            data = nullptr;
             XEvent event;
-            XWindowEvent( QX11Info::display(), QX11Info::appRootWindow(), PropertyChangeMask, &event );
+            XWindowEvent(QX11Info::display(), QX11Info::appRootWindow(), PropertyChangeMask, &event);
         }
-        if ( data )
-            XFree( data );
+        if (data) {
+            XFree(data);
+        }
     }
 #endif
 
@@ -987,26 +992,27 @@ QByteArray KApplication::startupId() const
     return d->startup_id;
 }
 
-void KApplication::setStartupId( const QByteArray& startup_id )
+void KApplication::setStartupId(const QByteArray &startup_id)
 {
-    if( startup_id == d->startup_id )
+    if (startup_id == d->startup_id) {
         return;
+    }
 #if defined Q_WS_X11
     KStartupInfo::handleAutoAppStartedSending(); // finish old startup notification if needed
 #endif
-    if( startup_id.isEmpty())
+    if (startup_id.isEmpty()) {
         d->startup_id = "0";
-    else
-        {
+    } else {
         d->startup_id = startup_id;
 #if defined Q_WS_X11
         KStartupInfoId id;
-        id.initId( startup_id );
+        id.initId(startup_id);
         long timestamp = id.timestamp();
-        if( timestamp != 0 )
-            updateUserTimestamp( timestamp );
-#endif
+        if (timestamp != 0) {
+            updateUserTimestamp(timestamp);
         }
+#endif
+    }
 }
 
 void KApplication::clearStartupId()
