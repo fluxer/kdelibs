@@ -61,14 +61,14 @@ namespace KStringHandler
       * @param text the text to capitalize
       * @return the resulting string
       */
-    KDECORE_EXPORT QString capwords( const QString &text );
+    KDECORE_EXPORT QString capwords(const QString &text);
 
     /** Capitalizes each word in the list
       * [hello, there] becomes [Hello, There]    (list)
       * @param list the list to capitalize
       * @return the resulting list
       */
-    KDECORE_EXPORT QStringList capwords( const QStringList &list );
+    KDECORE_EXPORT QStringList capwords(const QStringList &list);
 
     /** Substitute characters at the beginning of a string by "...".
      * @param str is the string to modify
@@ -76,7 +76,7 @@ namespace KStringHandler
      * If the original string is shorter than "maxlen", it is returned verbatim
      * @return the modified string
      */
-    KDECORE_EXPORT QString lsqueeze( const QString & str, int maxlen = 40 );
+    KDECORE_EXPORT QString lsqueeze( const QString & str, int maxlen = 40);
 
     /** Substitute characters at the middle of a string by "...".
      * @param str is the string to modify
@@ -84,7 +84,7 @@ namespace KStringHandler
      * If the original string is shorter than "maxlen", it is returned verbatim
      * @return the modified string
      */
-    KDECORE_EXPORT QString csqueeze( const QString & str, int maxlen = 40 );
+    KDECORE_EXPORT QString csqueeze(const QString &str, int maxlen = 40);
 
     /** Substitute characters at the end of a string by "...".
      * @param str is the string to modify
@@ -92,7 +92,7 @@ namespace KStringHandler
      * If the original string is shorter than "maxlen", it is returned verbatim
      * @return the modified string
      */
-    KDECORE_EXPORT QString rsqueeze( const QString & str, int maxlen = 40 );
+    KDECORE_EXPORT QString rsqueeze(const QString &str, int maxlen = 40);
 
     /**
      * Split a QString into a QStringList in a similar fashion to the static
@@ -111,9 +111,9 @@ namespace KStringHandler
      * @param max is the maximum number of extractions to perform, or 0.
      * @return A QStringList containing tokens extracted from s.
      */
-    KDECORE_EXPORT QStringList perlSplit( const QString & sep,
-                                          const QString & s,
-                                          int max = 0 );
+    KDECORE_EXPORT QStringList perlSplit(const QString &sep,
+                                         const QString &s,
+                                         int max = 0);
 
     /**
      * Split a QString into a QStringList in a similar fashion to the static
@@ -132,9 +132,9 @@ namespace KStringHandler
      * @param max is the maximum number of extractions to perform, or 0.
      * @return A QStringList containing tokens extracted from s.
      */
-    KDECORE_EXPORT QStringList perlSplit( const QChar & sep,
-                                          const QString & s,
-                                          int max = 0 );
+    KDECORE_EXPORT QStringList perlSplit(const QChar &sep,
+                                         const QString &s,
+                                         int max = 0);
 
     /**
      * Split a QString into a QStringList in a similar fashion to the static
@@ -153,9 +153,9 @@ namespace KStringHandler
      * @param max is the maximum number of extractions to perform, or 0.
      * @return A QStringList containing tokens extracted from s.
      */
-    KDECORE_EXPORT QStringList perlSplit( const QRegExp & sep,
-                                          const QString & s,
-                                          int max = 0);
+    KDECORE_EXPORT QStringList perlSplit(const QRegExp &sep,
+                                         const QString &s,
+                                         int max = 0);
 
     /**
      * This method auto-detects URLs in strings, and adds HTML markup to them
@@ -163,25 +163,7 @@ namespace KStringHandler
      * @param text the string which may contain URLs
      * @return the resulting text
      */
-    KDECORE_EXPORT QString tagUrls( const QString& text );
-
-    /**
-      Guess whether a string is UTF8 encoded.
-
-      @param str the string to check
-      @return true if UTF8. If false, the string is probably in Local8Bit.
-     */
-    KDECORE_EXPORT bool isUtf8( const char *str );
-
-    /**
-      Construct QString from a c string, guessing whether it is UTF8- or
-      Local8Bit-encoded.
-
-      @param str the input string
-      @return the (hopefully correctly guessed) QString representation of @p str
-
-     */
-    KDECORE_EXPORT QString from8Bit( const char *str );
+    KDECORE_EXPORT QString tagUrls(const QString &text);
 
     /**
       Does a natural comparing of the strings. A negative value is returned if \a a
@@ -194,7 +176,7 @@ namespace KStringHandler
 
       @since 4.1
      */
-    KDECORE_EXPORT int naturalCompare( const QString& a, const QString& b, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive );
+    KDECORE_EXPORT int naturalCompare(const QString &a, const QString &b, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive);
 
     /**
       Preprocesses the given string in order to provide additional line breaking
@@ -209,6 +191,6 @@ namespace KStringHandler
 
       @since 4.4
     */
-    KDECORE_EXPORT QString preProcessWrap( const QString& text );
+    KDECORE_EXPORT QString preProcessWrap(const QString &text);
 }
 #endif
