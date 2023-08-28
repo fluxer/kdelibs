@@ -17,6 +17,7 @@
 */
 
 #include "kdirwatch.h"
+#include "kglobal.h"
 #include "kdirwatch_p.h"
 #include "kde_file.h"
 
@@ -33,11 +34,11 @@ KDirWatchPrivate::~KDirWatchPrivate()
     watcher->deleteLater();
 }
 
-Q_GLOBAL_STATIC(KDirWatch, globalWatch)
+K_GLOBAL_STATIC(KDirWatch, globalWatch)
 
 KDirWatch* KDirWatch::self()
 {
-    return globalWatch();
+    return globalWatch;
 }
 
 KDirWatch::KDirWatch(QObject* parent)
