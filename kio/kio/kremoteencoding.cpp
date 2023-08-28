@@ -48,11 +48,6 @@ KRemoteEncoding::~KRemoteEncoding()
 
 QString KRemoteEncoding::decode(const QByteArray& name) const
 {
-#ifdef CHECK_UTF8
-  if (d->m_codec->mibEnum() == 106 && !KStringHandler::isUtf8(name))
-    return QString::fromLatin1(name.constData(), name.size());
-#endif
-
   QString result = d->m_codec->toUnicode(name);
   if (d->m_codec->fromUnicode(result) != name)
     // fallback in case of decoding failure
