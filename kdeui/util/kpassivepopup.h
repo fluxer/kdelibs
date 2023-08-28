@@ -266,7 +266,6 @@ public:
                                   const QPixmap &icon,
                                   WId parent, int timeout = -1);
 
-
 public Q_SLOTS:
     /**
      * Sets the delay for the popup is removed automatically. Setting the delay to 0

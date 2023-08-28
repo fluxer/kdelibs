@@ -31,6 +31,11 @@
 
 Q_DECLARE_METATYPE(QTreeWidgetItem*);
 
+static const QStringList s_soundextensions = QStringList()
+    << ".wav"
+    << ".ogg"
+    << ".oga";
+
 class KNotificationConfigDialog : public KDialog
 {
     Q_OBJECT
@@ -209,6 +214,23 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
 
     QStringList sounds = KGlobal::dirs()->findAllResources("sound", "*", KStandardDirs::Recursive);
     sounds.sort();
+    QMutableListIterator<QString> iter(sounds);
+    while (iter.hasNext()) {
+        const QString soundfile = iter.next();
+        bool isvalid = false;
+        foreach (const QString &soundextension, s_soundextensions) {
+            if (soundfile.endsWith(soundextension)) {
+                isvalid = true;
+                break;
+            }
+        }
+        if (!isvalid) {
+            // could be a theme.index file
+            kDebug() << "unsupported sound file" << soundfile;
+            iter.remove();
+        }
+    }
+
     KConfig notificationconfig("knotificationrc", KConfig::NoGlobals);
     notificationconfig.addConfigSources(QStringList() << notifyconfig);
     KConfigGroup globalgroupconfig(&notificationconfig, notification);

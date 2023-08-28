@@ -123,7 +123,7 @@ void KPassivePopup::setPopupStyle(int popupstyle)
     if (d->popupStyle == KPassivePopup::Boxed) {
         setFrameStyle(QFrame::Box| QFrame::Plain);
         setLineWidth(2);
-    } else if(d->popupStyle == KPassivePopup::Balloon) {
+    } else if (d->popupStyle == KPassivePopup::Balloon) {
         setPalette(QToolTip::palette());
         // XXX dead ? setAutoMask(true);
     }
@@ -149,7 +149,6 @@ void KPassivePopup::setView(const QString &caption, const QString &text,
     // kDebug() << "KPassivePopup::setView " << caption << ", " << text;
     setView(standardView(caption, text, icon, this));
 }
-
 
 KVBox* KPassivePopup::standardView(const QString &caption,
                                    const QString &text,
@@ -237,7 +236,6 @@ void KPassivePopup::mouseReleaseEvent(QMouseEvent *e)
 //
 // Main Implementation
 //
-
 void KPassivePopup::setVisible(bool visible)
 {
     if (!visible) {
@@ -498,7 +496,7 @@ KPassivePopup *KPassivePopup::message(const QString &caption, const QString &tex
                                       const QPixmap &icon,
                                       QWidget *parent, int timeout)
 {
-    return message( DEFAULT_POPUP_TYPE, caption, text, icon, parent, timeout );
+    return message(DEFAULT_POPUP_TYPE, caption, text, icon, parent, timeout);
 }
 
 KPassivePopup *KPassivePopup::message( const QString &text, QWidget *parent)
