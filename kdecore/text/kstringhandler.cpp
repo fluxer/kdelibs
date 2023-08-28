@@ -32,9 +32,9 @@
 //
 // Capitalization routines
 //
-QString KStringHandler::capwords( const QString &text )
+QString KStringHandler::capwords(const QString &text)
 {
-    if ( text.isEmpty() ) {
+    if (text.isEmpty()) {
         return text;
     }
 
@@ -47,145 +47,138 @@ QString KStringHandler::capwords( const QString &text )
     return result;
 }
 
-QStringList KStringHandler::capwords( const QStringList &list )
+QStringList KStringHandler::capwords(const QStringList &list)
 {
     QStringList tmp = list;
-    for ( QStringList::Iterator it = tmp.begin(); it != tmp.end(); ++it ) {
-        *it = ( *it )[ 0 ].toUpper() + ( *it ).mid( 1 );
+    for (QStringList::Iterator it = tmp.begin(); it != tmp.end(); ++it) {
+        *it = (*it)[0].toUpper() + (*it).mid(1);
     }
     return tmp;
 }
 
 
-QString KStringHandler::lsqueeze( const QString & str, int maxlen )
+QString KStringHandler::lsqueeze(const QString &str, int maxlen)
 {
-  if (str.length() > maxlen) {
-    int part = maxlen-3;
-    return QString::fromLatin1("...") + str.right(part);
-  }
-  else return str;
+    if (str.length() > maxlen) {
+        const int part = (maxlen - 3);
+        return QString::fromLatin1("...") + str.right(part);
+    }
+    return str;
 }
 
-QString KStringHandler::csqueeze( const QString & str, int maxlen )
+QString KStringHandler::csqueeze(const QString &str, int maxlen)
 {
-  if (str.length() > maxlen && maxlen > 3) {
-    const int part = (maxlen-3)/2;
-    return str.left(part) + QLatin1String("...") + str.right(part);
-  }
-  else return str;
+    if (str.length() > maxlen && maxlen > 3) {
+        const int part = ((maxlen - 3 ) / 2);
+        return str.left(part) + QLatin1String("...") + str.right(part);
+    }
+    return str;
 }
 
-QString KStringHandler::rsqueeze( const QString & str, int maxlen )
+QString KStringHandler::rsqueeze(const QString &str, int maxlen)
 {
-  if (str.length() > maxlen) {
-    int part = maxlen-3;
-    return str.left(part) + QLatin1String("...");
-  }
-  else return str;
+    if (str.length() > maxlen) {
+        const int part = maxlen-3;
+        return str.left(part) + QLatin1String("...");
+    }
+    return str;
 }
 
 QStringList KStringHandler::perlSplit(const QString & sep, const QString & s, int max)
 {
-  bool ignoreMax = 0 == max;
+    bool ignoreMax = (max == 0);
+    int searchStart = 0;
+    int tokenStart = s.indexOf(sep, searchStart);
+    QStringList l;
 
-  QStringList l;
+    while (-1 != tokenStart && (ignoreMax || l.count() < max - 1)) {
+        if (!s.mid(searchStart, tokenStart - searchStart).isEmpty()) {
+            l << s.mid(searchStart, tokenStart - searchStart);
+        }
 
-  int searchStart = 0;
+        searchStart = tokenStart + sep.length();
+        tokenStart = s.indexOf(sep, searchStart);
+    }
 
-  int tokenStart = s.indexOf(sep, searchStart);
+    if (!s.mid(searchStart, s.length() - searchStart).isEmpty()) {
+        l << s.mid(searchStart, s.length() - searchStart);
+    }
 
-  while (-1 != tokenStart && (ignoreMax || l.count() < max - 1))
-  {
-    if (!s.mid(searchStart, tokenStart - searchStart).isEmpty())
-      l << s.mid(searchStart, tokenStart - searchStart);
-
-    searchStart = tokenStart + sep.length();
-    tokenStart = s.indexOf(sep, searchStart);
-  }
-
-  if (!s.mid(searchStart, s.length() - searchStart).isEmpty())
-    l << s.mid(searchStart, s.length() - searchStart);
-
-  return l;
+    return l;
 }
 
 QStringList KStringHandler::perlSplit(const QChar & sep, const QString & s, int max)
 {
-  bool ignoreMax = 0 == max;
+    bool ignoreMax = (max == 0);
+    int searchStart = 0;
+    int tokenStart = s.indexOf(sep, searchStart);
+    QStringList l;
 
-  QStringList l;
+    while (-1 != tokenStart && (ignoreMax || l.count() < max - 1)) {
+        if (!s.mid(searchStart, tokenStart - searchStart).isEmpty()) {
+            l << s.mid(searchStart, tokenStart - searchStart);
+        }
 
-  int searchStart = 0;
+        searchStart = tokenStart + 1;
+        tokenStart = s.indexOf(sep, searchStart);
+    }
 
-  int tokenStart = s.indexOf(sep, searchStart);
+    if (!s.mid(searchStart, s.length() - searchStart).isEmpty()) {
+        l << s.mid(searchStart, s.length() - searchStart);
+    }
 
-  while (-1 != tokenStart && (ignoreMax || l.count() < max - 1))
-  {
-    if (!s.mid(searchStart, tokenStart - searchStart).isEmpty())
-      l << s.mid(searchStart, tokenStart - searchStart);
-
-    searchStart = tokenStart + 1;
-    tokenStart = s.indexOf(sep, searchStart);
-  }
-
-  if (!s.mid(searchStart, s.length() - searchStart).isEmpty())
-    l << s.mid(searchStart, s.length() - searchStart);
-
-  return l;
+    return l;
 }
 
-QStringList KStringHandler::perlSplit(const QRegExp & sep, const QString & s, int max)
+QStringList KStringHandler::perlSplit(const QRegExp &sep, const QString &s, int max)
 {
-  bool ignoreMax = 0 == max;
+    bool ignoreMax = (max == 0);
+    int searchStart = 0;
+    int tokenStart = sep.indexIn(s, searchStart);
+    int len = sep.matchedLength();
+    QStringList l;
 
-  QStringList l;
+    while (-1 != tokenStart && (ignoreMax || l.count() < max - 1)) {
+        if (!s.mid(searchStart, tokenStart - searchStart).isEmpty()) {
+            l << s.mid(searchStart, tokenStart - searchStart);
+        }
 
-  int searchStart = 0;
-  int tokenStart = sep.indexIn(s, searchStart);
-  int len = sep.matchedLength();
+        searchStart = tokenStart + len;
+        tokenStart = sep.indexIn(s, searchStart);
+        len = sep.matchedLength();
+    }
 
-  while (-1 != tokenStart && (ignoreMax || l.count() < max - 1))
-  {
-    if (!s.mid(searchStart, tokenStart - searchStart).isEmpty())
-      l << s.mid(searchStart, tokenStart - searchStart);
+    if (!s.mid(searchStart, s.length() - searchStart).isEmpty()) {
+        l << s.mid(searchStart, s.length() - searchStart);
+    }
 
-    searchStart = tokenStart + len;
-    tokenStart = sep.indexIn(s, searchStart);
-    len = sep.matchedLength();
-  }
-
-  if (!s.mid(searchStart, s.length() - searchStart).isEmpty())
-    l << s.mid(searchStart, s.length() - searchStart);
-
-  return l;
+    return l;
 }
 
-QString KStringHandler::tagUrls( const QString& text )
+QString KStringHandler::tagUrls(const QString &text)
 {
-    /*static*/ QRegExp urlEx(QLatin1String("(www\\.(?!\\.)|(fish|(f|ht)tp(|s))://)[\\d\\w\\./,:_~\\?=&;#@\\-\\+\\%\\$]+[\\d\\w/]"));
+    QRegExp urlEx(QLatin1String("(www\\.(?!\\.)|(fish|(f|ht)tp(|s))://)[\\d\\w\\./,:_~\\?=&;#@\\-\\+\\%\\$]+[\\d\\w/]"));
 
-    QString richText( text );
+    QString richText(text);
     int urlPos = 0, urlLen;
-    while ((urlPos = urlEx.indexIn(richText, urlPos)) >= 0)
-    {
+    while ((urlPos = urlEx.indexIn(richText, urlPos)) >= 0) {
         urlLen = urlEx.matchedLength();
         QString href = richText.mid( urlPos, urlLen );
-        // Qt doesn't support (?<=pattern) so we do it here
-        if((urlPos > 0) && richText[urlPos-1].isLetterOrNumber()){
+        // Katie doesn't support (?<=pattern) so do it here
+        if ((urlPos > 0) && richText[urlPos-1].isLetterOrNumber()){
             urlPos++;
             continue;
         }
         // Don't use QString::arg since %01, %20, etc could be in the string
         QString anchor = QString::fromLatin1("<a href=\"") + href + QLatin1String("\">") + href + QLatin1String("</a>");
-        richText.replace( urlPos, urlLen, anchor );
-
+        richText.replace(urlPos, urlLen, anchor);
 
         urlPos += anchor.length();
     }
     return richText;
 }
 
-bool KStringHandler::isUtf8( const char *buf )
+bool KStringHandler::isUtf8(const char *buf)
 {
   int i, n;
   unsigned char c;
@@ -271,13 +264,15 @@ done:
 #undef I
 #undef X
 
-QString KStringHandler::from8Bit( const char *str )
+QString KStringHandler::from8Bit(const char *str)
 {
-  if (!str || !*str)
-    return QString();
-  if (KStringHandler::isUtf8( str ))
-    return QString::fromUtf8( str );
-  return QString::fromLocal8Bit( str );
+    if (!str || !*str) {
+        return QString();
+    }
+    if (KStringHandler::isUtf8(str)) {
+        return QString::fromUtf8(str);
+    }
+    return QString::fromLocal8Bit(str);
 }
 
 int KStringHandler::naturalCompare(const QString &_a, const QString &_b, Qt::CaseSensitivity caseSensitivity)

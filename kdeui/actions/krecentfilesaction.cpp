@@ -290,8 +290,8 @@ void KRecentFilesAction::loadEntries(const KConfigGroup &config)
         nameValue = cg.readPathEntry(nameKey, url.fileName());
         title = titleWithSensibleWidth(nameValue, value);
         if (!value.isNull()) {
-          thereAreEntries=true;
-          addAction(new QAction(title, selectableActionGroup()), url, nameValue);
+            thereAreEntries=true;
+            addAction(new QAction(title, selectableActionGroup()), url, nameValue);
         }
     }
     if (thereAreEntries) {
@@ -319,7 +319,7 @@ void KRecentFilesAction::saveEntries(const KConfigGroup &_cg)
     const QList<QAction*> lst = selectableActionGroup()->actions();
     for (int i = 1 ; i <= lst.count(); i++) {
         key = QString("File%1").arg(i);
-        // i - 1 because we started from 1
+        // i - 1 because iteration started from 1
         value = d->m_urls[lst[i - 1]].pathOrUrl();
         cg.writePathEntry(key, value);
         key = QString("Name%1" ).arg(i);
