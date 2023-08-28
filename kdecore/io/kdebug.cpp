@@ -200,9 +200,10 @@ protected:
                 case QtFatalMsg: {
                     KMessage::message(KMessage::Fatal, text);
                     if (m_abortfatal) {
-                        // can't show message box and abort immediately, note that depending on the
-                        // KMessage handler and the alarm() behaviour (man 2 alarm) a lot of bad things
-                        // can happen meanwhile
+                        // can't show message box and abort immediately (QDialog::exec() depends on
+                        // events processing and there may not be any events to process at that
+                        // point), note that depending on the KMessage handler and the alarm()
+                        // behaviour (man 2 alarm) a lot of bad things can happen meanwhile
                         ::alarm(10);
                     }
                     break;
