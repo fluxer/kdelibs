@@ -94,7 +94,7 @@ if(NOT KDELIBS4_FOUND)
         set(KDE4_DEFINITIONS "${KDE4_DEFINITIONS} -DNDEBUG")
     endif()
 
-    find_package(Katie QUIET REQUIRED 4.13.0)
+    find_package(Katie QUIET REQUIRED 4.14.0)
     find_package(X11 QUIET REQUIRED)
 
     # add the found KDE, Katie and X11 include directories to KDE4_INCLUDES, the
