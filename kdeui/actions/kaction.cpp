@@ -136,7 +136,7 @@ KShortcut KAction::shortcut(ShortcutTypes type) const
             property("defaultAlternateShortcut").value<QKeySequence>()
         );
     }
-    const QList cuts = shortcuts();
+    const QList<QKeySequence> cuts = shortcuts();
     return KShortcut(cuts.value(0), cuts.value(1));
 }
 
