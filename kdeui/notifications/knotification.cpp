@@ -47,6 +47,7 @@ class KNotificationManager : public QObject
     Q_OBJECT
 public:
     KNotificationManager();
+    ~KNotificationManager();
 
     void send(KNotification *notification, const bool persistent);
     void close(KNotification *notification);
@@ -84,6 +85,11 @@ KNotificationManager::KNotificationManager()
     }
     slotDirty(QString());
     connect(&m_configwatch, SIGNAL(dirty(QString)), this, SLOT(slotDirty(QString)));
+}
+
+KNotificationManager::~KNotificationManager()
+{
+    delete m_config;
 }
 
 void KNotificationManager::send(KNotification *notification, const bool persistent)
