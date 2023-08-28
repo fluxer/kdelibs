@@ -26,8 +26,10 @@
 #include "kdbusconnectionpool.h"
 #include "kiconloader.h"
 #include "kpassivepopup.h"
+#include "kdirwatch.h"
 #include "kdebug.h"
 
+#include <QMutex>
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -52,9 +54,12 @@ public:
 private Q_SLOTS:
     void slotNotificationClosed(uint eventid, uint reason);
     void slotActionInvoked(uint eventid, const QString &action);
+    void slotDirty(const QString &path);
 
 private:
-    KConfig m_config;
+    QMutex m_mutex;
+    KConfig *m_config;
+    KDirWatch m_configwatch;
     QDBusInterface* m_notificationsiface;
     QDBusInterface* m_kaudioplayeriface;
     QMap<KNotification*,uint> m_notifications;
@@ -62,20 +67,30 @@ private:
 K_GLOBAL_STATIC(KNotificationManager, kNotificationManager);
 
 KNotificationManager::KNotificationManager()
-    : m_config("knotificationrc", KConfig::NoGlobals),
+    : m_config(nullptr),
+    m_configwatch(this),
     m_notificationsiface(nullptr),
     m_kaudioplayeriface(nullptr)
 {
-    // TODO: config watch
-    const QStringList notifyconfigs = KGlobal::dirs()->findAllResources("config", "notifications/*.notifyrc");
-    if (!notifyconfigs.isEmpty()) {
-        m_config.addConfigSources(notifyconfigs);
+    const QString knotificationrc = KGlobal::dirs()->saveLocation("config") + QLatin1String("knotificationrc");
+    // qDebug() << Q_FUNC_INFO << knotificationrc;
+    Q_ASSERT(!knotificationrc.isEmpty());
+    m_configwatch.addFile(knotificationrc);
+    const QStringList configdirs = KGlobal::dirs()->resourceDirs("config");
+    foreach (const QString &configdir, configdirs) {
+        const QString notificationdir = configdir + QLatin1String("notifications/");
+        // qDebug() << Q_FUNC_INFO << notificationdir;
+        m_configwatch.addDir(notificationdir);
     }
-    // qDebug() << Q_FUNC_INFO << notifyconfigs;
+    slotDirty(QString());
+    connect(&m_configwatch, SIGNAL(dirty(QString)), this, SLOT(slotDirty(QString)));
 }
 
 void KNotificationManager::send(KNotification *notification, const bool persistent)
 {
+    Q_ASSERT(m_config);
+    QMutexLocker locker(&m_mutex);
+
     const QString eventid = notification->eventID();
     const QStringList spliteventid = eventid.split(QLatin1Char('/'));
     // qDebug() << Q_FUNC_INFO << spliteventid;
@@ -83,9 +98,9 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
         kWarning(s_knotificationarea) << "invalid notification ID" << eventid;
         return;
     }
-    KConfigGroup globalgroup(&m_config, spliteventid.at(0));
+    KConfigGroup globalgroup(m_config, spliteventid.at(0));
     const QString globalcomment = globalgroup.readEntry("Comment");
-    KConfigGroup eventgroup(&m_config, eventid);
+    KConfigGroup eventgroup(m_config, eventid);
     QString eventtitle = notification->title();
     if (eventtitle.isEmpty()) {
         eventtitle = eventgroup.readEntry("Comment");
@@ -212,6 +227,7 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
 
 void KNotificationManager::close(KNotification *notification)
 {
+    QMutexLocker locker(&m_mutex);
     QMutableMapIterator<KNotification*,uint> iter(m_notifications);
     while (iter.hasNext()) {
         iter.next();
@@ -253,6 +269,20 @@ void KNotificationManager::slotActionInvoked(uint eventid, const QString &action
         }
     }
 }
+
+void KNotificationManager::slotDirty(const QString &path)
+{
+    kDebug(s_knotificationarea) << "dirty" << path;
+    QMutexLocker locker(&m_mutex);
+    delete m_config;
+    m_config = new KConfig("knotificationrc", KConfig::NoGlobals);
+    const QStringList notifyconfigs = KGlobal::dirs()->findAllResources("config", "notifications/*.notifyrc");
+    if (!notifyconfigs.isEmpty()) {
+        m_config->addConfigSources(notifyconfigs);
+    }
+    // qDebug() << Q_FUNC_INFO << notifyconfigs;
+}
+
 
 class KNotificationPrivate
 {
