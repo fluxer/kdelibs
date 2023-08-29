@@ -49,7 +49,7 @@ public:
     QPixmap pixmap() const;
 
     Qt::Alignment alignment() const;
-    void setAlignment(Qt::Alignment);
+    void setAlignment(const Qt::Alignment alignment);
 
     bool dragEnabled() const;
     void setDragEnabled(const bool enable);
