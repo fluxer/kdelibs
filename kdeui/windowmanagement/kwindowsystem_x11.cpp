@@ -379,7 +379,7 @@ KWindowSystemPrivate* KWindowSystem::s_d_func()
 }
 
 
-// optimalization - create KWindowSystemPrivate only when needed and only for what is needed
+// optimization - create KWindowSystemPrivate only when needed and only for what is needed
 void KWindowSystem::connectNotify( const char* signal )
 {
     int what = INFO_BASIC;
