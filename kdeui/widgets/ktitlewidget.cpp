@@ -18,6 +18,9 @@
 */
 
 #include "ktitlewidget.h"
+#include "kicon.h"
+#include "kiconloader.h"
+#include "kpixmapwidget.h"
 
 #include <QtCore/QTimer>
 #include <QtGui/qevent.h>
@@ -25,9 +28,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QTextDocument>
-
-#include <kicon.h>
-#include <kiconloader.h>
 
 class KTitleWidget::Private
 {
@@ -48,9 +48,9 @@ public:
 
     void updateCommentWidget() const
     {
-        // FIXME: we need the usability color styles to implement different
+        // FIXME: need the usability color styles to implement different
         // yet palette appropriate colours for the different use cases!
-        // also .. should we include an icon here, perhaps using the imageLabel?
+        // also .. should an icon be included here, perhaps using the pixmapWidget?
         switch (messageType) {
             case InfoMessage:
             case WarningMessage:
@@ -77,7 +77,7 @@ public:
 
     KTitleWidget* q;
     QGridLayout *headerLayout;
-    QLabel *imageLabel;
+    KPixmapWidget *pixmapWidget;
     QLabel *textLabel;
     QLabel *commentLabel;
     int autoHideTimeout;
@@ -130,11 +130,11 @@ KTitleWidget::KTitleWidget(QWidget *parent)
     d->textLabel->setVisible(false);
     d->textLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse);
 
-    d->imageLabel = new QLabel(titleFrame);
-    d->imageLabel->setVisible(false);
+    d->pixmapWidget = new KPixmapWidget(titleFrame);
+    d->pixmapWidget->setVisible(false);
 
     d->headerLayout->addWidget(d->textLabel, 0, 0);
-    d->headerLayout->addWidget(d->imageLabel, 0, 1, 1, 2);
+    d->headerLayout->addWidget(d->pixmapWidget, 0, 1, 1, 2);
 
     d->commentLabel = new QLabel(titleFrame);
     d->commentLabel->setVisible(false);
@@ -186,9 +186,9 @@ QString KTitleWidget::comment() const
     return d->commentLabel->text();
 }
 
-const QPixmap *KTitleWidget::pixmap() const
+QPixmap KTitleWidget::pixmap() const
 {
-    return d->imageLabel->pixmap();
+    return d->pixmapWidget->pixmap();
 }
 
 void KTitleWidget::setBuddy(QWidget *buddy)
@@ -237,15 +237,15 @@ void KTitleWidget::setComment(const QString &comment, MessageType type)
 
 void KTitleWidget::setPixmap(const QPixmap &pixmap, ImageAlignment alignment)
 {
-    d->imageLabel->setVisible(!pixmap.isNull());
+    d->pixmapWidget->setVisible(!pixmap.isNull());
 
     d->headerLayout->removeWidget(d->textLabel);
     d->headerLayout->removeWidget(d->commentLabel);
-    d->headerLayout->removeWidget(d->imageLabel);
+    d->headerLayout->removeWidget(d->pixmapWidget);
 
     if (alignment == ImageLeft) {
         // swap the text and image labels around
-        d->headerLayout->addWidget(d->imageLabel, 0, 0, 2, 1);
+        d->headerLayout->addWidget(d->pixmapWidget, 0, 0, 2, 1);
         d->headerLayout->addWidget(d->textLabel, 0, 1);
         d->headerLayout->addWidget(d->commentLabel, 1, 1);
         d->headerLayout->setColumnStretch(0, 0);
@@ -253,12 +253,12 @@ void KTitleWidget::setPixmap(const QPixmap &pixmap, ImageAlignment alignment)
     } else {
         d->headerLayout->addWidget(d->textLabel, 0, 0);
         d->headerLayout->addWidget(d->commentLabel, 1, 0);
-        d->headerLayout->addWidget(d->imageLabel, 0, 1, 2, 1);
+        d->headerLayout->addWidget(d->pixmapWidget, 0, 1, 2, 1);
         d->headerLayout->setColumnStretch(1, 0);
         d->headerLayout->setColumnStretch(0, 1);
     }
 
-    d->imageLabel->setPixmap(pixmap);
+    d->pixmapWidget->setPixmap(pixmap);
 }
 
 

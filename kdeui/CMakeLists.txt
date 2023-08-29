@@ -217,6 +217,7 @@ set(kdeui_LIB_SRCS
     widgets/kmessagewidget.cpp
     widgets/kmultitabbar.cpp
     widgets/knuminput.cpp
+    widgets/kpixmapwidget.cpp
     widgets/kpushbutton.cpp
     widgets/kratingpainter.cpp
     widgets/kratingwidget.cpp
@@ -514,6 +515,7 @@ install(
     widgets/kmessagewidget.h
     widgets/kmultitabbar.h
     widgets/knuminput.h
+    widgets/kpixmapwidget.h
     widgets/kpushbutton.h
     widgets/kratingpainter.h
     widgets/kratingwidget.h

@@ -22,30 +22,30 @@
 // I (espen) prefer that header files are included alphabetically
 
 #include "khelpmenu.h"
+#include "kaboutapplicationdialog.h"
+#include "kaboutdata.h"
+#include "kaboutkdedialog_p.h"
+#include "kaction.h"
+#include "kactioncollection.h"
+#include "kapplication.h"
+#include "kdialog.h"
+#include "kguiitem.h"
+#include "khbox.h"
+#include "kiconloader.h"
+#include "klocale.h"
+#include "kmenu.h"
+#include "kstandardshortcut.h"
+#include "kstandardaction.h"
+#include "kstandardguiitem.h"
+#include "kswitchlanguagedialog_p.h"
+#include "ktoolinvocation.h"
+#include "kstandarddirs.h"
+#include "kpixmapwidget.h"
 
 #include <QtCore/QTimer>
 #include <QtGui/QLabel>
 #include <QtGui/QWidget>
 #include <QtGui/QWhatsThis>
-
-#include <kaboutapplicationdialog.h>
-#include <kaboutdata.h>
-#include <kaboutkdedialog_p.h>
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kapplication.h>
-#include <kdialog.h>
-#include <kguiitem.h>
-#include <khbox.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kmenu.h>
-#include <kstandardshortcut.h>
-#include <kstandardaction.h>
-#include <kstandardguiitem.h>
-#include <kswitchlanguagedialog_p.h>
-#include <ktoolinvocation.h>
-#include <kstandarddirs.h>
 
 #include <config.h>
 #ifdef Q_WS_X11
@@ -271,10 +271,10 @@ void KHelpMenu::aboutApplication()
             hbox->setSpacing(KDialog::spacingHint() * 3);
             hbox->setMargin(KDialog::marginHint() * 1);
 
-            QLabel *label1 = new QLabel(hbox);
+            KPixmapWidget *pixmap1 = new KPixmapWidget(hbox);
 
             int size = IconSize(KIconLoader::Dialog);
-            label1->setPixmap(qApp->windowIcon().pixmap(size,size));
+            pixmap1->setPixmap(qApp->windowIcon().pixmap(size,size));
             QLabel *label2 = new QLabel(hbox);
             label2->setText(d->mAboutAppText);
         }

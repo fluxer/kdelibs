@@ -29,6 +29,7 @@
 #include "ktextedit.h"
 #include "ksqueezedtextlabel.h"
 #include "kwindowsystem.h"
+#include "kpixmapwidget.h"
 
 #include <QtCore/QPointer>
 #include <QtCore/QDebug>
@@ -176,17 +177,17 @@ int KMessageBox::createKMessageBox(KDialog *dialog, const QIcon &icon,
     hLayout->setSpacing(-1); // use default spacing
     mainLayout->addLayout(hLayout,5);
 
-    QLabel *iconLabel = new QLabel(mainWidget);
+    KPixmapWidget *iconWidget = new KPixmapWidget(mainWidget);
 
     if (!icon.isNull()) {
         QStyleOption option;
         option.initFrom(mainWidget);
-        iconLabel->setPixmap(icon.pixmap(mainWidget->style()->pixelMetric(QStyle::PM_MessageBoxIconSize, &option, mainWidget)));
+        iconWidget->setPixmap(icon.pixmap(mainWidget->style()->pixelMetric(QStyle::PM_MessageBoxIconSize, &option, mainWidget)));
     }
 
     QVBoxLayout *iconLayout = new QVBoxLayout();
     iconLayout->addStretch(1);
-    iconLayout->addWidget(iconLabel);
+    iconLayout->addWidget(iconWidget);
     iconLayout->addStretch(5);
 
     hLayout->addLayout(iconLayout,0);
@@ -301,12 +302,12 @@ int KMessageBox::createKMessageBox(KDialog *dialog, const QIcon &icon,
     dialog->setMainWidget(mainWidget);
     if (!usingListWidget && !usingScrollArea && !usingSqueezedTextLabel && details.isEmpty())
         dialog->setFixedSize(dialog->sizeHint() + QSize( 10, 10 ));
-    else if (!details.isEmpty() && dialog->minimumHeight()<iconLabel->sizeHint().height()*2)//strange bug...
+    else if (!details.isEmpty() && dialog->minimumHeight()<iconWidget->sizeHint().height()*2)//strange bug...
     {
         if (!usingScrollArea)
-            dialog->setMinimumSize(300,qMax(150,qMax(iconLabel->sizeHint().height(),messageLabel->sizeHint().height())));
+            dialog->setMinimumSize(300,qMax(150,qMax(iconWidget->sizeHint().height(),messageLabel->sizeHint().height())));
         else
-            dialog->setMinimumSize(300,qMax(150,iconLabel->sizeHint().height()));
+            dialog->setMinimumSize(300,qMax(150,iconWidget->sizeHint().height()));
     }
 
 

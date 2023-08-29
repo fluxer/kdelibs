@@ -276,6 +276,10 @@ ToolTip=Title box with label and icon
 WhatsThis=A styled frame to be used in title positions in dialogs and other widgets
 Group=Display (KDE)
 
+[KPixmapWidget]
+ToolTip=QPixmap-optimized widget with drag-n-drop support
+Group=Display (KDE)
+
 [KTreeWidgetSearchLine]
 ToolTip=QTreeWidget Search Line (KDE)
 Group=Input (KDE)

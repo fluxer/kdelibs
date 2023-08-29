@@ -24,6 +24,7 @@
 #include <kfileitem.h>
 #include <kpixmapsequenceoverlaypainter.h>
 #include <kio/previewjob.h>
+#include <kpixmapwidget.h>
 #include <kconfiggroup.h>
 
 #include <config-kfile.h>
@@ -56,13 +57,13 @@ public:
     void _k_slotFailed(const KFileItem &item);
 
     KUrl lastShownURL;
-    QLabel *imageLabel;
+    KPixmapWidget *pixmapWidget;
     KPixmapSequenceOverlayPainter *busyPainter;
     KIO::PreviewJob *m_job;
 };
 
 KImageFilePreviewPrivate::KImageFilePreviewPrivate()
-    : imageLabel(nullptr),
+    : pixmapWidget(nullptr),
     busyPainter(nullptr),
     m_job(nullptr)
 {
@@ -76,11 +77,11 @@ void KImageFilePreviewPrivate::_k_slotFailed(const KFileItem &item)
 {
     busyPainter->stop();
     if (item.isDir()) {
-        imageLabel->setPixmap(
+        pixmapWidget->setPixmap(
             DesktopIcon("inode-directory", KIconLoader::SizeEnormous, KIconLoader::DisabledState)
         );
     } else {
-        imageLabel->setPixmap(
+        pixmapWidget->setPixmap(
             SmallIcon("image-missing", KIconLoader::SizeEnormous, KIconLoader::DisabledState)
         );
     }
@@ -103,13 +104,13 @@ KImageFilePreview::KImageFilePreview(QWidget *parent)
     QVBoxLayout *vb = new QVBoxLayout(this);
     vb->setMargin(0);
 
-    d->imageLabel = new QLabel(this);
-    d->imageLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    d->imageLabel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-    vb->addWidget(d->imageLabel);
+    d->pixmapWidget = new KPixmapWidget(this);
+    d->pixmapWidget->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    d->pixmapWidget->setDragEnabled(true);
+    vb->addWidget(d->pixmapWidget);
 
     d->busyPainter = new KPixmapSequenceOverlayPainter(this);
-    d->busyPainter->setWidget(d->imageLabel);
+    d->busyPainter->setWidget(d->pixmapWidget);
     d->busyPainter->stop();
 
     setSupportedMimeTypes(KIO::PreviewJob::supportedMimeTypes());
@@ -133,8 +134,8 @@ void KImageFilePreview::showPreview(const KUrl& url)
 
     d->lastShownURL = url;
 
-    int w = d->imageLabel->contentsRect().width() - 4;
-    int h = d->imageLabel->contentsRect().height() - 4;
+    int w = d->pixmapWidget->contentsRect().width() - 4;
+    int h = d->pixmapWidget->contentsRect().height() - 4;
 
     if (d->m_job) {
         disconnect(
@@ -188,7 +189,7 @@ QSize KImageFilePreview::sizeHint() const
 void KImageFilePreview::gotPreview(const KFileItem &item, const QPixmap &pixmap)
 {
     d->busyPainter->stop();
-    d->imageLabel->setPixmap(pixmap);
+    d->pixmapWidget->setPixmap(pixmap);
 }
 
 
@@ -198,7 +199,7 @@ void KImageFilePreview::clearPreview()
         d->m_job->kill();
         d->m_job = nullptr;
     }
-    d->imageLabel->setPixmap(QPixmap());
+    d->pixmapWidget->setPixmap(QPixmap());
 }
 
 #include "moc_kimagefilepreview.cpp"

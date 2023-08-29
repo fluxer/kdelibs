@@ -202,6 +202,7 @@ install(
     KPasswordDialog
     KPasteTextAction
     KPixmap
+    KPixmapWidget
     KPluginFactory
     KPluginInfo
     KPluginLoader

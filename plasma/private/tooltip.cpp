@@ -20,6 +20,15 @@
 
 #include "tooltip_p.h"
 #include "windowpreview_p.h"
+#include "plasma/plasma.h"
+#include "plasma/paintutils.h"
+#include "plasma/theme.h"
+#include "plasma/framesvg.h"
+#include "plasma/windoweffects.h"
+#include "kdebug.h"
+#include "kglobal.h"
+#include "kglobalsettings.h"
+#include "kpixmapwidget.h"
 
 #include <QAbstractTextDocumentLayout>
 #include <QBitmap>
@@ -31,16 +40,6 @@
 #include <QTextDocument>
 #include <QPropertyAnimation>
 #include <QtGui/qtextobject.h>
-
-#include <kdebug.h>
-#include <kglobal.h>
-#include <kglobalsettings.h>
-
-#include <plasma/plasma.h>
-#include <plasma/paintutils.h>
-#include <plasma/theme.h>
-#include <plasma/framesvg.h>
-#include <plasma/windoweffects.h>
 
 namespace Plasma {
 
@@ -140,15 +139,17 @@ class ToolTipPrivate
 {
     public:
         ToolTipPrivate()
-        : text(0),
-          imageLabel(0),
-          preview(0),
+        : text(nullptr),
+          imageWidget(nullptr),
+          preview(nullptr),
+          background(nullptr),
+          animation(nullptr),
           direction(Plasma::Up),
           autohide(true)
     { }
 
     TipTextWidget *text;
-    QLabel *imageLabel;
+    KPixmapWidget *imageWidget;
     WindowPreview *preview;
     FrameSvg *background;
     QWeakPointer<QObject> source;
@@ -165,9 +166,9 @@ ToolTip::ToolTip(QWidget *parent)
     setWindowFlags(Qt::ToolTip);
     d->preview = new WindowPreview(this);
     d->text = new TipTextWidget(this);
-    d->imageLabel = new QLabel(this);
+    d->imageWidget = new KPixmapWidget(this);
 
-    d->imageLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    d->imageWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     d->animation = new QPropertyAnimation(this, "pos", this);
     d->animation->setEasingCurve(QEasingCurve::InOutQuad);
     d->animation->setDuration(250);
@@ -183,7 +184,7 @@ ToolTip::ToolTip(QWidget *parent)
     QGridLayout *mainLayout = new QGridLayout();//2, 2);
     mainLayout->addWidget(d->preview, 0, 0, 1, -1, Qt::AlignCenter);
 
-    mainLayout->addWidget(d->imageLabel, 1, 0, Qt::AlignTop | Qt::AlignHCenter);
+    mainLayout->addWidget(d->imageWidget, 1, 0, Qt::AlignTop | Qt::AlignHCenter);
     mainLayout->addWidget(d->text, 1, 1, Qt::AlignCenter | Qt::AlignVCenter);
     mainLayout->setColumnStretch(1, 10);
 
@@ -281,10 +282,10 @@ void ToolTip::setContent(QObject *tipper, const ToolTipContent &data)
     if (data.image().isNull() ||
         (WindowEffects::isEffectAvailable(WindowEffects::WindowPreview) &&
          !data.windowsToPreview().isEmpty())) {
-        d->imageLabel->hide();
+        d->imageWidget->hide();
     } else {
-        d->imageLabel->show();
-        d->imageLabel->setPixmap(data.image());
+        d->imageWidget->show();
+        d->imageWidget->setPixmap(data.image());
     }
 
     if (data.highlightWindows() && !data.windowsToPreview().isEmpty()) {

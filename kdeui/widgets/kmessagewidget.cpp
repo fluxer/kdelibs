@@ -18,13 +18,13 @@
  * 02110-1301  USA
  */
 #include "kmessagewidget.h"
-
-#include <kaction.h>
-#include <kcolorscheme.h>
-#include <kdebug.h>
-#include <kicon.h>
-#include <kiconloader.h>
-#include <kstandardaction.h>
+#include "kaction.h"
+#include "kcolorscheme.h"
+#include "kicon.h"
+#include "kiconloader.h"
+#include "kstandardaction.h"
+#include "kpixmapwidget.h"
+#include "kdebug.h"
 
 #include <QEvent>
 #include <QGridLayout>
@@ -42,7 +42,7 @@ public:
     void init(KMessageWidget *q_ptr);
 
     KMessageWidget* q;
-    QLabel* iconLabel;
+    KPixmapWidget* iconWidget;
     QLabel* textLabel;
     QToolButton* closeButton;
     QIcon icon;
@@ -58,9 +58,9 @@ void KMessageWidgetPrivate::init(KMessageWidget *q_ptr)
 
     q->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    iconLabel = new QLabel(q);
-    iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    iconLabel->hide();
+    iconWidget = new KPixmapWidget(q);
+    iconWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    iconWidget->hide();
 
     textLabel = new QLabel(q);
     textLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -104,7 +104,7 @@ void KMessageWidgetPrivate::updateLayout()
     if (textLabel->wordWrap()) {
         QGridLayout* layout = new QGridLayout(q);
         // Set alignment to make sure icon does not move down if text wraps
-        layout->addWidget(iconLabel, 0, 0, 1, 1, Qt::AlignHCenter | Qt::AlignTop);
+        layout->addWidget(iconWidget, 0, 0, 1, 1, Qt::AlignHCenter | Qt::AlignTop);
         layout->addWidget(textLabel, 0, 1);
 
         QHBoxLayout* buttonLayout = new QHBoxLayout();
@@ -121,7 +121,7 @@ void KMessageWidgetPrivate::updateLayout()
         layout->addItem(buttonLayout, 1, 0, 1, 2);
     } else {
         QHBoxLayout* layout = new QHBoxLayout(q);
-        layout->addWidget(iconLabel);
+        layout->addWidget(iconWidget);
         layout->addWidget(textLabel);
 
         Q_FOREACH(QToolButton* button, buttons) {
@@ -316,11 +316,11 @@ void KMessageWidget::setIcon(const QIcon& icon)
 {
     d->icon = icon;
     if (d->icon.isNull()) {
-        d->iconLabel->hide();
+        d->iconWidget->hide();
     } else {
         const int size = KIconLoader::global()->currentSize(KIconLoader::MainToolbar);
-        d->iconLabel->setPixmap(d->icon.pixmap(size));
-        d->iconLabel->show();
+        d->iconWidget->setPixmap(d->icon.pixmap(size));
+        d->iconWidget->show();
     }
 }
 

@@ -43,8 +43,8 @@
 #include <QtDBus/QDBusReply>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include <kmimetypetrader.h>
-#include <kmimetype.h>
+#include "kmimetypetrader.h"
+#include "kmimetype.h"
 #include "kio/jobclasses.h" // for KIO::JobFlags
 #include "kio/job.h"
 #include "kio/jobuidelegate.h"
@@ -54,24 +54,25 @@
 #include "kfile/kopenwithdialog.h"
 #include "kfile/krecentdocument.h"
 #include "kdesktopfileactions.h"
-#include <kmessageboxwrapper.h>
-#include <kurl.h>
-#include <kglobal.h>
-#include <ktoolinvocation.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <kprotocolmanager.h>
-#include <kstandarddirs.h>
-#include <kprocess.h>
-#include <kdesktopfile.h>
-#include <kmacroexpander.h>
-#include <kshell.h>
-#include <kde_file.h>
-#include <kconfiggroup.h>
-#include <kdialog.h>
-#include <kstandardguiitem.h>
-#include <kguiitem.h>
-#include <ksavefile.h>
+#include "kmessageboxwrapper.h"
+#include "kurl.h"
+#include "kglobal.h"
+#include "ktoolinvocation.h"
+#include "kdebug.h"
+#include "klocale.h"
+#include "kprotocolmanager.h"
+#include "kstandarddirs.h"
+#include "kprocess.h"
+#include "kdesktopfile.h"
+#include "kmacroexpander.h"
+#include "kshell.h"
+#include "kde_file.h"
+#include "kconfiggroup.h"
+#include "kdialog.h"
+#include "kstandardguiitem.h"
+#include "kguiitem.h"
+#include "ksavefile.h"
+#include "kpixmapwidget.h"
 
 #ifdef Q_WS_X11
 #include <kwindowsystem.h>
@@ -858,10 +859,10 @@ static bool makeServiceExecutable(const KService& service, QWidget* window)
     QWidget *baseWidget = new QWidget(baseDialog);
     QHBoxLayout *mainLayout = new QHBoxLayout(baseWidget);
 
-    QLabel *iconLabel = new QLabel(baseWidget);
+    KPixmapWidget *iconWidget = new KPixmapWidget(baseWidget);
     QPixmap warningIcon(KIconLoader::global()->loadIcon("dialog-warning", KIconLoader::NoGroup, KIconLoader::SizeHuge));
-    mainLayout->addWidget(iconLabel);
-    iconLabel->setPixmap(warningIcon);
+    mainLayout->addWidget(iconWidget);
+    iconWidget->setPixmap(warningIcon);
 
     QVBoxLayout *contentLayout = new QVBoxLayout;
     QString warningMessage = i18nc("program name follows in a line edit below",

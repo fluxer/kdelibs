@@ -43,7 +43,51 @@
 
 #include "kpropertiesdialog.h"
 #include "kpropertiesdialog_p.h"
-
+#include "kdialog.h"
+#include "kdirnotify.h"
+#include "kdiskfreespaceinfo.h"
+#include "kdebug.h"
+#include "kdesktopfile.h"
+#include "kicondialog.h"
+#include "kurl.h"
+#include "kurlrequester.h"
+#include "klocale.h"
+#include "kglobal.h"
+#include "kglobalsettings.h"
+#include "kstandarddirs.h"
+#include "kjobuidelegate.h"
+#include "kio/job.h"
+#include "kio/copyjob.h"
+#include "kio/chmodjob.h"
+#include "kio/directorysizejob.h"
+#include "kio/renamedialog.h"
+#include "kio/netaccess.h"
+#include "kio/jobuidelegate.h"
+#include "kfiledialog.h"
+#include "kmimetype.h"
+#include "kmountpoint.h"
+#include "kiconloader.h"
+#include "kmessagebox.h"
+#include "kservice.h"
+#include "kcombobox.h"
+#include "kcompletion.h"
+#include "klineedit.h"
+#include "kseparator.h"
+#include "ksqueezedtextlabel.h"
+#include "kmimetypetrader.h"
+#include "kpreviewprops.h"
+#include "kmetaprops.h"
+#include "krun.h"
+#include "kvbox.h"
+#include "kacl.h"
+#include "kconfiggroup.h"
+#include "kshell.h"
+#include "kcapacitybar.h"
+#include "kfileitemlistproperties.h"
+#include "kuser.h"
+#include "kpixmapwidget.h"
+#include "kbuildsycocaprogressdialog.h"
+#include "kmimetypechooser.h"
 
 #include <config.h>
 #include <config-acl.h>
@@ -75,58 +119,11 @@ extern "C" {
 #include <sys/acl.h>
 #endif
 
-#include <kdialog.h>
-#include <kdirnotify.h>
-#include <kdiskfreespaceinfo.h>
-#include <kdebug.h>
-#include <kdesktopfile.h>
-#include <kicondialog.h>
-#include <kurl.h>
-#include <kurlrequester.h>
-#include <klocale.h>
-#include <kglobal.h>
-#include <kglobalsettings.h>
-#include <kstandarddirs.h>
-#include <kjobuidelegate.h>
-#include <kio/job.h>
-#include <kio/copyjob.h>
-#include <kio/chmodjob.h>
-#include <kio/directorysizejob.h>
-#include <kio/renamedialog.h>
-#include <kio/netaccess.h>
-#include <kio/jobuidelegate.h>
-#include <kfiledialog.h>
-#include <kmimetype.h>
-#include <kmountpoint.h>
-#include <kiconloader.h>
-#include <kmessagebox.h>
-#include <kservice.h>
-#include <kcombobox.h>
-#include <kcompletion.h>
-#include <klineedit.h>
-#include <kseparator.h>
-#include <ksqueezedtextlabel.h>
-#include <kmimetypetrader.h>
-#include <kpreviewprops.h>
-#include <kmetaprops.h>
-#include <krun.h>
-#include <kvbox.h>
-#include <kacl.h>
-#include <kconfiggroup.h>
-#include <kshell.h>
-#include <kcapacitybar.h>
-#include <kfileitemlistproperties.h>
-#include <kuser.h>
-
 #include "ui_kpropertiesdesktopbase.h"
 #include "ui_kpropertiesdesktopadvbase.h"
 #ifdef HAVE_POSIX_ACL
 #include "kacleditwidget.h"
 #endif
-
-#include <kbuildsycocaprogressdialog.h>
-#include <kmimetypechooser.h>
-
 
 using namespace KDEPrivate;
 
@@ -858,11 +855,11 @@ KFilePropsPlugin::KFilePropsPlugin(KPropertiesDialog *props)
             this, SLOT(slotIconChanged())
         );
     } else {
-        QLabel *iconLabel = new QLabel(d->m_frame);
-        int bsize = 66 + 2 * iconLabel->style()->pixelMetric(QStyle::PM_ButtonMargin);
-        iconLabel->setFixedSize(bsize, bsize);
-        iconLabel->setPixmap(KIconLoader::global()->loadIcon(iconStr, KIconLoader::Desktop, 48));
-        d->iconArea = iconLabel;
+        KPixmapWidget *iconWidget = new KPixmapWidget(d->m_frame);
+        int bsize = 66 + 2 * iconWidget->style()->pixelMetric(QStyle::PM_ButtonMargin);
+        iconWidget->setFixedSize(bsize, bsize);
+        iconWidget->setPixmap(KIconLoader::global()->loadIcon(iconStr, KIconLoader::Desktop, 48));
+        d->iconArea = iconWidget;
     }
     grid->addWidget(d->iconArea, curRow, 0, Qt::AlignLeft);
 
