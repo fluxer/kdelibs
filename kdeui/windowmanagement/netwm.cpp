@@ -3522,8 +3522,11 @@ NETStrut NETWinInfo::frameOverlap() const {
 void NETWinInfo::kdeGeometry(NETRect& frame, NETRect& window) {
     if (p->win_geom.size.width == 0 || p->win_geom.size.height == 0) {
 	Window unused;
-	int x, y;
-	unsigned int w, h, junk;
+	int x = 0;
+	int y = 0;
+	unsigned int w = 0;
+	unsigned int h = 0;
+	unsigned int junk;
 	XGetGeometry(p->display, p->window, &unused, &x, &y, &w, &h, &junk, &junk);
 	XTranslateCoordinates(p->display, p->window, p->root, 0, 0, &x, &y, &unused
 			      );
