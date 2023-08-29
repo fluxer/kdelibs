@@ -85,7 +85,7 @@ QPixmap KPixmapWidget::pixmap() const
     return d->pixmap;
 }
 
-void KPixmapWidget::setAlignment(Qt::Alignment alignment)
+void KPixmapWidget::setAlignment(const Qt::Alignment alignment)
 {
     d->alignment = alignment;
     update();
