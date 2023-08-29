@@ -70,7 +70,7 @@ void KNewPasswordDialog::KNewPasswordDialogPrivate::init()
 
     ui.setupUi( q->mainWidget() );
 
-    ui.labelIcon->setPixmap( KIcon("dialog-password").pixmap(96, 96) );
+    ui.pixmapIcon->setPixmap( KIcon("dialog-password").pixmap(96, 96) );
     ui.labelMatch->setHidden(true);
 
     const QString strengthBarWhatsThis(i18n("The password strength meter gives an indication of the security "
@@ -220,14 +220,14 @@ QString KNewPasswordDialog::prompt() const
 
 void KNewPasswordDialog::setPixmap(const QPixmap &pixmap)
 {
-    d->ui.labelIcon->setPixmap(pixmap);
-    d->ui.labelIcon->setFixedSize( d->ui.labelIcon->sizeHint() );
+    d->ui.pixmapIcon->setPixmap(pixmap);
+    d->ui.pixmapIcon->setFixedSize( d->ui.pixmapIcon->sizeHint() );
 }
 
 
 QPixmap KNewPasswordDialog::pixmap() const
 {
-    return *d->ui.labelIcon->pixmap();
+    return d->ui.pixmapIcon->pixmap();
 }
 
 bool KNewPasswordDialog::checkAndGetPassword(QString *pwd)
