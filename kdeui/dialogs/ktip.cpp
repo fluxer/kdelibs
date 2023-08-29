@@ -25,6 +25,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************/
 
 #include "ktip.h"
+#include "kaboutdata.h"
+#include "kconfig.h"
+#include "kdebug.h"
+#include "kglobalsettings.h"
+#include "kcomponentdata.h"
+#include "klocale.h"
+#include "kpushbutton.h"
+#include "krandom.h"
+#include "kseparator.h"
+#include "kstandarddirs.h"
+#include "kpixmapwidget.h"
 
 #include <QtCore/QFile>
 #include <QtGui/QCheckBox>
@@ -32,17 +43,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QTextBrowser>
-
-#include <kaboutdata.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kglobalsettings.h>
-#include <kcomponentdata.h>
-#include <klocale.h>
-#include <kpushbutton.h>
-#include <krandom.h>
-#include <kseparator.h>
-#include <kstandarddirs.h>
 
 class KTipDatabase::Private
 {
@@ -287,10 +287,10 @@ KTipDialog::KTipDialog(KTipDatabase *database, QWidget *parent)
 
     browserLayout->addWidget(d->tipText);
 
-    QLabel *label = new QLabel(this);
-    label->setPixmap(KStandardDirs::locate("data", "kdeui/pics/ktip-bulb.png"));
-    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    browserLayout->addWidget(label);
+    KPixmapWidget *pixWidget = new KPixmapWidget(this);
+    pixWidget->setPixmap(KStandardDirs::locate("data", "kdeui/pics/ktip-bulb.png"));
+    pixWidget->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    browserLayout->addWidget(pixWidget);
 
     if (!isTipDialog) {
         resize(520, 280);

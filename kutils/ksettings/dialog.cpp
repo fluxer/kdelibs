@@ -23,17 +23,19 @@
 #include "dispatcher.h"
 //#include "componentsdialog_p.h"
 
-#include <klocale.h>
-#include <kservicegroup.h>
-#include <kdebug.h>
-#include <kservicetypetrader.h>
-#include <kconfig.h>
-#include <kstandarddirs.h>
-#include <kcomponentdata.h>
-#include <kiconloader.h>
-#include <QtCore/QFile>
-#include <QtGui/QCheckBox>
-#include <QtCore/QStack>
+#include "klocale.h"
+#include "kservicegroup.h"
+#include "kdebug.h"
+#include "kservicetypetrader.h"
+#include "kconfig.h"
+#include "kstandarddirs.h"
+#include "kcomponentdata.h"
+#include "kiconloader.h"
+#include "kpixmapwidget.h"
+
+#include <QFile>
+#include <QCheckBox>
+#include <QStack>
 
 uint qHash(const KCModuleInfo &info)
 {
@@ -230,19 +232,19 @@ KPageWidgetItem *DialogPrivate::createPageItem(KPageWidgetItem *parentItem,
     QWidget * page = new QWidget( q );
 
     QCheckBox *checkBox = new QCheckBox(i18n("Enable component"), page);
-    QLabel *iconLabel = new QLabel(page);
+    KPixmapWidget *iconWidget = new KPixmapWidget(page);
     QLabel *commentLabel = new QLabel(comment, page);
     commentLabel->setTextFormat(Qt::RichText);
     QVBoxLayout * layout = new QVBoxLayout(page);
     layout->addWidget(checkBox);
-    layout->addWidget(iconLabel);
+    layout->addWidget(iconWidget);
     layout->addWidget(commentLabel);
     layout->addStretch();
     page->setLayout(layout);
 
     KPageWidgetItem *item = new KPageWidgetItem(page, name);
     item->setIcon(KIcon(iconName));
-    iconLabel->setPixmap(item->icon().pixmap(128, 128));
+    iconWidget->setPixmap(item->icon().pixmap(128, 128));
     item->setProperty("_k_weight", weight);
     checkBoxForItem.insert(item, checkBox);
 
@@ -306,11 +308,9 @@ void DialogPrivate::parseGroupFile( const QString & filename )
 void DialogPrivate::createDialogFromServices()
 {
     Q_Q(Dialog);
-	// read .setdlg files
-	QString setdlgpath = KStandardDirs::locate( "appdata",
-                                                    KGlobal::mainComponent().componentName() + ".setdlg" );
-	const QStringList setdlgaddon = KGlobal::dirs()->findAllResources( "appdata",
-			"ksettingsdialog/*.setdlg" );
+    // read .setdlg files
+    QString setdlgpath = KStandardDirs::locate( "appdata", KGlobal::mainComponent().componentName() + ".setdlg" );
+    const QStringList setdlgaddon = KGlobal::dirs()->findAllResources( "appdata", "ksettingsdialog/*.setdlg" );
     if (!setdlgpath.isNull()) {
         parseGroupFile(setdlgpath);
     }

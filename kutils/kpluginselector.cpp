@@ -20,30 +20,30 @@
 
 #include "kpluginselector.h"
 #include "kpluginselector_p.h"
+#include "kdebug.h"
+#include "klineedit.h"
+#include "kdialog.h"
+#include "kurllabel.h"
+#include "ktabwidget.h"
+#include "kcmoduleinfo.h"
+#include "kcmoduleproxy.h"
+#include "kmessagebox.h"
+#include "kpushbutton.h"
+#include "kiconloader.h"
+#include "kstandarddirs.h"
+#include "klocalizedstring.h"
+#include "kcategorydrawer.h"
+#include "kcategorizedview.h"
+#include "kcategorizedsortfilterproxymodel.h"
+#include "kaboutapplicationdialog.h"
+#include "kpixmapwidget.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QPainter>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QApplication>
-#include <QtGui/QCheckBox>
-#include <QtGui/qstyleoption.h>
-
-#include <kdebug.h>
-#include <klineedit.h>
-#include <kdialog.h>
-#include <kurllabel.h>
-#include <ktabwidget.h>
-#include <kcmoduleinfo.h>
-#include <kcmoduleproxy.h>
-#include <kmessagebox.h>
-#include <kpushbutton.h>
-#include <kiconloader.h>
-#include <kstandarddirs.h>
-#include <klocalizedstring.h>
-#include <kcategorydrawer.h>
-#include <kcategorizedview.h>
-#include <kcategorizedsortfilterproxymodel.h>
-#include <kaboutapplicationdialog.h>
+#include <QLabel>
+#include <QPainter>
+#include <QBoxLayout>
+#include <QApplication>
+#include <QCheckBox>
+#include <QStyleOption>
 
 #define MARGIN 5
 
@@ -119,11 +119,11 @@ KPluginSelector::Private::DependenciesWidget::DependenciesWidget(QWidget *parent
     QVBoxLayout *dataLayout = new QVBoxLayout;
     dataLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     layout->setAlignment(Qt::AlignLeft);
-    QLabel *label = new QLabel();
-    label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    label->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Dialog));
-    label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout->addWidget(label);
+    KPixmapWidget *pixmap = new KPixmapWidget();
+    pixmap->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    pixmap->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Dialog));
+    pixmap->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    layout->addWidget(pixmap);
     KUrlLabel *link = new KUrlLabel();
     link->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     link->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
