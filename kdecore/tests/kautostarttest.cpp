@@ -17,19 +17,16 @@
 */
 
 #include "kautostarttest.h"
-
 #include "kstandarddirs.h"
-#include <kdebug.h>
-
-#include <qtest_kde.h>
+#include "kdebug.h"
+#include "kautostart.h"
+#include "qtest_kde.h"
 
 #include "moc_kautostarttest.cpp"
 
-#include <QtCore/QFile>
+#include <QFile>
 
 QTEST_KDEMAIN_CORE( KAutostartTest )
-
-#include <kautostart.h>
 
 void KAutostartTest::testStartDetection_data()
 {
@@ -37,8 +34,6 @@ void KAutostartTest::testStartDetection_data()
     QTest::addColumn<bool>("doesAutostart");
     if ( KAutostart::isServiceRegistered("plasma-desktop") )
         QTest::newRow("plasma-desktop") << "plasma-desktop" << true;
-    if ( KAutostart::isServiceRegistered("khotkeys") )
-        QTest::newRow("khotkeys") << "khotkeys" << false;
     QTest::newRow("does not exist") << "doesnotexist" << false;
 }
 
@@ -80,8 +75,6 @@ void KAutostartTest::testStartphase_data()
         QTest::newRow("plasma-desktop") << "plasma-desktop" << (int)KAutostart::BaseDesktop;
     if ( KAutostart::isServiceRegistered("klipper") )
         QTest::newRow("klipper") << "klipper" << (int)KAutostart::Applications;
-    if ( KAutostart::isServiceRegistered("khotkeys") )
-        QTest::newRow("khotkeys") << "ktip" << (int)KAutostart::Applications;
     QTest::newRow("does not exist") << "doesnotexist"
                                     << (int)KAutostart::Applications;
 }
