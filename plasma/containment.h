@@ -334,7 +334,7 @@ class PLASMA_EXPORT Containment : public Applet
         /**
          * Return whether wallpaper is painted or not.
          */
-        bool drawWallpaper();
+        bool drawWallpaper() const;
 
         /**
          * Sets wallpaper plugin.
@@ -380,19 +380,19 @@ class PLASMA_EXPORT Containment : public Applet
          * @return a list of all triggers that have a containmentactions plugin associated
          * @since 4.4
          */
-        QStringList containmentActionsTriggers();
+        QStringList containmentActionsTriggers() const;
 
         /**
          * @return the plugin name for the given trigger
          * @since 4.4
          */
-        QString containmentActions(const QString &trigger);
+        QString containmentActions(const QString &trigger) const;
 
         /**
          * @return the config group that containmentactions plugins go in
          * @since 4.6
          */
-        KConfigGroup containmentActionsConfig();
+        KConfigGroup containmentActionsConfig() const;
 
 Q_SIGNALS:
         /**

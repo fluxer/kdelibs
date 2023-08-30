@@ -1733,7 +1733,7 @@ void Containment::setDrawWallpaper(bool drawWallpaper)
     }
 }
 
-bool Containment::drawWallpaper()
+bool Containment::drawWallpaper() const
 {
     return d->drawWallpaper;
 }
@@ -1851,12 +1851,12 @@ void Containment::setContainmentActions(const QString &trigger, const QString &p
     emit configNeedsSaving();
 }
 
-QStringList Containment::containmentActionsTriggers()
+QStringList Containment::containmentActionsTriggers() const
 {
     return d->actionPlugins()->keys();
 }
 
-QString Containment::containmentActions(const QString &trigger)
+QString Containment::containmentActions(const QString &trigger) const
 {
     ContainmentActions *c = d->actionPlugins()->value(trigger);
     return c ? c->pluginName() : QString();
@@ -2301,7 +2301,7 @@ bool ContainmentPrivate::prepareContainmentActions(const QString &trigger, const
     return true;
 }
 
-KConfigGroup Containment::containmentActionsConfig()
+KConfigGroup Containment::containmentActionsConfig() const
 {
     KConfigGroup cfg;
     switch (d->containmentActionsSource) {
