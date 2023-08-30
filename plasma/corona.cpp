@@ -85,7 +85,7 @@ void Corona::setAppletMimeType(const QString &type)
     d->mimetype = type;
 }
 
-QString Corona::appletMimeType()
+QString Corona::appletMimeType() const
 {
     return d->mimetype;
 }

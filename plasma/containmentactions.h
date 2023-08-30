@@ -21,14 +21,13 @@
 #define PLASMA_CONTAINMENTACTIONS_H
 
 #include <QList>
+#include <QAction>
 
 #include <kplugininfo.h>
 #include <kdeversion.h>
 
 #include <plasma/plasma.h>
 #include <plasma/packagestructure.h>
-
-#include <QAction>
 
 namespace Plasma
 {

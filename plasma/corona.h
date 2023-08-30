@@ -51,7 +51,7 @@ class PLASMA_EXPORT Corona : public QGraphicsScene
 //typedef QHash<QString, QList<Plasma::Applet*> > layouts;
 
 public:
-    explicit Corona(QObject * parent = 0);
+    explicit Corona(QObject *parent = nullptr);
     ~Corona();
 
     /**
@@ -63,7 +63,7 @@ public:
     /**
      * The current mime type of Drag/Drop items.
      */
-    QString appletMimeType();
+    QString appletMimeType() const;
 
     /**
      * @return the default containment plugin type
@@ -195,13 +195,13 @@ public:
 
     /**
      * @since 4.4
-    * Recommended position for a popup window like a menu or a tooltip
-    * given its size
-    * @param item the item that the popup should appear adjacent to (an applet, say)
-    * @param size size of the popup
-    * @param alignment alignment of the popup, valid flags are Qt::AlignLeft, Qt::AlignRight and Qt::AlignCenter
-    * @returns reccomended position
-    */
+     * Recommended position for a popup window like a menu or a tooltip
+     * given its size
+     * @param item the item that the popup should appear adjacent to (an applet, say)
+     * @param size size of the popup
+     * @param alignment alignment of the popup, valid flags are Qt::AlignLeft, Qt::AlignRight and Qt::AlignCenter
+     * @returns reccomended position
+     */
     QPoint popupPosition(const QGraphicsItem *item, const QSize &size, Qt::AlignmentFlag alignment = Qt::AlignLeft);
 
     /**
