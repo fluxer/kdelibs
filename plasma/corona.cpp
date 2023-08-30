@@ -779,22 +779,22 @@ void CoronaPrivate::init()
     lockAction->setAutoRepeat(true);
     lockAction->setIcon(KIcon("object-locked"));
     lockAction->setData(AbstractToolBox::ControlTool);
-    lockAction->setShortcut(KShortcut("alt+l"));
+    lockAction->setShortcut(KShortcut(Qt::ALT + Qt::Key_L));
     lockAction->setShortcutContext(Qt::ApplicationShortcut);
 
-    //FIXME this doesn't really belong here. desktop KCM maybe?
-    //but should the shortcuts be per-app or really-global?
-    //I don't know how to make kactioncollections use plasmarc
+    // FIXME this doesn't really belong here. desktop KCM maybe?
+    // but should the shortcuts be per-app or really-global?
+    // I don't know how to make kactioncollections use plasmarc
     KAction *action = actions.addAction("configure shortcuts");
     QObject::connect(action, SIGNAL(triggered()), q, SLOT(showShortcutConfig()));
     action->setText(i18n("Shortcut Settings"));
     action->setIcon(KIcon("configure-shortcuts"));
     action->setAutoRepeat(false);
     action->setData(AbstractToolBox::ConfigureTool);
-    //action->setShortcut(KShortcut("ctrl+h"));
+    // action->setShortcut(KShortcut(Qt::CTRL + Qt::Key_H));
     action->setShortcutContext(Qt::ApplicationShortcut);
 
-    //fake containment/applet actions
+    // fake containment/applet actions
     KActionCollection *containmentActions = AppletPrivate::defaultActions(q); //containment has to start with applet stuff
     ContainmentPrivate::addDefaultActions(containmentActions); //now it's really containment
     actionCollections << &actions << AppletPrivate::defaultActions(q) << containmentActions;
