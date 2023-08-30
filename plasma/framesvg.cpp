@@ -303,7 +303,7 @@ bool FrameSvg::hasElementPrefix(Plasma::Location location) const
     }
 }
 
-QString FrameSvg::prefix()
+QString FrameSvg::prefix() const
 {
     if (d->prefix.isEmpty()) {
         return d->prefix;

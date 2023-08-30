@@ -207,7 +207,7 @@ class PLASMA_EXPORT FrameSvg : public Svg
          * Returns the prefix for SVG elements of the FrameSvg
          * @return the prefix
          */
-        Q_INVOKABLE QString prefix();
+        Q_INVOKABLE QString prefix() const;
 
         /**
          * Returns a mask that tightly contains the fully opaque areas of the svg
