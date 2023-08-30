@@ -374,7 +374,6 @@ class PLASMA_EXPORT Wallpaper : public QObject
          */
         bool needsPreviewDuringConfiguration() const;
 
-
     Q_SIGNALS:
         /**
          * This signal indicates that wallpaper needs to be repainted.

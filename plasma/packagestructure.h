@@ -183,7 +183,7 @@ public:
      * @return list of files by name
      * @since 4.3
      */
-    QStringList entryList(const char *key);
+    QStringList entryList(const char *key) const;
 
     /**
      * @return user visible name for the given entry

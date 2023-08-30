@@ -142,7 +142,6 @@ public:
      */
     bool isIconified() const;
 
-
 public Q_SLOTS:
     /**
      * Hides the popup.

@@ -66,8 +66,8 @@ class ContentStructure
         QStringList paths;
         QString name;
         QStringList mimetypes;
-        bool directory : 1;
-        bool required : 1;
+        bool directory;
+        bool required;
 };
 
 class PackageStructurePrivate
@@ -75,10 +75,10 @@ class PackageStructurePrivate
 public:
     PackageStructurePrivate(const QString &t)
         : type(t),
-          packageRoot("plasma/plasmoids"),
-          servicePrefix("plasma-applet-"),
-          metadata(0),
-          externalPaths(false)
+        packageRoot("plasma/plasmoids"),
+        servicePrefix("plasma-applet-"),
+        metadata(nullptr),
+        externalPaths(false)
     {
         contentsPrefixPaths << "contents/";
     }
@@ -89,7 +89,7 @@ public:
     }
 
     void createPackageMetadata(const QString &path);
-    QStringList entryList(const QString &prefix, const QString &requestedPath);
+    QStringList entryList(const QString &prefix, const QString &requestedPath) const;
 
     QString type;
     QString path;
@@ -238,7 +238,7 @@ QList<QByteArray> PackageStructure::requiredFiles() const
     return files;
 }
 
-QStringList PackageStructure::entryList(const char *key)
+QStringList PackageStructure::entryList(const char *key) const
 {
     QString p = path(key);
 
@@ -259,7 +259,7 @@ QStringList PackageStructure::entryList(const char *key)
     return list;
 }
 
-QStringList PackageStructurePrivate::entryList(const QString &prefix, const QString &requestedPath)
+QStringList PackageStructurePrivate::entryList(const QString &prefix, const QString &requestedPath) const
 {
     QDir dir(path + prefix + requestedPath);
 
