@@ -287,7 +287,7 @@ public:
     /**
     * @return the number of lines allowed to display
     */
-    int numDisplayLines();
+    int numDisplayLines() const;
 
     /**
     * @param numLines the number of lines to show in the display.

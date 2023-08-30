@@ -456,7 +456,7 @@ QAction *IconWidget::action() const
     return d->action;
 }
 
-int IconWidget::numDisplayLines()
+int IconWidget::numDisplayLines() const
 {
     return d->numDisplayLines;
 }
