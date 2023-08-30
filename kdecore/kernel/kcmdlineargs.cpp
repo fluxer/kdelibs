@@ -135,7 +135,7 @@ KCmdLineOptions &KCmdLineOptions::add (const QByteArray &name,
 {
     d->names.append(name);
     d->descriptions.append(description);
-    d->defaults.append(QString::fromUtf8(defaultValue));
+    d->defaults.append(QString::fromUtf8(defaultValue.constData(), defaultValue.size()));
     return *this;
 }
 

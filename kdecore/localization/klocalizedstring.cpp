@@ -154,7 +154,7 @@ QString KLocalizedStringPrivate::toString(const KLocale *locale) const
     // Check whether plural argument has been supplied, if message has plural.
     if (!plural.isEmpty() && !numberSet)
         kDebug(173) << QString::fromLatin1("Plural argument to message {%1} not supplied before conversion.")
-                              .arg(shortenMessage(QString::fromUtf8(msg)));
+                              .arg(shortenMessage(QString::fromUtf8(msg.constData(), msg.size())));
 
     // Get raw translation.
     QString rawtrans, lang;
@@ -176,18 +176,18 @@ QString KLocalizedStringPrivate::toString(const KLocale *locale) const
     // Substitute placeholders in ordinary translation.
     QString finalstr = substituteSimple(rawtrans);
     // Post-format ordinary translation.
-    return postFormat(finalstr, lang, QString::fromLatin1(ctxt));
+    return postFormat(finalstr, lang, QString::fromLatin1(ctxt.constData(), ctxt.size()));
 }
 
 QString KLocalizedStringPrivate::selectForEnglish () const
 {
     if (!plural.isEmpty()) {
         if (number == 1) {
-            return QString::fromUtf8(msg);
+            return QString::fromUtf8(msg.constData(), msg.size());
         }
-        return QString::fromUtf8(plural);
+        return QString::fromUtf8(plural.constData(), plural.size());
     }
-    return QString::fromUtf8(msg);
+    return QString::fromUtf8(msg.constData(), msg.size());
 }
 
 QString KLocalizedStringPrivate::substituteSimple(const QString &trans,
