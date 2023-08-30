@@ -38,8 +38,13 @@ class ItemBackgroundPrivate
 public:
     ItemBackgroundPrivate(ItemBackground *parent)
         : q(parent),
-          target(0)
-    {}
+        target(nullptr),
+        opacity(1.0),
+        fading(false),
+        fadeIn(false),
+        immediate(false)
+    {
+    }
 
     void animationUpdate(qreal progress);
     void targetDestroyed(QObject*);
@@ -66,10 +71,6 @@ ItemBackground::ItemBackground(QGraphicsWidget *parent)
     d->anim = new QPropertyAnimation(this, "animationUpdate", this);
     d->anim->setStartValue(0);
     d->anim->setEndValue(1);
-    d->opacity = 1;
-    d->fading = false;
-    d->fadeIn = false;
-    d->immediate = false;
 
     d->frameSvg->setImagePath("widgets/viewitem");
     d->frameSvg->setEnabledBorders(Plasma::FrameSvg::AllBorders);
