@@ -155,7 +155,7 @@ static const TransKey g_rgQtToSymX[] =
     { Qt::Key_Return,     XK_KP_Enter },
 
     // All of the stuff below really has to match qkeymapper_x11.cpp in Katie!s
-    { Qt::Key_Clear,  XF86XK_Clear },
+    { Qt::Key_Clear,   XF86XK_Clear },
     { Qt::Key_Select,  XF86XK_Select },
 };
 
@@ -259,12 +259,12 @@ bool initializeMods()
 #endif
 
     // Check if hyper overlaps with super or meta or alt
-    if (g_hyper_mask&(g_super_mask|g_meta_mask|g_alt_mask)) {
+    if (g_hyper_mask & (g_super_mask | g_meta_mask | g_alt_mask)) {
 #ifdef KKEYSERVER_DEBUG
         kDebug() << "Hyper conflicts with super, meta or alt.";
 #endif
         // Remove the conflicting masks
-        g_hyper_mask &= ~(g_super_mask|g_meta_mask|g_alt_mask);
+        g_hyper_mask &= ~(g_super_mask | g_meta_mask | g_alt_mask);
     }
 
     // Check if super overlaps with meta or alt
@@ -278,7 +278,7 @@ bool initializeMods()
 
 
     // Check if meta overlaps with alt
-    if (g_meta_mask|g_alt_mask) {
+    if (g_meta_mask | g_alt_mask) {
 #ifdef KKEYSERVER_DEBUG
         kDebug() << "Meta conflicts with alt.";
 #endif
@@ -325,7 +325,7 @@ bool initializeMods()
     g_rgX11ModInfo[2].modX = g_alt_mask;
     g_rgX11ModInfo[3].modX = g_meta_mask;
 
-    XFreeModifiermap( xmk );
+    XFreeModifiermap(xmk);
     g_bInitializedMods = true;
 
     return true;
@@ -473,7 +473,6 @@ bool keyQtToModX(int modQt, uint *modX)
 
     *modX = 0;
     for (int i = 0; i < 4; i++) {
-
         if (modQt & g_rgX11ModInfo[i].modQt) {
             if (g_rgX11ModInfo[i].modX) {
                 *modX |= g_rgX11ModInfo[i].modX;
@@ -501,7 +500,6 @@ bool modXToQt(uint modX, int *modQt)
     }
     return true;
 }
-
 
 bool codeXToSym(uchar codeX, uint modX, uint *sym)
 {
@@ -534,12 +532,12 @@ bool xEventToQt(XEvent *e, int *keyQt)
 
     KeySym keySym;
     char buffer[16];
-    XLookupString( (XKeyEvent*) e, buffer, 15, &keySym, 0 );
+    XLookupString((XKeyEvent*)e, buffer, 15, &keySym, 0 );
     uint keySymX = (uint)keySym;
 
     // If numlock is active and a keypad key is pressed, XOR the SHIFT state.
     //  e.g., KP_4 => Shift+KP_Left, and Shift+KP_4 => KP_Left.
-    if( e->xkey.state & modXNumLock() ) {
+    if (e->xkey.state & modXNumLock()) {
 #ifdef HAVE_XKB
         uint sym = XkbKeycodeToKeysym(QX11Info::display(), keyCodeX, 0, 0);
 #else
@@ -575,6 +573,5 @@ bool xEventToQt(XEvent *e, int *keyQt)
     *keyQt = keyCodeQt | keyModQt;
     return true;
 }
-
 
 } // end of namespace KKeyServer block
