@@ -148,7 +148,7 @@ public:
     /**
      * @return whether or not the view tracks changes to the containment
      */
-    bool trackContainmentChanges();
+    bool trackContainmentChanges() const;
 
     /**
      * @param pos the position in screen coordinates.

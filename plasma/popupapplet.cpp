@@ -142,7 +142,7 @@ void PopupApplet::setWidget(QWidget *widget)
             }
 
             if (!lay) {
-                lay = new QVBoxLayout;
+                lay = new QVBoxLayout();
                 dialog->setLayout(lay);
             }
 

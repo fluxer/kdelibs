@@ -404,7 +404,7 @@ void View::setTrackContainmentChanges(bool trackChanges)
     d->trackChanges = trackChanges;
 }
 
-bool View::trackContainmentChanges()
+bool View::trackContainmentChanges() const
 {
     return d->trackChanges;
 }

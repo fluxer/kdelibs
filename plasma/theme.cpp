@@ -176,11 +176,11 @@ public:
     QString themeVersion;
     QString themeMetadataPath;
 
-    bool isDefault : 1;
-    bool useGlobal : 1;
-    bool hasWallpapers : 1;
-    bool cacheTheme : 1;
-    bool useNativeWidgetStyle :1;
+    bool isDefault;
+    bool useGlobal;
+    bool hasWallpapers;
+    bool cacheTheme;
+    bool useNativeWidgetStyle;
 };
 
 PackageStructure::Ptr ThemePrivate::packageStructure(0);
