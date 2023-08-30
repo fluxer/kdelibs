@@ -27,16 +27,17 @@ using namespace KParts;
 class KParts::EventPrivate
 {
 public:
-    EventPrivate( const char *eventName ) :
-        m_eventName(eventName)
+    EventPrivate(const char *eventName)
+        : m_eventName(eventName)
     {
     }
+
     const char* m_eventName;
 };
 
-Event::Event( const char *eventName )
- : QEvent( (QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC) )
- , d( new EventPrivate(eventName) )
+Event::Event(const char *eventName)
+    : QEvent((QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC))
+    , d(new EventPrivate(eventName))
 {
 }
 
@@ -47,33 +48,32 @@ Event::~Event()
 
 const char *Event::eventName() const
 {
-  return d->m_eventName;
+    return d->m_eventName;
 }
 
-bool Event::test( const QEvent *event )
+bool Event::test(const QEvent *event)
 {
-  if ( !event )
-    return false;
-
-  return ( event->type() == (QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC ) );
+    if (!event) {
+        return false;
+    }
+    return (event->type() == (QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC));
 }
 
-bool Event::test( const QEvent *event, const char *name )
+bool Event::test(const QEvent *event, const char *name)
 {
-  if ( !test( event ) )
-    return false;
-
-  return ( strcmp( name, ((Event*)event)->eventName() ) == 0 );
+    if (!test(event)) {
+        return false;
+    }
+    return (qstrcmp(name, ((Event*)event)->eventName()) == 0);
 }
 
 
 /////// GUIActivateEvent ////////
-
 class KParts::GUIActivateEventPrivate
 {
 public:
-    GUIActivateEventPrivate( bool activated )
-        : m_bActivated( activated )
+    GUIActivateEventPrivate(bool activated)
+        : m_bActivated(activated)
     {
     }
     static const char *s_strGUIActivateEvent;
@@ -82,9 +82,9 @@ public:
 
 const char *GUIActivateEventPrivate::s_strGUIActivateEvent = "KParts/GUIActivate";
 
-GUIActivateEvent::GUIActivateEvent( bool activated ) :
-    Event( GUIActivateEventPrivate::s_strGUIActivateEvent ),
-    d( new GUIActivateEventPrivate(activated) )
+GUIActivateEvent::GUIActivateEvent(bool activated)
+    : Event(GUIActivateEventPrivate::s_strGUIActivateEvent),
+    d(new GUIActivateEventPrivate(activated))
 {
 }
 
@@ -98,8 +98,7 @@ bool GUIActivateEvent::activated() const
     return d->m_bActivated;
 }
 
-bool GUIActivateEvent::test( const QEvent *event )
+bool GUIActivateEvent::test(const QEvent *event)
 {
-    return Event::test( event, GUIActivateEventPrivate::s_strGUIActivateEvent );
+    return Event::test(event, GUIActivateEventPrivate::s_strGUIActivateEvent);
 }
-

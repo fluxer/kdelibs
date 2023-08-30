@@ -40,10 +40,10 @@ class Part;
  */
 class KPARTS_EXPORT Factory : public KPluginFactory
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  Factory( QObject *parent = 0 );
-  virtual ~Factory();
+    Factory(QObject *parent = nullptr);
+    virtual ~Factory();
 
     /**
      * Creates a part.
@@ -72,7 +72,8 @@ public:
      * important for reference counting, and allows unloading the
      * library automatically once all its objects have been destroyed.
      */
-     Part *createPart( QWidget *parentWidget = 0, QObject *parent = 0, const char *classname = "KParts::Part", const QStringList &args = QStringList() );
+    Part* createPart(QWidget *parentWidget = nullptr, QObject *parent = nullptr,
+                     const char *classname = "KParts::Part", const QStringList &args = QStringList());
 
      /**
       * If you have a part contained in a shared library you might want to query
@@ -92,7 +93,6 @@ public:
      static KComponentData partComponentDataFromLibrary(const QString &libraryName);
 
 protected:
-
     /**
      * Reimplement this method in your implementation to create the Part.
      *
@@ -115,19 +115,16 @@ protected:
      *
      * @returns the newly created part.
      */
-    virtual Part *createPartObject( QWidget *parentWidget = 0, QObject *parent = 0, const char *classname = "KParts::Part", const QStringList &args = QStringList() ) = 0;
+    virtual Part* createPartObject(QWidget *parentWidget = nullptr, QObject *parent = nullptr,
+                                   const char *classname = "KParts::Part", const QStringList &args = QStringList()) = 0;
 
     /**
      * Reimplemented from KPluginFactory. Calls createPart()
      */
-    virtual QObject *createObject( QObject *parent = 0, const char *classname = "QObject", const QStringList &args = QStringList() );
-
+    virtual QObject* createObject(QObject *parent = nullptr,
+                                  const char *classname = "QObject", const QStringList &args = QStringList());
 };
 
 }
-
-/*
- * vim: et sw=4
- */
 
 #endif

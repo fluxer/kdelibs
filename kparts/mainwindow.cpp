@@ -42,12 +42,9 @@ class MainWindowPrivate
 {
 public:
     MainWindowPrivate()
-        : m_activePart(0),
-          m_bShellGUIActivated(false),
-          m_helpMenu(0)
-    {
-    }
-    ~MainWindowPrivate()
+        : m_activePart(nullptr),
+        m_bShellGUIActivated(false),
+        m_helpMenu(nullptr)
     {
     }
 
@@ -57,18 +54,19 @@ public:
 };
 }
 
-MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
-    : KXmlGuiWindow( parent, f ), d(new MainWindowPrivate())
+MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags f)
+    : KXmlGuiWindow(parent, f),
+    d(new MainWindowPrivate())
 {
 }
 
 
 MainWindow::~MainWindow()
 {
-  delete d;
+    delete d;
 }
 
-void MainWindow::createGUI( Part * part )
+void MainWindow::createGUI(Part *part)
 {
 #if 0
   kDebug() << "part=" << part
@@ -77,9 +75,9 @@ void MainWindow::createGUI( Part * part )
 #endif
   KXMLGUIFactory *factory = guiFactory();
 
-  assert( factory );
+  assert(factory);
 
-  if ( d->m_activePart )
+  if (d->m_activePart)
   {
 #if 0
     kDebug() << "deactivating GUI for" << d->m_activePart

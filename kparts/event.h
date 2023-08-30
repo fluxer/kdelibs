@@ -37,15 +37,15 @@ class EventPrivate;
 class KPARTS_EXPORT Event : public QEvent
 {
 public:
-  Event( const char *eventName );
-  ~Event();
-  const char *eventName() const;
+    Event(const char *eventName);
+    ~Event();
+    const char *eventName() const;
 
-  static bool test( const QEvent *event );
-  static bool test( const QEvent *event, const char *name );
+    static bool test(const QEvent *event);
+    static bool test(const QEvent *event, const char *name);
 
 private:
-  EventPrivate * const d;
+    EventPrivate * const d;
 };
 
 class GUIActivateEventPrivate;
@@ -58,15 +58,15 @@ class GUIActivateEventPrivate;
 class KPARTS_EXPORT GUIActivateEvent : public Event
 {
 public:
-  GUIActivateEvent( bool activated );
-  ~GUIActivateEvent();
+    GUIActivateEvent(bool activated);
+    ~GUIActivateEvent();
 
-  bool activated() const;
+    bool activated() const;
 
-  static bool test( const QEvent *event );
+    static bool test(const QEvent *event);
 
 private:
-  GUIActivateEventPrivate * const d;
+    GUIActivateEventPrivate * const d;
 };
 
 } // namespace
