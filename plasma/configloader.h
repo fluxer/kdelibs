@@ -113,12 +113,12 @@ public:
      * @param key the configuration key to find
      * @return the associated KConfigSkeletonItem, or 0 if none
      */
-    KConfigSkeletonItem *findItemByGroup(const QString &group, const QString &key);
+    KConfigSkeletonItem *findItemByGroup(const QString &group, const QString &key) const;
 
     /**
      * Returns the property (variantized value) of the named item
      */
-    QVariant property(const QString &name);
+    QVariant property(const QString &name) const;
 
     /**
      * Check to see if a group exists
