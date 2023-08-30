@@ -190,7 +190,7 @@ QMimeData * AbstractRunner::mimeDataForMatch(const QueryMatch *match)
     return 0;
 }
 
-bool AbstractRunner::hasRunOptions()
+bool AbstractRunner::hasRunOptions() const
 {
     return d->hasRunOptions;
 }

@@ -149,7 +149,7 @@ class PLASMA_EXPORT AbstractRunner : public QObject
          * what happens when run or one of the actions created in match
          * is called, the runner should return true
          */
-        bool hasRunOptions();
+        bool hasRunOptions() const;
 
         /**
          * If hasRunOptions() returns true, this method may be called to get
