@@ -17,22 +17,21 @@
    Boston, MA 02110-1301, USA.
 */
 #include "kpassworddialog.h"
+#include "kcombobox.h"
+#include "kconfig.h"
+#include "kiconloader.h"
+#include "klineedit.h"
+#include "klocale.h"
+#include "kdebug.h"
+#include "kconfiggroup.h"
+#include "ktitlewidget.h"
+#include "kpixmapwidget.h"
 
 #include <QCheckBox>
-#include <QLabel>
 #include <QLayout>
 #include <QTextDocument>
 #include <QTimer>
 #include <QDesktopWidget>
-
-#include <kcombobox.h>
-#include <kconfig.h>
-#include <kiconloader.h>
-#include <klineedit.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kconfiggroup.h>
-#include <ktitlewidget.h>
 
 #include "ui_kpassworddialog.h"
 
@@ -43,7 +42,7 @@ public:
     KPasswordDialogPrivate(KPasswordDialog *q)
         : q(q),
           userEditCombo(0),
-          pixmapLabel(0),
+          pixmapWidget(0),
           commentRow(0)
     {}
 
@@ -58,7 +57,7 @@ public:
     Ui_KPasswordDialog ui;
     QMap<QString,QString> knownLogins;
     KComboBox* userEditCombo;
-    QLabel* pixmapLabel;
+    KPixmapWidget* pixmapWidget;
     unsigned int commentRow;
 };
 
@@ -135,23 +134,23 @@ void KPasswordDialog::KPasswordDialogPrivate::init()
 
 void KPasswordDialog::setPixmap(const QPixmap &pixmap)
 {
-    if ( !d->pixmapLabel )
+    if ( !d->pixmapWidget )
     {
-        d->pixmapLabel = new QLabel( mainWidget() );
-        d->pixmapLabel->setAlignment( Qt::AlignLeft | Qt::AlignTop );
-        d->ui.hboxLayout->insertWidget( 0, d->pixmapLabel );
+        d->pixmapWidget = new KPixmapWidget( mainWidget() );
+        d->pixmapWidget->setAlignment( Qt::AlignLeft | Qt::AlignTop );
+        d->ui.hboxLayout->insertWidget( 0, d->pixmapWidget );
     }
 
-    d->pixmapLabel->setPixmap( pixmap );
+    d->pixmapWidget->setPixmap( pixmap );
 }
 
 QPixmap KPasswordDialog::pixmap() const
 {
-    if ( !d->pixmapLabel ) {
+    if ( !d->pixmapWidget ) {
         return QPixmap();
     }
 
-    return *d->pixmapLabel->pixmap();
+    return d->pixmapWidget->pixmap();
 }
 
 
