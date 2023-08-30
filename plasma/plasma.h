@@ -178,8 +178,7 @@ enum IntervalAlignment {
 };
 
 enum ItemTypes {
-    AppletType = QGraphicsItem::UserType + 1,
-    LineEditType = QGraphicsItem::UserType + 2
+    AppletType = QGraphicsItem::UserType + 1
 };
 
 /**
