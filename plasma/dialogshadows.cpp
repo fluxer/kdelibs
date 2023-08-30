@@ -49,8 +49,6 @@ public:
     void freeX11Pixmaps();
     void clearPixmaps();
     void setupPixmaps();
-    void initPixmap(const QString &element);
-    KPixmap initEmptyPixmap(const QSize &size);
     void updateShadow(const QWidget *window, Plasma::FrameSvg::EnabledBorders);
     void clearShadow(const QWidget *window);
     void updateShadows();
@@ -131,38 +129,27 @@ void DialogShadowsPrivate::updateShadows()
     }
 }
 
-void DialogShadowsPrivate::initPixmap(const QString &element)
-{
-    m_shadowPixmaps << KPixmap(q->pixmap(element));
-}
-
-KPixmap DialogShadowsPrivate::initEmptyPixmap(const QSize &size)
-{
-    return KPixmap(size);
-}
-
 void DialogShadowsPrivate::setupPixmaps()
 {
     clearPixmaps();
-    initPixmap("shadow-top");
-    initPixmap("shadow-topright");
-    initPixmap("shadow-right");
-    initPixmap("shadow-bottomright");
-    initPixmap("shadow-bottom");
-    initPixmap("shadow-bottomleft");
-    initPixmap("shadow-left");
-    initPixmap("shadow-topleft");
 
-    m_emptyCornerPix = initEmptyPixmap(QSize(1,1));
-    m_emptyCornerLeftPix = initEmptyPixmap(QSize(q->elementSize("shadow-topleft").width(), 1));
-    m_emptyCornerTopPix = initEmptyPixmap(QSize(1, q->elementSize("shadow-topleft").height()));
-    m_emptyCornerRightPix = initEmptyPixmap(QSize(q->elementSize("shadow-bottomright").width(), 1));
-    m_emptyCornerBottomPix = initEmptyPixmap(QSize(1, q->elementSize("shadow-bottomright").height()));
-    m_emptyVerticalPix = initEmptyPixmap(QSize(1, q->elementSize("shadow-left").height()));
-    m_emptyHorizontalPix = initEmptyPixmap(QSize(q->elementSize("shadow-top").width(), 1));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-top")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-topright")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-right")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-bottomright")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-bottom")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-bottomleft")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-left")));
+    m_shadowPixmaps << KPixmap(q->pixmap(QString::fromLatin1("shadow-topleft")));
 
+    m_emptyCornerPix = KPixmap(QSize(1,1));
+    m_emptyCornerLeftPix = KPixmap(QSize(q->elementSize("shadow-topleft").width(), 1));
+    m_emptyCornerTopPix = KPixmap(QSize(1, q->elementSize("shadow-topleft").height()));
+    m_emptyCornerRightPix = KPixmap(QSize(q->elementSize("shadow-bottomright").width(), 1));
+    m_emptyCornerBottomPix = KPixmap(QSize(1, q->elementSize("shadow-bottomright").height()));
+    m_emptyVerticalPix = KPixmap(QSize(1, q->elementSize("shadow-left").height()));
+    m_emptyHorizontalPix = KPixmap(QSize(q->elementSize("shadow-top").width(), 1));
 }
-
 
 void DialogShadowsPrivate::setupData(Plasma::FrameSvg::EnabledBorders enabledBorders)
 {
