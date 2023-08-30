@@ -729,8 +729,8 @@ void KWindowSystem::setIcons( WId win, const QPixmap& icon, const QPixmap& miniI
     NETWinInfo info( QX11Info::display(), win, QX11Info::appRootWindow(), 0 );
     QImage img = icon.toImage().convertToFormat( QImage::Format_ARGB32 );
     NETIcon ni;
-    ni.size.width = img.size().width();
-    ni.size.height = img.size().height();
+    ni.size.width = img.width();
+    ni.size.height = img.height();
     ni.data = (unsigned char *) img.bits();
     info.setIcon( ni, true );
     if ( miniIcon.isNull() )
@@ -738,8 +738,8 @@ void KWindowSystem::setIcons( WId win, const QPixmap& icon, const QPixmap& miniI
     img = miniIcon.toImage().convertToFormat( QImage::Format_ARGB32 );
     if ( img.isNull() )
         return;
-    ni.size.width = img.size().width();
-    ni.size.height = img.size().height();
+    ni.size.width = img.width();
+    ni.size.height = img.height();
     ni.data = (unsigned char *) img.bits();
     info.setIcon( ni, false );
 }

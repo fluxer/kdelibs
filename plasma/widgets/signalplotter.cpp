@@ -633,8 +633,8 @@ void SignalPlotter::drawWidget(QPainter *p, uint w, uint height, int horizontalS
         h -= fontheight;
     }
     if (d->backgroundPixmap.isNull() ||
-        (uint)d->backgroundPixmap.size().height() != height ||
-        (uint)d->backgroundPixmap.size().width() != w) {
+        (uint)d->backgroundPixmap.height() != height ||
+        (uint)d->backgroundPixmap.width() != w) {
         // recreate on resize etc
         d->backgroundPixmap = QPixmap(w, height);
         d->backgroundPixmap.fill(Qt::transparent);

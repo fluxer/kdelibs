@@ -879,8 +879,8 @@ void KStatusNotifierItemPrivate::minimizeRestore(bool show)
 KDbusImageStruct KStatusNotifierItemPrivate::imageToStruct(const QImage &image)
 {
     KDbusImageStruct icon;
-    icon.width = image.size().width();
-    icon.height = image.size().height();
+    icon.width = image.width();
+    icon.height = image.height();
     if (image.format() == QImage::Format_ARGB32) {
         icon.data = QByteArray((const char*)image.constBits(), image.byteCount());
     } else {
