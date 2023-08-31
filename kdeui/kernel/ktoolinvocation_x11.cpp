@@ -38,7 +38,6 @@
 #include "kconfiggroup.h"
 #include "kmimetypetrader.h"
 #include "kurl.h"
-#include <QProcess>
 
 static QStringList splitEmailAddressList( const QString & aStr )
 {
@@ -206,11 +205,12 @@ void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
     QString error;
     // TODO this should check if cmd has a .desktop file, and use data from it, together
     // with sending more ASN data
-    if (kdeinitExec(cmd, cmdTokens, &error, startup_id ))
-    {
-      KMessage::message(KMessage::Error,
-                      i18n("Could not launch the mail client:\n\n%1", error),
-                      i18n("Could not launch Mail Client"));
+    if (kdeinitExec(cmd, cmdTokens, &error, startup_id) != 0) {
+        KMessage::message(
+            KMessage::Error,
+            i18n("Could not launch the mail client:\n\n%1", error),
+            i18n("Could not launch Mail Client")
+        );
     }
 }
 
@@ -222,76 +222,32 @@ void KToolInvocation::invokeBrowser(const QString &url, const QByteArray& startu
 
     // This method should launch a webbrowser, preferably without doing a mimetype
     // check first, like KRun (i.e. kde-open) would do.
-
-    // In a KDE session, honour BrowserApplication if set, otherwise use preferred app for text/html if any,
-    // otherwise xdg-open, otherwise kde-open (which does a mimetype check first though).
-
-    // Outside KDE, call xdg-open if present, otherwise fallback to the above logic.
-
-    QString exe; // the binary we are going to launch.
-
-    const QString xdg_open = KStandardDirs::findExe(QString::fromLatin1("xdg-open"));
-    static const bool kde_full_session = (QProcess::execute(QString::fromLatin1("kcheckrunning")) == 0);
-    if (!kde_full_session) {
-        exe = xdg_open;
-    }
-
-    if (exe.isEmpty()) {
-        // We're in a KDE session (or there's no xdg-open installed)
-        KConfigGroup config(KGlobal::config(), "General");
-        const QString browserApp = config.readPathEntry("BrowserApplication", QString());
-        if (!browserApp.isEmpty()) {
-            exe = browserApp;
-            if (exe.startsWith(QLatin1Char('!'))) {
-                exe = exe.mid(1); // Literal command
-                QStringList cmdTokens = KShell::splitArgs(exe);
-                exe = cmdTokens.takeFirst();
-                args = cmdTokens + args;
-            } else {
-                // desktop file ID
-                KService::Ptr service = KService::serviceByStorageId(exe);
-                if (service) {
-                    kDebug() << "Starting service" << service->entryPath();
-                    if (startServiceByDesktopPath(service->entryPath(), args,
-                            &error, startup_id)) {
-                        KMessage::message(KMessage::Error,
-                                          // TODO: i18n("Could not launch %1:\n\n%2", exe, error),
-                                          i18n("Could not launch the browser:\n\n%1", error),
-                                          i18n("Could not launch Browser"));
-                    }
-                    return;
-                }
-            }
-        } else {
-            const KService::Ptr htmlApp = KMimeTypeTrader::self()->preferredService(QLatin1String("text/html"));
-            if (htmlApp) {
-                QString error;
-                int err = startServiceByDesktopPath(htmlApp->entryPath(), url, &error, startup_id);
-                if (err != 0) {
-                    KMessage::message(KMessage::Error,
-                                      // TODO: i18n("Could not launch %1:\n\n%2", htmlApp->exec(), error),
-                                      i18n("Could not launch the browser:\n\n%1", error),
-                                      i18n("Could not launch Browser"));
-                } else { // success
-                    return;
-                }
-            } else {
-                exe = xdg_open;
-            }
+    const KService::Ptr htmlApp = KMimeTypeTrader::self()->preferredService(QLatin1String("text/html"));
+    if (htmlApp) {
+        QString error;
+        const int err = startServiceByDesktopPath(htmlApp->entryPath(), url, &error, startup_id);
+        if (err != 0) {
+            KMessage::message(
+                KMessage::Error,
+                // TODO: i18n("Could not launch %1:\n\n%2", htmlApp->exec(), error),
+                i18n("Could not launch the browser:\n\n%1", error),
+                i18n("Could not launch Browser"));
         }
+        return;
     }
 
+    QString exe = KStandardDirs::findExe(QString::fromLatin1("kde-open"));
     if (exe.isEmpty()) {
-        exe = QString::fromLatin1("kde-open"); // it's from kdebase-runtime, it has to be there.
+        exe = KStandardDirs::findExe(QString::fromLatin1("xdg-open"));
     }
 
-    kDebug() << "Using" << exe << "to open" << url;
-    if (kdeinitExec(exe, args, &error, startup_id ))
-    {
-        KMessage::message(KMessage::Error,
-                          // TODO: i18n("Could not launch %1:\n\n%2", exe, error),
-                          i18n("Could not launch the browser:\n\n%1", error),
-                          i18n("Could not launch Browser"));
+    if (kdeinitExec(exe, args, &error, startup_id) != 0) {
+        KMessage::message(
+            KMessage::Error,
+            // TODO: i18n("Could not launch %1:\n\n%2", exe, error),
+            i18n("Could not launch the browser:\n\n%1", error),
+            i18n("Could not launch Browser")
+        );
     }
 }
 

@@ -203,8 +203,7 @@ void KProtocolInfo::selectServiceOrHelper(const QString &protocol, KProtocolInfo
     //  A) if the .protocol file says "launch an application", then the new-style handler-app has priority
     //  B) but if the .protocol file is for a kioslave (e.g. kio_http) then this has priority over
     //     firefox or chromium saying x-scheme-handler/http. Gnome people want to send all HTTP urls
-    //     to a webbrowser, but we want mimetype-determination-in-calling-application by default
-    //     (the user can configure a BrowserApplication though)
+    //     to a webbrowser, but mimetype-determination-in-calling-application by default is done here
 
     const KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
     const KService::Ptr service = KMimeTypeTrader::self()->preferredService(QString::fromLatin1("x-scheme-handler/") + protocol);

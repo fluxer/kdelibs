@@ -1038,7 +1038,6 @@ void KRun::KRunPrivate::init(const KUrl& url, QWidget* window, mode_t mode, bool
     m_runExecutables = true;
     m_window = window;
     m_asn = asn;
-    q->setEnableExternalBrowser(true);
 
     // Start the timer. This means we will return to the event
     // loop and do initialization afterwards.
@@ -1068,11 +1067,7 @@ void KRun::init()
         d->m_bIsLocalFile = true;
     }
 
-    if (!d->m_externalBrowser.isEmpty() && d->m_strURL.protocol().startsWith(QLatin1String("http"))) {
-        if (d->runExecutable(d->m_externalBrowser)) {
-            return;
-        }
-    } else if (d->m_bIsLocalFile) {
+    if (d->m_bIsLocalFile) {
         if (d->m_mode == 0) {
             KDE_struct_stat buff;
             if (KDE::stat(d->m_strURL.toLocalFile(), &buff) == -1) {
@@ -1094,13 +1089,7 @@ void KRun::init()
         KMimeType::Ptr mime = KMimeType::findByUrl(d->m_strURL, d->m_mode, true /*local*/);
         assert(mime);
         kDebug(7010) << "MIME TYPE is " << mime->name();
-        if (!d->m_externalBrowser.isEmpty() &&
-            (mime->is(QLatin1String("text/html")) ||
-             mime->is(QLatin1String("application/xhtml+xml")))) {
-            if (d->runExecutable(d->m_externalBrowser)) {
-                return;
-            }
-        } else if (mime->isDefault() && !QFileInfo(d->m_strURL.toLocalFile()).isReadable()) {
+        if (mime->isDefault() && !QFileInfo(d->m_strURL.toLocalFile()).isReadable()) {
             // Unknown mimetype because the file is unreadable, no point in showing an open-with dialog (#261002)
             d->m_showingDialog = true;
             error(KIO::buildErrorString(KIO::ERR_ACCESS_DENIED, d->m_strURL.prettyUrl()));
@@ -1489,16 +1478,6 @@ bool KRun::autoDelete() const
 void KRun::setAutoDelete(bool b)
 {
     d->m_bAutoDelete = b;
-}
-
-void KRun::setEnableExternalBrowser(bool b)
-{
-    if (b) {
-        d->m_externalBrowser = KConfigGroup(KGlobal::config(), "General").readEntry("BrowserApplication");
-    }
-    else {
-        d->m_externalBrowser.clear();
-    }
 }
 
 void KRun::setPreferredService(const QString& desktopEntryName)

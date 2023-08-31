@@ -95,7 +95,6 @@ public:
     bool m_runExecutables;
 
     QString m_preferredService;
-    QString m_externalBrowser;
     QString m_localPath;
     QString m_suggestedFileName;
     QPointer <QWidget> m_window;

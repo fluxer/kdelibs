@@ -156,14 +156,6 @@ public:
     void setRunExecutables(bool b);
 
     /**
-     * Sets whether the external webbrowser setting should be honoured.
-     * This is enabled by default.
-     * This should only be disabled in webbrowser applications.
-     * @param b whether to enable the external browser or not.
-     */
-    void setEnableExternalBrowser(bool b);
-
-    /**
      * Sets the file name to use in the case of downloading the file to a tempfile
      * in order to give to a non-url-aware application. Some apps rely on the extension
      * to determine the mimetype of the file. Usually the file name comes from the URL,
