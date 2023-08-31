@@ -68,7 +68,7 @@ protected Q_SLOTS:
      * Reimplement if your mainwindow has a complex statusbar
      * (with several items)
      */
-    virtual void slotSetStatusBarText( const QString & );
+    virtual void slotSetStatusBarText(const QString &text);
 
     /**
      * Rebuilds the GUI after KEditToolbar changed the toolbar layout.

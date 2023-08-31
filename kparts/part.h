@@ -58,35 +58,33 @@ class PartBasePrivate;
 class KPARTS_EXPORT PartBase : virtual public KXMLGUIClient
 {
     KPARTS_DECLARE_PRIVATE(PartBase)
-
 public:
+    /**
+     *  Constructor.
+     */
+    PartBase();
 
-  /**
-   *  Constructor.
-   */
-  PartBase();
-
-  /**
-   *  Destructor.
-   */
-  virtual ~PartBase();
-
-protected:
-  /**
-   * Set the componentData(KComponentData) for this part.
-   *
-   * Call this *first* in the inherited class constructor,
-   * because it loads the i18n catalogs.
-   */
-  virtual void setComponentData(const KComponentData &componentData);
+    /**
+     *  Destructor.
+     */
+    virtual ~PartBase();
 
 protected:
-  PartBase(PartBasePrivate &dd);
+    /**
+     * Set the componentData(KComponentData) for this part.
+     *
+     * Call this *first* in the inherited class constructor,
+     * because it loads the i18n catalogs.
+     */
+    virtual void setComponentData(const KComponentData &componentData);
 
-  PartBasePrivate *d_ptr;
+protected:
+    PartBase(PartBasePrivate &dd);
+
+    PartBasePrivate *d_ptr;
 
 private:
-  Q_DISABLE_COPY(PartBase)
+    Q_DISABLE_COPY(PartBase)
 };
 
 /**
@@ -117,17 +115,14 @@ private:
 class KPARTS_EXPORT Part : public QObject, public PartBase
 {
     Q_OBJECT
-
     KPARTS_DECLARE_PRIVATE(Part)
-
 public:
-
     /**
      *  Constructor.
      *
      *  @param parent Parent object of the part.
      */
-    explicit Part( QObject *parent = 0 );
+    explicit Part(QObject *parent = nullptr);
 
     /**
      *  Destructor.
@@ -145,7 +140,7 @@ public:
      * This method is not recommended since creating the widget with the correct
      * parent is simpler anyway.
      */
-    virtual void embed( QWidget * parentWidget );
+    virtual void embed(QWidget *parentWidget);
 
     /**
      * @return The widget defined by this part, set by setWidget().
@@ -180,12 +175,12 @@ public:
      * @param widget the part widget being clicked - usually the same as widget(), except in koffice.
      * @param globalPos the mouse coordinates in global coordinates
      */
-    virtual Part *hitTest( QWidget *widget, const QPoint &globalPos );
+    virtual Part* hitTest(QWidget *widget, const QPoint &globalPos);
 
     /**
      *  @param selectable Indicates whether the part is selectable or not.
      */
-    virtual void setSelectable( bool selectable );
+    virtual void setSelectable(bool selectable);
 
     /**
      *  Returns whether the part is selectable or not.
@@ -206,12 +201,12 @@ Q_SIGNALS:
      * Emitted by the part, to set the caption of the window(s)
      * hosting this part
      */
-    void setWindowCaption( const QString & caption );
+    void setWindowCaption(const QString &caption);
     /**
      * Emitted by the part, to set a text in the statusbar of the window(s)
      * hosting this part
      */
-    void setStatusBarText( const QString & text );
+    void setStatusBarText(const QString &text);
 
 protected:
     /**
@@ -219,12 +214,12 @@ protected:
      *
      * Call this in the Part-inherited class constructor.
      */
-    virtual void setWidget( QWidget * widget );
+    virtual void setWidget(QWidget *widget);
 
     /**
      * @internal
      */
-    virtual void customEvent( QEvent *event );
+    virtual void customEvent(QEvent *event);
 
     /**
      * Convenience method which is called when the Part received a
@@ -232,13 +227,13 @@ protected:
      * Reimplement this if you don't want to reimplement event and
      * test for the event yourself or even install an event filter.
      */
-    virtual void guiActivateEvent( GUIActivateEvent *event );
+    virtual void guiActivateEvent(GUIActivateEvent *event);
 
     /**
      * Convenience method for KXMLGUIFactory::container.
      * @return a container widget owned by the Part's GUI.
      */
-    QWidget *hostContainer( const QString &containerName );
+    QWidget* hostContainer(const QString &containerName);
 
 protected Q_SLOTS:
     /**
@@ -272,7 +267,7 @@ class KPARTS_EXPORT OpenUrlArguments
 public:
     OpenUrlArguments();
     OpenUrlArguments(const OpenUrlArguments &other);
-    OpenUrlArguments &operator=( const OpenUrlArguments &other);
+    OpenUrlArguments &operator=(const OpenUrlArguments &other);
     ~OpenUrlArguments();
 
     /**
@@ -354,17 +349,14 @@ private:
 class KPARTS_EXPORT ReadOnlyPart : public Part
 {
     Q_OBJECT
-
-    Q_PROPERTY( KUrl url READ url )
-
+    Q_PROPERTY(KUrl url READ url)
     KPARTS_DECLARE_PRIVATE(ReadOnlyPart)
-
 public:
     /**
      * Constructor
      * See also Part for the setXXX methods to call.
      */
-    explicit ReadOnlyPart( QObject *parent = 0 );
+    explicit ReadOnlyPart(QObject *parent = nullptr);
 
     /**
      * Destructor
@@ -378,7 +370,7 @@ public:
      * signals emitted by this class, and/or those emitted by
      * the Job given by started.
      */
-    void setProgressInfoEnabled( bool show );
+    void setProgressInfoEnabled(bool show);
 
     /**
      * Returns whether the part shows the progress info dialog used by internal
@@ -395,7 +387,7 @@ public Q_SLOTS:
      * If you reimplement it, don't forget to set the caption, usually with
      * emit setWindowCaption( url.prettyUrl() );
      */
-    virtual bool openUrl( const KUrl &url );
+    virtual bool openUrl(const KUrl &url);
 
 public:
     /**
@@ -419,10 +411,6 @@ public:
      * Sets the arguments to use for the next openUrl call.
      */
     void setArguments(const OpenUrlArguments& arguments);
-    // TODO to avoid problems with the case where the loading fails, this could also be a openUrl() argument (heavy porting!).
-    // However we need to have setArguments in any case for updated made by the part, see e.g. KHTMLPart::openUrl.
-    // Well, maybe we should have setArguments (affects next openurl call) and updateArguments?
-
 
     /**
      * @return the arguments that were used to open this URL.
@@ -440,7 +428,7 @@ public:
      * every ReadOnlyPart has a URL (see url()), so this simply sets it.
      * @return true if the part supports progressive loading and accepts data, false otherwise.
      */
-    bool openStream( const QString& mimeType, const KUrl& url );
+    bool openStream(const QString &mimeType, const KUrl &url);
 
     /**
      * Send some data to the part. openStream must have been called previously,
@@ -448,7 +436,7 @@ public:
      * @return true if the data was accepted by the part. If false is returned,
      * the application should stop sending data, and doesn't have to call closeStream.
      */
-    bool writeStream( const QByteArray& data );
+    bool writeStream(const QByteArray &data);
 
     /**
      * Terminate the sending of data to the part.
@@ -464,14 +452,14 @@ private: // Makes no sense for inherited classes to call those. But make it prot
      * Parts which implement progress loading should check the @p mimeType
      * parameter, and return true if they can accept a data stream of that type.
      */
-    virtual bool doOpenStream( const QString& /*mimeType*/ ) { return false; }
+    virtual bool doOpenStream(const QString & /*mimeType*/) { return false; }
     /**
      * Receive some data from the hosting application.
      * In this method the part should attempt to display the data progressively.
      * With some data types (text, html...) closeStream might never actually be called,
      * in the case of continuous streams. This can't happen with e.g. images.
      */
-    virtual bool doWriteStream( const QByteArray& /*data*/ ) { return false; }
+    virtual bool doWriteStream(const QByteArray &/*data*/) { return false; }
     /**
      * This is called by closeStream(), to indicate that all the data has been sent.
      * Parts should ensure that all of the data is displayed at this point.
@@ -485,7 +473,7 @@ Q_SIGNALS:
      * If using a KIO::Job, it sets the job in the signal, so that
      * progress information can be shown. Otherwise, job is 0.
      **/
-    void started( KIO::Job * );
+    void started(KIO::Job *);
 
     /**
      * Emit this when you have completed loading data.
@@ -503,13 +491,13 @@ Q_SIGNALS:
      *
      * @p pendingAction true if a pending action exists, false otherwise.
      */
-    void completed( bool pendingAction );
+    void completed(bool pendingAction);
 
     /**
      * Emit this if loading is canceled by the user or by an error.
      * @param errMsg the error message, empty if the user canceled the loading voluntarily.
      */
-    void canceled( const QString &errMsg );
+    void canceled(const QString &errMsg);
 
     /**
      * Emitted by the part when url() is about to change
@@ -521,7 +509,7 @@ Q_SIGNALS:
      * Emitted by the part when url() changes
      * @since 4.10
      */
-    void urlChanged( const KUrl & url );
+    void urlChanged(const KUrl &url);
 
 protected:
     /**
@@ -542,7 +530,7 @@ protected:
      * This is the usual behavior in 99% of the apps
      * Reimplement if you don't like it - test for event->activated() !
      */
-    virtual void guiActivateEvent( GUIActivateEvent *event );
+    virtual void guiActivateEvent(GUIActivateEvent *event);
 
     /**
      * Sets the url associated with this part.
@@ -557,7 +545,7 @@ protected:
     /**
      * Sets the local file path associated with this part.
      */
-    void setLocalFilePath( const QString &localFilePath );
+    void setLocalFilePath(const QString &localFilePath);
 
 protected:
     ReadOnlyPart(ReadOnlyPartPrivate &dd, QObject *parent);
@@ -589,15 +577,13 @@ class ReadWritePartPrivate;
 class KPARTS_EXPORT ReadWritePart : public ReadOnlyPart
 {
     Q_OBJECT
-
     KPARTS_DECLARE_PRIVATE(ReadWritePart)
-
 public:
     /**
      * Constructor
      * See parent constructor for instructions.
      */
-    explicit ReadWritePart( QObject *parent = 0 );
+    explicit ReadWritePart(QObject *parent = nullptr);
     /**
      * Destructor
      * Applications using a ReadWritePart should make sure, before
@@ -617,7 +603,7 @@ public:
      * Changes the behavior of this part to readonly or readwrite.
      * @param readwrite set to true to enable readwrite mode
      */
-    virtual void setReadWrite ( bool readwrite = true );
+    virtual void setReadWrite(bool readwrite = true);
 
     /**
      * @return true if the document has been modified.
@@ -655,19 +641,19 @@ public:
      *
      * Equivalent to promptToSave ? closeUrl() : ReadOnlyPart::closeUrl()
      */
-    virtual bool closeUrl( bool promptToSave );
+    virtual bool closeUrl(bool promptToSave);
 
     /**
      * Save the file to a new location.
      *
      * Calls save(), no need to reimplement
      */
-    virtual bool saveAs( const KUrl &url );
+    virtual bool saveAs(const KUrl &url);
 
     /**
      *  Sets the modified flag of the part.
      */
-    virtual void setModified( bool modified );
+    virtual void setModified(bool modified);
 
 Q_SIGNALS:
     /**
@@ -675,7 +661,7 @@ Q_SIGNALS:
      * set abortClosing to true, if you handled the request,
      * but for any reason don't  want to allow closing the document
      */
-    void sigQueryClose(bool *handled, bool* abortClosing);
+    void sigQueryClose(bool *handled, bool *abortClosing);
 
 public Q_SLOTS:
     /**
@@ -723,7 +709,7 @@ protected:
     virtual bool saveToUrl();
 
 private:
-    Q_PRIVATE_SLOT(d_func(), void _k_slotUploadFinished( KJob * job ))
+    Q_PRIVATE_SLOT(d_func(), void _k_slotUploadFinished(KJob * job))
 
     Q_DISABLE_COPY(ReadWritePart)
 };
