@@ -105,8 +105,8 @@ namespace KParts
       void setStatusBar( KStatusBar* status );
 
       /**
-       * Queries @p obj for a child object which inherits from this
-       * BrowserExtension class. Convenience method.
+       * Queries @p obj for a child object which inherits StatusBarExtension
+       * class. Convenience method.
        */
       static StatusBarExtension *childObject( QObject *obj );
 

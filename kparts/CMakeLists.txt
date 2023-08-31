@@ -16,7 +16,6 @@ set(kparts_LIB_SRCS
     part.cpp
     mainwindow.cpp
     event.cpp
-    browserextension.cpp
     factory.cpp
     statusbarextension.cpp
 )
@@ -58,7 +57,6 @@ install(
     part.h
     mainwindow.h
     event.h
-    browserextension.h
     factory.h
     statusbarextension.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts

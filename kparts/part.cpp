@@ -21,7 +21,6 @@
 #include "part.h"
 #include "event.h"
 #include "mainwindow.h"
-#include "browserextension.h"
 
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
@@ -374,6 +373,7 @@ void ReadOnlyPart::setUrl(const KUrl &url)
 {
     Q_D(ReadOnlyPart);
 
+    emit urlAboutToChange();
     d->m_url = url;
     emit urlChanged( url );
 }
@@ -615,11 +615,6 @@ bool ReadOnlyPart::writeStream( const QByteArray& data )
 bool ReadOnlyPart::closeStream()
 {
     return doCloseStream();
-}
-
-BrowserExtension* ReadOnlyPart::browserExtension() const
-{
-    return findChild<KParts::BrowserExtension *>();
 }
 
 void KParts::ReadOnlyPart::setArguments(const OpenUrlArguments& arguments)

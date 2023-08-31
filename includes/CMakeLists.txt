@@ -386,12 +386,10 @@ install(
 
 install(
     FILES
-    KParts/BrowserExtension
     KParts/Event
     KParts/Factory
     KParts/GUIActivateEvent
     KParts/MainWindow
-    KParts/OpenUrlEvent
     KParts/Part
     KParts/PartBase
     KParts/ReadOnlyPart

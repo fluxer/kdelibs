@@ -255,7 +255,6 @@ private:
 
 class ReadWritePart;
 class ReadOnlyPartPrivate;
-class BrowserExtension;
 class OpenUrlArgumentsPrivate;
 
 /**
@@ -417,12 +416,6 @@ public:
     virtual bool closeUrl();
 
     /**
-     * This convenience method returns the browserExtension for this part,
-     * or 0 if there isn't any.
-     */
-    BrowserExtension* browserExtension() const;
-
-    /**
      * Sets the arguments to use for the next openUrl call.
      */
     void setArguments(const OpenUrlArguments& arguments);
@@ -517,6 +510,12 @@ Q_SIGNALS:
      * @param errMsg the error message, empty if the user canceled the loading voluntarily.
      */
     void canceled( const QString &errMsg );
+
+    /**
+     * Emitted by the part when url() is about to change
+     * @since 4.24
+     */
+    void urlAboutToChange();
 
     /**
      * Emitted by the part when url() changes
