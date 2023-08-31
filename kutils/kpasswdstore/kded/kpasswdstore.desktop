@@ -9,4 +9,3 @@ X-KDE-DBus-ModuleName=kpasswdstore
 X-KDE-Kded-autoload=true
 X-KDE-Kded-load-on-demand=true
 X-KDE-Kded-phase=1
-OnlyShowIn=KDE;

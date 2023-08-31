@@ -197,32 +197,44 @@ void Kded::messageFilter(const QDBusMessage &message)
     Q_UNUSED(module);
 }
 
-static int phaseForModule(const KService::Ptr& service)
+static int phaseForModule(const KService::Ptr &service)
 {
-    const QVariant phasev = service->property("X-KDE-Kded-phase", QVariant::Int );
+    const QVariant phasev = service->property("X-KDE-Kded-phase", QVariant::Int);
     return (phasev.isValid() ? phasev.toInt() : 2);
+}
+
+static bool allowedForDesktop(const KService::Ptr &service, const QString &desktop)
+{
+    const QString only_show_in = service->property("OnlyShowIn", QVariant::String).toString();
+    kDebug(7020) << "only_show_in" << service->entryPath() << only_show_in;
+    if (only_show_in.isEmpty()) {
+        return true;
+    }
+    const QStringList only_show_in_list = only_show_in.split(QLatin1Char(';'));
+    return only_show_in_list.contains(desktop);
+}
+
+static bool excludedForDesktop(const KService::Ptr &service, const QString &desktop)
+{
+    const QString not_show_in = service->property("NotShowIn", QVariant::String).toString();
+    kDebug(7020) << "not_show_in" << service->entryPath() << not_show_in;
+    if (not_show_in.isEmpty()) {
+        return false;
+    }
+    const QStringList not_show_in_list = not_show_in.split(QLatin1Char(';'));
+    return !not_show_in_list.contains(desktop);
 }
 
 void Kded::initModules()
 {
     m_dontLoad.clear();
-    bool kde_running = !qgetenv("KDE_FULL_SESSION").isEmpty();
-    if (!kde_running) {
-        kde_running = (QProcess::execute(QString::fromLatin1("kcheckrunning")) == 0);
-    }
-    if (kde_running) {
-        // not the same user like the one running the session (most likely we're run via sudo or something)
-        const QByteArray sessionUID = qgetenv("KDE_SESSION_UID");
-        if (!sessionUID.isEmpty() && uid_t(sessionUID.toInt()) != ::getuid()) {
-            kde_running = false;
-        }
-    }
-    kDebug(7020) << "kde_running" << kde_running;
+    const QString current_desktop = QString::fromLocal8Bit(qgetenv("XDG_CURRENT_DESKTOP"));
+    kDebug(7020) << "current_desktop" << current_desktop;
 
     // Preload kded modules.
     const KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
     for (int phase = 0; phase < 2; phase++) {
-        foreach (KService::Ptr service, kdedModules) {
+        foreach (const KService::Ptr service, kdedModules) {
             const int module_phase = phaseForModule(service);
             // Should the service be loaded in this phase or later?
             if (module_phase != phase) {
@@ -231,8 +243,6 @@ void Kded::initModules()
 
             // Should the service load on startup?
             const bool autoload = isModuleAutoloaded(service);
-
-            // see ksmserver's README for description of the phases
             bool prevent_autoload = false;
             switch( module_phase ) {
                 case 0: {
@@ -240,8 +250,17 @@ void Kded::initModules()
                     break;
                 }
                 case 1: {
-                    // autoload only in KDE
-                    if (!kde_running) {
+                    // autoload only in the current desktop?
+                    if (current_desktop.isEmpty()) {
+                        prevent_autoload = true;
+                        break;
+                    }
+
+                    if (!prevent_autoload && !allowedForDesktop(service, current_desktop)) {
+                        prevent_autoload = true;
+                    }
+
+                    if (!prevent_autoload && excludedForDesktop(service, current_desktop)) {
                         prevent_autoload = true;
                     }
                     break;
