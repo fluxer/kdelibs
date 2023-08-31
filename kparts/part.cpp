@@ -42,7 +42,6 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <assert.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 
@@ -557,8 +556,8 @@ void ReadOnlyPartPrivate::_k_slotJobFinished(KJob *job)
 {
     Q_Q(ReadOnlyPart);
 
-    assert( job == m_job );
-    m_job = 0;
+    Q_ASSERT(job == m_job);
+    m_job = nullptr;
     if (job->error()) {
         emit q->canceled(job->errorString());
     } else {
@@ -594,29 +593,6 @@ void ReadOnlyPart::guiActivateEvent(GUIActivateEvent *event)
             emit setWindowCaption("");
         }
     }
-}
-
-bool ReadOnlyPart::openStream(const QString &mimeType, const KUrl &url)
-{
-    Q_D(ReadOnlyPart);
-
-    OpenUrlArguments args = d->m_arguments;
-    if (!closeUrl()) {
-        return false;
-    }
-    d->m_arguments = args;
-    setUrl(url);
-    return doOpenStream(mimeType);
-}
-
-bool ReadOnlyPart::writeStream(const QByteArray &data)
-{
-    return doWriteStream(data);
-}
-
-bool ReadOnlyPart::closeStream()
-{
-    return doCloseStream();
 }
 
 void KParts::ReadOnlyPart::setArguments(const OpenUrlArguments& arguments)
@@ -744,7 +720,7 @@ bool ReadWritePart::closeUrl()
 
 bool ReadWritePart::closeUrl(bool promptToSave)
 {
-    return promptToSave ? closeUrl() : ReadOnlyPart::closeUrl();
+    return (promptToSave ? closeUrl() : ReadOnlyPart::closeUrl());
 }
 
 bool ReadWritePart::save()
@@ -820,7 +796,7 @@ bool ReadWritePart::saveToUrl()
         setModified(false);
         emit completed();
         // if m_url is a local file there won't be a temp file -> nothing to remove
-        assert(!d->m_bTemp);
+        Q_ASSERT(!d->m_bTemp);
         d->m_saveOk = true;
         d->m_duringSaveAs = false;
         d->m_originalURL = KUrl();
@@ -986,7 +962,7 @@ void KParts::OpenUrlArguments::setMimeType(const QString& mime)
     d->mimeType = mime;
 }
 
-QMap<QString, QString> & KParts::OpenUrlArguments::metaData()
+QMap<QString, QString>& KParts::OpenUrlArguments::metaData()
 {
     return d->metaData;
 }
