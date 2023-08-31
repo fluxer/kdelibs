@@ -17,7 +17,6 @@ set(kparts_LIB_SRCS
     mainwindow.cpp
     event.cpp
     factory.cpp
-    statusbarextension.cpp
 )
 
 add_library(kparts SHARED ${kparts_LIB_SRCS})
@@ -58,6 +57,5 @@ install(
     mainwindow.h
     event.h
     factory.h
-    statusbarextension.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts
 )

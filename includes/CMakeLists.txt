@@ -394,7 +394,6 @@ install(
     KParts/PartBase
     KParts/ReadOnlyPart
     KParts/ReadWritePart
-    KParts/StatusBarExtension
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KParts
 )
 
