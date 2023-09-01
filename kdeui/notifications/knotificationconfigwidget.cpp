@@ -170,8 +170,6 @@ KNotificationConfigWidget::KNotificationConfigWidget(const QString &notification
     d->treewidget->setHeaderLabels(treeheaders);
     d->treewidget->setRootIsDecorated(false);
     d->treewidget->header()->setStretchLastSection(false);
-    d->treewidget->header()->setResizeMode(0, QHeaderView::Stretch);
-    d->treewidget->header()->setResizeMode(2, QHeaderView::Stretch);
     connect(
         d->treewidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
         this, SLOT(_k_slotItemChanged(QTreeWidgetItem*,int))
@@ -293,6 +291,11 @@ void KNotificationConfigWidget::setNotification(const QString &notification)
         connect(eventbox, SIGNAL(currentIndexChanged(int)), this, SLOT(_k_slotSoundChanged(int)));
         d->treewidget->setItemWidget(eventitem, 2, eventbox);
     }
+
+    d->treewidget->header()->setResizeMode(0, QHeaderView::Stretch);
+    d->treewidget->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    d->treewidget->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+    d->treewidget->header()->setResizeMode(3, QHeaderView::ResizeToContents);
 }
 
 void KNotificationConfigWidget::configure(const QString &notification, QWidget *parent)
