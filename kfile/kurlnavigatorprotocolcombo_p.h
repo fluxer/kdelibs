@@ -48,6 +48,7 @@ public:
     QString currentProtocol() const;
 
     void setCustomProtocols(const QStringList &protocols);
+    QStringList customProtocols() const;
 
     virtual QSize sizeHint() const;
 

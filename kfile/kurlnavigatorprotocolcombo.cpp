@@ -62,6 +62,11 @@ void KUrlNavigatorProtocolCombo::setCustomProtocols(const QStringList& protocols
     }
 }
 
+QStringList KUrlNavigatorProtocolCombo::customProtocols() const
+{
+    return m_protocols;
+}
+
 QSize KUrlNavigatorProtocolCombo::sizeHint() const
 {
     const QSize size = KUrlNavigatorButtonBase::sizeHint();

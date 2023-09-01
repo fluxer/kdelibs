@@ -169,7 +169,6 @@ public:
     QList<KUrlNavigatorButton*> m_navButtons;
     KUrlNavigatorButtonBase* m_toggleEditableMode;
     KUrl m_homeUrl;
-    QStringList m_customProtocols;
     KUrlNavigator* q;
 };
 
@@ -188,7 +187,6 @@ KUrlNavigator::Private::Private(KUrlNavigator* q, KFilePlacesModel* placesModel)
     m_navButtons(),
     m_toggleEditableMode(0),
     m_homeUrl(),
-    m_customProtocols(QStringList()),
     q(q)
 {
     m_layout->setSpacing(0);
@@ -1112,13 +1110,12 @@ KUrlComboBox* KUrlNavigator::editor() const
 
 void KUrlNavigator::setCustomProtocols(const QStringList &protocols)
 {
-    d->m_customProtocols = protocols;
-    d->m_protocols->setCustomProtocols(d->m_customProtocols);
+    d->m_protocols->setCustomProtocols(protocols);
 }
 
 QStringList KUrlNavigator::customProtocols() const
 {
-    return d->m_customProtocols;
+    return d->m_protocols->customProtocols();
 }
 
 #include "moc_kurlnavigator.cpp"
