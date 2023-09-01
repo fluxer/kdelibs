@@ -902,7 +902,6 @@ bool KUrlNavigator::showFullPath() const
     return d->m_showFullPath;
 }
 
-
 void KUrlNavigator::setActive(bool active)
 {
     if (active != d->m_active) {
@@ -1023,9 +1022,6 @@ void KUrlNavigator::setFocus()
         QWidget::setFocus();
     }
 }
-
-
-
 
 void KUrlNavigator::keyPressEvent(QKeyEvent* event)
 {

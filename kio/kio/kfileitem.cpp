@@ -750,15 +750,15 @@ QString KFileItem::iconName() const
  */
 static bool checkDesktopFile(const KFileItem &item, bool _determineMimeType)
 {
+    // only regular files
+    if (!item.isRegularFile()) {
+        return false;
+    }
+
     // only local files
     bool isLocal = false;
     const KUrl url = item.mostLocalUrl(isLocal);
     if (!isLocal) {
-        return false;
-    }
-
-    // only regular files
-    if (!item.isRegularFile()) {
         return false;
     }
 
