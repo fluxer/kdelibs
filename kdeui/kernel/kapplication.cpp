@@ -748,22 +748,6 @@ void KApplication::saveState( QSessionManager& sm )
     // tell the session manager about our new lifecycle
     QStringList restartCommand = sm.restartCommand();
 
-    if (KGlobalSettings::isMultiHead()) {
-        // if multihead is enabled, we save our -display argument so that
-        // we are restored onto the correct head... one problem with this
-        // is that the display is hard coded, which means we cannot restore
-        // to a different display (ie. if we are in a university lab and try,
-        // try to restore a multihead session, our apps could be started on
-        // someone else's display instead of our own)
-        QByteArray displayname = qgetenv("DISPLAY");
-        if (! displayname.isNull()) {
-            // only store the command if we actually have a DISPLAY
-            // environment variable
-            restartCommand.append(QLatin1String("-display"));
-            restartCommand.append(QLatin1String(displayname));
-        }
-    }
-
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
     if (args && args->isSet("tray")) {
         restartCommand.append(QLatin1String("-tray"));

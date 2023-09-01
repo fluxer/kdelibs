@@ -102,7 +102,7 @@ public:
        @param doActivate true to activate the window
     **/
     NETRootInfo(Display *display, Window supportWindow, const char *wmName,
-		const unsigned long properties[], int properties_size,
+                const unsigned long properties[], int properties_size,
                 int screen = -1, bool doActivate = true);
 
 
@@ -137,7 +137,7 @@ public:
         and therefore you cannot read all root window properties using it.
     **/
     NETRootInfo(Display *display, unsigned long properties, int screen = -1,
-		bool doActivate = true);
+                bool doActivate = true);
 
     /**
        Creates a shared copy of the specified NETRootInfo object.

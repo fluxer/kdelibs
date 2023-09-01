@@ -328,15 +328,6 @@ QString KGlobalSettings::musicPath()
     return (path.isEmpty() ? QDir::homePath() : path);
 }
 
-bool KGlobalSettings::isMultiHead()
-{
-    QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
-    if (!multiHead.isEmpty()) {
-        return (multiHead.toLower() == "true");
-    }
-    return false;
-}
-
 bool KGlobalSettings::wheelMouseZooms()
 {
     KConfigGroup g(KGlobal::config(), "KDE");

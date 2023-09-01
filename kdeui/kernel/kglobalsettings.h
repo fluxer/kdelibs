@@ -320,14 +320,6 @@ public:
     static QFont smallestReadableFont();
 
     /**
-     * Returns if the user specified multihead. In case the display
-     * has multiple screens, the return value of this function specifies
-     * if the user wants KDE to run on all of them or just on the primary
-     * @return true if the user chose multi head
-     */
-    static bool isMultiHead();
-
-    /**
      * Typically, QScrollView derived classes can be scrolled fast by
      * holding down the Ctrl-button during wheel-scrolling.
      * But QTextEdit and derived classes perform zooming instead of fast
