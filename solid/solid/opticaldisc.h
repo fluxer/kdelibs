@@ -97,14 +97,15 @@ namespace Solid
          * - HdDvdRecordable : A High Density Digital Versatile Disc Recordable (HD DVD-R)
          * - HdDvdRewritable : A High Density Digital Versatile Disc ReWritable (HD DVD-RW)
          */
-        enum DiscType { UnknownDiscType = -1,
-                        CdRom, CdRecordable, CdRewritable, DvdRom, DvdRam,
-                        DvdRecordable, DvdRewritable,
-                        DvdPlusRecordable, DvdPlusRewritable,
-                        DvdPlusRecordableDuallayer, DvdPlusRewritableDuallayer,
-                        BluRayRom, BluRayRecordable, BluRayRewritable,
-                        HdDvdRom, HdDvdRecordable, HdDvdRewritable };
-
+        enum DiscType {
+            UnknownDiscType,
+            CdRom, CdRecordable, CdRewritable, DvdRom, DvdRam,
+            DvdRecordable, DvdRewritable,
+            DvdPlusRecordable, DvdPlusRewritable,
+            DvdPlusRecordableDuallayer, DvdPlusRewritableDuallayer,
+            BluRayRom, BluRayRecordable, BluRayRewritable,
+            HdDvdRom, HdDvdRecordable, HdDvdRewritable
+        };
 
     private:
         /**
