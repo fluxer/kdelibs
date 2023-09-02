@@ -25,6 +25,7 @@
 #include "devinfographic.h"
 
 #include "kdevicedatabase.h"
+#include "klocale.h"
 
 #include <QDebug>
 
@@ -197,17 +198,17 @@ QStringList DevinfoDevice::emblems() const
 QString DevinfoDevice::description() const
 {
     if (m_device == DEVINFO_ROOT_UDI || parentUdi().isEmpty()) {
-        return QObject::tr("Computer");
+        return i18n("Computer");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
-        return QObject::tr("Processor");
+        return i18n("Processor");
     } else if (queryDeviceInterface(Solid::DeviceInterface::NetworkInterface)) {
         const NetworkInterface networkIface(const_cast<DevinfoDevice *>(this));
         if (networkIface.isWireless()) {
-            return QObject::tr("WLAN Interface");
+            return i18n("WLAN Interface");
         }
-        return QObject::tr("Networking Interface");
+        return i18n("Networking Interface");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
-        return QObject::tr("Graphic display");
+        return i18n("Graphic display");
     }
     return deviceProperty(DevinfoDevice::DeviceDescription);
 }

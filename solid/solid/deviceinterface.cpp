@@ -20,11 +20,10 @@
 
 #include "deviceinterface.h"
 #include "deviceinterface_p.h"
+#include "solid/ifaces/deviceinterface.h"
+#include "klocale.h"
 
-#include <solid/ifaces/deviceinterface.h>
-
-#include <QtCore/qmetaobject.h>
-
+#include <QMetaEnum>
 
 Solid::DeviceInterface::DeviceInterface(DeviceInterfacePrivate &dd, QObject *backendObject)
     : d_ptr(&dd)
@@ -66,39 +65,39 @@ QString Solid::DeviceInterface::typeDescription(Type type)
     switch (type)
     {
     case Unknown:
-        return QObject::tr("Unknown");
+        return i18n("Unknown");
     case Processor:
-        return QObject::tr("Processor");
+        return i18n("Processor");
     case Block:
-        return QObject::tr("Block");
+        return i18n("Block");
     case StorageAccess:
-        return QObject::tr("Storage Access");
+        return i18n("Storage Access");
     case StorageDrive:
-        return QObject::tr("Storage Drive");
+        return i18n("Storage Drive");
     case OpticalDrive:
-        return QObject::tr("Optical Drive");
+        return i18n("Optical Drive");
     case StorageVolume:
-        return QObject::tr("Storage Volume");
+        return i18n("Storage Volume");
     case OpticalDisc:
-        return QObject::tr("Optical Disc");
+        return i18n("Optical Disc");
     case Camera:
-        return QObject::tr("Camera");
+        return i18n("Camera");
     case PortableMediaPlayer:
-        return QObject::tr("Portable Media Player");
+        return i18n("Portable Media Player");
     case NetworkInterface:
-        return QObject::tr("Network Interface");
+        return i18n("Network Interface");
     case AcAdapter:
-        return QObject::tr("Ac Adapter");
+        return i18n("Ac Adapter");
     case Battery:
-        return QObject::tr("Battery");
+        return i18n("Battery");
     case Button:
-        return QObject::tr("Button");
+        return i18n("Button");
     case AudioInterface:
-        return QObject::tr("Audio Interface");
+        return i18n("Audio Interface");
     case Video:
-        return QObject::tr("Video");
+        return i18n("Video");
     case Graphic:
-        return QObject::tr("Graphic");
+        return i18n("Graphic");
     case Last:
         return QString();
     }

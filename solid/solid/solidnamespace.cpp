@@ -19,6 +19,10 @@
 */
 
 #include "solidnamespace.h"
+#include "kglobal.h"
+#include "klocale.h"
+
+static const KCatalogLoader loader("solid_qt");
 
 static int registerSolidMetaTypes()
 {
@@ -33,19 +37,19 @@ QString Solid::errorString(const ErrorType error)
         case Solid::NoError:
             return QString();
         case Solid::UnauthorizedOperation:
-            return QObject::tr("Unauthorized operation");
+            return i18n("Unauthorized operation");
         case Solid::DeviceBusy:
-            return QObject::tr("Device is busy");
+            return i18n("Device is busy");
         case Solid::OperationFailed:
-            return QObject::tr("Operation failed");
+            return i18n("Operation failed");
         case Solid::UserCanceled:
-            return QObject::tr("Canceled by user");
+            return i18n("Canceled by user");
         case Solid::InvalidOption:
-            return QObject::tr("Invalid option");
+            return i18n("Invalid option");
         case Solid::MissingDriver:
-            return QObject::tr("Missing driver");
+            return i18n("Missing driver");
         case Solid::Insecure:
-            return QObject::tr("The filesystem type has been deemed insecure");
+            return i18n("The filesystem type has been deemed insecure");
     }
     return QString();
 }

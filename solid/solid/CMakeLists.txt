@@ -165,7 +165,7 @@ if(UDEV_FOUND)
                     Support for m-p-i is included even if not found during build"
                     )
 
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${UDEV_LIBRARIES} kdecore)
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${UDEV_LIBRARIES})
 endif(UDEV_FOUND)
 
 if(DEVINFO_FOUND)
@@ -195,6 +195,7 @@ target_link_libraries(solid PUBLIC
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}
+    kdecore
 )
 
 set_target_properties(solid PROPERTIES

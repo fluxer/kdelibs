@@ -47,8 +47,7 @@ enum KLocaleDuration
 static QStringList s_defaultcatalogs = QStringList()
     << QString::fromLatin1("kio4")
     << QString::fromLatin1("kdelibs4")
-    << QString::fromLatin1("kdeqt")
-    << QString::fromLatin1("solid_qt");
+    << QString::fromLatin1("kdeqt");
 
 static const QLatin1String s_localenamec = QLatin1String("C");
 static const QLatin1Char s_localeexponentc = QLatin1Char('e');
