@@ -112,7 +112,6 @@ int KToolInvocation::startServiceInternal(const char *_function,
     QString function = QString::fromLatin1(_function);
     // make sure there is id, so that user timestamp exists
     QStringList envs;
-    QByteArray asn = startup_id;
     if (QX11Info::display()) {
         const QString dpystring = QString::fromLatin1(XDisplayString(QX11Info::display()));
         envs << QLatin1String("DISPLAY=") + dpystring;
@@ -123,18 +122,14 @@ int KToolInvocation::startServiceInternal(const char *_function,
         }
     }
 
-    if (asn.isEmpty()) {
-        asn = KStartupInfo::createNewStartupId();
-    }
-
     QDBusPendingReply<int> reply;
     if (qstrcmp(_function, "kdeinit_exec_with_workdir") == 0) {
         reply = klauncherIface->asyncCall(
-            function, name, URLs, envs, QString::fromLatin1(asn, asn.size()), workdir
+            function, name, URLs, envs, QString::fromLatin1(startup_id, startup_id.size()), workdir
         );
     } else {
         reply = klauncherIface->asyncCall(
-            function, name, URLs, envs, QString::fromLatin1(asn, asn.size())
+            function, name, URLs, envs, QString::fromLatin1(startup_id, startup_id.size())
         );
     }
     kDebug() << "Waiting for klauncher call to finish" << function;
