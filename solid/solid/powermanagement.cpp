@@ -116,8 +116,9 @@ void Solid::PowerManagement::requestSleep(SleepState state)
 uint Solid::PowerManagement::beginSuppressingSleep(const QString &reason)
 {
     QDBusReply<uint> reply = globalPowerManager()->inhibitIface.call("Inhibit", QCoreApplication::applicationName(), reason);
-    if (reply.isValid())
-        return reply;
+    if (reply.isValid()) {
+        return reply.value();
+    }
     return 0;
 }
 
@@ -145,7 +146,7 @@ uint Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString
             globalPowerManager()->screensaverCookies.append(ssReply.value());
         }
 
-        return ssReply;
+        return ssReply.value();
     }
     // No way to fallback on something, hence return failure (0 is invalid cookie)
     return 0;
