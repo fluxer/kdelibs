@@ -32,6 +32,8 @@
 using namespace Solid::Backends::UDev;
 using namespace Solid::Backends::Shared;
 
+// #define UDEV_DETAILED_OUTPUT
+
 class UDevManager::Private
 {
 public:
@@ -235,26 +237,37 @@ QObject *UDevManager::createDevice(const QString &udi_)
 
 void UDevManager::slotDeviceAdded(const UdevQt::Device &device)
 {
-    if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
-        emit deviceAdded(udiPrefix() + device.sysfsPath());
+    const QString udi = udiPrefix() + device.sysfsPath();
+    if (d->isOfInterest(udi, device)) {
+        emit deviceAdded(udi);
     }
 }
 
 void UDevManager::slotDeviceRemoved(const UdevQt::Device &device)
 {
-    if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
-        emit deviceRemoved(udiPrefix() + device.sysfsPath());
-        d->m_devicesOfInterest.removeAll(udiPrefix() + device.sysfsPath());
+    const QString udi = udiPrefix() + device.sysfsPath();
+    if (d->isOfInterest(udi, device)) {
+        emit deviceRemoved(udi);
+        d->m_devicesOfInterest.removeAll(udi);
     }
 }
 
 void UDevManager::slotDeviceChanged(const UdevQt::Device &device)
 {
-    if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
+    const QString udi = udiPrefix() + device.sysfsPath();
+    const bool wasofinterest = d->m_devicesOfInterest.contains(udi);
+    if (d->isOfInterest(udi, device)) {
         if (device.subsystem() == "block") {
             const QString idfsusage = device.deviceProperty("ID_FS_USAGE");
             const bool hascontent = (idfsusage == "filesystem" || idfsusage == "crypto");
-            emit contentChanged(udiPrefix() + device.sysfsPath(), hascontent);
+            emit contentChanged(udi, hascontent);
+        }
+
+        // NOTE: this happens to be "change" event for an otherwise removed/untracked device (e.g.
+        // battery from power_supply) that is added now - the event is bogus (emitted by udev as if
+        // the device was not really removed) so it is fixed-up here
+        if (!wasofinterest) {
+            emit deviceAdded(udi);
         }
     }
 }
