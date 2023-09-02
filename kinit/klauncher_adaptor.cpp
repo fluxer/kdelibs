@@ -74,9 +74,8 @@ void KLauncherProcess::setupStartup(const QByteArray &startup_id, const QString 
                                     const KService::Ptr kservice, const qint64 timeout)
 {
     Q_ASSERT(m_kstartupinfoid.none() == true);
-    bool startupsilent = false;
     QByteArray startupwmclass;
-    if (KRun::checkStartupNotify(kservice.data(), &startupsilent, &startupwmclass)) {
+    if (KRun::checkStartupNotify(kservice.data(), &startupwmclass)) {
         m_kstartupinfoid.initId(!isASNValid(startup_id) ? KStartupInfo::createNewStartupId() : startup_id);
         kDebug() << "setting up ASN for" << kservice->entryPath() << m_kstartupinfoid.id();
         m_kstartupinfodata.setHostname();
@@ -84,7 +83,6 @@ void KLauncherProcess::setupStartup(const QByteArray &startup_id, const QString 
         m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
         m_kstartupinfodata.setIcon(kservice->icon());
         m_kstartupinfodata.setApplicationId(kservice->entryPath());
-        m_kstartupinfodata.setSilent(startupsilent ? KStartupInfoData::Yes : KStartupInfoData::No);
         m_kstartupinfodata.setWMClass(startupwmclass);
         QProcessEnvironment processenv = QProcess::processEnvironment();
         processenv.insert(QString::fromLatin1("DESKTOP_STARTUP_ID"), m_kstartupinfoid.id());

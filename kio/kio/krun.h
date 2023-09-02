@@ -327,12 +327,12 @@ public:
      * @endcode
      * to the mimetype's desktop file.
      */
-    static bool isExecutableFile(const KUrl& url, const QString &mimetype);
+    static bool isExecutableFile(const KUrl &url, const QString &mimetype);
 
     /**
      * @internal
      */
-    static bool checkStartupNotify(const KService* service, bool* silent_arg, QByteArray* wmclass_arg);
+    static bool checkStartupNotify(const KService *service, QByteArray *wmclass_arg);
 
 Q_SIGNALS:
     /**

@@ -533,11 +533,10 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
     }
 
     QString bin = KRun::binaryName(executable, true);
-#ifdef Q_WS_X11 // Startup notification doesn't work with QT/E, service isn't needed without Startup notification
-    bool silent;
+#ifdef Q_WS_X11
     QByteArray wmclass;
     KStartupInfoId id;
-    bool startup_notify = (asn != "0" && KRun::checkStartupNotify(service, &silent, &wmclass));
+    bool startup_notify = (asn != "0" && KRun::checkStartupNotify(service, &wmclass));
     if (startup_notify) {
         id.initId(asn);
         id.setupStartupEnv();
@@ -557,9 +556,6 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
         }
         if (!wmclass.isEmpty()) {
             data.setWMClass(wmclass);
-        }
-        if (silent) {
-            data.setSilent(KStartupInfoData::Yes);
         }
         data.setDesktop(KWindowSystem::currentDesktop());
         if(service && !service->entryPath().isEmpty())
@@ -582,59 +578,49 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
 }
 
 // This code is also used in klauncher.
-bool KRun::checkStartupNotify(const KService* service, bool* silent_arg, QByteArray* wmclass_arg)
+bool KRun::checkStartupNotify(const KService *service, QByteArray *wmclass_arg)
 {
     if (!service || service->entryPath().isEmpty()) {
-         // non-compliant app or service action
+        // non-compliant app or service action
 
-         // TODO: for service actions (and other KService's crafted from the name, exec and icon)
-         // get the ASN property from the "Desktop Entry" group in the .desktop file somehow
-         return false;
+        // TODO: for service actions (and other KService's crafted from the name, exec and icon)
+        // get the ASN property from the "Desktop Entry" group in the .desktop file somehow
+        return false;
     }
 
-    bool silent = false;
-    QByteArray wmclass;
-    if (service->property("StartupNotify").isValid()) {
-        silent = !service->property("StartupNotify").toBool();
-        wmclass = service->property("StartupWMClass").toString().toLatin1();
+    if (service->property("StartupNotify").toBool() != true) {
+        // nope
+        return false;
+    }
 
-        // NOTE: this is using spec properties but probably not for the purpose the properties were
-        // ment for
-        if (service->property("SingleMainWindow").toBool()) {
-            const QStringList implements = service->property("Implements").toStringList();
-            if (!implements.isEmpty()) {
-                // TODO: where is the interface supposed to be registered?
-                QDBusConnectionInterface* dbusconnectioninterface = QDBusConnection::sessionBus().interface();
-                if (dbusconnectioninterface) {
-                    QDBusReply<bool> implementedreply;
-                    foreach (const QString &implemented, implements) {
-                        implementedreply = dbusconnectioninterface->isServiceRegistered(implemented);
-                        if (implementedreply.isValid() && implementedreply.value() == true) {
-                            kDebug(7010) << "implemented interface" << implemented << ", disabling startup notification";
-                            return false;
-                        }
+    QByteArray wmclass = service->property("StartupWMClass").toString().toLatin1();
+
+    // NOTE: this is using spec properties but probably not for the purpose the properties were
+    // ment for
+    if (service->property("SingleMainWindow").toBool()) {
+        const QStringList implements = service->property("Implements").toStringList();
+        if (!implements.isEmpty()) {
+            // TODO: where is the interface supposed to be registered?
+            QDBusConnectionInterface* dbusconnectioninterface = QDBusConnection::sessionBus().interface();
+            if (dbusconnectioninterface) {
+                QDBusReply<bool> implementedreply;
+                foreach (const QString &implemented, implements) {
+                    implementedreply = dbusconnectioninterface->isServiceRegistered(implemented);
+                    if (implementedreply.isValid() && implementedreply.value() == true) {
+                        kDebug(7010) << "implemented interface" << implemented << ", disabling startup notification";
+                        return false;
                     }
-                } else {
-                    kDebug(7010) << "null D-Bus connection interface";
                 }
+            } else {
+                kDebug(7010) << "null D-Bus connection interface";
             }
         }
-    } else {
-        // non-compliant app
-        if (service->isApplication()) {
-            // doesn't have .desktop entries needed, start as non-compliant
-            silent = true;
-            wmclass = "0";
-        } else {
-            return false; // no startup notification at all
-        }
     }
-    if (silent_arg != NULL) {
-        *silent_arg = silent;
-    }
+
     if (wmclass_arg != NULL) {
         *wmclass_arg = wmclass;
     }
+
     return true;
 }
 
