@@ -76,7 +76,6 @@ namespace Solid
          */
         enum DriveType { HardDisk, CdromDrive, Floppy, Tape, CompactFlash, MemoryStick, SmartMedia, SdMmc };
 
-
     private:
         /**
          * Creates a new StorageDrive object.

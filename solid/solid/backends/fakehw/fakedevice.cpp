@@ -36,6 +36,7 @@
 #include "fakeaudiointerface.h"
 #include "fakevideo.h"
 #include "fakegraphic.h"
+#include "fakeinput.h"
 
 #include <QtCore/QStringList>
 #include <QtDBus/QDBusConnection>
@@ -295,6 +296,9 @@ QObject *FakeDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
         break;
     case Solid::DeviceInterface::Graphic:
         iface = new FakeGraphic(this);
+        break;
+    case Solid::DeviceInterface::Input:
+        iface = new FakeInput(this);
         break;
     case Solid::DeviceInterface::Unknown:
         break;

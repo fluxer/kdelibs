@@ -34,6 +34,7 @@
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
 #include "udevgraphic.h"
+#include "udevinput.h"
 #include "udevmanager.h"
 #include "cpuinfo.h"
 
@@ -310,6 +311,18 @@ QString UDevDevice::icon() const
         return QLatin1String("insert-button");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
         return QLatin1String("video-display");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Input)) {
+        const Input inputIface(const_cast<UDevDevice *>(this));
+        switch (inputIface.inputType()) {
+        case Solid::Input::UnknownInput:
+            return QString();
+        case Solid::Input::Mouse:
+            return QLatin1String("input-mouse");
+        case Solid::Input::Keyboard:
+            return QLatin1String("input-keyboard");
+        case Solid::Input::Joystick:
+            return QLatin1String("input-gaming");
+        }
     }
 
     return QString();
@@ -494,6 +507,19 @@ QString UDevDevice::description() const
         return QString();
     } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
         return i18n("Graphic display");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Input)) {
+        const Input inputIface(const_cast<UDevDevice *>(this));
+        switch (inputIface.inputType()) {
+            case Solid::Input::UnknownInput:
+                return i18n("Unknown Input");
+            case Solid::Input::Mouse:
+                return i18n("Mouse");
+            case Solid::Input::Keyboard:
+                return i18n("Keyboard");
+            case Solid::Input::Joystick:
+                return i18n("Joystick");
+        }
+        return QString();
     }
 
     return QString();
@@ -558,6 +584,13 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::Graphic:
         return deviceProperty("PCI_CLASS").toInt() == 30000;
 
+    case Solid::DeviceInterface::Input:
+        return (
+            deviceProperty("ID_INPUT_MOUSE").toInt() == 1
+            || deviceProperty("ID_INPUT_KEYBOARD").toInt() == 1
+            || deviceProperty("ID_INPUT_JOYSTICK").toInt() == 1
+        );
+
     default:
         return false;
     }
@@ -618,6 +651,9 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
 
     case Solid::DeviceInterface::Graphic:
         return new Graphic(this);
+
+    case Solid::DeviceInterface::Input:
+        return new Input(this);
 
     default:
         qFatal("Shouldn't happen");

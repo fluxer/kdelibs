@@ -60,6 +60,7 @@ namespace Solid
          * - PortableMediaPlayer: A portable media player
          * - NetworkInterface: A network interface
          * - Graphic: A graphic interface
+         * - Input: A input interface
          */
         enum Type {
             Unknown = 0,
@@ -79,6 +80,7 @@ namespace Solid
             AudioInterface = 14,
             Video = 15,
             Graphic = 16,
+            Input = 17,
             Last = 0xffff
         };
 

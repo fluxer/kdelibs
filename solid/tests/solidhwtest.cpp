@@ -29,6 +29,7 @@
 #include <solid/storagevolume.h>
 #include <solid/video.h>
 #include <solid/graphic.h>
+#include <solid/input.h>
 #include <solid/predicate.h>
 #include "solid/managerbase_p.h"
 
@@ -269,6 +270,7 @@ void SolidHwTest::testDeviceInterfaceIntrospection_data()
     QTest::newRow("DeviceInterface: Button") << "Button" << (int)Solid::DeviceInterface::Button;
     QTest::newRow("DeviceInterface: AudioInterface") << "AudioInterface" << (int)Solid::DeviceInterface::AudioInterface;
     QTest::newRow("DeviceInterface: Graphic") << "Graphic" << (int)Solid::DeviceInterface::Graphic;
+    QTest::newRow("DeviceInterface: Input") << "Input" << (int)Solid::DeviceInterface::Input;
     QTest::newRow("DeviceInterface: Video") << "Video" << (int)Solid::DeviceInterface::Video;
 }
 
@@ -489,6 +491,14 @@ void SolidHwTest::testMisc()
         Solid::Device device("/org/kde/solid/fakehw/pci_10de_0fc1_card0");
         Solid::Graphic* deviceptr = device.as<Solid::Graphic>();
         QCOMPARE(deviceptr->driver(), QString("nouveau"));
+    }
+
+    SOLID_TEST_IFACE("/org/kde/solid/fakehw/pci_0000_001d_input0", Solid::DeviceInterface::Input, Solid::Input);
+    {
+        Solid::Device device("/org/kde/solid/fakehw/pci_0000_001d_input0");
+        Solid::Input* deviceptr = device.as<Solid::Input>();
+        QCOMPARE(deviceptr->driver(), QString("usbhid"));
+        QCOMPARE(deviceptr->inputType(), Solid::Input::Mouse);
     }
 
     SOLID_TEST_IFACE("/org/kde/solid/fakehw/pci_01ed_f0c1_video0", Solid::DeviceInterface::Video, Solid::Video);

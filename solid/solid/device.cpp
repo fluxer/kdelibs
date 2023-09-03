@@ -60,6 +60,8 @@
 #include <solid/ifaces/video.h>
 #include <solid/graphic.h>
 #include <solid/ifaces/graphic.h>
+#include <solid/input.h>
+#include <solid/ifaces/input.h>
 
 Solid::Device::Device(const QString &udi)
 {
@@ -216,6 +218,9 @@ const Solid::DeviceInterface *Solid::Device::asDeviceInterface(const DeviceInter
                 break;
             case DeviceInterface::Graphic:
                 iface = deviceinterface_cast(Ifaces::Graphic, Graphic, dev_iface);
+                break;
+            case DeviceInterface::Input:
+                iface = deviceinterface_cast(Ifaces::Input, Input, dev_iface);
                 break;
             case DeviceInterface::Unknown:
             case DeviceInterface::Last:

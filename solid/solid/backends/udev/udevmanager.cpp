@@ -123,7 +123,18 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
 
     if (device.subsystem() == QLatin1String("input")) {
         const QStringList deviceProperties = device.deviceProperties();
-        return (device.deviceProperty("ID_INPUT_KEY").toInt() == 1 && (deviceProperties.contains("KEY") || deviceProperties.contains("SW")));
+        // key
+        if (device.deviceProperty("ID_INPUT_KEY").toInt() == 1
+            && (deviceProperties.contains("KEY") || deviceProperties.contains("SW"))) {
+            return true;
+        }
+        // mouse, keyboard or joystick
+        if (device.deviceProperty("ID_INPUT_MOUSE").toInt() == 1
+            || device.deviceProperty("ID_INPUT_KEYBOARD").toInt() == 1
+            || device.deviceProperty("ID_INPUT_JOYSTICK").toInt() == 1) {
+            return deviceProperties.contains("EV");
+        }
+        return false;
     }
 
     return device.subsystem() == QLatin1String("video4linux") ||
@@ -157,7 +168,8 @@ UDevManager::UDevManager(QObject *parent)
                              << Solid::DeviceInterface::Block
                              << Solid::DeviceInterface::Video
                              << Solid::DeviceInterface::Button
-                             << Solid::DeviceInterface::Graphic;
+                             << Solid::DeviceInterface::Graphic
+                             << Solid::DeviceInterface::Input;
 }
 
 UDevManager::~UDevManager()

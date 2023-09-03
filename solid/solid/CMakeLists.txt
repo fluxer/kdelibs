@@ -46,6 +46,7 @@ set(solid_LIB_SRCS
     powermanagement.cpp
     video.cpp
     graphic.cpp
+    input.cpp
 
     ifaces/acadapter.cpp
     ifaces/audiointerface.cpp
@@ -66,6 +67,7 @@ set(solid_LIB_SRCS
     ifaces/storageaccess.cpp
     ifaces/video.cpp
     ifaces/graphic.cpp
+    ifaces/input.cpp
 
     backends/shared/rootdevice.cpp
 )
@@ -97,6 +99,7 @@ if(ENABLE_TESTING)
         backends/fakehw/fakevideo.cpp
         backends/fakehw/fakevolume.cpp
         backends/fakehw/fakegraphic.cpp
+        backends/fakehw/fakeinput.cpp
     )
 endif()
 
@@ -123,6 +126,7 @@ if(UDEV_FOUND)
         backends/udev/udevbattery.cpp
         backends/udev/udevacadapter.cpp
         backends/udev/udevgraphic.cpp
+        backends/udev/udevinput.cpp
         backends/udev/udevqtclient.cpp
         backends/udev/udevqtdevice.cpp
     )
@@ -160,10 +164,10 @@ if(UDEV_FOUND)
     endif(XDG_DATA_DIRS_ENV)
 
     add_feature_info("media-player-info" MEDIAPLAYERINFO_PATH
-                    "Enables identification and querying of portable media players.
-                    Runtime-only dependency of the udev solid backend.
-                    Support for m-p-i is included even if not found during build"
-                    )
+        "Enables identification and querying of portable media players.
+        Runtime-only dependency of the udev solid backend.
+        Support for m-p-i is included even if not found during build"
+    )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${UDEV_LIBRARIES})
 endif(UDEV_FOUND)
@@ -237,5 +241,6 @@ install(
     powermanagement.h
     video.h
     graphic.h
+    input.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
 )

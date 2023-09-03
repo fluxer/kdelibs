@@ -463,7 +463,9 @@ install(
     Solid/StorageAccess
     Solid/StorageDrive
     Solid/StorageVolume
+    Solid/Video
     Solid/Graphic
+    Solid/Input
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Solid
 )
 

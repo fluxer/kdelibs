@@ -62,44 +62,45 @@ Solid::DeviceInterface::Type Solid::DeviceInterface::stringToType(const QString 
 
 QString Solid::DeviceInterface::typeDescription(Type type)
 {
-    switch (type)
-    {
-    case Unknown:
-        return i18n("Unknown");
-    case Processor:
-        return i18n("Processor");
-    case Block:
-        return i18n("Block");
-    case StorageAccess:
-        return i18n("Storage Access");
-    case StorageDrive:
-        return i18n("Storage Drive");
-    case OpticalDrive:
-        return i18n("Optical Drive");
-    case StorageVolume:
-        return i18n("Storage Volume");
-    case OpticalDisc:
-        return i18n("Optical Disc");
-    case Camera:
-        return i18n("Camera");
-    case PortableMediaPlayer:
-        return i18n("Portable Media Player");
-    case NetworkInterface:
-        return i18n("Network Interface");
-    case AcAdapter:
-        return i18n("Ac Adapter");
-    case Battery:
-        return i18n("Battery");
-    case Button:
-        return i18n("Button");
-    case AudioInterface:
-        return i18n("Audio Interface");
-    case Video:
-        return i18n("Video");
-    case Graphic:
-        return i18n("Graphic");
-    case Last:
-        return QString();
+    switch (type) {
+        case Solid::DeviceInterface::Unknown:
+            return i18n("Unknown");
+        case Solid::DeviceInterface::Processor:
+            return i18n("Processor");
+        case Solid::DeviceInterface::Block:
+            return i18n("Block");
+        case Solid::DeviceInterface::StorageAccess:
+            return i18n("Storage Access");
+        case Solid::DeviceInterface::StorageDrive:
+            return i18n("Storage Drive");
+        case Solid::DeviceInterface::OpticalDrive:
+            return i18n("Optical Drive");
+        case Solid::DeviceInterface::StorageVolume:
+            return i18n("Storage Volume");
+        case Solid::DeviceInterface::OpticalDisc:
+            return i18n("Optical Disc");
+        case Solid::DeviceInterface::Camera:
+            return i18n("Camera");
+        case Solid::DeviceInterface::PortableMediaPlayer:
+            return i18n("Portable Media Player");
+        case Solid::DeviceInterface::NetworkInterface:
+            return i18n("Network Interface");
+        case Solid::DeviceInterface::AcAdapter:
+            return i18n("Ac Adapter");
+        case Solid::DeviceInterface::Battery:
+            return i18n("Battery");
+        case Solid::DeviceInterface::Button:
+            return i18n("Button");
+        case Solid::DeviceInterface::AudioInterface:
+            return i18n("Audio Interface");
+        case Solid::DeviceInterface::Video:
+            return i18n("Video");
+        case Solid::DeviceInterface::Graphic:
+            return i18n("Graphic");
+        case Solid::DeviceInterface::Input:
+            return i18n("Input");
+        case Solid::DeviceInterface::Last:
+            return QString();
     }
     return QString();
 }
@@ -107,12 +108,10 @@ QString Solid::DeviceInterface::typeDescription(Type type)
 Solid::DeviceInterfacePrivate::DeviceInterfacePrivate()
     : m_devicePrivate(0)
 {
-
 }
 
 Solid::DeviceInterfacePrivate::~DeviceInterfacePrivate()
 {
-
 }
 
 QObject *Solid::DeviceInterfacePrivate::backendObject() const

@@ -42,7 +42,6 @@ namespace Ifaces
          */
         virtual ~StorageDrive();
 
-
         /**
          * Retrieves the type of physical interface this storage device is
          * connected to.
