@@ -139,7 +139,7 @@ uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString
         kWarning() << "Inhibit limit greater than INT_MAX";
         return 0;
     }
-    uint cookiecounter = 0;
+    uint cookiecounter = 1;
     while (m_cookies.contains(cookiecounter)) {
         if (cookiecounter >= maxinhibitors) {
             kWarning() << "Inhibit limit reached";
