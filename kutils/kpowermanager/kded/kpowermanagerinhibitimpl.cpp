@@ -128,6 +128,7 @@ uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString
     } else if (m_consolekit.isValid()) {
         maxinhibitors = INT_MAX;
     } else {
+        kDebug() << "No valid inhibition interface";
         return 0;
     }
 
@@ -175,6 +176,7 @@ uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString
 void KPowerManagerInhibitImpl::UnInhibit(uint cookie)
 {
     if (!m_login1.isValid() && !m_consolekit.isValid()) {
+        kDebug() << "No valid inhibition interface";
         return;
     }
     if (!m_cookies.contains(cookie)) {
