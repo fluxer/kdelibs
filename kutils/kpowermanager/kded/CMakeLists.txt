@@ -43,4 +43,8 @@ install(
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
+install(
+    FILES kpowermanager.notifyrc
+    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}/notifications
+)
 

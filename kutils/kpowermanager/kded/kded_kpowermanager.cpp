@@ -19,6 +19,7 @@
 #include "kded_kpowermanager.h"
 #include "kpluginfactory.h"
 #include "kpowermanager.h"
+#include "knotification.h"
 #include "kdebug.h"
 
 static void setPowerProfile(bool save_power)
@@ -63,6 +64,11 @@ KPowerManagerModule::~KPowerManagerModule()
 void KPowerManagerModule::slotPowerSaveStatusChanged(bool save_power)
 {
     setPowerProfile(save_power);
+    if (save_power) {
+        KNotification::event("kpowermanager/PowerSave");
+    } else {
+        KNotification::event("kpowermanager/Performance");
+    }
 }
 
 #include "moc_kded_kpowermanager.cpp"

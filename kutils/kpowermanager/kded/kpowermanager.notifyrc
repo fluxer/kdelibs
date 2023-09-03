@@ -1,0 +1,16 @@
+[kpowermanager]
+Name=kpowermanager
+Comment=Power management
+IconName=preferences-system-power-management
+
+[kpowermanager/PowerSave]
+Name=Switched power management profile to PowerSave
+Actions=Sound,Popup
+Sound=KDE-Im-Contact-Out.ogg
+IconName=battery
+
+[kpowermanager/Performance]
+Name=Switched power management profile to Performance
+Actions=Sound,Popup
+Sound=KDE-Im-Contact-In.ogg
+IconName=preferences-system-power-management
