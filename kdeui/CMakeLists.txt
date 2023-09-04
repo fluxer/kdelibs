@@ -197,6 +197,7 @@ set(kdeui_LIB_SRCS
     util/kpixmapsequencewidget.cpp
     util/kimageio.cpp
     util/kkeyserver_x11.cpp
+    util/kkeyboardlayout.cpp
     widgets/kactionselector.cpp
     widgets/kdialogbuttonbox.cpp
     widgets/kbuttongroup.cpp
@@ -271,6 +272,11 @@ if (X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}
         ${X11_Xlib_INCLUDE_PATH}
+    )
+    set(KDEUI_EXTRA_LIBS
+        ${KDEUI_EXTRA_LIBS}
+        ${X11_LIBRARIES}
+        ${X11_Xkbfile_LIB}
     )
 endif()
 
@@ -482,6 +488,7 @@ install(
     util/kcursor.h
     util/kguiitem.h
     util/kkeyserver.h
+    util/kkeyboardlayout.h
     util/kselectionowner.h
     util/knumvalidator.h
     util/kpassivepopup.h

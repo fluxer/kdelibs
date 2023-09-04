@@ -158,6 +158,7 @@ install(
     KJobTrackerInterface
     KJobUiDelegate
     KKeySequenceWidget
+    KKeyboardLayout
     KLed
     KLineEdit
     KLinkItemSelectionModel

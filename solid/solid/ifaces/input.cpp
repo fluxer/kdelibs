@@ -1,5 +1,5 @@
 /*
-    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
+    Copyright 2023 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
