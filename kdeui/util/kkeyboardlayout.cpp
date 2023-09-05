@@ -1161,7 +1161,7 @@ bool KKeyboardLayout::setLayouts(const QList<KKeyboardType> &layouts)
             return false;
         }
 
-        // NOTE: -rules and -model can be speicifed only once
+        // NOTE: -rules and -model can be speicified only once
         if (!xkbrule.isEmpty() && xkbrule != layout.rule) {
             kWarning() << "Conflicting keyboard layout rules";
             return false;
@@ -1186,7 +1186,7 @@ bool KKeyboardLayout::setLayouts(const QList<KKeyboardType> &layouts)
     }
 
     kDebug() << "Changing XKB layouts to" << xkbrule << xkbmodel << xkblayouts << xkbvariants << xkboptions;
-    // setting the properly is simply not enough, X11 server has to load rules and whatnot
+    // setting the property is simply not enough, X11 server has to load rules and whatnot
     if (d->setxkbmapexe.isEmpty()) {
         d->setxkbmapexe = KStandardDirs::findExe("setxkbmap");
     }
