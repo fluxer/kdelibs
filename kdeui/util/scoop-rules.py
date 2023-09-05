@@ -3,8 +3,8 @@
 import os, sys, glob
 
 def cstringify(s):
-    r = s.replace('"', '\\"')
-    r = r.replace('\\', '\\\\')
+    r = s.replace('\\', '\\\\')
+    r = r.replace('"', '\\"')
     return r
 
 if len(sys.argv) < 2:
