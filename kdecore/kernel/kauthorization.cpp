@@ -17,10 +17,13 @@
 */
 
 #include "kauthorization.h"
-#include "kdbusconnectionpool.h"
 #include "klocale.h"
+#include "klockfile.h"
+#include "kglobal.h"
+#include "kstandarddirs.h"
 #include "kdebug.h"
 
+#include <QDir>
 #include <QThread>
 #include <QTimer>
 #include <QDBusAbstractAdaptor>
@@ -56,6 +59,12 @@ void kAuthMessageHandler(QtMsgType type, const char *msg)
             break;
         }
     }
+}
+
+static QString kGetLockFile(const QString &helper)
+{
+    const QString lockdir = KGlobal::dirs()->saveLocation("tmp");
+    return lockdir + helper;
 }
 
 class KAuthorizationAdaptor: public QDBusAbstractAdaptor
@@ -126,6 +135,8 @@ KAuthorization::~KAuthorization()
 bool KAuthorization::isAuthorized(const QString &helper)
 {
     kDebug() << "Checking if" << helper << "is authorized";
+    KLockFile authorizationlock(kGetLockFile(helper));
+    authorizationlock.lock();
     QDBusInterface kauthorizationinterface(
         helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
         QDBusConnection::systemBus()
@@ -143,12 +154,8 @@ bool KAuthorization::isAuthorized(const QString &helper)
 int KAuthorization::execute(const QString &helper, const QString &method, const QVariantMap &arguments)
 {
     kDebug(s_kauthorizationarea) << "Executing" << helper << "method" << method;
-
-    while (KDBusConnectionPool::isServiceRegistered(helper, QDBusConnection::systemBus())) {
-        kDebug(s_kauthorizationarea) << "Waiting for service to unregister" << helper;
-        QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
-    }
-
+    KLockFile authorizationlock(kGetLockFile(helper));
+    authorizationlock.lock();
     QDBusInterface kauthorizationinterface(
         helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
         QDBusConnection::systemBus()
