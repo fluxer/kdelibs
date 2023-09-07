@@ -19,6 +19,7 @@
 */
 
 #include "udevopticaldrive.h"
+#include "kmountpoint.h"
 
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -64,8 +65,13 @@ OpticalDrive::~OpticalDrive()
 bool OpticalDrive::eject()
 {
     // cdio fails to unmount unless current user is root
-    QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
-    soliduiserver.call("unmountUdi", m_device->udi());
+    const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
+    const QString devname(m_device->deviceProperty("DEVNAME"));
+    const KMountPoint::Ptr mp = mountpoints.findByDevice(devname);
+    if (mp && !mp->mountPoint().isEmpty()) {
+        QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
+        soliduiserver.call("unmountUdi", m_device->udi());
+    }
 
     emit ejectRequested(m_device->udi());
 
