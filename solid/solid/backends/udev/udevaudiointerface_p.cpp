@@ -103,7 +103,7 @@ Solid::AudioInterface::SoundcardType UdevAudioInterfacePrivate::soundcardType()
         }
         else
         {
-            QString busName = parentDevice.subsystem();
+            QByteArray busName = parentDevice.subsystem();
             QString driverName = parentDevice.driver();
             if (busName == "ieee1394")
             {

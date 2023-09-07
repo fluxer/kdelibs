@@ -69,12 +69,12 @@ bool Device::isValid() const
     return (m_device != nullptr);
 }
 
-QString Device::subsystem() const
+QByteArray Device::subsystem() const
 {
     if (!m_device) {
-        return QString();
+        return QByteArray();
     }
-    return QString::fromLatin1(udev_device_get_subsystem(m_device));
+    return QByteArray(udev_device_get_subsystem(m_device));
 }
 
 QString Device::devType() const

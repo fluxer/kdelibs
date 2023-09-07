@@ -75,7 +75,7 @@ QString UDevDevice::parentUdi() const
     // code in several places expects the parent to NOT be the actual parent (disk) device UDI even
     // for partitions but another device UDI related to this device, has to be fixed and verified
     // to work at some point
-    if (m_device.subsystem() == QLatin1String("block") || idcdrom == 1) {
+    if (m_device.subsystem() == "block" || idcdrom == 1) {
         return devicePath();
     }
 
@@ -531,13 +531,13 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::StorageAccess:
     case Solid::DeviceInterface::StorageDrive:
     case Solid::DeviceInterface::StorageVolume: {
-        return m_device.subsystem() == QLatin1String("block");
+        return m_device.subsystem() == "block";
     }
 
     case Solid::DeviceInterface::AcAdapter: {
         const QString powersupplytype = deviceProperty("POWER_SUPPLY_TYPE").toLower();
         return (
-            m_device.subsystem() == QLatin1String("power_supply")
+            m_device.subsystem() == "power_supply"
             && (powersupplytype == QLatin1String("mains")
             || powersupplytype.contains(QLatin1String("ups")))
         );
@@ -545,7 +545,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::Battery: {
         const QString powersupplytype = deviceProperty("POWER_SUPPLY_TYPE").toLower();
         return (
-            m_device.subsystem() == QLatin1String("power_supply") &&
+            m_device.subsystem() == "power_supply" &&
             (powersupplytype == QLatin1String("battery")
             || powersupplytype.contains(QLatin1String("usb")))
         );
@@ -570,13 +570,13 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
         return !deviceProperty("MAJOR").isEmpty();
 
     case Solid::DeviceInterface::Video:
-        return m_device.subsystem() == QLatin1String("video4linux");
+        return m_device.subsystem() == "video4linux";
 
     case Solid::DeviceInterface::AudioInterface:
-        return m_device.subsystem() == QLatin1String("sound");
+        return m_device.subsystem() == "sound";
 
     case Solid::DeviceInterface::NetworkInterface:
-        return m_device.subsystem() == QLatin1String("net");
+        return m_device.subsystem() == "net";
 
     case Solid::DeviceInterface::Button:
         return deviceProperty("ID_INPUT_KEY").toInt() == 1;

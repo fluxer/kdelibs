@@ -47,7 +47,7 @@ public:
     Device &operator= (const Device &other);
 
     bool isValid() const;
-    QString subsystem() const;
+    QByteArray subsystem() const;
     QString devType() const;
     QString name() const;
     QString sysfsPath() const;

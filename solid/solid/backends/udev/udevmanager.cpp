@@ -97,31 +97,31 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     qDebug() << "Subsystem:" << device.subsystem();
     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 #endif
-    if (device.subsystem() == QLatin1String("block")) {
+    if (device.subsystem() == "block") {
         return !device.deviceProperty("ID_FS_TYPE").isEmpty();
     }
 
-    if (device.subsystem() == QLatin1String("power_supply")) {
+    if (device.subsystem() == "power_supply") {
         return true;
     }
 
-    if (device.driver() == QLatin1String("processor")) {
+    if (device.driver() == "processor") {
         // Linux ACPI reports processor slots, rather than processors.
         // Empty slots will not have a system device associated with them.
         QDir sysfsDir(device.sysfsPath());
         return (sysfsDir.exists("sysdev") || sysfsDir.exists("cpufreq") || sysfsDir.exists("topology/core_id"));
     }
-    if (device.subsystem() == QLatin1String("sound") &&
+    if (device.subsystem() == "sound" &&
         device.deviceProperty("SOUND_FORM_FACTOR") != "internal") {
         return true;
     }
 
-    if (device.subsystem() == QLatin1String("pci")) {
+    if (device.subsystem() == "pci") {
         const QString pciclass = device.deviceProperty("PCI_CLASS");
         return (pciclass == QLatin1String("30000")); // VGA controller
     }
 
-    if (device.subsystem() == QLatin1String("input")) {
+    if (device.subsystem() == "input") {
         const QStringList deviceProperties = device.deviceProperties();
         // key
         if (device.deviceProperty("ID_INPUT_KEY").toInt() == 1
@@ -137,8 +137,8 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
         return false;
     }
 
-    return device.subsystem() == QLatin1String("video4linux") ||
-           device.subsystem() == QLatin1String("net") ||
+    return device.subsystem() == "video4linux" ||
+           device.subsystem() == "net" ||
            device.deviceProperty("ID_MEDIA_PLAYER").toInt() == 1 || // media-player-info recognized devices
            (device.deviceProperty("ID_GPHOTO2").toInt() == 1 && device.parent().deviceProperty("ID_GPHOTO2").toInt() != 1); // GPhoto2 cameras
 }
