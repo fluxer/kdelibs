@@ -57,7 +57,7 @@ public:
     QString deviceName() const;
     QString devicePath() const;
     int deviceNumber() const;
-    UdevQt::Device udevDevice();
+    UdevQt::Device udevDevice() const;
 
 private:
     friend class AcAdapter;

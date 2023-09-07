@@ -695,7 +695,7 @@ QString UDevDevice::devicePath() const
     return QString::fromLatin1(UDEV_UDI_PREFIX) + deviceName();
 }
 
-UdevQt::Device UDevDevice::udevDevice()
+UdevQt::Device UDevDevice::udevDevice() const
 {
     return m_device;
 }
