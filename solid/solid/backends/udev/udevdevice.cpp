@@ -53,7 +53,7 @@ using namespace Solid::Backends::UDev;
 
 static KDeviceDatabase s_devicedb;
 
-UDevDevice::UDevDevice(const UdevQt::Device device)
+UDevDevice::UDevDevice(const UdevQt::Device &device)
     : Solid::Ifaces::Device()
     , m_device(device)
 {

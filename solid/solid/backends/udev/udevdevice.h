@@ -38,7 +38,7 @@ class UDevDevice : public Solid::Ifaces::Device
     Q_OBJECT
 
 public:
-    UDevDevice(const UdevQt::Device device);
+    UDevDevice(const UdevQt::Device &device);
     virtual ~UDevDevice();
 
     virtual QString udi() const;
