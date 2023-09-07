@@ -115,12 +115,12 @@ int Device::sysfsNumber() const
     return -1;
 }
 
-QString Device::driver() const
+QByteArray Device::driver() const
 {
     if (!m_device) {
-        return QString();
+        return QByteArray();
     }
-    return QString::fromLatin1(udev_device_get_driver(m_device));
+    return QByteArray(udev_device_get_driver(m_device));
 }
 
 QStringList Device::alternateDeviceSymlinks() const

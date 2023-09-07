@@ -52,7 +52,7 @@ public:
     QString name() const;
     QString sysfsPath() const;
     int sysfsNumber() const;
-    QString driver() const;
+    QByteArray driver() const;
     QStringList alternateDeviceSymlinks() const;
     QStringList deviceProperties() const;
     Device parent() const;

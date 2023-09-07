@@ -95,26 +95,18 @@ Solid::AudioInterface::SoundcardType UdevAudioInterfacePrivate::soundcardType()
                 deviceName.contains("headphone", Qt::CaseInsensitive))
         {
             m_soundcardType = Solid::AudioInterface::Headset;
-        }
-        else if (productName.contains("modem", Qt::CaseInsensitive) ||
+        } else if (productName.contains("modem", Qt::CaseInsensitive) ||
                 deviceName.contains("modem", Qt::CaseInsensitive))
         {
             m_soundcardType = Solid::AudioInterface::Modem;
-        }
-        else
-        {
+        } else {
             QByteArray busName = parentDevice.subsystem();
             QString driverName = parentDevice.driver();
-            if (busName == "ieee1394")
-            {
+            if (busName == "ieee1394") {
                 m_soundcardType = Solid::AudioInterface::FirewireSoundcard;
-            }
-            else if (busName == "usb" || busName == "usb_device" || driverName.contains("usb", Qt::CaseInsensitive))
-            {
+            } else if (busName == "usb" || busName == "usb_device" || driverName.contains("usb", Qt::CaseInsensitive)) {
                 m_soundcardType = Solid::AudioInterface::UsbSoundcard;
-            }
-            else
-            {
+            } else {
                 m_soundcardType = Solid::AudioInterface::InternalSoundcard;
             }
         }
@@ -122,7 +114,6 @@ Solid::AudioInterface::SoundcardType UdevAudioInterfacePrivate::soundcardType()
 
     return m_soundcardType;
 }
-
 
 bool UdevAudioInterfacePrivate::isHardware(const char* lastElement)
 {
@@ -139,7 +130,7 @@ bool UdevAudioInterfacePrivate::isHardware(const char* lastElement)
 
 bool UdevAudioInterfacePrivate::isAlsaControl(const char* lastElement)
 {
-    if (sscanf (lastElement, "controlC%d", &m_cardnum) == 1) {
+    if (sscanf(lastElement, "controlC%d", &m_cardnum) == 1) {
         m_deviceFile = m_device->deviceProperty("DEVNAME");
         m_name = cardNumberToName();
         m_driver = Solid::AudioInterface::Alsa;
@@ -152,7 +143,7 @@ bool UdevAudioInterfacePrivate::isAlsaControl(const char* lastElement)
 bool UdevAudioInterfacePrivate::isAlsaPcm(const char* lastElement)
 {
     char type;
-    if (sscanf (lastElement, "pcmC%dD%d%c", &m_cardnum, &m_devicenum, &type) == 3) {
+    if (sscanf(lastElement, "pcmC%dD%d%c", &m_cardnum, &m_devicenum, &type) == 3) {
         m_driver = Solid::AudioInterface::Alsa;
         m_name = cardNumberToName();
         QString name = deviceName(type);
@@ -239,33 +230,33 @@ bool UdevAudioInterfacePrivate::isOSSDevice(const QByteArray& lastElement, const
 
     if (lastElement.startsWith("dsp")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;
-        sscanf (lastElementAscii, "dsp%d", &m_cardnum);
+        sscanf(lastElementAscii, "dsp%d", &m_cardnum);
     }
 
     if (lastElement.startsWith("adsp")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;
-        sscanf (lastElementAscii, "adsp%d", &m_cardnum);
+        sscanf(lastElementAscii, "adsp%d", &m_cardnum);
     }
 
     if (lastElement.startsWith("midi")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;
-        sscanf (lastElementAscii, "midi%d", &m_cardnum);
+        sscanf(lastElementAscii, "midi%d", &m_cardnum);
     }
 
     if (lastElement.startsWith("amidi")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;
-        sscanf (lastElementAscii, "amidi%d", &m_cardnum);
+        sscanf(lastElementAscii, "amidi%d", &m_cardnum);
     }
 
     if (lastElement.startsWith("audio")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;
-        sscanf (lastElementAscii, "audio%d", &m_cardnum);
+        sscanf(lastElementAscii, "audio%d", &m_cardnum);
     }
 
     if (lastElement.startsWith("mixer")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;
         m_type = Solid::AudioInterface::AudioControl;
-        sscanf (lastElementAscii, "mixer%d", &m_cardnum);
+        sscanf(lastElementAscii, "mixer%d", &m_cardnum);
     }
 
     if (m_driver != Solid::AudioInterface::UnknownAudioDriver) {

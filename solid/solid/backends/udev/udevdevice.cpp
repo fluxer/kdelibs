@@ -552,7 +552,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     }
 
     case Solid::DeviceInterface::Processor:
-        return m_device.driver() == QLatin1String("processor");
+        return m_device.driver() == "processor";
 
 #if defined(LIBCDIO_FOUND)
     case Solid::DeviceInterface::OpticalDrive:
