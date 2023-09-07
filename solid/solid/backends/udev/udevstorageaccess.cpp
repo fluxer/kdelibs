@@ -22,11 +22,24 @@
 #include "kmountpoint.h"
 #include "kde_file.h"
 
+#include <QCoreApplication>
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QDebug>
 
 using namespace Solid::Backends::UDev;
+
+#define SOLID_TIMEOUT 250
+
+static Solid::ErrorType kSolidUiCall(const QString &method, const QString &udi)
+{
+    QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
+    QDBusPendingReply<int> reply = soliduiserver.asyncCall(method, udi);
+    while (!reply.isFinished()) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, SOLID_TIMEOUT);
+    }
+    return static_cast<Solid::ErrorType>(reply.value());
+}
 
 StorageAccess::StorageAccess(UDevDevice *device)
     : DeviceInterface(device),
@@ -112,10 +125,7 @@ bool StorageAccess::setup()
 
     emit setupRequested(m_device->udi());
 
-    QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
-    QDBusReply<int> reply = soliduiserver.call("mountUdi", m_device->udi());
-
-    const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
+    const Solid::ErrorType replyvalue = kSolidUiCall("mountUdi", m_device->udi());
     if (replyvalue == Solid::NoError) {
         emit accessibilityChanged(true, m_device->udi());
     }
@@ -133,10 +143,7 @@ bool StorageAccess::teardown()
 
     emit teardownRequested(m_device->udi());
 
-    QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
-    QDBusReply<int> reply = soliduiserver.call("unmountUdi", m_device->udi());
-
-    const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
+    const Solid::ErrorType replyvalue = kSolidUiCall("unmountUdi", m_device->udi());
     if (replyvalue == Solid::NoError) {
         emit accessibilityChanged(false, m_device->udi());
     }
