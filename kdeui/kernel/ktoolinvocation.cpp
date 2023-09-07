@@ -43,7 +43,6 @@
 #endif
 
 #define KTOOLINVOCATION_TIMEOUT 250
-#define KTOOLINVOCATION_SLEEPTIME 50
 
 // NOTE: keep in sync with:
 // kdelibs/kinit/klauncher_adaptor.h
@@ -135,7 +134,6 @@ int KToolInvocation::startServiceInternal(const char *_function,
     kDebug() << "Waiting for klauncher call to finish" << function;
     while (!reply.isFinished()) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KTOOLINVOCATION_TIMEOUT);
-        QThread::msleep(KTOOLINVOCATION_SLEEPTIME);
     }
     kDebug() << "Done waiting for klauncher call to finish" << function;
     if (!reply.isValid()) {
