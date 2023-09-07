@@ -102,7 +102,7 @@ void KAuthorizationAdaptor::stop()
 
 void KAuthorizationAdaptor::delayedStop()
 {
-    QTimer::singleShot(500, this, SLOT(stop()));
+    QTimer::singleShot(100, this, SLOT(stop()));
 }
 
 
