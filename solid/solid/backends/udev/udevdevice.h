@@ -51,7 +51,6 @@ public:
     virtual bool queryDeviceInterface(const Solid::DeviceInterface::Type &type) const;
     virtual QObject *createDeviceInterface(const Solid::DeviceInterface::Type &type);
 
-    QString device() const;
     QString deviceProperty(const QByteArray &key) const;
     bool devicePropertyExists(const QByteArray &key) const;
     QString deviceName() const;

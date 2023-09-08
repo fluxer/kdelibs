@@ -661,11 +661,6 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     }
 }
 
-QString UDevDevice::device() const
-{
-    return devicePath();
-}
-
 QString UDevDevice::deviceProperty(const QByteArray &key) const
 {
     const QString res = m_device.deviceProperty(key);

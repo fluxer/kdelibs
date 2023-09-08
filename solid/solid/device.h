@@ -112,8 +112,6 @@ namespace Solid
          */
         ~Device();
 
-
-
         /**
          * Assigns a device to this device and returns a reference to it.
          *
@@ -129,7 +127,6 @@ namespace Solid
          * @return true if this device is available, false otherwise
          */
         bool isValid() const;
-
 
         /**
          * Retrieves the Universal Device Identifier (UDI).
@@ -153,7 +150,6 @@ namespace Solid
          */
         QString parentUdi() const;
 
-
         /**
          * Retrieves the parent of the Device.
          *
@@ -161,8 +157,6 @@ namespace Solid
          * @see parentUdi()
          */
         Device parent() const;
-
-
 
         /**
          * Retrieves the name of the device vendor.
