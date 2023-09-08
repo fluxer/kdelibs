@@ -46,36 +46,14 @@ public:
     ~KLockFile();
 
     /*!
-        @brief Possible return values of the lock function
+        @brief Attempts to acquire the lock
     */
-    enum LockResult {
-        //! @brief Lock was acquired successfully
-        LockOK = 0,
-
-        //! @brief The lock could not be acquired because it is held by another process
-        LockFail,
-
-        //! @brief The lock could not be acquired due to an error
-        LockError,
-
-        //! @brief A stale lock has been detected, i.e. the process that owned the lock has crashed
-        LockStale
-    };
-
-    enum LockFlag {
-        //! @brief Return immediately, do not wait for the lock to become available
-        NoBlockFlag = 1,
-
-        //! @brief Automatically remove a lock when it is detected to be stale
-        ForceFlag = 2
-    };
-    Q_DECLARE_FLAGS(LockFlags, LockFlag)
+    bool tryLock();
 
     /*!
-        @brief Attempt to acquire the lock
-        @param flags A set of @ref LockFlag values OR'ed together
+        @brief Acquires the lock
     */
-    LockResult lock(LockFlags flags = LockFlags());
+    void lock();
 
     /*!
         @brief Returns whether the lock is held or not
@@ -87,17 +65,9 @@ public:
     */
     void unlock();
 
-    /*!
-        @brief Returns the pid of the process holding the lock.
-        @returns false if the pid could not be determined
-    */
-    bool getLockInfo(qint64 &pid);
-
 private:
     Q_DISABLE_COPY(KLockFile);
     KLockFilePrivate *const d;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KLockFile::LockFlags)
-
-#endif
+#endif // KLOCKFILE_H

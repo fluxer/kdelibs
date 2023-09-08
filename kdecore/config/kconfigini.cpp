@@ -594,10 +594,7 @@ bool KConfigIniBackend::lock(const KComponentData& componentData)
         m_lockfile = new KLockFile(filePath());
     }
 
-    if (m_lockfile->lock() == KLockFile::LockStale) {
-        // attempt to break the lock
-        m_lockfile->lock(KLockFile::ForceFlag);
-    }
+    m_lockfile->lock();
     return m_lockfile->isLocked();
 }
 

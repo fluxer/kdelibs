@@ -31,9 +31,7 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void testLock();
-    void testLockInfo();
     void testUnlock();
-    void testStaleNoBlockFlag();
 };
 
 #endif // KLOCKFILETEST_H

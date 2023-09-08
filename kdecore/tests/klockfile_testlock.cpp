@@ -29,14 +29,14 @@ int main(int argc, char *argv[])
    KComponentData cData(&about);
 
    if (argc <= 1) {
-       return KLockFile::LockError;
+       return false;
    }
 
    const QString lockName = QString::fromLocal8Bit(argv[1]);
 
    KLockFile lockFile(lockName);
    if (lockFile.isLocked()) {
-       return KLockFile::LockError;
+       return false;
    }
-   return lockFile.lock(KLockFile::NoBlockFlag);
+   return lockFile.tryLock();
 }
