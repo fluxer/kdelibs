@@ -5,6 +5,8 @@ import os, sys, glob
 def cstringify(s):
     r = s.replace('\\', '\\\\')
     r = r.replace('"', '\\"')
+    r = r.replace('&lt;', '<')
+    r = r.replace('&gt;', '>')
     return r
 
 if len(sys.argv) < 2:
