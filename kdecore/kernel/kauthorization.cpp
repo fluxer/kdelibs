@@ -161,10 +161,11 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
         QDBusConnection::systemBus()
     );
     QDBusPendingReply<int> reply = kauthorizationinterface.asyncCall(QString::fromLatin1("execute"), method, arguments);
+    kDebug(s_kauthorizationarea) << "Waiting for service call to finish" << helper;
     while (!reply.isFinished()) {
-        kDebug(s_kauthorizationarea) << "Waiting for service call to finish" << helper;
         QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
     }
+    kDebug(s_kauthorizationarea) << "Done waiting for service call to finish" << helper;
     int result = KAuthorization::NoError;
     if (!reply.isValid()) {
         result = KAuthorization::DBusError;
