@@ -66,13 +66,11 @@ DeviceList Client::allDevices()
     struct udev_list_entry *list = udev_enumerate_get_list_entry(en);
     udev_list_entry_foreach(entry, list) {
         struct udev_device *ud = udev_device_new_from_syspath(m_udev, udev_list_entry_get_name(entry));
-
         if (!ud) {
             continue;
         }
         ret << Device(ud, false);
     }
-
     udev_enumerate_unref(en);
 
     return ret;
@@ -88,7 +86,6 @@ Device Client::deviceBySysfsPath(const QString &sysfsPath)
     return Device(ud, false);
 }
 
-
 void Client::monitorReadyRead(int fd)
 {
     Q_UNUSED(fd);
@@ -99,23 +96,23 @@ void Client::monitorReadyRead(int fd)
     if (!dev) {
         return;
     }
-    Device device(dev, false);
 
-    QByteArray action(udev_device_get_action(dev));
-    if (action == "add") {
+    const Device device(dev, false);
+    const char* action = udev_device_get_action(dev);
+    if (qstrcmp(action, "add") == 0) {
         emit deviceAdded(device);
-    } else if (action == "remove") {
+    } else if (qstrcmp(action, "remove") == 0) {
         emit deviceRemoved(device);
-    } else if (action == "change") {
+    } else if (qstrcmp(action, "change") == 0) {
         emit deviceChanged(device);
-    } else if (action == "online" || action == "offline") {
+    } else if (qstrcmp(action, "online") == 0 || qstrcmp(action, "offline") == 0) {
         ; // nada
-    } else if (Q_UNLIKELY(action != "bind" && action != "unbind")) {
+    } else if (qstrcmp(action, "bind") != 0 && qstrcmp(action, "unbind") != 0) {
         /*
             bind/unbind are driver changing for device type of event, on some systems it appears to be
             broken and doing it all the time thus ignore the actions
         */
-        qWarning("UdevQt: unhandled device action \"%s\"", action.constData());
+        qWarning("UdevQt: unhandled device action \"%s\"", action);
     }
 }
 
