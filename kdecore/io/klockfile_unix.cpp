@@ -26,7 +26,6 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <signal.h>
 #include <errno.h>
 
 #define KLOCKFILE_TIMEOUT 150
