@@ -70,20 +70,20 @@ class Client : public QObject
 {
     Q_OBJECT
 public:
-    Client(const QList<QByteArray> &subsystems, QObject *parent = 0);
+    Client(const QList<QByteArray> &subsystems, QObject *parent = nullptr);
     ~Client();
 
     DeviceList allDevices();
     Device deviceBySysfsPath(const QString &sysfsPath);
 
-signals:
+Q_SIGNALS:
     void deviceAdded(const UdevQt::Device &dev);
     void deviceRemoved(const UdevQt::Device &dev);
     void deviceChanged(const UdevQt::Device &dev);
     void deviceOnlined(const UdevQt::Device &dev);
     void deviceOfflined(const UdevQt::Device &dev);
 
-private slots:
+private Q_SLOTS:
     void monitorReadyRead(int fd);
 
 private:

@@ -22,8 +22,11 @@
 
 namespace UdevQt {
 
-Client::Client(const QList<QByteArray>& subsystems, QObject *parent)
-    : QObject(parent), m_udev(udev_new()), m_monitor(0), m_monitorNotifier(0)
+Client::Client(const QList<QByteArray> &subsystems, QObject *parent)
+    : QObject(parent),
+    m_udev(udev_new()),
+    m_monitor(nullptr),
+    m_monitorNotifier(nullptr)
 {
     // create a listener
     m_monitor = udev_monitor_new_from_netlink(m_udev, "udev");
@@ -39,8 +42,8 @@ Client::Client(const QList<QByteArray>& subsystems, QObject *parent)
 
     // start the monitor receiving
     udev_monitor_enable_receiving(m_monitor);
-    m_monitorNotifier = new QSocketNotifier(udev_monitor_get_fd(m_monitor), QSocketNotifier::Read);
-    QObject::connect(m_monitorNotifier, SIGNAL(activated(int)), this, SLOT(monitorReadyRead(int)));
+    m_monitorNotifier = new QSocketNotifier(udev_monitor_get_fd(m_monitor), QSocketNotifier::Read, this);
+    connect(m_monitorNotifier, SIGNAL(activated(int)), this, SLOT(monitorReadyRead(int)));
 }
 
 Client::~Client()
