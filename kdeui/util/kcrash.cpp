@@ -107,6 +107,7 @@ void KCrash::setFlags(KCrash::CrashFlags flags)
             if (kaboutdata) {
                 s_crashdata["appversion"] = kaboutdata->version();
                 s_crashdata["programname"] = kaboutdata->programName();
+                s_crashdata["programicon"] = kaboutdata->programIconName();
                 s_crashdata["bugaddress"] = kaboutdata->bugAddress();
                 s_crashdata["homepage"] = kaboutdata->homepage();
             }
