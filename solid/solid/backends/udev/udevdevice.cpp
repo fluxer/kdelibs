@@ -65,7 +65,7 @@ UDevDevice::~UDevDevice()
 
 QString UDevDevice::udi() const
 {
-    return devicePath();
+    return QString::fromLatin1(UDEV_UDI_PREFIX) + deviceName();
 }
 
 QString UDevDevice::parentUdi() const
@@ -76,7 +76,7 @@ QString UDevDevice::parentUdi() const
     // for partitions but another device UDI related to this device, has to be fixed and verified
     // to work at some point
     if (m_device.subsystem() == "block" || idcdrom == 1) {
-        return devicePath();
+        return udi();
     }
 
     return QString::fromLatin1(UDEV_UDI_PREFIX);
@@ -683,11 +683,6 @@ QString UDevDevice::deviceName() const
 int UDevDevice::deviceNumber() const
 {
     return m_device.sysfsNumber();
-}
-
-QString UDevDevice::devicePath() const
-{
-    return QString::fromLatin1(UDEV_UDI_PREFIX) + deviceName();
 }
 
 UdevQt::Device UDevDevice::udevDevice() const

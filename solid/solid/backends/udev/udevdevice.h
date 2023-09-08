@@ -54,7 +54,6 @@ public:
     QString deviceProperty(const QByteArray &key) const;
     bool devicePropertyExists(const QByteArray &key) const;
     QString deviceName() const;
-    QString devicePath() const;
     int deviceNumber() const;
     UdevQt::Device udevDevice() const;
 
