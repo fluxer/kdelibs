@@ -67,7 +67,8 @@ bool NetworkInterface::isWireless() const
         struct iwreq iwr;
 
         int ioctl_fd = socket (PF_INET, SOCK_DGRAM, 0);
-        strncpy (iwr.ifr_ifrn.ifrn_name, ifaceName().toLatin1().constData(), IFNAMSIZ);
+        const QByteArray ifaceNameBytes = ifaceName().toLatin1();
+        strncpy (iwr.ifr_ifrn.ifrn_name, ifaceNameBytes.constData(), IFNAMSIZ);
 
         QFileInfo phyDir(m_device->deviceName() + "/phy80211");
         
