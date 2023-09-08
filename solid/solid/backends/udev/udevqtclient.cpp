@@ -108,15 +108,13 @@ void Client::monitorReadyRead(int fd)
         emit deviceRemoved(device);
     } else if (action == "change") {
         emit deviceChanged(device);
-    } else if (action == "online") {
-        emit deviceOnlined(device);
-    } else  if (action == "offline") {
-        emit deviceOfflined(device);
-    /*
-        bind/unbind are driver changing for device type of event, on some systems it appears to be
-        broken and doing it all the time thus ignore the actions
-    */
+    } else if (action == "online" || action == "offline") {
+        ; // nada
     } else if (Q_UNLIKELY(action != "bind" && action != "unbind")) {
+        /*
+            bind/unbind are driver changing for device type of event, on some systems it appears to be
+            broken and doing it all the time thus ignore the actions
+        */
         qWarning("UdevQt: unhandled device action \"%s\"", action.constData());
     }
 }

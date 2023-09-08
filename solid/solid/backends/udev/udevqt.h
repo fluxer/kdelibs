@@ -80,8 +80,6 @@ Q_SIGNALS:
     void deviceAdded(const UdevQt::Device &dev);
     void deviceRemoved(const UdevQt::Device &dev);
     void deviceChanged(const UdevQt::Device &dev);
-    void deviceOnlined(const UdevQt::Device &dev);
-    void deviceOfflined(const UdevQt::Device &dev);
 
 private Q_SLOTS:
     void monitorReadyRead(int fd);
