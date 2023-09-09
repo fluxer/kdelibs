@@ -97,7 +97,6 @@ public:
           bottomBorder(0),
           leftBorder(0),
           rightBorder(0),
-          dragging(false),
           overflowBordersVisible(true)
     {
     }
@@ -292,9 +291,7 @@ public:
             return;
         }
 
-        if (!dragging) {
-            widget.data()->setPos(QPoint(widget.data()->pos().x(), -value*10));
-        }
+        widget.data()->setPos(QPoint(widget.data()->pos().x(), -value*10));
     }
 
     void horizontalScroll(int value)
@@ -303,9 +300,7 @@ public:
             return;
         }
 
-        if (!dragging) {
-            widget.data()->setPos(QPoint(-value*10, widget.data()->pos().y()));
-        }
+        widget.data()->setPos(QPoint(-value*10, widget.data()->pos().y()));
     }
 
     void adjustClipping()
@@ -1040,8 +1035,6 @@ public:
     QString styleSheet;
     QWeakPointer<QGraphicsWidget> widgetToBeVisible;
     QRectF rectToBeVisible;
-    QPointF dragHandleClicked;
-    bool dragging;
     QTimer *adjustScrollbarsTimer;
     QTimer *wheelTimer;
 
