@@ -24,7 +24,6 @@
 #include "kdebug.h"
 
 #include <QDir>
-#include <QThread>
 #include <QTimer>
 #include <QDBusAbstractAdaptor>
 #include <QDBusInterface>
@@ -32,8 +31,6 @@
 #include <QDBusConnectionInterface>
 
 #include <syslog.h>
-
-#define KAUTHORIZATION_TIMEOUT 250
 
 // see kdebug.areas
 static const int s_kauthorizationarea = 185;
