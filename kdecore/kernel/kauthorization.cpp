@@ -37,6 +37,7 @@
 
 // see kdebug.areas
 static const int s_kauthorizationarea = 185;
+static const qint64 s_servicetimeout = 30000;
 
 void kAuthMessageHandler(QtMsgType type, const char *msg)
 {
@@ -160,12 +161,7 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
         helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
         QDBusConnection::systemBus()
     );
-    QDBusPendingReply<int> reply = kauthorizationinterface.asyncCall(QString::fromLatin1("execute"), method, arguments);
-    kDebug(s_kauthorizationarea) << "Waiting for service call to finish" << helper;
-    while (!reply.isFinished()) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
-    }
-    kDebug(s_kauthorizationarea) << "Done waiting for service call to finish" << helper;
+    QDBusReply<int> reply = kauthorizationinterface.call(QString::fromLatin1("execute"), method, arguments);
     int result = KAuthorization::NoError;
     if (!reply.isValid()) {
         result = KAuthorization::DBusError;
@@ -221,7 +217,7 @@ void KAuthorization::helperMain(const char* const helper, KAuthorization *object
     }
 
     // in case the process executing the helper crashes
-    QTimer::singleShot(30000, qApp, SLOT(quit()));
+    QTimer::singleShot(s_servicetimeout, qApp, SLOT(quit()));
 }
 
 #include "kauthorization.moc"

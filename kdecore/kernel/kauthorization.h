@@ -70,6 +70,7 @@
     }
     @endcode
 
+    @warning the helper has failsafe - after 30sec it will exit unconditionally!
     @since 4.22
 */
 class KDECORE_EXPORT KAuthorization : public QObject
