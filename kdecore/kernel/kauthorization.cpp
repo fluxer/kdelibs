@@ -59,12 +59,6 @@ void kAuthMessageHandler(QtMsgType type, const char *msg)
     }
 }
 
-static QString kGetLockFile(const QString &helper)
-{
-    const QString lockdir = KGlobal::dirs()->saveLocation("tmp");
-    return lockdir + helper;
-}
-
 class KAuthorizationAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
@@ -133,7 +127,7 @@ KAuthorization::~KAuthorization()
 bool KAuthorization::isAuthorized(const QString &helper)
 {
     kDebug() << "Checking if" << helper << "is authorized";
-    KLockFile authorizationlock(kGetLockFile(helper));
+    KLockFile authorizationlock(helper);
     authorizationlock.lock();
     QDBusInterface kauthorizationinterface(
         helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
@@ -152,7 +146,7 @@ bool KAuthorization::isAuthorized(const QString &helper)
 int KAuthorization::execute(const QString &helper, const QString &method, const QVariantMap &arguments)
 {
     kDebug(s_kauthorizationarea) << "Executing" << helper << "method" << method;
-    KLockFile authorizationlock(kGetLockFile(helper));
+    KLockFile authorizationlock(helper);
     authorizationlock.lock();
     QDBusInterface kauthorizationinterface(
         helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),

@@ -17,6 +17,8 @@
 */
 
 #include "klockfile.h"
+#include "kglobal.h"
+#include "kstandarddirs.h"
 #include "kdebug.h"
 #include "kde_file.h"
 
@@ -48,7 +50,8 @@ KLockFilePrivate::KLockFilePrivate()
 KLockFile::KLockFile(const QString &file)
     : d(new KLockFilePrivate())
 {
-    d->m_lockfile = QFile::encodeName(file);
+    d->m_lockfile = QFile::encodeName(KGlobal::dirs()->saveLocation("tmp"));
+    d->m_lockfile.append(QFile::encodeName(file).toHex());
     d->m_lockfile.append(".klockfile");
 }
 
@@ -64,11 +67,7 @@ bool KLockFile::tryLock()
         return true;
     }
 
-#ifdef O_CLOEXEC
-    d->m_lockfd = KDE_open(d->m_lockfile.constData(), O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, 0644);
-#else
     d->m_lockfd = KDE_open(d->m_lockfile.constData(), O_WRONLY | O_CREAT | O_EXCL, 0644);
-#endif
     return (d->m_lockfd != -1);
 }
 

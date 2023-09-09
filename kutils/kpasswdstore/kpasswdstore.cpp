@@ -19,7 +19,6 @@
 #include "kpasswdstore.h"
 #include "kconfig.h"
 #include "kconfiggroup.h"
-#include "kglobal.h"
 #include "kstandarddirs.h"
 #include "klockfile.h"
 #include "ksettings.h"
@@ -47,7 +46,7 @@ static QByteArray getCookie()
 
 static QString getLockName(const QByteArray &cookie, const QString &storeid)
 {
-    return QString::fromLatin1("%1/%2-%3").arg(KGlobal::dirs()->saveLocation("tmp"), cookie, storeid);
+    return QString::fromLatin1("%2-%3").arg(cookie, storeid);
 }
 
 class KPasswdStorePrivate
