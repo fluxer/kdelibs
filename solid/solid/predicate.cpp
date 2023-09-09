@@ -220,12 +220,12 @@ bool Solid::Predicate::matches(const Device &device) const
             }
 
             if (d->compOperator==Mask) {
-                bool v_ok;
+                bool v_ok = false;
                 int v = value.toInt(&v_ok);
-                bool e_ok;
+                bool e_ok = false;
                 int e = expected.toInt(&e_ok);
 
-                return (e_ok && v_ok && (v &e));
+                return (e_ok && v_ok && (v & e));
             } else {
                 return (value == expected);
             }
