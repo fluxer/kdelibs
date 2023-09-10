@@ -78,8 +78,6 @@ public:
      */
     QGroupBox *nativeWidget() const;
 
-Q_SIGNALS:
-
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
     void changeEvent(QEvent *event);
