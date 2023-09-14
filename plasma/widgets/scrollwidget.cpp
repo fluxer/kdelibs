@@ -119,10 +119,6 @@ public:
         borderSvg = new Plasma::Svg(q);
         borderSvg->setImagePath("widgets/scrollwidget");
 
-        adjustScrollbarsTimer = new QTimer(q);
-        adjustScrollbarsTimer->setSingleShot(true);
-        QObject::connect(adjustScrollbarsTimer, SIGNAL(timeout()), q, SLOT(adjustScrollbars()));
-
         wheelTimer =  new QTimer(q);
         wheelTimer->setSingleShot(true);
 
@@ -1035,7 +1031,6 @@ public:
     QString styleSheet;
     QWeakPointer<QGraphicsWidget> widgetToBeVisible;
     QRectF rectToBeVisible;
-    QTimer *adjustScrollbarsTimer;
     QTimer *wheelTimer;
 
     QPointF pressPos;
@@ -1115,7 +1110,7 @@ void ScrollWidget::setWidget(QGraphicsWidget *widget)
         widget->setParentItem(d->scrollingWidget);
         widget->setPos(d->minXExtent(), d->minYExtent());
         widget->installEventFilter(this);
-        d->adjustScrollbarsTimer->start(200);
+        d->adjustScrollbars();
     }
 }
 
@@ -1290,7 +1285,7 @@ void ScrollWidget::resizeEvent(QGraphicsSceneResizeEvent *event)
         return;
     }
 
-    d->adjustScrollbarsTimer->start(200);
+    d->adjustScrollbars();
 
     //if topBorder exists bottomBorder too
     if (d->topBorder) {
@@ -1375,7 +1370,7 @@ bool ScrollWidget::eventFilter(QObject *watched, QEvent *event)
         emit viewportGeometryChanged(viewportGeometry());
     } else if (watched == d->widget.data() && event->type() == QEvent::GraphicsSceneResize) {
         d->stopAnimations();
-        d->adjustScrollbarsTimer->start(200);
+        d->adjustScrollbars();
         updateGeometry();
 
         QPointF newPos = d->widget.data()->pos();

@@ -56,7 +56,6 @@ class PLASMA_EXPORT ScrollWidget : public QGraphicsWidget
     Q_PROPERTY(bool overShoot READ hasOverShoot WRITE setOverShoot)
 
 public:
-
     /**
      * Constructs a new ScrollWidget
      *
@@ -173,7 +172,6 @@ public:
      */
     QRectF viewportGeometry() const;
 
-
     /**
      * @return the size of the internal widget
      * @since 4.4
@@ -230,7 +228,7 @@ Q_SIGNALS:
      * @since 4.4
      */
     void scrollStateChanged(QAbstractAnimation::State newState,
-            QAbstractAnimation::State oldState);
+                            QAbstractAnimation::State oldState);
 
     /**
      * The viewport geomety changed, for instance due a widget resize
@@ -258,7 +256,6 @@ private:
     Q_PRIVATE_SLOT(d, void horizontalScroll(int value))
     Q_PRIVATE_SLOT(d, void makeRectVisible())
     Q_PRIVATE_SLOT(d, void makeItemVisible())
-    Q_PRIVATE_SLOT(d, void adjustScrollbars())
     Q_PRIVATE_SLOT(d, void fixupX())
     Q_PRIVATE_SLOT(d, void fixupY())
     Q_PRIVATE_SLOT(d, void setScrollX())
