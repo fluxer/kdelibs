@@ -1363,12 +1363,12 @@ QList<QAction*> Applet::contextualActions()
     return d->script ? d->script->contextualActions() : QList<QAction*>();
 }
 
-QAction *Applet::action(QString name) const
+QAction *Applet::action(const QString &name) const
 {
     return d->actions->action(name);
 }
 
-void Applet::addAction(QString name, QAction *action)
+void Applet::addAction(const QString &name, QAction *action)
 {
     d->actions->addAction(name, action);
 }

@@ -482,12 +482,12 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
         /**
          * Returns the QAction with the given name from our collection
          */
-        Q_INVOKABLE QAction *action(QString name) const;
+        Q_INVOKABLE QAction *action(const QString &name) const;
 
         /**
          * Adds the action to our collection under the given name
          */
-        void addAction(QString name, QAction *action);
+        void addAction(const QString &name, QAction *action);
 
         /**
          * Sets the BackgroundHints for this applet @see BackgroundHint
