@@ -162,7 +162,7 @@ ToolButton::ToolButton(QGraphicsWidget *parent)
     d->background->setCacheAllRenderedFrames(true);
     d->background->setElementPrefix("normal");
 
-    QToolButton *native = new QToolButton;
+    QToolButton *native = new QToolButton();
     connect(native, SIGNAL(clicked()), this, SIGNAL(clicked()));
     connect(native, SIGNAL(pressed()), this, SIGNAL(pressed()));
     connect(native, SIGNAL(released()), this, SIGNAL(released()));
