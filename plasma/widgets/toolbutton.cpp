@@ -255,6 +255,10 @@ void ToolButton::setImage(const QString &path)
 
 void ToolButton::setImage(const QString &path, const QString &elementid)
 {
+    if (d->imagePath == path && d->svgElement == elementid) {
+        return;
+    }
+    d->imagePath.clear();
     d->svgElement = elementid;
     setImage(path);
 }
