@@ -34,6 +34,8 @@ Charsets        string          Charset(s) send in the "Accept-Charset:" HTTP Re
 
 Languages       string          Language(s) send in the "Accept-Language:" HTTP Request Header.
 
+Authorization   string          Authorization send in the "Authorization:" HTTP Request Header.
+
 no-auth         bool            Flag that indicates that no authentication (neither WWW nor proxy)
                                 attempts should be made.
 no-www-auth     bool            Flag that indicates that no HTTP WWW authentication attempts should

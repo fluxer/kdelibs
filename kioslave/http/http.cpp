@@ -605,6 +605,10 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         m_curlheaders = curl_slist_append(m_curlheaders, QByteArray("Accept: ") + metaData("accept").toAscii());
     }
 
+    if (hasMetaData(QLatin1String("Authorization"))) {
+        m_curlheaders = curl_slist_append(m_curlheaders, QByteArray("Authorization: ") + metaData("Authorization").toAscii());
+    }
+
     curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, m_curlheaders);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(m_curlheaders);
