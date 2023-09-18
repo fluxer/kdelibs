@@ -1006,11 +1006,6 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
         Extender *extender() const;
 
         /**
-         * @internal event filter; used for focus watching
-         **/
-        bool eventFilter(QObject *o, QEvent *e);
-
-        /**
          * @internal scene event filter; used to manage applet dragging
          */
         bool sceneEventFilter (QGraphicsItem *watched, QEvent *event);
