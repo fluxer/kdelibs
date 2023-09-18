@@ -242,10 +242,7 @@ TabBar::TabBar(QGraphicsWidget *parent)
     d->tabWidgetLayout->addItem(d->tabBarLayout);
     d->tabWidgetLayout->addItem(d->emptyTabBarSpacer);
 
-    //tabBar is centered, so a stretch at begin one at the end
-    d->tabBarLayout->addStretch();
     d->tabBarLayout->addItem(d->tabProxy);
-    d->tabBarLayout->addStretch();
     d->tabBarLayout->setContentsMargins(0,0,0,0);
     //d->tabBarLayout->setStretchFactor(d->tabProxy, 2);
 
