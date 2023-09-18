@@ -152,14 +152,14 @@ public:
     void verifyState(const char* cmdName)
     {
         if ((m_state != SlaveBasePrivate::FinishedCalled) && (m_state != SlaveBasePrivate::ErrorCalled)){
-            kWarning(7019) << cmdName << "did not call finished() or error()! Please fix the KIO slave.";
+            kWarning(7019) << m_protocol << cmdName << "did not call finished() or error()! Please fix the KIO slave.";
         }
     }
 
     void verifyErrorFinishedNotCalled(const char* cmdName)
     {
         if (m_state == SlaveBasePrivate::FinishedCalled || m_state == SlaveBasePrivate::ErrorCalled) {
-            kWarning(7019) << cmdName << "called finished() or error(), but it's not supposed to! Please fix the KIO slave.";
+            kWarning(7019) << m_protocol << cmdName << "called finished() or error(), but it's not supposed to! Please fix the KIO slave.";
         }
     }
 
