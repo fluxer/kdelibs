@@ -401,8 +401,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
         {
             kDebug(7101) << "calling canResume with" << KIO::number(buff_part.st_size);
 
-            // Maybe we can use this partial file for resuming
-            // Tell about the size we have, and the app will tell us
+            // Maybe use this partial file for resuming, tell about the size and the app will tell
             // if it's ok to resume or not.
             _flags |= canResume(buff_part.st_size) ? KIO::Resume : KIO::DefaultFlags;
 
@@ -423,7 +422,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
     QString dest;
     int fd = -1;
 
-    // Loop until we got 0 (end of data)
+    // Loop until 0 (end of data)
     do {
         QByteArray buffer;
         dataReq(); // Request for data
@@ -480,7 +479,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
 
             if (write_all(fd, buffer.data(), buffer.size())) {
                 if (errno == ENOSPC) {
-                     // disk full 
+                    // disk full
                     error(KIO::ERR_DISK_FULL, dest_orig);
                     result = -2; // means: remove dest file
                 } else {
@@ -512,12 +511,12 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
     }
 
     if (fd == -1) {
-        // we got nothing to write out, so we never opened the file
+        // got nothing to write out, so never opened the file
         finished();
         return;
     }
 
-    if (::close(fd)) {
+    if (::close(fd) == -1) {
         kWarning(7101) << "Error when closing file descriptor:" << strerror(errno);
         error(KIO::ERR_COULD_NOT_WRITE, dest_orig);
         return;
@@ -570,7 +569,7 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
 
     }
 
-    // We have done our job => finish
+    // job done
     finished();
 }
 
