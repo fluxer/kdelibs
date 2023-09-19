@@ -195,10 +195,7 @@ void KNotificationManager::send(KNotification *notification, const bool persiste
     }
 
     if (eventactions.contains(QString::fromLatin1("Sound"))) {
-        QString eventsound = notification->icon();
-        if (eventsound.isEmpty()) {
-            eventsound = eventgroup.readEntry("Sound");
-        }
+        QString eventsound = eventgroup.readEntry("Sound");
         if (eventsound.isEmpty()) {
             eventsound = globalgroup.readEntry("Sound");
         }
