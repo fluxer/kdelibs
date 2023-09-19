@@ -507,7 +507,10 @@ void FileProtocol::put(const KUrl &url, int _mode, KIO::JobFlags _flags)
             }
         }
 
-        return;
+        if (fd != -1) {
+            return;
+        }
+        // falltrough when nothing was opened
     }
 
     if (fd == -1) {
