@@ -20,17 +20,14 @@
 #include "slider.h"
 
 #include <QApplication>
-#include <QPainter>
 #include <QSlider>
-#include <QtGui/qstyleoption.h>
-#include <QtGui/qgraphicssceneevent.h>
+#include <QGraphicsSceneWheelEvent>
 #include <kmimetype.h>
 
 #include "theme.h"
 #include "framesvg.h"
 
 #include "private/style_p.h"
-#include "private/focusindicator_p.h"
 
 namespace Plasma
 {
@@ -42,13 +39,7 @@ public:
     {
     }
 
-    ~SliderPrivate()
-    {
-    }
-
-    Plasma::FrameSvg *background;
     Plasma::Style::Ptr style;
-    FocusIndicator *focusIndicator;
 };
 
 Slider::Slider(QGraphicsWidget *parent)
@@ -65,10 +56,6 @@ Slider::Slider(QGraphicsWidget *parent)
     native->setWindowIcon(QIcon());
     native->setAttribute(Qt::WA_NoSystemBackground);
 
-    d->background = new Plasma::FrameSvg(this);
-    d->background->setImagePath("widgets/slider");
-    d->focusIndicator = new FocusIndicator(this, d->background);
-
     d->style = Plasma::Style::sharedStyle();
     native->setStyle(d->style.data());
 }
@@ -77,109 +64,6 @@ Slider::~Slider()
 {
     delete d;
     Plasma::Style::doneWithSharedStyle();
-}
-
-void Slider::paint(QPainter *painter,
-                   const QStyleOptionGraphicsItem *option,
-                   QWidget *widget)
-{
-    if (!styleSheet().isNull() || Theme::defaultTheme()->useNativeWidgetStyle()) {
-        QGraphicsProxyWidget::paint(painter, option, widget);
-        return;
-    }
-
-    QSlider *slider = nativeWidget();
-    QStyle *style = slider->style();
-    QStyleOptionSlider sliderOpt;
-    sliderOpt.initFrom(slider);
-
-    //init the other stuff in the slider, taken from initStyleOption()
-    sliderOpt.subControls = QStyle::SC_None;
-    sliderOpt.activeSubControls = QStyle::SC_None;
-    sliderOpt.orientation = slider->orientation();
-    sliderOpt.maximum = slider->maximum();
-    sliderOpt.minimum = slider->minimum();
-    sliderOpt.tickPosition = (QSlider::TickPosition)slider->tickPosition();
-    sliderOpt.tickInterval = slider->tickInterval();
-    sliderOpt.upsideDown = (slider->orientation() == Qt::Horizontal) ?
-                     (slider->invertedAppearance() != (sliderOpt.direction == Qt::RightToLeft))
-                     : (!slider->invertedAppearance());
-    sliderOpt.direction = Qt::LeftToRight; // we use the upsideDown option instead
-    sliderOpt.sliderPosition = slider->sliderPosition();
-    sliderOpt.sliderValue = slider->value();
-    sliderOpt.singleStep = slider->singleStep();
-    sliderOpt.pageStep = slider->pageStep();
-    if (slider->orientation() == Qt::Horizontal) {
-        sliderOpt.state |= QStyle::State_Horizontal;
-    }
-
-    QRect backgroundRect =
-        style->subControlRect(QStyle::CC_Slider, &sliderOpt, QStyle::SC_SliderGroove, slider);
-
-    if (sliderOpt.orientation == Qt::Horizontal &&
-        d->background->hasElement("horizontal-background-center")) {
-        d->background->setElementPrefix("horizontal-background");
-        d->background->resizeFrame(backgroundRect.size());
-        d->background->paintFrame(painter, backgroundRect.topLeft());
-    } else if (sliderOpt.orientation == Qt::Vertical &&
-        d->background->hasElement("vertical-background-center")) {
-        d->background->setElementPrefix("vertical-background");
-        d->background->resizeFrame(backgroundRect.size());
-        d->background->paintFrame(painter, backgroundRect.topLeft());
-    } else if (sliderOpt.orientation == Qt::Horizontal) {
-        QRect elementRect = d->background->elementRect("horizontal-slider-line").toRect();
-        elementRect.setWidth(sliderOpt.rect.width());
-        elementRect.moveCenter(sliderOpt.rect.center());
-        d->background->paint(painter, elementRect, "horizontal-slider-line");
-    } else {
-        QRect elementRect = d->background->elementRect("vertical-slider-line").toRect();
-        elementRect.setHeight(sliderOpt.rect.height());
-        elementRect.moveCenter(sliderOpt.rect.center());
-        d->background->paint(painter, elementRect, "vertical-slider-line");
-    }
-
-    //Tickmarks
-    if (sliderOpt.tickPosition != QSlider::NoTicks) {
-        sliderOpt.subControls = QStyle::SC_SliderTickmarks;
-        sliderOpt.palette.setColor(
-            QPalette::WindowText, Plasma::Theme::defaultTheme()->color(Theme::TextColor));
-        style->drawComplexControl(QStyle::CC_Slider, &sliderOpt, painter, slider);
-    }
-
-    QRect handleRect = style->subControlRect(QStyle::CC_Slider, &sliderOpt, QStyle::SC_SliderHandle, slider);
-
-    QString handle;
-    if (sliderOpt.orientation == Qt::Horizontal) {
-        handle = "horizontal-slider-handle";
-    } else {
-        handle = "vertical-slider-handle";
-    }
-
-    QRect elementRect = d->background->elementRect(handle).toRect();
-    elementRect.moveCenter(handleRect.center());
-    if (elementRect.right() > rect().right()) {
-        elementRect.moveRight(rect().right());
-    }
-
-    if (elementRect.left() < rect().left()) {
-        elementRect.moveLeft(rect().left());
-    }
-
-    if (elementRect.top() < rect().top()) {
-        elementRect.moveTop(rect().top());
-    }
-
-    if (elementRect.bottom() > rect().bottom()) {
-        elementRect.moveBottom(rect().bottom());
-    }
-
-    if (orientation() == Qt::Vertical) {
-        d->focusIndicator->setCustomPrefix("vertical-slider-");
-    } else {
-        d->focusIndicator->setCustomPrefix("horizontal-slider-");
-    }
-    d->focusIndicator->setCustomGeometry(elementRect);
-    d->background->paint(painter, elementRect, handle);
 }
 
 void Slider::wheelEvent(QGraphicsSceneWheelEvent *event)

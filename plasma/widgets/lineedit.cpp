@@ -30,7 +30,6 @@
 #include "applet.h"
 #include "framesvg.h"
 #include "private/style_p.h"
-#include "private/focusindicator_p.h"
 #include "private/themedwidgetinterface_p.h"
 #include "theme.h"
 
@@ -60,16 +59,6 @@ LineEdit::LineEdit(QGraphicsWidget *parent)
       d(new LineEditPrivate(this))
 {
     d->style = Plasma::Style::sharedStyle();
-    d->background = new Plasma::FrameSvg(this);
-    d->background->setImagePath("widgets/lineedit");
-    d->background->setCacheAllRenderedFrames(true);
-
-#if 0 //  causes bug 290111
-    FocusIndicator *indicator = new FocusIndicator(this, d->background);
-    if (d->background->hasElement("hint-focus-over-base")) {
-        indicator->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
-    }
-#endif
     setNativeWidget(new KLineEdit);
 }
 
@@ -143,26 +132,6 @@ void LineEdit::setNativeWidget(KLineEdit *nativeWidget)
 KLineEdit *LineEdit::nativeWidget() const
 {
     return static_cast<KLineEdit*>(widget());
-}
-
-void LineEdit::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event)
-    update();
-}
-
-void LineEdit::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event)
-    update();
-}
-
-void LineEdit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
-
-    nativeWidget()->render(painter, QPoint(0, 0), QRegion(), QWidget::DrawChildren|QWidget::IgnoreMask);
 }
 
 void LineEdit::changeEvent(QEvent *event)

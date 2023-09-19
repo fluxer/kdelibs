@@ -217,19 +217,11 @@ public Q_SLOTS:
     void setChecked(bool checked);
 
 protected:
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget = 0);
     void resizeEvent(QGraphicsSceneResizeEvent *event);
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void changeEvent(QEvent *event);
-    QSizeF sizeHint(Qt::SizeHint which, const QSizeF & constraint) const;
 
 private:
-    Q_PRIVATE_SLOT(d, void syncBorders())
     Q_PRIVATE_SLOT(d, void setPixmap())
-    Q_PRIVATE_SLOT(d, void pressedChanged())
     Q_PRIVATE_SLOT(d, void syncToAction())
     Q_PRIVATE_SLOT(d, void clearAction())
     Q_PRIVATE_SLOT(d, void setPalette())

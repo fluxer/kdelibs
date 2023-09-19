@@ -129,20 +129,14 @@ Q_SIGNALS:
     void currentIndexChanged(int index);
 
 protected:
-    void resizeEvent(QGraphicsSceneResizeEvent *event);
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget);
     void focusOutEvent(QFocusEvent *event);
     void changeEvent(QEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
 
 private:
     ComboBoxPrivate * const d;
 
     friend class ComboBoxPrivate;
-    Q_PRIVATE_SLOT(d, void syncBorders())
     Q_PRIVATE_SLOT(d, void setPalette())
 };
 

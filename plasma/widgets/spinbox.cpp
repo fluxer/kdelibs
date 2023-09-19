@@ -20,19 +20,14 @@
 
 #include "spinbox.h"
 
-#include <QPainter>
-#include <QtGui/qstyleoption.h>
-#include <QGraphicsView>
-
-#include <kmimetype.h>
-#include <knuminput.h>
-
 #include "applet.h"
-#include "framesvg.h"
-#include "private/focusindicator_p.h"
 #include "private/style_p.h"
 #include "private/themedwidgetinterface_p.h"
 #include "theme.h"
+
+#include <QGraphicsView>
+#include <kmimetype.h>
+#include <knuminput.h>
 
 namespace Plasma
 {
@@ -41,19 +36,12 @@ class SpinBoxPrivate : public ThemedWidgetInterface<SpinBox>
 {
 public:
     SpinBoxPrivate(SpinBox *spinBox)
-        : ThemedWidgetInterface<SpinBox>(spinBox),
-          focusIndicator(0)
+        : ThemedWidgetInterface<SpinBox>(spinBox)
     {
         buttonColorForText = true;
     }
 
-    ~SpinBoxPrivate()
-    {
-    }
-
     Plasma::Style::Ptr style;
-    Plasma::FrameSvg *background;
-    FocusIndicator *focusIndicator;
 };
 
 SpinBox::SpinBox(QGraphicsWidget *parent)
@@ -65,29 +53,14 @@ SpinBox::SpinBox(QGraphicsWidget *parent)
     connect(native, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
     connect(native, SIGNAL(editingFinished()), this, SIGNAL(editingFinished()));
 
-    d->focusIndicator = new FocusIndicator(this, "widgets/lineedit");
-
     d->setWidget(native);
     native->setWindowIcon(QIcon());
     native->setAttribute(Qt::WA_NoSystemBackground);
     native->setAutoFillBackground(false);
 
-    d->background = new Plasma::FrameSvg(this);
-    d->background->setImagePath("widgets/lineedit");
-    d->background->setCacheAllRenderedFrames(true);
-
-    if (d->background->hasElement("hint-focus-over-base")) {
-        d->focusIndicator->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
-    }
-
     d->style = Plasma::Style::sharedStyle();
     native->setStyle(d->style.data());
     d->initTheming();
-
-    QStyleOptionSpinBox spinOpt;
-    spinOpt.initFrom(nativeWidget());
-    QRect controlrect = nativeWidget()->style()->subControlRect(QStyle::CC_SpinBox, &spinOpt, QStyle::SC_SpinBoxFrame, nativeWidget());
-    d->focusIndicator->setCustomGeometry(controlrect);
 }
 
 SpinBox::~SpinBox()
@@ -150,38 +123,6 @@ void SpinBox::changeEvent(QEvent *event)
 {
     d->changeEvent(event);
     QGraphicsProxyWidget::changeEvent(event);
-}
-
-void SpinBox::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event)
-    update();
-}
-
-void SpinBox::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event)
-    update();
-}
-
-void SpinBox::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    QGraphicsProxyWidget::resizeEvent(event);
-    QStyleOptionSpinBox spinOpt;
-    spinOpt.initFrom(nativeWidget());
-    QRect controlrect = nativeWidget()->style()->subControlRect(QStyle::CC_SpinBox, &spinOpt, QStyle::SC_SpinBoxFrame, nativeWidget());
-
-    if (d->focusIndicator) {
-        d->focusIndicator->setCustomGeometry(controlrect);
-    }
-}
-
-void SpinBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
-
-    QGraphicsProxyWidget::paint(painter, option, widget);
 }
 
 void SpinBox::mousePressEvent(QGraphicsSceneMouseEvent *event)

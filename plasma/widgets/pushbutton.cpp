@@ -31,11 +31,9 @@
 #include <kpushbutton.h>
 
 #include "animator.h"
-#include "animations/animation.h"
 #include "framesvg.h"
 #include "paintutils.h"
 #include "private/actionwidgetinterface_p.h"
-#include "private/focusindicator_p.h"
 #include "private/themedwidgetinterface_p.h"
 #include "theme.h"
 
@@ -47,8 +45,6 @@ class PushButtonPrivate : public ActionWidgetInterface<PushButton>
 public:
     PushButtonPrivate(PushButton *pushButton)
         : ActionWidgetInterface<PushButton>(pushButton),
-          background(0),
-          fadeIn(false),
           svg(0)
     {
     }
@@ -102,101 +98,20 @@ public:
         static_cast<KPushButton*>(q->widget())->setIcon(KIcon(pm));
     }
 
-    void pressedChanged()
-    {
-        if (q->nativeWidget()->isDown() || q->nativeWidget()->isChecked()) {
-            focusIndicator->animateVisibility(false);
-        } else {
-            focusIndicator->animateVisibility(true);
-        }
-    }
-
-    void syncFrame()
-    {
-        if (background) {
-            //resize all panels
-            background->setElementPrefix("pressed");
-            background->resizeFrame(q->size());
-
-            syncActiveRect();
-
-            background->setElementPrefix("normal");
-            background->resizeFrame(q->size());
-            hoverAnimation->setProperty("startPixmap", background->framePixmap());
-
-            background->setElementPrefix("active");
-            background->resizeFrame(activeRect.size());
-            hoverAnimation->setProperty("targetPixmap", background->framePixmap());
-        }
-    }
-
-    void syncActiveRect();
-    void syncBorders();
-
-    FrameSvg *background;
-    bool fadeIn;
-    qreal opacity;
-    QRectF activeRect;
-
-    Animation *hoverAnimation;
-
-    FocusIndicator *focusIndicator;
     QString imagePath;
     QString absImagePath;
     Svg *svg;
     QString svgElement;
 };
 
-void PushButtonPrivate::syncActiveRect()
-{
-    background->setElementPrefix("normal");
-
-    qreal left, top, right, bottom;
-    background->getMargins(left, top, right, bottom);
-
-    background->setElementPrefix("active");
-    qreal activeLeft, activeTop, activeRight, activeBottom;
-    background->getMargins(activeLeft, activeTop, activeRight, activeBottom);
-
-    activeRect = QRectF(QPointF(0, 0), q->size());
-    activeRect.adjust(left - activeLeft, top - activeTop,
-                      -(right - activeRight), -(bottom - activeBottom));
-
-    background->setElementPrefix("normal");
-}
-
-void PushButtonPrivate::syncBorders()
-{
-    //set margins from the normal element
-    qreal left, top, right, bottom;
-
-    background->setElementPrefix("normal");
-    background->getMargins(left, top, right, bottom);
-    q->setContentsMargins(left, top, right, bottom);
-
-    //calc the rect for the over effect
-    syncActiveRect();
-}
-
 
 PushButton::PushButton(QGraphicsWidget *parent)
     : QGraphicsProxyWidget(parent),
       d(new PushButtonPrivate(this))
 {
-    d->background = new FrameSvg(this);
-    d->background->setImagePath("widgets/button");
-    d->background->setCacheAllRenderedFrames(true);
-
-    d->background->setElementPrefix("normal");
-
-    d->hoverAnimation = Animator::create(Animator::PixmapTransitionAnimation);
-    d->hoverAnimation->setTargetWidget(this);
-
     KPushButton *native = new KPushButton;
     connect(native, SIGNAL(pressed()), this, SIGNAL(pressed()));
-    connect(native, SIGNAL(pressed()), this, SLOT(pressedChanged()));
     connect(native, SIGNAL(released()), this, SIGNAL(released()));
-    connect(native, SIGNAL(released()), this, SLOT(pressedChanged()));
     connect(native, SIGNAL(clicked()), this, SIGNAL(clicked()));
     connect(native, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
     setWidget(native);
@@ -204,15 +119,9 @@ PushButton::PushButton(QGraphicsWidget *parent)
     native->setWindowIcon(QIcon());
 
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
-    d->focusIndicator = new FocusIndicator(this, d->background);
-
-    d->syncBorders();
     setAcceptHoverEvents(true);
 
-    connect(d->background, SIGNAL(repaintNeeded()), SLOT(syncBorders()));
     d->initTheming();
-    d->syncFrame();
 }
 
 PushButton::~PushButton()
@@ -268,7 +177,6 @@ QString PushButton::image() const
 
 void PushButton::setStyleSheet(const QString &stylesheet)
 {
-    d->focusIndicator->setVisible(stylesheet.isEmpty());
     widget()->setStyleSheet(stylesheet);
 }
 
@@ -340,194 +248,13 @@ KPushButton *PushButton::nativeWidget() const
 void PushButton::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     d->setPixmap();
-
-    d->syncFrame();
-
     QGraphicsProxyWidget::resizeEvent(event);
-}
-
-void PushButton::paint(QPainter *painter,
-                       const QStyleOptionGraphicsItem *option,
-                       QWidget *widget)
-{
-    if (!styleSheet().isNull() || Theme::defaultTheme()->useNativeWidgetStyle()) {
-        QGraphicsProxyWidget::paint(painter, option, widget);
-        return;
-    }
-
-    QPixmap bufferPixmap;
-
-    //Normal button, pressed or not
-    if (isEnabled()) {
-        if (nativeWidget()->isDown() || nativeWidget()->isChecked()) {
-            d->background->setElementPrefix("pressed");
-        } else {
-            d->background->setElementPrefix("normal");
-        }
-
-    //flat or disabled
-    } else if (!isEnabled() || nativeWidget()->isFlat()) {
-        bufferPixmap = QPixmap(rect().size().toSize());
-        bufferPixmap.fill(Qt::transparent);
-
-        QPainter buffPainter(&bufferPixmap);
-        d->background->paintFrame(&buffPainter);
-        buffPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        buffPainter.fillRect(bufferPixmap.rect(), QColor(0, 0, 0, 128));
-
-        painter->drawPixmap(0, 0, bufferPixmap);
-    }
-
-    //if is under mouse draw the animated glow overlay
-    if (!nativeWidget()->isDown() && !nativeWidget()->isChecked() && isEnabled() && acceptHoverEvents() && d->background->hasElementPrefix("active")) {
-        if (d->hoverAnimation->state() == QAbstractAnimation::Running && !isUnderMouse() && !nativeWidget()->isDefault()) {
-            d->background->setElementPrefix("active");
-            d->background->paintFrame(painter, d->activeRect.topLeft());
-        } else {
-            painter->drawPixmap(
-                d->activeRect.topLeft(),
-                d->hoverAnimation->property("currentPixmap").value<QPixmap>());
-        }
-    } else if (isEnabled()) {
-        d->background->paintFrame(painter);
-    }
-
-
-    painter->setPen(Plasma::Theme::defaultTheme()->color(Theme::ButtonTextColor));
-
-    if (nativeWidget()->isDown()) {
-        painter->translate(QPoint(1, 1));
-    }
-
-    QRectF rect = contentsRect();
-
-    if (!nativeWidget()->icon().isNull()) {
-        const qreal iconSize = qMin(rect.width(), rect.height());
-        QPixmap iconPix = nativeWidget()->icon().pixmap(iconSize);
-        if (!isEnabled()) {
-            KIconEffect *effect = KIconLoader::global()->iconEffect();
-            iconPix = effect->apply(iconPix, KIconLoader::Toolbar, KIconLoader::DisabledState);
-        }
-
-        QRect pixmapRect;
-        if (nativeWidget()->text().isEmpty()) {
-            pixmapRect = nativeWidget()->style()->alignedRect(option->direction, Qt::AlignCenter, iconPix.size(), rect.toRect());
-        } else {
-            pixmapRect = nativeWidget()->style()->alignedRect(option->direction, Qt::AlignLeft|Qt::AlignVCenter, iconPix.size(), rect.toRect());
-        }
-        painter->drawPixmap(pixmapRect.topLeft(), iconPix);
-
-        if (option->direction == Qt::LeftToRight) {
-            rect.adjust(rect.height(), 0, 0, 0);
-        } else {
-            rect.adjust(0, 0, -rect.height(), 0);
-        }
-    }
-
-    QFontMetricsF fm(font());
-    // If the height is too small increase the Height of the button to shall the whole text #192988
-    if (rect.height() < fm.height()) {
-        rect.setHeight(fm.height());
-        rect.moveTop(boundingRect().center().y() - rect.height() / 2);
-    }
-
-    // If there is not enough room for the text make it to fade out
-    if (rect.width() < fm.width(nativeWidget()->text())) {
-        if (bufferPixmap.isNull()) {
-            bufferPixmap = QPixmap(rect.size().toSize());
-        }
-        bufferPixmap.fill(Qt::transparent);
-
-        QPainter p(&bufferPixmap);
-        p.setPen(painter->pen());
-        p.setFont(font());
-
-        // Create the alpha gradient for the fade out effect
-        QLinearGradient alphaGradient(0, 0, 1, 0);
-        alphaGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-        if (option->direction == Qt::LeftToRight) {
-            alphaGradient.setColorAt(0, QColor(0, 0, 0, 255));
-            alphaGradient.setColorAt(1, QColor(0, 0, 0, 0));
-            p.drawText(bufferPixmap.rect(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextShowMnemonic,
-                       nativeWidget()->text());
-        } else {
-            alphaGradient.setColorAt(0, QColor(0, 0, 0, 0));
-            alphaGradient.setColorAt(1, QColor(0, 0, 0, 255));
-            p.drawText(bufferPixmap.rect(), Qt::AlignRight|Qt::AlignVCenter|Qt::TextShowMnemonic,
-                       nativeWidget()->text());
-        }
-
-        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        p.fillRect(bufferPixmap.rect(), alphaGradient);
-
-        painter->drawPixmap(rect.topLeft(), bufferPixmap);
-    } else {
-        painter->setFont(font());
-        painter->drawText(rect, Qt::AlignCenter|Qt::TextShowMnemonic, nativeWidget()->text());
-    }
-}
-
-void PushButton::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    if (nativeWidget()->isDown() || d->background->hasElementPrefix("hover")) {
-        return;
-    }
-
-    d->hoverAnimation->setProperty("duration", 75);
-
-    d->background->setElementPrefix("normal");
-    d->hoverAnimation->setProperty("startPixmap", d->background->framePixmap());
-
-    d->background->setElementPrefix("active");
-    d->hoverAnimation->setProperty("targetPixmap", d->background->framePixmap());
-
-    d->hoverAnimation->start();
-
-    QGraphicsProxyWidget::hoverEnterEvent(event);
 }
 
 void PushButton::changeEvent(QEvent *event)
 {
     d->changeEvent(event);
     QGraphicsProxyWidget::changeEvent(event);
-}
-
-void PushButton::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    if (nativeWidget()->isDown() || d->background->hasElementPrefix("hover")) {
-        return;
-    }
-
-    d->hoverAnimation->setProperty("duration", 150);
-
-    d->background->setElementPrefix("active");
-    d->hoverAnimation->setProperty("startPixmap", d->background->framePixmap());
-
-    d->background->setElementPrefix("normal");
-    d->hoverAnimation->setProperty("targetPixmap", d->background->framePixmap());
-
-    d->hoverAnimation->start();
-
-    QGraphicsProxyWidget::hoverLeaveEvent(event);
-}
-
-
-QSizeF PushButton::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
-{
-    QSizeF hint = QGraphicsProxyWidget::sizeHint(which, constraint);
-
-    if (hint.isEmpty()) {
-        return hint;
-    }
-
-    //replace the native margin with the Svg one
-    QStyleOption option;
-    option.initFrom(nativeWidget());
-    int nativeMargin = nativeWidget()->style()->pixelMetric(QStyle::PM_ButtonMargin, &option, nativeWidget());
-    qreal left, top, right, bottom;
-    d->background->getMargins(left, top, right, bottom);
-    hint = hint - QSize(nativeMargin, nativeMargin) + QSize(left+right, top+bottom);
-    return hint;
 }
 
 } // namespace Plasma

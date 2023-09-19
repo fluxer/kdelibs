@@ -88,7 +88,6 @@ set(plasma_LIB_SRCS
     private/dataengineconsumer.cpp
     private/extenderapplet.cpp
     private/extenderitemmimedata.cpp
-    private/focusindicator.cpp
     private/nativetabbar.cpp
     private/packages.cpp
     private/runnerjobs.cpp
