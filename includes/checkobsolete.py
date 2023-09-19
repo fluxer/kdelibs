@@ -6,11 +6,6 @@ import os, re, sys
 
 oregex = re.compile('#(?:[\\s]+)?include [<|"](.*)[>|"]')
 
-lexceptions = [
-    '../../dnssd/settings.h',
-    '../../plasma/version.h',
-]
-
 lall = []
 for root, dirs, files in os.walk('%s/..' % os.getcwd()):
     for sfile in files:
@@ -23,8 +18,6 @@ for root, dirs, files in os.walk(os.getcwd()):
         with open(sfull, 'rb') as f:
             content = f.read()
         for smatch in oregex.findall(str(content)):
-            if smatch in lexceptions:
-                continue
             if not os.path.basename(smatch) in lall:
                 print(sfull, smatch)
                 if '--remove' in sys.argv:

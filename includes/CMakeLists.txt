@@ -536,7 +536,6 @@ install(
     Plasma/ToolTipManager
     Plasma/TreeView
     Plasma/CalendarWidget
-    Plasma/Version
     Plasma/View
     Plasma/Wallpaper
     Plasma/WindowEffects
