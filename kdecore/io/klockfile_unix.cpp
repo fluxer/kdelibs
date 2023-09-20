@@ -22,7 +22,6 @@
 #include "kdebug.h"
 #include "kde_file.h"
 
-#include <QCryptographicHash>
 #include <QCoreApplication>
 #include <QThread>
 
@@ -52,7 +51,7 @@ KLockFile::KLockFile(const QString &file)
     : d(new KLockFilePrivate())
 {
     d->m_lockfile = QFile::encodeName(KGlobal::dirs()->saveLocation("tmp"));
-    d->m_lockfile.append(QCryptographicHash::hash(QFile::encodeName(file), QCryptographicHash::KAT).toHex());
+    d->m_lockfile.append(QByteArray::number(qHash(file)));
     d->m_lockfile.append(".klockfile");
 }
 
