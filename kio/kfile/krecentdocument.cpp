@@ -106,14 +106,8 @@ void KRecentDocument::add(const KUrl &url, const QString &desktopEntryName)
         return;
     }
 
-    QString openStr = url.url();
-    openStr.replace(QRegExp("\\$"), "$$"); // Desktop files with type "Link" are $-variable expanded
-
-    KConfigGroup config = KGlobal::config()->group(QByteArray("RecentDocuments"));
-    bool useRecent = config.readEntry(QLatin1String("UseRecent"), true);
-    int maxEntries = config.readEntry(QLatin1String("MaxEntries"), 10);
-
-    if (!useRecent || maxEntries <= 0) {
+    int maxEntries = KRecentDocument::maximumItems();
+    if (maxEntries <= 0) {
         kDebug(s_krecentdocumentarea) << "disabled" << url;
         return;
     }
@@ -156,6 +150,9 @@ void KRecentDocument::add(const KUrl &url, const QString &desktopEntryName)
         }
     }
 
+    QString openStr = url.url();
+    openStr.replace(QRegExp("\\$"), "$$"); // Desktop files with type "Link" are $-variable expanded
+
     kDebug(s_krecentdocumentarea) << "adding URL" << url;
     // create the applnk
     KDesktopFile configFile(ddesktop);
@@ -164,8 +161,8 @@ void KRecentDocument::add(const KUrl &url, const QString &desktopEntryName)
     conf.writePathEntry("URL", openStr );
     // If you change the line below, change the test in the above loop
     conf.writeEntry("X-KDE-LastOpenedWith", desktopEntryName);
-    conf.writeEntry("Name", url.fileName() );
-    conf.writeEntry("Icon", KMimeType::iconNameForUrl(url ));
+    conf.writeEntry("Name", url.fileName());
+    conf.writeEntry("Icon", KMimeType::iconNameForUrl(url));
 }
 
 void KRecentDocument::clear()
