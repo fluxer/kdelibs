@@ -46,11 +46,10 @@ Slider::Slider(QGraphicsWidget *parent)
     : QGraphicsProxyWidget(parent),
       d(new SliderPrivate)
 {
-    QSlider *native = new QSlider;
+    QSlider *native = new QSlider();
 
     connect(native, SIGNAL(sliderMoved(int)), this, SIGNAL(sliderMoved(int)));
     connect(native, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
-
 
     setWidget(native);
     native->setWindowIcon(QIcon());

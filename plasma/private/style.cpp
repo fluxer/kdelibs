@@ -297,17 +297,6 @@ QRect Style::subControlRect(ComplexControl control, const QStyleOptionComplex *o
 {
     QRect rect(QCommonStyle::subControlRect(control, option, subControl, widget));
     switch (control) {
-        case CC_Slider: {
-            const QStyleOptionSlider *sliderOpt = qstyleoption_cast<const QStyleOptionSlider *>(option);
-            if (sliderOpt) {
-                if (sliderOpt->orientation == Qt::Horizontal) {
-                    rect.moveCenter(QPoint(rect.center().x(), option->rect.center().y()));
-                } else {
-                    rect.moveCenter(QPoint(option->rect.center().x(), rect.center().y()));
-                }
-            }
-            break;
-        }
         case CC_ScrollBar: {
             const bool hasButtons = d->scrollbar->hasElement("arrow-up");
             switch (subControl) {
