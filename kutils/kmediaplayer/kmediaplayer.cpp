@@ -42,7 +42,8 @@
     const bool globalmute = d->m_settings->boolean("global/mute", false); \
     setAudioOutput(d->m_settings->string(d->m_playerid + "/audiooutput", globalaudio)); \
     setVolume(int(d->m_settings->integer(d->m_playerid + "/volume", globalvolume))); \
-    setMute(d->m_settings->boolean(d->m_playerid + "/mute", globalmute));
+    setMute(d->m_settings->boolean(d->m_playerid + "/mute", globalmute)); \
+    setOption("audio-client-name", d->m_playerid);
 
 #define COMMON_STATE_SAVE \
     if (d->m_handle && d->m_settings && d->m_settings->isWritable()) { \
