@@ -385,8 +385,6 @@ namespace KIO {
             DestinationSide
         };
 
-        ~StatJob();
-
         /**
          * A stat() can have two meanings. Either we want to read from this URL,
          * or to check if we can write to it. First case is "source", second is "dest".
@@ -473,8 +471,6 @@ namespace KIO {
     Q_OBJECT
 
     public:
-        ~TransferJob();
-
         /**
          * Sets the modification time of the file to be created (by KIO::put)
          * Note that some kioslaves might ignore this.
@@ -599,8 +595,6 @@ namespace KIO {
         Q_OBJECT
 
     public:
-        ~StoredTransferJob();
-
         /**
          * Set data to be uploaded. This is for put jobs.
          * Automatically called by KIO::storedPut(const QByteArray &, ...),
@@ -633,9 +627,6 @@ namespace KIO {
     class KIO_EXPORT MimetypeJob : public TransferJob {
     Q_OBJECT
 
-    public:
-        ~MimetypeJob();
-
     protected Q_SLOTS:
         virtual void slotFinished( );
     protected:
@@ -653,7 +644,6 @@ namespace KIO {
     Q_OBJECT
 
     public:
-        ~FileCopyJob();
         /**
          * If you know the size of the source file, call this method
          * to inform this job. It will be displayed in the "resume" dialog.
@@ -733,8 +723,6 @@ namespace KIO {
     Q_OBJECT
 
     public:
-        ~ListJob();
-
         /**
          * Returns the ListJob's redirection URL. This will be invalid if there
          * was no redirection.
@@ -821,9 +809,6 @@ namespace KIO {
          * ioslave.
          */
         QByteArray arguments() const;
-
-    public:
-        ~SpecialJob();
 
     private:
         Q_DECLARE_PRIVATE(SpecialJob)

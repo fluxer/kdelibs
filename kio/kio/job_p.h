@@ -227,9 +227,6 @@ namespace KIO {
 
     Q_OBJECT
 
-    public:
-        ~MkdirJob();
-
     Q_SIGNALS:
         /**
          * Signals a redirection.
@@ -309,7 +306,6 @@ namespace KIO {
 
     public:
         DirectCopyJob(const KUrl &url, const QByteArray &packedArgs);
-        ~DirectCopyJob();
 
     public Q_SLOTS:
         void slotCanResume( KIO::filesize_t offset );

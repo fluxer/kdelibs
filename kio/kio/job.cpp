@@ -551,10 +551,6 @@ MkdirJob::MkdirJob(MkdirJobPrivate &dd)
 {
 }
 
-MkdirJob::~MkdirJob()
-{
-}
-
 void MkdirJobPrivate::start(SlaveInterface *slave)
 {
     Q_Q(MkdirJob);
@@ -699,11 +695,6 @@ StatJob::StatJob(StatJobPrivate &dd)
 {
 }
 
-StatJob::~StatJob()
-{
-}
-
-
 void StatJob::setSide(StatSide side)
 {
     d_func()->m_bSource = side == SourceSide;
@@ -821,10 +812,6 @@ TransferJob::TransferJob(TransferJobPrivate &dd)
     if (d->m_command == CMD_PUT) {
         d->m_extraFlags |= JobPrivate::EF_TransferJobDataSent;
     }
-}
-
-TransferJob::~TransferJob()
-{
 }
 
 // Slave sends data
@@ -1126,10 +1113,6 @@ StoredTransferJob::StoredTransferJob(StoredTransferJobPrivate &dd)
     );
 }
 
-StoredTransferJob::~StoredTransferJob()
-{
-}
-
 void StoredTransferJob::setData(const QByteArray &arr)
 {
     Q_D(StoredTransferJob);
@@ -1224,10 +1207,6 @@ MimetypeJob::MimetypeJob(MimetypeJobPrivate &dd)
 {
 }
 
-MimetypeJob::~MimetypeJob()
-{
-}
-
 void MimetypeJob::slotFinished()
 {
     Q_D(MimetypeJob);
@@ -1290,10 +1269,6 @@ DirectCopyJob::DirectCopyJob(const KUrl &url, const QByteArray &packedArgs)
     : SimpleJob(*new DirectCopyJobPrivate(url, CMD_COPY, packedArgs))
 {
     setUiDelegate(new JobUiDelegate());
-}
-
-DirectCopyJob::~DirectCopyJob()
-{
 }
 
 void DirectCopyJobPrivate::start(SlaveInterface *slave)
@@ -1461,10 +1436,6 @@ void FileCopyJobPrivate::startBestCopyMethod()
     } else {
         startDataPump();
     }
-}
-
-FileCopyJob::~FileCopyJob()
-{
 }
 
 void FileCopyJob::setSourceSize(KIO::filesize_t size)
@@ -1960,10 +1931,6 @@ ListJob::ListJob(ListJobPrivate &dd)
     stream << d->m_url;
 }
 
-ListJob::~ListJob()
-{
-}
-
 void ListJobPrivate::slotListEntries(const KIO::UDSEntryList &list)
 {
     Q_Q(ListJob);
@@ -2144,10 +2111,6 @@ class KIO::SpecialJobPrivate: public TransferJobPrivate
 
 SpecialJob::SpecialJob(const KUrl &url, const QByteArray &packedArgs)
     : TransferJob(*new TransferJobPrivate(url, CMD_SPECIAL, packedArgs))
-{
-}
-
-SpecialJob::~SpecialJob()
 {
 }
 
