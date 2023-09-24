@@ -221,9 +221,10 @@ void Frame::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
         QFontMetricsF fm(font());
         QRectF textRect = d->svg->contentsRect();
         textRect.setHeight(fm.height());
+        const QString elided = fm.elidedText(d->text, Qt::ElideRight, textRect.width());
         painter->setFont(font());
         painter->setPen(Plasma::Theme::defaultTheme()->color(Theme::TextColor));
-        painter->drawText(textRect, Qt::AlignHCenter|Qt::AlignTop, d->text);
+        painter->drawText(textRect, Qt::AlignHCenter|Qt::AlignTop, elided);
     }
 
     if (!d->imagePath.isNull()) {
