@@ -58,7 +58,6 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
         kDebug() << "hey! we got more than one! let's blindly take the first one";
     } */
 
-    AppletPrivate::filterOffers(offers);
     if (offers.isEmpty()) {
         kDebug() << "offers is empty for " << name;
         return 0;
@@ -161,9 +160,6 @@ KPluginInfo::List PluginLoader::listAppletInfo(const QString &category, const QS
     }
 
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/Applet", constraint);
-
-    //now we have to do some manual filtering because the constraint can't handle everything
-    AppletPrivate::filterOffers(offers);
 
     //kDebug() << "Applet::listAppletInfo constraint was '" << constraint
     //         << "' which got us " << offers.count() << " matches";

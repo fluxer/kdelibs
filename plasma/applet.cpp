@@ -2140,35 +2140,6 @@ bool Applet::hasValidAssociatedApplication() const
     return AssociatedApplicationManager::self()->appletHasValidAssociatedApplication(this);
 }
 
-void AppletPrivate::filterOffers(QList<KService::Ptr> &offers)
-{
-    KConfigGroup constraintGroup(KGlobal::config(), "Constraints");
-    foreach (const QString &key, constraintGroup.keyList()) {
-        //kDebug() << "security constraint" << key;
-        if (constraintGroup.readEntry(key, true)) {
-            continue;
-        }
-
-        //ugh. a qlist of ksharedptr<kservice>
-        QMutableListIterator<KService::Ptr> it(offers);
-        while (it.hasNext()) {
-            KService::Ptr p = it.next();
-            QString prop = QString("X-Plasma-Requires-").append(key);
-            QVariant req = p->property(prop, QVariant::String);
-            //valid values: Required/Optional/Unused
-            QString reqValue;
-            if (req.isValid()) {
-                reqValue = req.toString();
-            }
-
-            if (!(reqValue == "Optional" || reqValue == "Unused")) {
-            //if (reqValue == "Required") {
-                it.remove();
-            }
-        }
-    }
-}
-
 QString AppletPrivate::parentAppConstraint(const QString &parentApp)
 {
     if (parentApp.isEmpty()) {
@@ -2190,7 +2161,6 @@ KPluginInfo::List Applet::listAppletInfoForMimetype(const QString &mimetype)
     constraint.append(QString(" and '%1' in [X-Plasma-DropMimeTypes]").arg(mimetype));
     //kDebug() << "listAppletInfoForMimetype with" << mimetype << constraint;
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/Applet", constraint);
-    AppletPrivate::filterOffers(offers);
     return KPluginInfo::fromServices(offers);
 }
 
@@ -2199,7 +2169,6 @@ KPluginInfo::List Applet::listAppletInfoForUrl(const QUrl &url)
     QString constraint = AppletPrivate::parentAppConstraint();
     constraint.append(" and exist [X-Plasma-DropUrlPatterns]");
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/Applet", constraint);
-    AppletPrivate::filterOffers(offers);
 
     KPluginInfo::List allApplets = KPluginInfo::fromServices(offers);
     KPluginInfo::List filtered;
@@ -2230,7 +2199,6 @@ QStringList Applet::listCategories(const QString &parentApp, bool visibleOnly)
     }
 
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/Applet", constraint);
-    AppletPrivate::filterOffers(offers);
 
     QStringList categories;
     QStringList known = AppletPrivate::knownCategories();
