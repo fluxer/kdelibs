@@ -99,12 +99,12 @@ QString KTemperature::unit() const
         case KTemperature::Fahrenheit:
             return QString::fromUtf8("°F");
         case KTemperature::Kelvin:
-            return QLatin1String("K");
+            return QString::fromLatin1("K");
         case KTemperature::Invalid:
         case KTemperature::UnitCount:
             break;
     }
-    return QLatin1String("Unknown");
+    return QString::fromLatin1("Unknown");
 }
 
 KTemperature::KTempUnit KTemperature::unitEnum() const
@@ -238,18 +238,18 @@ QString KVelocity::unit() const
 {
     switch (d->m_unitenum) {
         case KVelocity::KilometerPerHour:
-            return QLatin1String("km/h");
+            return QString::fromLatin1("km/h");
         case KVelocity::Knot:
-            return QLatin1String("kt");
+            return QString::fromLatin1("kt");
         case KVelocity::MeterPerSecond:
-            return QLatin1String("m/s");
+            return QString::fromLatin1("m/s");
         case KVelocity::MilePerHour:
-            return QLatin1String("mph");
+            return QString::fromLatin1("mph");
         case KVelocity::Invalid:
         case KVelocity::UnitCount:
             break;
     }
-    return QLatin1String("Unknown");
+    return QString::fromLatin1("Unknown");
 }
 
 KVelocity::KVeloUnit KVelocity::unitEnum() const
@@ -399,18 +399,18 @@ QString KPressure::unit() const
 {
     switch (d->m_unitenum) {
         case KPressure::Hectopascal:
-            return QLatin1String("hPa");
+            return QString::fromLatin1("hPa");
         case KPressure::InchesOfMercury:
-            return QLatin1String("inHg");
+            return QString::fromLatin1("inHg");
         case KPressure::Kilopascal:
-            return QLatin1String("kPa");
+            return QString::fromLatin1("kPa");
         case KPressure::Millibar:
-            return QLatin1String("mbar");
+            return QString::fromLatin1("mbar");
         case KPressure::Invalid:
         case KPressure::UnitCount:
             break;
     }
-    return QLatin1String("Unknown");
+    return QString::fromLatin1("Unknown");
 }
 
 KPressure::KPresUnit KPressure::unitEnum() const
@@ -541,16 +541,16 @@ QString KLength::unit() const
 {
     switch (d->m_unitenum) {
         case KLength::Kilometer:
-            return QLatin1String("km");
+            return QString::fromLatin1("km");
         case KLength::Foot:
-            return QLatin1String("ft");
+            return QString::fromLatin1("ft");
         case KLength::Mile:
-            return QLatin1String("mi");
+            return QString::fromLatin1("mi");
         case KLength::Invalid:
         case KLength::UnitCount:
             break;
     }
-    return QLatin1String("Unknown");
+    return QString::fromLatin1("Unknown");
 }
 
 KLength::KLengUnit KLength::unitEnum() const
