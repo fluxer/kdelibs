@@ -189,9 +189,7 @@ KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
     KConfig klauncherconfig("klaunchrc", KConfig::NoGlobals);
     KConfigGroup kconfiggroup = klauncherconfig.group("BusyCursorSettings");
     const int busytimeout = kconfiggroup.readEntry("Timeout", s_startuptimeout);
-    kconfiggroup = klauncherconfig.group("TaskbarButtonSettings");
-    const int tasktimeout = kconfiggroup.readEntry("Timeout", s_startuptimeout);
-    m_startuptimeout = (qMax(busytimeout, tasktimeout) * 1000);
+    m_startuptimeout = (busytimeout * 1000);
 }
 
 KLauncherAdaptor::~KLauncherAdaptor()
